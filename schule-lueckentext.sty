@@ -1,0 +1,107 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{schule-lueckentext}
+
+% Three things you can do with LuaTEX that
+% would be extremely painful otherwise
+% Paul Isambert
+
+% TUGBoat
+% Volume 31, Number 3, 2010
+
+\RequirePackage{fontspec}
+\RequirePackage{luatexbase-mcb}
+\RequirePackage{color}
+
+\directlua{
+  require("schule_lueckentext")
+  luatexbase.add_to_callback("post_linebreak_filter", get_lines, "get_lines")
+}
+
+%-----------------------------------------------------------------------
+% Öffentliche Makros
+%-----------------------------------------------------------------------
+
+%%
+% \luecke{Lorem ipsum}
+%%
+\newcommand{\luecke}[1]{%
+  \lueckemarker{1}%
+  {%
+    \lueckeschrift%
+    \hspace{0.1cm}%
+    #1%
+    \hspace{0.1cm}%
+  }%
+  \lueckemarker{2}%
+}
+
+%%
+% \zeigelueckentext
+%%
+\newcommand{\zeigelueckentext}{\directlua{show_cloze_text = true}}
+
+%%
+% \verbergelueckentext
+%%
+\newcommand{\verbergelueckentext}{\directlua{show_cloze_text = false}}
+
+%%
+% \lueckemarker
+%%
+\newcommand{\lueckemarker}[1]{%
+  \directlua{
+    local whatsit = whatsit_userdefined(#1)
+    node.write(whatsit)
+  }%
+}
+
+%-----------------------------------------------------------------------
+% Lückenformatierung
+%-----------------------------------------------------------------------
+
+%%
+% \lueckeschrift
+%%
+\newcommand{\lueckeschrift}{\itshape}
+
+%%
+% \lueckeunterlaenge{3pt}
+%%
+\newcommand{\lueckeunterlaenge}[1]{\wert[unterlaenge]{#1}}
+
+%%
+% \lueckedicke{3pt}
+%%
+\newcommand{\lueckedicke}[1]{\wert[dicke]{#1}}
+
+%%
+% \lueckeabstand{0.1cm}
+%%
+%\newcommand{\lueckeabstand}[1][0.1cm]{\wert[lueckeabstand]{#1}}
+
+
+%-----------------------------------------------------------------------
+% Farben
+%-----------------------------------------------------------------------
+
+%%
+% \lueckentextfarbe
+%%
+\def\lueckentextfarbe#1{\csname\string\color@#1\endcsname\space}
+
+%%
+% \farbelinie{rgb}{1,0.5,0.7}
+%%
+\newcommand{\farbeluecke}[2]{
+  \definecolor{farbeluecke}{#1}{#2}
+  \directlua{farbeluecke = "\lueckentextfarbe{farbeluecke}"}
+}
+
+%%
+% \farbeluecke{rgb}{0.2,1,0.9}
+%%
+\newcommand{\farbelinie}[2]{
+  \definecolor{farbelinie}{#1}{#2}
+  \directlua{farbelinie = "\lueckentextfarbe{farbelinie}"}
+}
+
