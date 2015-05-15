@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{schule-lueckentext}
+\ProvidesPackage{luacloze}
 
 % Three things you can do with LuaTEX that
 % would be extremely painful otherwise
@@ -13,7 +13,7 @@
 \RequirePackage{color}
 
 \directlua{
-  require("schule_lueckentext")
+  require("luacloze")
   luatexbase.add_to_callback("post_linebreak_filter", get_lines, "get_lines")
 }
 
