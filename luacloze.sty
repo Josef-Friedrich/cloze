@@ -67,17 +67,17 @@
 %%
 % \clozedescender{3pt}
 %%
-\newcommand{\clozedescender}[1]{\wert[descender]{#1}}
+\newcommand{\clozedescender}[1]{\directlua{descender = "#1"}}
 
 %%
 % \clozelinethickness{3pt}
 %%
-\newcommand{\clozelinethickness}[1]{\wert[thickness]{#1}}
+\newcommand{\clozelinethickness}[1]{\directlua{thickness = "#1"}}
 
 %%
-% \clozeabstand{0.1cm}
+% \clozemargin{0.1cm}
 %%
-%\newcommand{\clozeabstand}[1][0.1cm]{\wert[clozeabstand]{#1}}
+\newcommand{\clozemargin}[1][0.1cm]{\directlua{clozemargin = "#1"}}
 
 
 %-----------------------------------------------------------------------
