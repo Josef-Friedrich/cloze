@@ -17,28 +17,28 @@ function get_lines(head)
     node.insert_before(current, current, whatsit_userdefined(99))
     line.head = current.prev
 
-    if ZEILEN_ENDE then
-      INIT_LUECKE = true
+    if LINE_END then
+      INIT_CLOZE = true
     end
 
     local item = line.head
 
     while item do
 
-      if check_luecke_marker(item, 1) or INIT_LUECKE then
+      if check_cloze_marker(item, 1) or INIT_CLOZE then
 
         colorstack_blue = color_text()
         node.insert_after(line.head, item, colorstack_blue)
 
-        INIT_LUECKE = false
+        INIT_CLOZE = false
 
         local end_node = item
         while end_node.next do
 
-          ZEILEN_ENDE = true
+          LINE_END = true
 
-          if check_luecke_marker(end_node.next, 2) then
-            ZEILEN_ENDE = false
+          if check_cloze_marker(end_node.next, 2) then
+            LINE_END = false
             break
           end
 
@@ -81,7 +81,7 @@ end -- function
 
 ---
 --
-function check_luecke_marker(item, value)
+function check_cloze_marker(item, value)
   if item.id == node.id('whatsit')
       and item.subtype == 44
       and item.user_id == WHATSIT_USERID
@@ -98,12 +98,12 @@ function color_rule()
 
   local data
 
-  if not farbelinie then
+  if not clozelinecolor then
     -- black
     data = '0 0 0 rg 0 0 0 RG'
 
   else
-    data = farbelinie
+    data = clozelinecolor
   end
 
   local node = node_colorstack(data)
@@ -116,12 +116,12 @@ end
 function color_text()
   local data
 
-  if not farbeluecke then
+  if not clozetextcolor then
     -- black
     data = '0 0 1 rg 0 0 1 RG'
 
   else
-    data = farbeluecke
+    data = clozetextcolor
   end
 
   local node = node_colorstack(data)
@@ -135,20 +135,19 @@ function node_rule(width)
   -- Rule.
   local node = node.new(node.id('rule'))
 
-  -- tickness = depth - height
-
-  if not unterlaenge then
-    unterlaenge = "3.4pt"
+  -- thickness = depth - height
+  if not descender then
+    descender = "3.4pt"
   end
 
-  if not dicke then
-    dicke = "0.4pt"
+  if not thickness then
+    thickness = "0.4pt"
   end
 
-  hoehe = tex.sp(dicke) - tex.sp(unterlaenge)
+  height = tex.sp(thickness) - tex.sp(descender)
 
-  node.depth = tex.sp(unterlaenge) -- 3.4pt
-  node.height = tex.sp(hoehe) -- -3pt
+  node.depth = tex.sp(descender) -- 3.4pt
+  node.height = tex.sp(height) -- -3pt
   node.width = width
 
   return node

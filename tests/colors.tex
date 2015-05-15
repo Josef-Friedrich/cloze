@@ -1,35 +1,35 @@
 %!TEX program = lualatex
 \documentclass{article}
-\usepackage{schule-lueckentext}
-\farbeluecke{rgb}{0.2,1,0.9}
+\usepackage{luacloze}
+\clozetextcolor{rgb}{0.2,1,0.9}
 
-\farbelinie{rgb}{1,0.5,0.7}
+\clozelinecolor{rgb}{1,0.5,0.7}
 
 \begin{document}
 
 \section{Farbe des Lückentexts}
 
-\directlua{tex.print(farbeluecke)}
+\directlua{tex.print(clozetextcolor)}
 
-\textcolor{farbeluecke}{Lorem ipsum dolor sit amet, consectetur
+\textcolor{clozetextcolor}{Lorem ipsum dolor sit amet, consectetur
 adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
 magna aliqua.}
 
 \section{Farbe der Linie}
 
-\directlua{tex.print(farbelinie)}
+\directlua{tex.print(clozelinecolor)}
 
-\textcolor{farbelinie}{Lorem ipsum dolor sit amet, consectetur
+\textcolor{clozelinecolor}{Lorem ipsum dolor sit amet, consectetur
 adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
 magna aliqua.}
 
 \vspace{3cm}
 
-Lorem ipsum \luecke{dolor sit} amet, consectetur adipisicing elit, sed do
+Lorem ipsum \cloze{dolor sit} amet, consectetur adipisicing elit, sed do
 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-minim veniam, \luecke{quis nostrud} exercitation ullamco \luecke{laboris
+minim veniam, \cloze{quis nostrud} exercitation ullamco \cloze{laboris
 nisi} ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-reprehenderit in \luecke{voluptate velit esse cillum} dolore eu fugiat
+reprehenderit in \cloze{voluptate velit esse cillum} dolore eu fugiat
 nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
 culpa qui officia deserunt mollit anim id est laborum.
 

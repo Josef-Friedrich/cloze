@@ -22,17 +22,17 @@
 %-----------------------------------------------------------------------
 
 %%
-% \luecke{Lorem ipsum}
+% \cloze{Lorem ipsum}
 %%
-\newcommand{\luecke}[1]{%
-  \lueckemarker{1}%
+\newcommand{\cloze}[1]{%
+  \clozemarker{1}%
   {%
-    \lueckeschrift%
+    \clozefont%
     \hspace{0.1cm}%
     #1%
     \hspace{0.1cm}%
   }%
-  \lueckemarker{2}%
+  \clozemarker{2}%
 }
 
 %%
@@ -46,9 +46,9 @@
 \newcommand{\hidetext}{\directlua{show_cloze_text = false}}
 
 %%
-% \lueckemarker
+% \clozemarker
 %%
-\newcommand{\lueckemarker}[1]{%
+\newcommand{\clozemarker}[1]{%
   \directlua{
     local whatsit = whatsit_userdefined(#1)
     node.write(whatsit)
@@ -60,48 +60,49 @@
 %-----------------------------------------------------------------------
 
 %%
-% \lueckeschrift
+% \clozefont
 %%
-\newcommand{\lueckeschrift}{\itshape}
+\newcommand{\clozefont}{\itshape}
 
 %%
-% \lueckeunterlaenge{3pt}
+% \clozedescender{3pt}
 %%
-\newcommand{\lueckeunterlaenge}[1]{\wert[unterlaenge]{#1}}
+\newcommand{\clozedescender}[1]{\wert[descender]{#1}}
 
 %%
-% \lueckedicke{3pt}
+% \clozelinethickness{3pt}
 %%
-\newcommand{\lueckedicke}[1]{\wert[dicke]{#1}}
+\newcommand{\clozelinethickness}[1]{\wert[thickness]{#1}}
 
 %%
-% \lueckeabstand{0.1cm}
+% \clozeabstand{0.1cm}
 %%
-%\newcommand{\lueckeabstand}[1][0.1cm]{\wert[lueckeabstand]{#1}}
+%\newcommand{\clozeabstand}[1][0.1cm]{\wert[clozeabstand]{#1}}
 
 
 %-----------------------------------------------------------------------
-% Farben
+% Colors
 %-----------------------------------------------------------------------
 
 %%
-% \lueckentextfarbe
+% \clozecolor
 %%
-\def\lueckentextfarbe#1{\csname\string\color@#1\endcsname\space}
+\def\clozecolor#1{\csname\string\color@#1\endcsname\space}
 
 %%
-% \farbelinie{rgb}{1,0.5,0.7}
+% \clozetextcolor{rgb}{0.2,1,0.9}
 %%
-\newcommand{\farbeluecke}[2]{
-  \definecolor{farbeluecke}{#1}{#2}
-  \directlua{farbeluecke = "\lueckentextfarbe{farbeluecke}"}
+\newcommand{\clozetextcolor}[2]{
+  \definecolor{clozetextcolor}{#1}{#2}
+  \directlua{clozetextcolor = "\clozecolor{clozetextcolor}"}
 }
 
+
 %%
-% \farbeluecke{rgb}{0.2,1,0.9}
+% \clozelinecolor{rgb}{1,0.5,0.7}
 %%
-\newcommand{\farbelinie}[2]{
-  \definecolor{farbelinie}{#1}{#2}
-  \directlua{farbelinie = "\lueckentextfarbe{farbelinie}"}
+\newcommand{\clozelinecolor}[2]{
+  \definecolor{clozelinecolor}{#1}{#2}
+  \directlua{clozelinecolor = "\clozecolor{clozelinecolor}"}
 }
 
