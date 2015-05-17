@@ -1,12 +1,10 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{luacloze}
 
+% Inspired by:
 % Three things you can do with LuaTEX that
 % would be extremely painful otherwise
-% Paul Isambert
-
-% TUGBoat
-% Volume 31, Number 3, 2010
+%   --Paul Isambert; TUGBoat Volume 31, Number 3, 2010
 
 \RequirePackage{fontspec}
 \RequirePackage{luatexbase-mcb}
@@ -18,8 +16,11 @@
 }
 
 %-----------------------------------------------------------------------
-% Öffentliche Makros
+% Public macros
 %-----------------------------------------------------------------------
+
+\newlength{\clozemargin}
+\setlength{\clozemargin}{0.1cm}
 
 %%
 % \cloze{Lorem ipsum}
@@ -28,9 +29,9 @@
   \clozemarker{1}%
   {%
     \clozefont%
-    \hspace{0.1cm}%
+    \hspace{\clozemargin}%
     #1%
-    \hspace{0.1cm}%
+    \hspace{\clozemargin}%
   }%
   \clozemarker{2}%
 }
@@ -45,18 +46,8 @@
 %%
 \newcommand{\hidetext}{\directlua{show_cloze_text = false}}
 
-%%
-% \clozemarker
-%%
-\newcommand{\clozemarker}[1]{%
-  \directlua{
-    local whatsit = whatsit_userdefined(#1)
-    node.write(whatsit)
-  }%
-}
-
 %-----------------------------------------------------------------------
-% Lückenformatierung
+% Formats
 %-----------------------------------------------------------------------
 
 %%
@@ -73,12 +64,6 @@
 % \clozelinethickness{3pt}
 %%
 \newcommand{\clozelinethickness}[1]{\directlua{thickness = "#1"}}
-
-%%
-% \clozemargin{0.1cm}
-%%
-\newcommand{\clozemargin}[1][0.1cm]{\directlua{clozemargin = "#1"}}
-
 
 %-----------------------------------------------------------------------
 % Colors
@@ -97,7 +82,6 @@
   \directlua{clozetextcolor = "\clozecolor{clozetextcolor}"}
 }
 
-
 %%
 % \clozelinecolor{rgb}{1,0.5,0.7}
 %%
@@ -106,3 +90,16 @@
   \directlua{clozelinecolor = "\clozecolor{clozelinecolor}"}
 }
 
+%-----------------------------------------------------------------------
+% Helper
+%-----------------------------------------------------------------------
+
+%%
+% \clozemarker
+%%
+\newcommand{\clozemarker}[1]{%
+  \directlua{
+    local whatsit = whatsit_userdefined(#1)
+    node.write(whatsit)
+  }%
+}
