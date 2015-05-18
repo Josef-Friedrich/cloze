@@ -4,13 +4,11 @@
 \usepackage{luacloze}
 \lstset{basicstyle=\ttfamily,language=TeX,frame=single,backgroundcolor=\color{yellow}}
 
-\newcommand{\ergebnis}[1]{\fbox{\noindent\begin{minipage}{12cm}#1\end{minipage}}}
-
-
+\newcommand{\result}[1]{\noindent\fbox{\begin{minipage}{12cm}#1\end{minipage}}}
 
 \begin{document}
 
-\section{Usage}
+\section{Basic usage}
 
 \begin{lstlisting}
 \usepackage{luacloze}
@@ -22,8 +20,94 @@ adipisicing elit, sed do eiusmod tempor
 incididunt ut labore et dolore magna aliqua.
 \end{lstlisting}
 
-\noindent\ergebnis{Lorem ipsum \cloze{dolor} sit amet, consectetur adipisicing
+\result{Lorem ipsum \cloze{dolor} sit amet, consectetur adipisicing
 elit, sed do eiusmod tempor incididunt ut labore et dolore magna
 aliqua.}
 
+%-----------------------------------------------------------------------
+% Cloze line thickness
+%-----------------------------------------------------------------------
+
+\subsection{Cloze line thickness}
+
+%%
+% 0.5pt
+%%
+
+\begin{lstlisting}
+\clozelinethickness{0.5pt}
+\end{lstlisting}
+
+\clozelinethickness{0.5pt}
+
+\result{Lorem \cloze{ipsum dolor} sit amet.}
+
+%%
+% 1mm
+%%
+
+\begin{lstlisting}
+\clozelinethickness{1mm}
+\end{lstlisting}
+
+\clozelinethickness{1mm}
+
+\result{Lorem \cloze{ipsum dolor} sit amet.}
+
+%%
+% 0.15em
+%%
+
+\begin{lstlisting}
+\clozelinethickness{0.15em}
+\end{lstlisting}
+
+\clozelinethickness{0.15em}
+
+\result{Lorem \cloze{ipsum dolor} sit amet.}
+
+
+%-----------------------------------------------------------------------
+% Descender of the cloze line
+%-----------------------------------------------------------------------
+
+\subsection{Descender of the cloze line}
+
+%%
+% 0pt
+%%
+
+\begin{lstlisting}
+\clozedescender{0pt}
+\end{lstlisting}
+
+\clozelinethickness{0.4pt}
+\clozedescender{0pt}
+
+\result{Lorem \cloze{ipsum dolor} sit amet.}
+
+%%
+% 3pt
+%%
+
+\begin{lstlisting}
+\clozedescender{3pt}
+\end{lstlisting}
+
+\clozedescender{3pt}
+
+\result{Lorem \cloze{ipsum dolor} sit amet.}
+
+
+%%
+% -4pt
+%%
+
+\begin{lstlisting}
+\clozedescender{-4pt}
+\end{lstlisting}
+
+\clozedescender{-4pt}
+
+\result{Lorem \cloze{ipsum dolor} sit amet.}
 \end{document}
