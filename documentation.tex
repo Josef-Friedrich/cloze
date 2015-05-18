@@ -1,0 +1,29 @@
+%!TEX program = lualatex
+\documentclass{article}
+\usepackage{listings}
+\usepackage{luacloze}
+\lstset{basicstyle=\ttfamily,language=TeX,frame=single,backgroundcolor=\color{yellow}}
+
+\newcommand{\ergebnis}[1]{\fbox{\noindent\begin{minipage}{12cm}#1\end{minipage}}}
+
+
+
+\begin{document}
+
+\section{Usage}
+
+\begin{lstlisting}
+\usepackage{luacloze}
+\end{lstlisting}
+
+\begin{lstlisting}
+Lorem ipsum \cloze{dolor} sit amet, consectetur
+adipisicing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
+\end{lstlisting}
+
+\noindent\ergebnis{Lorem ipsum \cloze{dolor} sit amet, consectetur adipisicing
+elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+aliqua.}
+
+\end{document}
