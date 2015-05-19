@@ -6,12 +6,28 @@
 % would be extremely painful otherwise
 %   --Paul Isambert; TUGBoat Volume 31, Number 3, 2010
 
+\RequirePackage{kvoptions}
+
+\SetupKeyvalOptions{
+  family=LC,
+  prefix=LC@
+}
+
+\DeclareStringOption[0.4pt]{thickness}
+\DeclareStringOption[3pt]{descender}
+
+\ProcessKeyvalOptions*
+
 \RequirePackage{fontspec}
 \RequirePackage{luatexbase-mcb}
 \RequirePackage{color}
 
 \directlua{
   require("luacloze")
+
+  thickness = '\LC@thickness'
+  descender = '\LC@descender'
+
   luatexbase.add_to_callback("post_linebreak_filter", get_lines, "get_lines")
 }
 
