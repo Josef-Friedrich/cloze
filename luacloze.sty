@@ -22,14 +22,19 @@
 \RequirePackage{luatexbase-mcb}
 \RequirePackage{color}
 
-\directlua{
-  require("luacloze")
-
+\newcommand{\setluavalues}{\directlua{
   thickness = '\LC@thickness'
   descender = '\LC@descender'
+}}
 
+\setluavalues
+
+\directlua{
+  require("luacloze")
   luatexbase.add_to_callback("post_linebreak_filter", get_lines, "get_lines")
 }
+
+\newcommand{\setcloze}[1]{\setkeys{LC}{#1}\setluavalues}
 
 %-----------------------------------------------------------------------
 % Public macros
@@ -70,16 +75,6 @@
 % \clozefont
 %%
 \newcommand{\clozefont}{\itshape}
-
-%%
-% \clozedescender{3pt}
-%%
-\newcommand{\clozedescender}[1]{\directlua{descender = "#1"}}
-
-%%
-% \clozelinethickness{3pt}
-%%
-\newcommand{\clozelinethickness}[1]{\directlua{thickness = "#1"}}
 
 %-----------------------------------------------------------------------
 % Colors
