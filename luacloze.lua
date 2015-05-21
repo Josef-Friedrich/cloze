@@ -98,12 +98,12 @@ function color_rule()
 
   local data
 
-  if not clozelinecolor then
+  if not linecolor then
     -- black
     data = '0 0 0 rg 0 0 0 RG'
 
   else
-    data = clozelinecolor
+    data = linecolor
   end
 
   local node = node_colorstack(data)
@@ -116,12 +116,12 @@ end
 function color_text()
   local data
 
-  if not clozetextcolor then
+  if not textcolor then
     -- black
     data = '0 0 1 rg 0 0 1 RG'
 
   else
-    data = clozetextcolor
+    data = textcolor
   end
 
   local node = node_colorstack(data)

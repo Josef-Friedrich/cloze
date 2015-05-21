@@ -1,12 +1,20 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{luacloze}
 
+\RequirePackage{fontspec}
+\RequirePackage{luatexbase-mcb}
+\RequirePackage{xcolor}
+\RequirePackage{kvoptions}
+
+\directlua{
+  require("luacloze")
+  luatexbase.add_to_callback("post_linebreak_filter", get_lines, "get_lines")
+}
+
 % Inspired by:
 % Three things you can do with LuaTEX that
 % would be extremely painful otherwise
 %   --Paul Isambert; TUGBoat Volume 31, Number 3, 2010
-
-\RequirePackage{kvoptions}
 
 \SetupKeyvalOptions{
   family=LC,
@@ -15,24 +23,29 @@
 
 \DeclareStringOption[0.4pt]{thickness}
 \DeclareStringOption[3pt]{descender}
+\DeclareStringOption[{0,0,1}]{textcolor}
+\DeclareStringOption[{0,0,0}]{linecolor}
 
-\ProcessKeyvalOptions*
+\DeclareVoidOption{show}{\directlua{show_cloze_text = true}}
+\DeclareVoidOption{hide}{\directlua{show_cloze_text = false}}
 
-\RequirePackage{fontspec}
-\RequirePackage{luatexbase-mcb}
-\RequirePackage{color}
+\ProcessKeyvalOptions{LC}
 
-\newcommand{\setluavalues}{\directlua{
-  thickness = '\LC@thickness'
-  descender = '\LC@descender'
-}}
+\newcommand{\pdf@colorstack}[1]{\csname\string\color@#1\endcsname}
+
+\newcommand{\setluavalues}{%
+  \definecolor{clozelinecolor}{rgb}{\LC@linecolor}%
+  \definecolor{clozetextcolor}{rgb}{\LC@textcolor}%
+%
+  \directlua{
+    thickness = '\LC@thickness'
+    descender = '\LC@descender'
+    linecolor = '\pdf@colorstack{clozelinecolor}'
+    textcolor = '\pdf@colorstack{clozetextcolor}'
+  }%
+}
 
 \setluavalues
-
-\directlua{
-  require("luacloze")
-  luatexbase.add_to_callback("post_linebreak_filter", get_lines, "get_lines")
-}
 
 \newcommand{\setcloze}[1]{\setkeys{LC}{#1}\setluavalues}
 
@@ -47,6 +60,7 @@
 % \cloze{Lorem ipsum}
 %%
 \newcommand{\cloze}[1]{%
+  \strut%
   \clozemarker{1}%
   {%
     \clozefont%
@@ -75,31 +89,6 @@
 % \clozefont
 %%
 \newcommand{\clozefont}{\itshape}
-
-%-----------------------------------------------------------------------
-% Colors
-%-----------------------------------------------------------------------
-
-%%
-% \clozecolor
-%%
-\def\clozecolor#1{\csname\string\color@#1\endcsname\space}
-
-%%
-% \clozetextcolor{rgb}{0.2,1,0.9}
-%%
-\newcommand{\clozetextcolor}[2]{
-  \definecolor{clozetextcolor}{#1}{#2}
-  \directlua{clozetextcolor = "\clozecolor{clozetextcolor}"}
-}
-
-%%
-% \clozelinecolor{rgb}{1,0.5,0.7}
-%%
-\newcommand{\clozelinecolor}[2]{
-  \definecolor{clozelinecolor}{#1}{#2}
-  \directlua{clozelinecolor = "\clozecolor{clozelinecolor}"}
-}
 
 %-----------------------------------------------------------------------
 % Helper
