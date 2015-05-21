@@ -2,7 +2,12 @@
 \documentclass{article}
 \usepackage{listings}
 \usepackage{luacloze}
-\lstset{basicstyle=\ttfamily,language=TeX,frame=single,backgroundcolor=\color{yellow}}
+\lstset{
+  basicstyle=\ttfamily,
+  language=TeX,
+  frame=single,
+  backgroundcolor=\color{yellow},
+}
 
 \newcommand{\result}[1]{\noindent\fbox{\begin{minipage}{12cm}#1\end{minipage}}}
 
@@ -24,6 +29,30 @@ incididunt ut labore et dolore magna aliqua.
 elit, sed do eiusmod tempor incididunt ut labore et dolore magna
 aliqua.}
 
+\subsection{Hide cloze text}
+
+\begin{lstlisting}
+\setcloze{hide}
+\end{lstlisting}
+
+\setcloze{hide}
+
+\result{Lorem ipsum \cloze{dolor} sit amet, consectetur adipisicing
+elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+aliqua.}
+
+\subsection{Show cloze text}
+
+\begin{lstlisting}
+\setcloze{show}
+\end{lstlisting}
+
+\setcloze{show}
+
+\result{Lorem ipsum \cloze{dolor} sit amet, consectetur adipisicing
+elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+aliqua.}
+
 %-----------------------------------------------------------------------
 % Cloze line thickness
 %-----------------------------------------------------------------------
@@ -35,10 +64,10 @@ aliqua.}
 %%
 
 \begin{lstlisting}
-\clozelinethickness{0.5pt}
+\setcloze{thickness=0.5pt}
 \end{lstlisting}
 
-\clozelinethickness{0.5pt}
+\setcloze{thickness=0.5pt}
 
 \result{Lorem \cloze{ipsum dolor} sit amet.}
 
@@ -47,10 +76,10 @@ aliqua.}
 %%
 
 \begin{lstlisting}
-\clozelinethickness{1mm}
+\setcloze{thickness=1mm}
 \end{lstlisting}
 
-\clozelinethickness{1mm}
+\setcloze{thickness=1mm}
 
 \result{Lorem \cloze{ipsum dolor} sit amet.}
 
@@ -59,13 +88,12 @@ aliqua.}
 %%
 
 \begin{lstlisting}
-\clozelinethickness{0.15em}
+\setcloze{thickness=0.15em}
 \end{lstlisting}
 
-\clozelinethickness{0.15em}
+\setcloze{thickness=0.15em}
 
 \result{Lorem \cloze{ipsum dolor} sit amet.}
-
 
 %-----------------------------------------------------------------------
 % Descender of the cloze line
@@ -78,11 +106,10 @@ aliqua.}
 %%
 
 \begin{lstlisting}
-\clozedescender{0pt}
+\setcloze{descender=0pt}
 \end{lstlisting}
 
-\clozelinethickness{0.4pt}
-\clozedescender{0pt}
+\setcloze{descender=0pt,thickness=0.4pt}
 
 \result{Lorem \cloze{ipsum dolor} sit amet.}
 
@@ -91,10 +118,10 @@ aliqua.}
 %%
 
 \begin{lstlisting}
-\clozedescender{3pt}
+\setcloze{descender=3pt}
 \end{lstlisting}
 
-\clozedescender{3pt}
+\setcloze{descender=3pt}
 
 \result{Lorem \cloze{ipsum dolor} sit amet.}
 
@@ -104,10 +131,10 @@ aliqua.}
 %%
 
 \begin{lstlisting}
-\clozedescender{-4pt}
+\setcloze{descender=-4pt}
 \end{lstlisting}
 
-\clozedescender{-4pt}
+\setcloze{descender=-4pt}
 
 \result{Lorem \cloze{ipsum dolor} sit amet.}
 \end{document}
