@@ -107,12 +107,13 @@
 %
 % Creates a cloze on one line with a fixed length.
 %%
-\newcommand{\clozefixed}[1]{%
+\newcommand{\clozefixed}[2][]{%
   \directlua{
-    register_callback("post_linebreak_filter", process.clozefixed, "clozefixed")
+    register_callback("pre_linebreak_filter", process.clozefixed, "clozefixed")
   }%
+  \strut
   \clozemarker{begin-clozefixed}%
-  #1%
+  #2%
   \clozemarker{end-clozefixed}
 }
 

@@ -1,9 +1,16 @@
 %!TEX program = lualatex
 \documentclass{article}
 \usepackage{luacloze}
+\usepackage[callback=prelinebreak]{luanodelist}
 
 \begin{document}
 Lorem ipsum \clozefixed{dolor sit amet, consectetur} adipisicing elit,
 sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
 enim ad minim veniam exercitation ullamco.
+
+\begin{enumerate}
+\item \clozefixed{dolor sit amet, consectetur}
+\item \clozefixed{consectetur}
+\item \clozefixed{amet}
+\end{enumerate}
 \end{document}
