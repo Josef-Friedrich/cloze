@@ -8,7 +8,6 @@
 
 \directlua{
   require("luacloze")
-  luatexbase.add_to_callback("post_linebreak_filter", get_lines, "get_lines")
 }
 
 % Inspired by:
@@ -60,6 +59,7 @@
 % \cloze{Lorem ipsum}
 %%
 \newcommand{\cloze}[1]{%
+  \directlua{register_callback("post_linebreak_filter", get_lines, "get_lines")}%
   \strut%
   \clozemarker{begin-cloze}%
   {%

@@ -4,6 +4,13 @@ WHATSIT_USERID = 3121978
 
 show_cloze_text = true
 
+function register_callback(name, func, description)
+  if not is_registered then
+    luatexbase.add_to_callback(name, func, description)
+    is_registered = true
+  end
+end
+
 ---
 --
 function get_lines(head)
