@@ -13,9 +13,23 @@ function register_callback(name, func, description)
   end
 end
 
+process = {}
+
+process.clozeend = function(head)
+  return head
+end
+
+process.clozepar = function(head)
+  return head
+end
+
+process.clozefixed = function(head)
+  return head
+end
+
 ---
 --
-function get_lines(head)
+process.cloze = function(head)
 
   for line in node.traverse_id(node.id("hlist"), head) do
 
