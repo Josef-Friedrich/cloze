@@ -4,10 +4,12 @@ WHATSIT_USERID = 3121978
 
 show_cloze_text = true
 
+is_registered = {}
+
 function register_callback(name, func, description)
-  if not is_registered then
+  if not is_registered[description] then
     luatexbase.add_to_callback(name, func, description)
-    is_registered = true
+    is_registered[description] = true
   end
 end
 
