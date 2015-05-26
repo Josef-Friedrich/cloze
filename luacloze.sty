@@ -61,15 +61,29 @@
 %%
 \newcommand{\cloze}[1]{%
   \strut%
-  \clozemarker{1}%
+  \clozemarker{begin-cloze}%
   {%
     \clozefont%
     \hspace{\clozemargin}%
     #1%
     \hspace{\clozemargin}%
   }%
-  \clozemarker{2}%
+  \clozemarker{end-cloze}%
 }
+
+%%
+% \begin{clozepar}
+% Lorem ipsum.
+% \end{clozepar}
+%%
+
+%%
+% \clozeend{Lorem ipsum}
+%%
+
+%%
+% \clozefixed{Lorem ipsum}
+%%
 
 %%
 % \showclozetext
@@ -99,7 +113,7 @@
 %%
 \newcommand{\clozemarker}[1]{%
   \directlua{
-    local whatsit = whatsit_userdefined(#1)
+    local whatsit = whatsit_userdefined("#1")
     node.write(whatsit)
   }%
 }

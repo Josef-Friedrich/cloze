@@ -25,7 +25,7 @@ function get_lines(head)
 
     while item do
 
-      if check_cloze_marker(item, 1) or INIT_CLOZE then
+      if check_cloze_marker(item, "begin-cloze") or INIT_CLOZE then
 
         colorstack_blue = color_text()
         node.insert_after(line.head, item, colorstack_blue)
@@ -37,7 +37,7 @@ function get_lines(head)
 
           LINE_END = true
 
-          if check_cloze_marker(end_node.next, 2) then
+          if check_cloze_marker(end_node.next, "end-cloze") then
             LINE_END = false
             break
           end
@@ -48,7 +48,7 @@ function get_lines(head)
         local rule_width = node.dimensions(line.glue_set, line.glue_sign, line.glue_order, item, end_node.next)
         local rule = node_rule(rule_width)
         -- Kern.
-        local kern = node.new(node.id("kern"), 1)
+        local kern = node.new(node.id("kern"), "begin-cloze")
         kern.kern = -rule_width
 
         -- Append rule and kern to the node list.
@@ -82,6 +82,7 @@ end -- function
 ---
 --
 function check_cloze_marker(item, value)
+  print(item.value)
   if item.id == node.id('whatsit')
       and item.subtype == 44
       and item.user_id == WHATSIT_USERID
@@ -171,7 +172,7 @@ end
 --
 function whatsit_userdefined(value)
   local node = node.new('whatsit','user_defined')
-  node.type = 100
+  node.type = 115 -- string
   node.user_id = WHATSIT_USERID
   node.value = value
 
