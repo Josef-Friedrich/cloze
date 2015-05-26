@@ -76,14 +76,32 @@
 % Lorem ipsum.
 % \end{clozepar}
 %%
-
+\newenvironment{clozepar}%
+{\clozemarker{begin-clozepar}}%
+{\par\clozemarker{end-clozepar}}
 %%
 % \clozeend{Lorem ipsum}
+%
+% This command forces a line break and creates a cloze line that extends
+% to the end of the text line.
 %%
+\newcommand{\clozeend}[1]{%
+  \clozemarker{begin-clozeend}%
+  #1%
+  \newline%
+  \clozemarker{end-clozeend}
+}
 
 %%
 % \clozefixed{Lorem ipsum}
+%
+% Creates a cloze on one line with a fixed length.
 %%
+\newcommand{\clozefixed}[1]{%
+  \clozemarker{begin-clozefixed}%
+  #1%
+  \clozemarker{end-clozefixed}
+}
 
 %%
 % \showclozetext
