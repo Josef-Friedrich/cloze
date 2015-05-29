@@ -72,9 +72,6 @@ process_cloze = function(head)
 
         local rule_width = node.dimensions(line.glue_set, line.glue_sign, line.glue_order, item, end_node.next)
         local rule = create.rule(rule_width)
-        -- Kern.
-        local kern = node.new(node.id("kern"), "begin-cloze")
-        kern.kern = -rule_width
 
         -- Append rule and kern to the node list.
         colorstack_rule = create.color('line')
@@ -84,7 +81,7 @@ process_cloze = function(head)
         newitem, current = node.insert_after(head, rule, colorstack_reset)
 
         if show_cloze_text then
-          node.insert_after(head, colorstack_reset, kern)
+          node.insert_after(head, colorstack_reset, create.kern(-rule_width))
           colorstack_reset = create.whatsit_colorstack()
           node.insert_after(head, end_node, colorstack_reset)
         else

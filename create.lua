@@ -52,6 +52,12 @@ function create.rule(width)
   return node
 end
 
+function create.kern(kern)
+  local node = node.new(node.id('kern'))
+  node.kern = kern
+  return node
+end
+
 ---
 --
 function create.whatsit_userdefined(value)
