@@ -39,7 +39,7 @@ process_cloze = function(head)
     -- user defined whatsit. Now we can add rule, color etc. nodes AFTER
     -- the first node of a line not BEFORE. AFTER is much more easier.
     current = line.head
-    node.insert_before(current, current, create.whatsit_userdefined(99))
+    node.insert_before(current, current, create.whatsit_userdefined('cloze-anchor'))
     line.head = current.prev
 
     if LINE_END then
@@ -50,10 +50,8 @@ process_cloze = function(head)
 
     while item do
 
-      if check_cloze_marker(item, "begin-cloze") or INIT_CLOZE then
-
-        colorstack_blue = create.color('text')
-        node.insert_after(line.head, item, colorstack_blue)
+      if check_cloze_marker(item, "cloze-begin") or INIT_CLOZE then
+        node.insert_after(line.head, item, create.color('text'))
 
         INIT_CLOZE = false
 
@@ -62,7 +60,7 @@ process_cloze = function(head)
 
           LINE_END = true
 
-          if check_cloze_marker(end_node.next, "end-cloze") then
+          if check_cloze_marker(end_node.next, "cloze-end") then
             LINE_END = false
             break
           end
