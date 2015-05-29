@@ -1,3 +1,5 @@
+create = require("create")
+
 local GLUE = node.id("glue")
 
 WHATSIT_USERID = 3121978
@@ -37,7 +39,7 @@ process_cloze = function(head)
     -- user defined whatsit. Now we can add rule, color etc. nodes AFTER
     -- the first node of a line not BEFORE. AFTER is much more easier.
     current = line.head
-    node.insert_before(current, current, whatsit_userdefined(99))
+    node.insert_before(current, current, create.whatsit_userdefined(99))
     line.head = current.prev
 
     if LINE_END then
@@ -50,7 +52,7 @@ process_cloze = function(head)
 
       if check_cloze_marker(item, "begin-cloze") or INIT_CLOZE then
 
-        colorstack_blue = color_text()
+        colorstack_blue = create.color('text')
         node.insert_after(line.head, item, colorstack_blue)
 
         INIT_CLOZE = false
@@ -69,21 +71,21 @@ process_cloze = function(head)
         end
 
         local rule_width = node.dimensions(line.glue_set, line.glue_sign, line.glue_order, item, end_node.next)
-        local rule = node_rule(rule_width)
+        local rule = create.rule(rule_width)
         -- Kern.
         local kern = node.new(node.id("kern"), "begin-cloze")
         kern.kern = -rule_width
 
         -- Append rule and kern to the node list.
-        colorstack_rule = color_rule()
+        colorstack_rule = create.color('line')
         node.insert_after(head, item, colorstack_rule)
         node.insert_after(head, colorstack_rule, rule)
-        colorstack_reset = node_colorstack()
+        colorstack_reset = create.whatsit_colorstack()
         newitem, current = node.insert_after(head, rule, colorstack_reset)
 
         if show_cloze_text then
           node.insert_after(head, colorstack_reset, kern)
-          colorstack_reset = node_colorstack()
+          colorstack_reset = create.whatsit_colorstack()
           node.insert_after(head, end_node, colorstack_reset)
         else
           current.next = end_node.next
@@ -113,90 +115,4 @@ function check_cloze_marker(item, value)
   else
     return false
   end
-end
-
----
---
-function color_rule()
-
-  local data
-
-  if not options.linecolor then
-    -- black
-    data = '0 0 0 rg 0 0 0 RG'
-
-  else
-    data = options.linecolor
-  end
-
-  local node = node_colorstack(data)
-
-  return node
-end
-
----
---
-function color_text()
-  local data
-
-  if not options.textcolor then
-    -- black
-    data = '0 0 1 rg 0 0 1 RG'
-
-  else
-    data = options.textcolor
-  end
-
-  local node = node_colorstack(data)
-
-  return node
-end
-
----
---
-function node_rule(width)
-  -- Rule.
-  local node = node.new(node.id('rule'))
-
-  -- thickness = depth - height
-  if not options.descender then
-    options.descender = "3.4pt"
-  end
-
-  if not options.thickness then
-    options.thickness = "0.4pt"
-  end
-
-  local height = tex.sp(options.thickness) - tex.sp(options.descender)
-
-  node.depth = tex.sp(options.descender) -- 3.4pt
-  node.height = tex.sp(height) -- -3pt
-  node.width = width
-
-  return node
-end
-
--- Whatsit: colorstack
-function node_colorstack(data)
-  if not data then
-    -- black
-    data = '0 0 0 rg 0 0 0 RG'
-  end
-
-  local node = node.new('whatsit', 'pdf_colorstack')
-  node.stack = 0
-  node.data = data
-
-  return node
-end
-
----
---
-function whatsit_userdefined(value)
-  local node = node.new('whatsit','user_defined')
-  node.type = 115 -- string
-  node.user_id = WHATSIT_USERID
-  node.value = value
-
-  return node
 end

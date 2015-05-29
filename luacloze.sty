@@ -8,6 +8,7 @@
 
 \directlua{
   require("luacloze")
+  create = require("create")
 }
 
 % Inspired by:
@@ -146,7 +147,7 @@
 %%
 \newcommand{\clozemarker}[1]{%
   \directlua{
-    local whatsit = whatsit_userdefined("#1")
+    local whatsit = create.whatsit_userdefined("#1")
     node.write(whatsit)
   }%
 }
