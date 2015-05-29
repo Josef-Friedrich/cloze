@@ -6,7 +6,7 @@ show_cloze_text = true
 
 is_registered = {}
 
-function register_callback(name, func, description)
+function cloze_register_callback(name, func, description)
   if not is_registered[description] then
     luatexbase.add_to_callback(name, func, description)
     is_registered[description] = true
@@ -23,13 +23,13 @@ process.clozepar = function(head)
   return head
 end
 
-process.clozefixed = function(head)
+process_clozefixed = function(head)
   return head
 end
 
 ---
 --
-process.cloze = function(head)
+process_cloze = function(head)
 
   for line in node.traverse_id(node.id("hlist"), head) do
 
@@ -105,7 +105,6 @@ end -- function
 ---
 --
 function check_cloze_marker(item, value)
-  print(item.value)
   if item.id == node.id('whatsit')
       and item.subtype == 44
       and item.user_id == WHATSIT_USERID
@@ -122,12 +121,12 @@ function color_rule()
 
   local data
 
-  if not linecolor then
+  if not options.linecolor then
     -- black
     data = '0 0 0 rg 0 0 0 RG'
 
   else
-    data = linecolor
+    data = options.linecolor
   end
 
   local node = node_colorstack(data)
@@ -140,12 +139,12 @@ end
 function color_text()
   local data
 
-  if not textcolor then
+  if not options.textcolor then
     -- black
     data = '0 0 1 rg 0 0 1 RG'
 
   else
-    data = textcolor
+    data = options.textcolor
   end
 
   local node = node_colorstack(data)
@@ -160,17 +159,17 @@ function node_rule(width)
   local node = node.new(node.id('rule'))
 
   -- thickness = depth - height
-  if not descender then
-    descender = "3.4pt"
+  if not options.descender then
+    options.descender = "3.4pt"
   end
 
-  if not thickness then
-    thickness = "0.4pt"
+  if not options.thickness then
+    options.thickness = "0.4pt"
   end
 
-  height = tex.sp(thickness) - tex.sp(descender)
+  local height = tex.sp(options.thickness) - tex.sp(options.descender)
 
-  node.depth = tex.sp(descender) -- 3.4pt
+  node.depth = tex.sp(options.descender) -- 3.4pt
   node.height = tex.sp(height) -- -3pt
   node.width = width
 

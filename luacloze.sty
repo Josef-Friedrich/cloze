@@ -37,10 +37,11 @@
   \definecolor{clozetextcolor}{rgb}{\LC@textcolor}%
 %
   \directlua{
-    thickness = '\LC@thickness'
-    descender = '\LC@descender'
-    linecolor = '\pdf@colorstack{clozelinecolor}'
-    textcolor = '\pdf@colorstack{clozetextcolor}'
+    options = {}
+    options.thickness = '\LC@thickness'
+    options.descender = '\LC@descender'
+    options.linecolor = '\pdf@colorstack{clozelinecolor}'
+    options.textcolor = '\pdf@colorstack{clozetextcolor}'
   }%
 }
 
@@ -60,7 +61,7 @@
 %%
 \newcommand{\cloze}[1]{%
   \directlua{
-    register_callback("post_linebreak_filter", process.cloze, "cloze")
+    cloze_register_callback("post_linebreak_filter", process_cloze, "cloze")
   }%
   \strut%
   \clozemarker{begin-cloze}%
@@ -81,7 +82,7 @@
 \newenvironment{clozepar}%
 {%
   \directlua{
-    register_callback("post_linebreak_filter", process.clozepar, "clozepar")
+    cloze_register_callback("post_linebreak_filter", process.clozepar, "clozepar")
   }%
   \clozemarker{begin-clozepar}%
 }%
@@ -94,7 +95,7 @@
 %%
 \newcommand{\clozeend}[1]{%
   \directlua{
-    register_callback("post_linebreak_filter", process.clozeend, "clozeend")
+    cloze_register_callback("post_linebreak_filter", process.clozeend, "clozeend")
   }%
   \clozemarker{begin-clozeend}%
   #1%
@@ -109,7 +110,7 @@
 %%
 \newcommand{\clozefixed}[2][]{%
   \directlua{
-    register_callback("pre_linebreak_filter", process.clozefixed, "clozefixed")
+    cloze_register_callback("pre_linebreak_filter", process_clozefixed, "clozefixed")
   }%
   \strut
   \clozemarker{begin-clozefixed}%
