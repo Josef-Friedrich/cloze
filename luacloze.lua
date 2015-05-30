@@ -41,11 +41,11 @@ process_clozepar = function(head)
 
     while current do
       -- print(current)
-      if check_cloze_marker(current, 'clozepar-begin') then
+      if check_marker(current, 'clozepar-begin') then
         -- print('begin')
       end
 
-      if check_cloze_marker(current, 'clozepar-end') then
+      if check_marker(current, 'clozepar-end') then
         -- print('end')
       end
       current = current.next
@@ -60,11 +60,15 @@ end
 --
 ---
 process_clozefixed = function(head)
-  print(head)
-  for current in node.traverse_id(node.id('whatsit'), head) do
 
-    if check_cloze_marker(current, 'clozefixed-begin') then
-      make_clozefixed(head, current)
+  B, E = false
+  for current in node.traverse_id(node.id('whatsit'), head) do
+    if not B then B = get_begin(current, 'clozefixed') end
+    if not E then E = get_end(current, 'clozefixed') end
+
+    if B and E then
+      make_clozefixed(head, B, E)
+      B, E = false
     end
   end
 
@@ -73,10 +77,10 @@ end
 
 -- B whatsit begin marker
 -- E whatsit end marker
-function make_clozefixed(head, current)
-  print(head)
-  head, new = create.rule_colored(head, current, tex.sp("5cm"))
-  head, new = node.insert_after(head, new, create.kern(-tex.sp("5cm")))
+function make_clozefixed(head, B, E)
+  width = node.dimensions(B,E)
+  head, new = create.rule_colored(head, B, width)
+  head, new = node.insert_after(head, new, create.kern(-width))
 end
 
 ---
@@ -101,7 +105,7 @@ process_cloze = function(head)
 
     while item do
 
-      if check_cloze_marker(item, "cloze-begin") or INIT_CLOZE then
+      if check_marker(item, "cloze-begin") or INIT_CLOZE then
         node.insert_after(line.head, item, create.color('text'))
 
         INIT_CLOZE = false
@@ -111,7 +115,7 @@ process_cloze = function(head)
 
           LINE_END = true
 
-          if check_cloze_marker(end_node.next, "cloze-end") then
+          if check_marker(end_node.next, "cloze-end") then
             LINE_END = false
             break
           end
@@ -146,7 +150,7 @@ end -- function
 
 ---
 --
-function check_cloze_marker(item, value)
+function check_marker(item, value)
   if item.id == node.id('whatsit')
       and item.subtype == 44
       and item.user_id == WHATSIT_USERID
@@ -155,4 +159,20 @@ function check_cloze_marker(item, value)
   else
     return false
   end
+end
+
+function get_begin(current, value)
+    if check_marker(current, value .. '-begin') then
+      return current
+    else
+      return false
+    end
+end
+
+function get_end(current, value)
+    if check_marker(current, value .. '-end') then
+      return current
+    else
+      return false
+    end
 end
