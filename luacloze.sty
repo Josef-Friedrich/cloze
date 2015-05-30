@@ -79,15 +79,15 @@
 % \begin{clozepar}
 % Lorem ipsum.
 % \end{clozepar}
-%%
 \newenvironment{clozepar}%
 {%
   \directlua{
-    cloze_register_callback("post_linebreak_filter", process.clozepar, "clozepar")
+    cloze_register_callback("post_linebreak_filter", process_clozepar, "clozepar")
   }%
-  \clozemarker{begin-clozepar}%
+  \strut\clozemarker{clozepar-begin}%
 }%
-{\par\clozemarker{end-clozepar}}
+{\clozemarker{clozepar-end}\par}
+
 %%
 % \clozeend{Lorem ipsum}
 %
@@ -101,6 +101,7 @@
   \clozemarker{begin-clozeend}%
   #1%
   \newline%
+  \strut%
   \clozemarker{end-clozeend}
 }
 
@@ -113,10 +114,10 @@
   \directlua{
     cloze_register_callback("pre_linebreak_filter", process_clozefixed, "clozefixed")
   }%
-  \strut
-  \clozemarker{begin-clozefixed}%
+  \strut%
+  \clozemarker{clozefixed-begin}%
   #2%
-  \clozemarker{end-clozefixed}
+  \clozemarker{clozefixed-end}
 }
 
 %%

@@ -28,6 +28,24 @@ function create.color(option)
   return create.whatsit_colorstack(data)
 end
 
+
+function create.rule_colored(head, current, width)
+
+  local color = {}
+
+  color.line = create.color('line')
+  color.reset = create.whatsit_colorstack()
+
+  -- Append rule and kern to the node list.
+  local rule = create.rule(width)
+
+  head, new = node.insert_after(head, current, color.line)
+  head, new = node.insert_after(head, new, rule)
+  head, new = node.insert_after(head, new, color.reset)
+
+  return head, new
+end
+
 ---
 --
 function create.rule(width)
@@ -55,6 +73,12 @@ end
 function create.kern(kern)
   local node = node.new(node.id('kern'))
   node.kern = kern
+  return node
+end
+
+function create.glyph()
+  local node = node.new(node.id('glyph'))
+  node.char = 34
   return node
 end
 

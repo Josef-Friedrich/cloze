@@ -15,22 +15,91 @@ function cloze_register_callback(name, func, description)
   end
 end
 
-process = {}
-
-process.clozeend = function(head)
-  return head
-end
-
-process.clozepar = function(head)
-  return head
-end
-
-process_clozefixed = function(head)
+---
+--
+---
+process_clozeend = function(head)
   return head
 end
 
 ---
 --
+---
+process_clozepar = function(head)
+
+  for line in node.traverse_id(node.id("hlist"), head) do
+
+    if line.subtype == 1 then
+      local rule = create.rule(line.width)
+      print(rule)
+    end
+
+    current = line.head
+
+    node.insert_after(current, current, create.rule("20cm"))
+
+
+    while current do
+      -- print(current)
+      if check_cloze_marker(current, 'clozepar-begin') then
+        -- print('begin')
+      end
+
+      if check_cloze_marker(current, 'clozepar-end') then
+        -- print('end')
+      end
+      current = current.next
+    end
+
+  end
+
+  return head
+end
+
+---
+--
+---
+process_clozefixed = function(head)
+  for n in node.traverse_id(node.id('whatsit'), head) do
+
+    if n.char == 101 then
+      node.remove(head,n)
+    end
+
+    if check_cloze_marker(n, 'clozefixed-begin') then
+      head, new = node.insert_after(head, n, create.rule(tex.sp("5cm")))
+      node.insert_after(head, new, create.kern(-tex.sp("5cm")))
+    end
+
+    -- while current do
+    --   print(current)
+    --   if check_cloze_marker(current, 'clozefixed-begin') then
+    --     head = node.insert_after(head, current, create.glyph())
+    --   end
+
+    --   if check_cloze_marker(current, 'clozefixed-end') then
+    --     -- print('end')
+    --   end
+    --   current = current.next
+    -- end
+
+  end
+
+  return head
+end
+
+function remove_e(head)
+  for n in node.traverse_id(37,head) do
+    if n.char == 101 then
+      node.remove(head,n)
+    end
+  end
+  return head
+end
+
+---
+--
+---
 process_cloze = function(head)
 
   for line in node.traverse_id(node.id("hlist"), head) do
@@ -69,17 +138,11 @@ process_cloze = function(head)
         end
 
         local rule_width = node.dimensions(line.glue_set, line.glue_sign, line.glue_order, item, end_node.next)
-        local rule = create.rule(rule_width)
 
-        -- Append rule and kern to the node list.
-        colorstack_rule = create.color('line')
-        node.insert_after(head, item, colorstack_rule)
-        node.insert_after(head, colorstack_rule, rule)
-        colorstack_reset = create.whatsit_colorstack()
-        newitem, current = node.insert_after(head, rule, colorstack_reset)
+        head, current = create.rule_colored(head, item, rule_width)
 
         if show_cloze_text then
-          node.insert_after(head, colorstack_reset, create.kern(-rule_width))
+          node.insert_after(head, current, create.kern(-rule_width))
           colorstack_reset = create.whatsit_colorstack()
           node.insert_after(head, end_node, colorstack_reset)
         else
