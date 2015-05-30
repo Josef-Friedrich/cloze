@@ -60,41 +60,23 @@ end
 --
 ---
 process_clozefixed = function(head)
-  for n in node.traverse_id(node.id('whatsit'), head) do
+  print(head)
+  for current in node.traverse_id(node.id('whatsit'), head) do
 
-    if n.char == 101 then
-      node.remove(head,n)
+    if check_cloze_marker(current, 'clozefixed-begin') then
+      make_clozefixed(head, current)
     end
-
-    if check_cloze_marker(n, 'clozefixed-begin') then
-      head, new = node.insert_after(head, n, create.rule(tex.sp("5cm")))
-      node.insert_after(head, new, create.kern(-tex.sp("5cm")))
-    end
-
-    -- while current do
-    --   print(current)
-    --   if check_cloze_marker(current, 'clozefixed-begin') then
-    --     head = node.insert_after(head, current, create.glyph())
-    --   end
-
-    --   if check_cloze_marker(current, 'clozefixed-end') then
-    --     -- print('end')
-    --   end
-    --   current = current.next
-    -- end
-
   end
 
   return head
 end
 
-function remove_e(head)
-  for n in node.traverse_id(37,head) do
-    if n.char == 101 then
-      node.remove(head,n)
-    end
-  end
-  return head
+-- B whatsit begin marker
+-- E whatsit end marker
+function make_clozefixed(head, current)
+  print(head)
+  head, new = create.rule_colored(head, current, tex.sp("5cm"))
+  head, new = node.insert_after(head, new, create.kern(-tex.sp("5cm")))
 end
 
 ---

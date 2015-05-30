@@ -137,4 +137,20 @@ aliqua.}
 \setcloze{descender=-4pt}
 
 \result{Lorem \cloze{ipsum dolor} sit amet.}
+
+
+\renewcommand{\b}[1]{\fbox{#1}}
+
+\begin{itemize}
+\item B: Begin whatsit user\_definded
+\item cl: Color for cloze line.
+\item R: Rule
+\item cr: Color reset (Black).
+\item K: kern
+\item a,b,c: Cloze text
+\item E: Begin whatsit user\_definded
+\end{itemize}
+
+\b{E} \b{cl} \b{R} \b{cr} \b{K} \b{a} \b{b} \b{c} \b{K} \b{B}
+
 \end{document}
