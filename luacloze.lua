@@ -70,15 +70,17 @@ end
 --
 ---
 function process_fix(head)
+  -- n = node
+  local n = {}
 
-  b, e = false
+  n.start, n.stop = false
   for current in node.traverse_id(node.id('whatsit'), head) do
-    if not b then b = get_begin(current, 'clozefix') end
-    if not e then e = get_end(current, 'clozefix') end
+    if not n.start then n.start = get_begin(current, 'clozefix') end
+    if not n.stop then n.stop = get_end(current, 'clozefix') end
 
-    if b and e then
-      make_clozefix(head, b, e)
-      b, e = false
+    if n.start and n.stop then
+      make_clozefix(head, n.start, n.stop)
+      n.start, n.stop = false
     end
   end
 
