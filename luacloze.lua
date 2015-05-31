@@ -75,8 +75,8 @@ function process_fix(head)
 
   n.start, n.stop = false
   for current in node.traverse_id(node.id('whatsit'), head) do
-    if not n.start then n.start = get_begin(current, 'clozefix') end
-    if not n.stop then n.stop = get_end(current, 'clozefix') end
+    if not n.start then n.start = get_start(current, 'clozefix') end
+    if not n.stop then n.stop = get_stop(current, 'clozefix') end
 
     if n.start and n.stop then
       make_clozefix(head, n.start, n.stop)
@@ -224,7 +224,7 @@ function check_marker(item, value)
   end
 end
 
-function get_begin(current, value)
+function get_start(current, value)
     if check_marker(current, value .. '-begin') then
       return current
     else
@@ -232,7 +232,7 @@ function get_begin(current, value)
     end
 end
 
-function get_end(current, value)
+function get_stop(current, value)
     if check_marker(current, value .. '-end') then
       return current
     else
