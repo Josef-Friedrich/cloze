@@ -61,26 +61,46 @@ end
 ---
 process_clozefixed = function(head)
 
-  B, E = false
+  b, e = false
   for current in node.traverse_id(node.id('whatsit'), head) do
-    if not B then B = get_begin(current, 'clozefixed') end
-    if not E then E = get_end(current, 'clozefixed') end
+    if not b then b = get_begin(current, 'clozefixed') end
+    if not e then e = get_end(current, 'clozefixed') end
 
-    if B and E then
-      make_clozefixed(head, B, E)
-      B, E = false
+    if b and e then
+      make_clozefixed(head, b, e)
+      b, e = false
     end
   end
 
   return head
 end
 
--- B whatsit begin marker
--- E whatsit end marker
-function make_clozefixed(head, B, E)
-  width = node.dimensions(B,E)
-  head, new = create.rule_colored(head, B, width)
-  head, new = node.insert_after(head, new, create.kern(-width))
+-- b whatsit begin marker
+-- e whatsit end marker
+-- t tmp
+function make_clozefixed(head,b,e)
+  local t = {}
+  t.text_width = node.dimensions(b,e)
+
+  t.align = 'r'
+  t.cloze_length = tex.sp("8cm")
+
+  if t.align == 'r' then
+    t.begin_kern = - t.text_width
+    t.end_kern = 0
+  elseif t.align == 'c' then
+    t.half = (t.cloze_length - t.text_width) / 2
+    t.begin_kern = - t.half - t.text_width
+    t.end_kern = t.half
+  else
+    t.begin_kern = -t.cloze_length
+    t.end_kern = t.cloze_length - t.text_width
+  end
+
+  head, new = create.rule_colored(head,b,t.cloze_length)
+  head, new = node.insert_after(head,new,create.kern(t.begin_kern))
+  head, new = node.insert_before(head,e,create.kern(t.end_kern))
+
 end
 
 ---
