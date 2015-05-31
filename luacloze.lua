@@ -18,14 +18,14 @@ end
 ---
 --
 ---
-process_clozeend = function(head)
+function process_clozeend(head)
   return head
 end
 
 ---
 --
 ---
-process_clozepar = function(head)
+function process_clozepar(head)
 
   for line in node.traverse_id(node.id("hlist"), head) do
 
@@ -59,7 +59,7 @@ end
 ---
 --
 ---
-process_clozefixed = function(head)
+function process_clozefixed(head)
 
   b, e = false
   for current in node.traverse_id(node.id('whatsit'), head) do
@@ -82,31 +82,32 @@ function make_clozefixed(head,b,e)
   local t = {}
   t.text_width = node.dimensions(b,e)
 
-  t.align = 'r'
-  t.cloze_length = tex.sp("8cm")
+  t.align = 'l'
+  t.length = tex.sp("8cm")
 
   if t.align == 'r' then
     t.begin_kern = - t.text_width
     t.end_kern = 0
   elseif t.align == 'c' then
-    t.half = (t.cloze_length - t.text_width) / 2
+    t.half = (t.length - t.text_width) / 2
     t.begin_kern = - t.half - t.text_width
     t.end_kern = t.half
   else
-    t.begin_kern = -t.cloze_length
-    t.end_kern = t.cloze_length - t.text_width
+    t.begin_kern = -t.length
+    t.end_kern = t.length - t.text_width
   end
 
-  head, new = create.rule_colored(head,b,t.cloze_length)
+  -- W[b] W[linecolor] R[length] W[colorreset] K[begin_kern]
+  --   cloze test K[end_kern] W[e]
+  head, new = create.rule_colored(head,b,t.length)
   head, new = node.insert_after(head,new,create.kern(t.begin_kern))
   head, new = node.insert_before(head,e,create.kern(t.end_kern))
-
 end
 
 ---
 --
 ---
-process_cloze = function(head)
+function process_cloze(head)
 
   for line in node.traverse_id(node.id("hlist"), head) do
 
