@@ -1,10 +1,11 @@
 create = require("create")
 
 local GLUE = node.id("glue")
+options = {}
 
 WHATSIT_USERID = 3121978
 
-show_cloze_text = true
+options.show_text = true
 
 is_registered = {}
 
@@ -156,7 +157,7 @@ function process_basic(head)
 
         head, current = create.rule_colored(head, item, rule_width)
 
-        if show_cloze_text then
+        if options.show_text then
           node.insert_after(head, current, create.kern(-rule_width))
           colorstack_reset = create.whatsit_colorstack()
           node.insert_after(head, end_node, colorstack_reset)

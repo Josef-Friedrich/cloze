@@ -26,8 +26,8 @@
 \DeclareStringOption[{0,0,1}]{textcolor}
 \DeclareStringOption[{0,0,0}]{linecolor}
 
-\DeclareVoidOption{show}{\directlua{show_cloze_text = true}}
-\DeclareVoidOption{hide}{\directlua{show_cloze_text = false}}
+\DeclareVoidOption{show}{\directlua{options.show_text = true}}
+\DeclareVoidOption{hide}{\directlua{options.show_text = false}}
 
 \ProcessKeyvalOptions{LC}
 
@@ -115,12 +115,12 @@
 %%
 % \showclozetext
 %%
-\newcommand{\showclozetext}{\directlua{show_cloze_text = true}}
+\newcommand{\showclozetext}{\directlua{options.show_text = true}}
 
 %%
 % \hideclozetext
 %%
-\newcommand{\hideclozetext}{\directlua{show_cloze_text = false}}
+\newcommand{\hideclozetext}{\directlua{options.show_text = false}}
 
 %-----------------------------------------------------------------------
 % Formats
