@@ -61,9 +61,7 @@
 % \cloze{Lorem ipsum}
 %%
 \newcommand{\cloze}[1]{%
-  \directlua{
-    cloze_register_callback("post_linebreak_filter", process_cloze, "cloze")
-  }%
+  \directlua{register("basic")}%%
   \strut%
   \clozemarker{cloze-begin}%
   {%
@@ -81,9 +79,7 @@
 % Creates a cloze on one line with a fixed length.
 %%
 \newcommand{\clozefix}[2][]{%
-  \directlua{
-    cloze_register_callback("pre_linebreak_filter", process_clozefix, "clozefix")
-  }%
+  \directlua{register("fix")}%
   \strut%
   \clozemarker{clozefix-begin}%
   #2%
@@ -96,9 +92,7 @@
 % \end{clozepar}
 \newenvironment{clozepar}%
 {%
-  \directlua{
-    cloze_register_callback("post_linebreak_filter", process_clozepar, "clozepar")
-  }%
+  \directlua{register("par")}%
   \strut\clozemarker{clozepar-begin}%
 }%
 {\clozemarker{clozepar-end}\par}
@@ -110,9 +104,7 @@
 % to the end of the text line.
 %%
 \newcommand{\clozeend}[1]{%
-  \directlua{
-    cloze_register_callback("post_linebreak_filter", process.clozeend, "clozeend")
-  }%
+  \directlua{register("end")}%%
   \clozemarker{begin-clozeend}%
   #1%
   \newline%

@@ -8,24 +8,32 @@ show_cloze_text = true
 
 is_registered = {}
 
-function cloze_register_callback(name, func, description)
-  if not is_registered[description] then
-    luatexbase.add_to_callback(name, func, description)
-    is_registered[description] = true
+function register(mode)
+  if not is_registered[mode] then
+    if mode == 'basic' then
+      luatexbase.add_to_callback('post_linebreak_filter', process_basic, mode)
+    elseif mode == 'fix' then
+      luatexbase.add_to_callback('pre_linebreak_filter', process_fix, mode)
+    elseif mode == 'end' then
+      luatexbase.add_to_callback('post_linebreak_filter', process_end, mode)
+    else
+      luatexbase.add_to_callback('post_linebreak_filter', process_par, mode)
+    end
+    is_registered[mode] = true
   end
 end
 
 ---
 --
 ---
-function process_clozeend(head)
+function process_end(head)
   return head
 end
 
 ---
 --
 ---
-function process_clozepar(head)
+function process_par(head)
 
   for line in node.traverse_id(node.id("hlist"), head) do
 
@@ -59,7 +67,7 @@ end
 ---
 --
 ---
-function process_clozefix(head)
+function process_fix(head)
 
   b, e = false
   for current in node.traverse_id(node.id('whatsit'), head) do
@@ -107,7 +115,7 @@ end
 ---
 --
 ---
-function process_cloze(head)
+function process_basic(head)
 
   for line in node.traverse_id(node.id("hlist"), head) do
 
