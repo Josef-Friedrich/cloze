@@ -59,15 +59,15 @@ end
 ---
 --
 ---
-function process_clozefixed(head)
+function process_clozefix(head)
 
   b, e = false
   for current in node.traverse_id(node.id('whatsit'), head) do
-    if not b then b = get_begin(current, 'clozefixed') end
-    if not e then e = get_end(current, 'clozefixed') end
+    if not b then b = get_begin(current, 'clozefix') end
+    if not e then e = get_end(current, 'clozefix') end
 
     if b and e then
-      make_clozefixed(head, b, e)
+      make_clozefix(head, b, e)
       b, e = false
     end
   end
@@ -78,7 +78,7 @@ end
 -- b whatsit begin marker
 -- e whatsit end marker
 -- t tmp
-function make_clozefixed(head,b,e)
+function make_clozefix(head,b,e)
   local t = {}
   t.text_width = node.dimensions(b,e)
 
