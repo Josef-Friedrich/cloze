@@ -51,11 +51,11 @@ function process_par(head)
 
     while current do
       -- print(current)
-      if check_marker(current, 'clozepar-begin') then
+      if check_marker(current, 'clozepar-start') then
         -- print('begin')
       end
 
-      if check_marker(current, 'clozepar-end') then
+      if check_marker(current, 'clozepar-stop') then
         -- print('end')
       end
       current = current.next
@@ -168,7 +168,7 @@ function process_basic(head)
 
     while item do
 
-      if check_marker(item, "cloze-begin") or INIT_CLOZE then
+      if check_marker(item, "cloze-start") or INIT_CLOZE then
         node.insert_after(line.head, item, create.color('text'))
 
         INIT_CLOZE = false
@@ -178,7 +178,7 @@ function process_basic(head)
 
           LINE_END = true
 
-          if check_marker(end_node.next, "cloze-end") then
+          if check_marker(end_node.next, "cloze-stop") then
             LINE_END = false
             break
           end
@@ -225,7 +225,7 @@ function check_marker(item, value)
 end
 
 function get_start(current, value)
-    if check_marker(current, value .. '-begin') then
+    if check_marker(current, value .. '-start') then
       return current
     else
       return false
@@ -233,7 +233,7 @@ function get_start(current, value)
 end
 
 function get_stop(current, value)
-    if check_marker(current, value .. '-end') then
+    if check_marker(current, value .. '-stop') then
       return current
     else
       return false

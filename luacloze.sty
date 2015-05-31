@@ -62,14 +62,14 @@
 \newcommand{\cloze}[1]{%
   \directlua{register("basic")}%%
   \strut%
-  \clozemarker{cloze-begin}%
+  \clozemarker{cloze-start}%
   {%
     \clozefont%
     \hspace{\clozemargin}%
     #1%
     \hspace{\clozemargin}%
   }%
-  \clozemarker{cloze-end}%
+  \clozemarker{cloze-stop}%
 }
 
 %%
@@ -80,12 +80,12 @@
 \newcommand{\clozefix}[2][]{%
   \directlua{register("fix")}%
   \strut%
-  \clozemarker{clozefix-begin}%
+  \clozemarker{clozefix-start}%
   {%
     \clozefont%
     #2%
   }%
-  \clozemarker{clozefix-end}%
+  \clozemarker{clozefix-stop}%
 }
 
 %%
@@ -95,9 +95,9 @@
 \newenvironment{clozepar}%
 {%
   \directlua{register("par")}%
-  \strut\clozemarker{clozepar-begin}%
+  \strut\clozemarker{clozepar-start}%
 }%
-{\clozemarker{clozepar-end}\par}
+{\clozemarker{clozepar-stop}\par}
 
 %%
 % \clozeend{Lorem ipsum}
@@ -144,5 +144,14 @@
   \directlua{
     local whatsit = create.whatsit_userdefined("#1")
     node.write(whatsit)
+  }%
+}
+
+%%
+% \clozemarker
+%%
+\newcommand{\optionstable}{%
+  \directlua{
+    node.write(create.options_table())
   }%
 }
