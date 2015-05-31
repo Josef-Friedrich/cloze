@@ -38,7 +38,6 @@
   \definecolor{clozetextcolor}{rgb}{\LC@textcolor}%
 %
   \directlua{
-    options = {}
     options.thickness = '\LC@thickness'
     options.descender = '\LC@descender'
     options.linecolor = '\pdf@colorstack{clozelinecolor}'
@@ -82,8 +81,11 @@
   \directlua{register("fix")}%
   \strut%
   \clozemarker{clozefix-begin}%
-  #2%
-  \clozemarker{clozefix-end}
+  {%
+    \clozefont%
+    #2%
+  }%
+  \clozemarker{clozefix-end}%
 }
 
 %%

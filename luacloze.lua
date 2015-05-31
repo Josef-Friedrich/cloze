@@ -1,7 +1,8 @@
 create = require("create")
 
-local GLUE = node.id("glue")
 options = {}
+
+local GLUE = node.id("glue")
 
 WHATSIT_USERID = 3121978
 
@@ -87,30 +88,60 @@ end
 -- b whatsit begin marker
 -- e whatsit end marker
 -- t tmp
-function make_clozefix(head,b,e)
-  local t = {}
-  t.text_width = node.dimensions(b,e)
+function make_clozefix(head, start, stop)
+  -- l = length
+  local l = {}
+  l.length = tex.sp("8cm")
 
-  t.align = 'l'
-  t.length = tex.sp("8cm")
+  -- n = node
+  local n = {}
+  -- loption = local option
+  n.start = start
+  n.stop = stop
 
-  if t.align == 'r' then
-    t.begin_kern = - t.text_width
-    t.end_kern = 0
-  elseif t.align == 'c' then
-    t.half = (t.length - t.text_width) / 2
-    t.begin_kern = - t.half - t.text_width
-    t.end_kern = t.half
+  local loption = {}
+  loption.align = 'l'
+
+  l.text_width = node.dimensions(n.start, n.stop)
+
+  if loption.align == 'r' then
+    l.kern_start = -l.text_width
+    l.kern_stop = 0
+  elseif loption.align == 'c' then
+    l.half = (l.length - l.text_width) / 2
+    l.kern_start = -l.half - l.text_width
+    l.kern_stop = l.half
   else
-    t.begin_kern = -t.length
-    t.end_kern = t.length - t.text_width
+    l.kern_start = -l.length
+    l.kern_stop = l.length - l.text_width
   end
 
-  -- W[b] W[linecolor] R[length] W[colorreset] K[begin_kern]
-  --   cloze test K[end_kern] W[e]
-  head, new = create.rule_colored(head,b,t.length)
-  head, new = node.insert_after(head,new,create.kern(t.begin_kern))
-  head, new = node.insert_before(head,e,create.kern(t.end_kern))
+  -- W[n.start] R[n.line] K[n.kern_start] W[textcolor]
+  --   cloze test W[colorreset] K[n.kern_stop] W[n.end]
+
+  -- Insert colored rule ()
+  head, n.line = create.rule_colored(head, n.start, l.length)
+
+  -- W[b] W[linecolor] R[length] W[colorreset] K[kern_start] W[textcolor]
+  --   cloze test W[colorreset] K[kern_stop] W[e]
+  if options.show_text then
+
+  -- Insert kerning for the gap at the beginning.
+  head, n.kern_start = node.insert_after(head, n.line, create.kern(l.kern_start))
+
+  -- Insert text color.
+  node.insert_after(head, n.kern_start, create.color('text'))
+
+  -- Reset text color.
+  node.insert_before(head, n.stop, create.whatsit_colorstack())
+
+  -- Insert kerning for the gap at the end.
+  node.insert_before(head, n.stop, create.kern(l.kern_stop))
+
+  -- W[b] W[linecolor] R[length] W[colorreset] K[kern_start] W[e]
+  else
+    n.line.next = n.stop.next
+  end
 end
 
 ---
