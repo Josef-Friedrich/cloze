@@ -25,6 +25,9 @@
 \DeclareStringOption[3pt]{descender}
 \DeclareStringOption[{0,0,1}]{textcolor}
 \DeclareStringOption[{0,0,0}]{linecolor}
+% Affects only \clozefix
+\DeclareStringOption[l]{align}
+\DeclareStringOption[6cm]{width}
 
 \DeclareVoidOption{show}{\directlua{options.show_text = true}}
 \DeclareVoidOption{hide}{\directlua{options.show_text = false}}
@@ -42,6 +45,8 @@
     options.descender = '\LC@descender'
     options.linecolor = '\pdf@colorstack{clozelinecolor}'
     options.textcolor = '\pdf@colorstack{clozetextcolor}'
+    options.width = '\LC@width'
+    options.align = '\LC@align'
   }%
 }
 

@@ -93,7 +93,7 @@ end
 function make_clozefix(head, start, stop)
   -- l = length
   local l = {}
-  l.length = tex.sp("8cm")
+  l.width = tex.sp(options.width)
 
   -- n = node
   local n = {}
@@ -102,27 +102,27 @@ function make_clozefix(head, start, stop)
   n.stop = stop
 
   local loption = {}
-  loption.align = 'l'
+  loption.align = normalize_align_options(options.align)
 
   l.text_width = node.dimensions(n.start, n.stop)
 
-  if loption.align == 'r' then
+  if loption.align == 'right' then
     l.kern_start = -l.text_width
     l.kern_stop = 0
-  elseif loption.align == 'c' then
-    l.half = (l.length - l.text_width) / 2
+  elseif loption.align == 'center' then
+    l.half = (l.width - l.text_width) / 2
     l.kern_start = -l.half - l.text_width
     l.kern_stop = l.half
   else
-    l.kern_start = -l.length
-    l.kern_stop = l.length - l.text_width
+    l.kern_start = -l.width
+    l.kern_stop = l.width - l.text_width
   end
 
   -- W[n.start] R[n.line] K[n.kern_start] W[textcolor]
   --   cloze test W[colorreset] K[n.kern_stop] W[n.end]
 
   -- Insert colored rule ()
-  head, n.line = create.rule_colored(head, n.start, l.length)
+  head, n.line = create.rule_colored(head, n.start, l.width)
 
   -- W[b] W[linecolor] R[length] W[colorreset] K[kern_start] W[textcolor]
   --   cloze test W[colorreset] K[kern_stop] W[e]
@@ -144,6 +144,21 @@ function make_clozefix(head, start, stop)
   else
     n.line.next = n.stop.next
   end
+end
+
+function normalize_align_options(option)
+  option = string.lower(option)
+
+  if option == 'r' then
+    return 'right'
+  elseif option == 'c' then
+    return 'center'
+  elseif option == 'l' then
+    return 'left'
+  else
+    return option
+  end
+
 end
 
 ---
