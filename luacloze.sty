@@ -76,6 +76,21 @@
 }
 
 %%
+% \clozefix{Lorem ipsum}
+%
+% Creates a cloze on one line with a fixed length.
+%%
+\newcommand{\clozefix}[2][]{%
+  \directlua{
+    cloze_register_callback("pre_linebreak_filter", process_clozefix, "clozefix")
+  }%
+  \strut%
+  \clozemarker{clozefix-begin}%
+  #2%
+  \clozemarker{clozefix-end}
+}
+
+%%
 % \begin{clozepar}
 % Lorem ipsum.
 % \end{clozepar}
@@ -103,21 +118,6 @@
   \newline%
   \strut%
   \clozemarker{end-clozeend}
-}
-
-%%
-% \clozefix{Lorem ipsum}
-%
-% Creates a cloze on one line with a fixed length.
-%%
-\newcommand{\clozefix}[2][]{%
-  \directlua{
-    cloze_register_callback("pre_linebreak_filter", process_clozefix, "clozefix")
-  }%
-  \strut%
-  \clozemarker{clozefix-begin}%
-  #2%
-  \clozemarker{clozefix-end}
 }
 
 %%

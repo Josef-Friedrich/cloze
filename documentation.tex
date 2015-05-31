@@ -2,11 +2,14 @@
 \documentclass{article}
 \usepackage{listings}
 \usepackage{luacloze}
+
+\definecolor{codebackground}{rgb}{0.95,0.95,0.95}
+
 \lstset{
   basicstyle=\ttfamily,
   language=TeX,
   frame=single,
-  backgroundcolor=\color{yellow},
+  backgroundcolor=\color{codebackground},
 }
 
 \newcommand{\result}[1]{\noindent\fbox{\begin{minipage}{12cm}#1\end{minipage}}}
@@ -52,6 +55,62 @@ aliqua.}
 \result{Lorem ipsum \cloze{dolor} sit amet, consectetur adipisicing
 elit, sed do eiusmod tempor incididunt ut labore et dolore magna
 aliqua.}
+
+
+%-----------------------------------------------------------------------
+% Different modes
+%-----------------------------------------------------------------------
+
+\section{Different modes}
+
+At present there are four different modes to generate cloze text.
+
+%%
+% basic
+%%
+
+\subsection{Basic (basic)}
+
+\begin{lstlisting}
+\cloze{Lorem ipsum}
+\end{lstlisting}
+
+%%
+% fix
+%%
+
+\subsection{Fixed (fix)}
+
+Creates a cloze on one line with a fixed length.
+
+\begin{lstlisting}
+\clozefix{Lorem ipsum}
+\end{lstlisting}
+
+%%
+% end
+%%
+
+\subsection{End (end)}
+
+This command forces a line break and creates a cloze line that extends
+to the end of the text line.
+
+\begin{lstlisting}
+\clozeend{Lorem ipsum}
+\end{lstlisting}
+
+%%
+% par
+%%
+
+\subsection{Paragraph (par)}
+
+\begin{lstlisting}
+\begin{clozepar}
+Lorem ipsum
+\end{clozepar}
+\end{lstlisting}
 
 %-----------------------------------------------------------------------
 % Cloze line thickness
