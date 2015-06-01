@@ -1,6 +1,7 @@
 local check = {}
 local create = {}
 local insert = {}
+local cloze = {}
 local base = {}
 
 WHATSIT_USERID = 3121978
@@ -165,138 +166,14 @@ function insert.marker_stop(value)
   insert.whatsit(value .. '-stop')
 end
 
----
---
----
-function process_end(head)
-  return head
-end
+------------------------------------------------------------------------
+-- cloze
+------------------------------------------------------------------------
 
 ---
 --
 ---
-function process_par(head)
-  -- l = lenght
-  local l = {}
-
-  -- n = node
-  local n = {}
-
-  for line in node.traverse_id(node.id("hlist"), head) do
-
-    l.width = line.width
-
-    n.current = line.head
-    n.rule = create.rule(l.width)
-    line.head = n.rule
-    n.rule.next = n.current
-
-    node.insert_after(head,  n.rule, create.kern(-l.width))
-
-  end
-
-  return head
-end
-
----
---
----
-function process_fix(head)
-  -- n = node
-  local n = {}
-
-  n.start, n.stop = false
-  for current in node.traverse_id(node.id('whatsit'), head) do
-    if not n.start then n.start = check.get_start(current, 'fix') end
-    if not n.stop then n.stop = check.get_stop(current, 'fix') end
-
-    if n.start and n.stop then
-      make_clozefix(head, n.start, n.stop)
-      n.start, n.stop = false
-    end
-  end
-
-  return head
-end
-
--- b whatsit begin marker
--- e whatsit end marker
--- t tmp
-function make_clozefix(head, start, stop)
-  -- l = length
-  local l = {}
-  l.width = tex.sp(options.width)
-
-  -- n = node
-  local n = {}
-  -- loption = local option
-  n.start = start
-  n.stop = stop
-
-  local loption = {}
-  loption.align = normalize_align_options(options.align)
-
-  l.text_width = node.dimensions(n.start, n.stop)
-
-  if loption.align == 'right' then
-    l.kern_start = -l.text_width
-    l.kern_stop = 0
-  elseif loption.align == 'center' then
-    l.half = (l.width - l.text_width) / 2
-    l.kern_start = -l.half - l.text_width
-    l.kern_stop = l.half
-  else
-    l.kern_start = -l.width
-    l.kern_stop = l.width - l.text_width
-  end
-
-  -- W[n.start] R[n.line] K[n.kern_start] W[textcolor]
-  --   cloze test W[colorreset] K[n.kern_stop] W[n.end]
-
-  -- Insert colored rule ()
-  head, n.line = insert.rule_colored(head, n.start, l.width)
-
-  -- W[b] W[linecolor] R[length] W[colorreset] K[kern_start] W[textcolor]
-  --   cloze test W[colorreset] K[kern_stop] W[e]
-  if options.show_text then
-
-  -- Insert kerning for the gap at the beginning.
-  head, n.kern_start = node.insert_after(head, n.line, create.kern(l.kern_start))
-
-  -- Insert text color.
-  node.insert_after(head, n.kern_start, create.color('text'))
-
-  -- Reset text color.
-  node.insert_before(head, n.stop, create.whatsit_colorstack())
-
-  -- Insert kerning for the gap at the end.
-  node.insert_before(head, n.stop, create.kern(l.kern_stop))
-
-  -- W[b] W[linecolor] R[length] W[colorreset] K[kern_start] W[e]
-  else
-    n.line.next = n.stop.next
-  end
-end
-
-function normalize_align_options(option)
-  option = string.lower(option)
-
-  if option == 'r' then
-    return 'right'
-  elseif option == 'c' then
-    return 'center'
-  elseif option == 'l' then
-    return 'left'
-  else
-    return option
-  end
-
-end
-
----
---
----
-function process_basic(head)
+function cloze.basic(head)
 
   for line in node.traverse_id(node.id("hlist"), head) do
 
@@ -358,6 +235,134 @@ function process_basic(head)
   return head
 end -- function
 
+function cloze.fix_align_options(option)
+  option = string.lower(option)
+
+  if option == 'r' then
+    return 'right'
+  elseif option == 'c' then
+    return 'center'
+  elseif option == 'l' then
+    return 'left'
+  else
+    return option
+  end
+
+end
+
+-- b whatsit begin marker
+-- e whatsit end marker
+-- t tmp
+function cloze.fix_make(head, start, stop)
+  -- l = length
+  local l = {}
+  l.width = tex.sp(options.width)
+
+  -- n = node
+  local n = {}
+  -- loption = local option
+  n.start = start
+  n.stop = stop
+
+  local loption = {}
+  loption.align = cloze.fix_align_options(options.align)
+
+  l.text_width = node.dimensions(n.start, n.stop)
+
+  if loption.align == 'right' then
+    l.kern_start = -l.text_width
+    l.kern_stop = 0
+  elseif loption.align == 'center' then
+    l.half = (l.width - l.text_width) / 2
+    l.kern_start = -l.half - l.text_width
+    l.kern_stop = l.half
+  else
+    l.kern_start = -l.width
+    l.kern_stop = l.width - l.text_width
+  end
+
+  -- W[n.start] R[n.line] K[n.kern_start] W[textcolor]
+  --   cloze test W[colorreset] K[n.kern_stop] W[n.end]
+
+  -- Insert colored rule ()
+  head, n.line = insert.rule_colored(head, n.start, l.width)
+
+  -- W[b] W[linecolor] R[length] W[colorreset] K[kern_start] W[textcolor]
+  --   cloze test W[colorreset] K[kern_stop] W[e]
+  if options.show_text then
+
+  -- Insert kerning for the gap at the beginning.
+  head, n.kern_start = node.insert_after(head, n.line, create.kern(l.kern_start))
+
+  -- Insert text color.
+  node.insert_after(head, n.kern_start, create.color('text'))
+
+  -- Reset text color.
+  node.insert_before(head, n.stop, create.whatsit_colorstack())
+
+  -- Insert kerning for the gap at the end.
+  node.insert_before(head, n.stop, create.kern(l.kern_stop))
+
+  -- W[b] W[linecolor] R[length] W[colorreset] K[kern_start] W[e]
+  else
+    n.line.next = n.stop.next
+  end
+end
+
+---
+--
+---
+function cloze.fix(head)
+  -- n = node
+  local n = {}
+
+  n.start, n.stop = false
+  for current in node.traverse_id(node.id('whatsit'), head) do
+    if not n.start then n.start = check.get_start(current, 'fix') end
+    if not n.stop then n.stop = check.get_stop(current, 'fix') end
+
+    if n.start and n.stop then
+      cloze.fix_make(head, n.start, n.stop)
+      n.start, n.stop = false
+    end
+  end
+
+  return head
+end
+
+---
+--
+---
+function cloze.toend(head)
+  return head
+end
+
+---
+--
+---
+function cloze.par(head)
+  -- l = lenght
+  local l = {}
+
+  -- n = node
+  local n = {}
+
+  for line in node.traverse_id(node.id("hlist"), head) do
+
+    l.width = line.width
+
+    n.current = line.head
+    n.rule = create.rule(l.width)
+    line.head = n.rule
+    n.rule.next = n.current
+
+    node.insert_after(head,  n.rule, create.kern(-l.width))
+
+  end
+
+  return head
+end
+
 ------------------------------------------------------------------------
 -- base
 ------------------------------------------------------------------------
@@ -365,13 +370,13 @@ end -- function
 function base.register(mode)
   if not is_registered[mode] then
     if mode == 'basic' then
-      luatexbase.add_to_callback('post_linebreak_filter', process_basic, mode, 1)
+      luatexbase.add_to_callback('post_linebreak_filter', cloze.basic, mode, 1)
     elseif mode == 'fix' then
-      luatexbase.add_to_callback('pre_linebreak_filter', process_fix, mode, 1)
+      luatexbase.add_to_callback('pre_linebreak_filter', cloze.fix, mode, 1)
     elseif mode == 'end' then
-      luatexbase.add_to_callback('post_linebreak_filter', process_end, mode, 1)
+      luatexbase.add_to_callback('post_linebreak_filter', cloze.toend, mode, 1)
     else
-      luatexbase.add_to_callback('post_linebreak_filter', process_par, mode, 1)
+      luatexbase.add_to_callback('post_linebreak_filter', cloze.par, mode, 1)
     end
     is_registered[mode] = true
   end
