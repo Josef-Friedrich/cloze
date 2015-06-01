@@ -25,6 +25,18 @@ function register(mode)
   end
 end
 
+function unregister(mode)
+  if mode == 'basic' then
+    luatexbase.remove_from_callback('post_linebreak_filter', mode)
+  elseif mode == 'fix' then
+    luatexbase.remove_from_callback('pre_linebreak_filter', mode)
+  elseif mode == 'end' then
+    luatexbase.remove_from_callback('post_linebreak_filter', mode)
+  else
+    luatexbase.remove_from_callback('post_linebreak_filter', mode)
+  end
+end
+
 ---
 --
 ---

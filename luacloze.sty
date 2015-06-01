@@ -100,9 +100,16 @@
 \newenvironment{clozepar}%
 {%
   \directlua{register("par")}%
-  \clozefont\par\strut\clozemarker{clozepar-start}%
+  \clozefont%
+  \par%
+  \strut%
+  \clozemarker{clozepar-start}%
 }%
-{\clozemarker{clozepar-stop}\par}
+{%
+  \clozemarker{clozepar-stop}%
+  \par%
+  \directlua{unregister("par")}%
+}
 
 %%
 % \clozeend{Lorem ipsum}
