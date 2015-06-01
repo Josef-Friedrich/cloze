@@ -1,5 +1,6 @@
 local check = {}
 local create = {}
+local insert = {}
 local base = {}
 
 WHATSIT_USERID = 3121978
@@ -84,24 +85,6 @@ function create.color(option)
   return create.whatsit_colorstack(data)
 end
 
-
-function create.rule_colored(head, current, width)
-
-  local color = {}
-
-  color.line = create.color('line')
-  color.reset = create.whatsit_colorstack()
-
-  -- Append rule and kern to the node list.
-  local rule = create.rule(width)
-
-  head, new = node.insert_after(head, current, color.line)
-  head, new = node.insert_after(head, new, rule)
-  head, new = node.insert_after(head, new, color.reset)
-
-  return head, new
-end
-
 ---
 --
 function create.rule(width)
@@ -149,20 +132,38 @@ function create.whatsit_userdefined(value)
   return node
 end
 
-function create.write_whatsit(value)
+------------------------------------------------------------------------
+-- insert
+------------------------------------------------------------------------
+
+function insert.rule_colored(head, current, width)
+
+  local color = {}
+
+  color.line = create.color('line')
+  color.reset = create.whatsit_colorstack()
+
+  -- Append rule and kern to the node list.
+  local rule = create.rule(width)
+
+  head, new = node.insert_after(head, current, color.line)
+  head, new = node.insert_after(head, new, rule)
+  head, new = node.insert_after(head, new, color.reset)
+
+  return head, new
+end
+
+function insert.whatsit(value)
   node.write(create.whatsit_userdefined(value))
 end
 
-function create.marker_start(value)
-  create.write_whatsit(value .. '-start')
+function insert.marker_start(value)
+  insert.whatsit(value .. '-start')
 end
 
-function create.marker_stop(value)
-  create.write_whatsit(value .. '-stop')
+function insert.marker_stop(value)
+  insert.whatsit(value .. '-stop')
 end
-
-local GLUE = node.id("glue")
-
 
 ---
 --
@@ -253,7 +254,7 @@ function make_clozefix(head, start, stop)
   --   cloze test W[colorreset] K[n.kern_stop] W[n.end]
 
   -- Insert colored rule ()
-  head, n.line = create.rule_colored(head, n.start, l.width)
+  head, n.line = insert.rule_colored(head, n.start, l.width)
 
   -- W[b] W[linecolor] R[length] W[colorreset] K[kern_start] W[textcolor]
   --   cloze test W[colorreset] K[kern_stop] W[e]
@@ -334,7 +335,7 @@ function process_basic(head)
 
         local rule_width = node.dimensions(line.glue_set, line.glue_sign, line.glue_order, item, end_node.next)
 
-        head, current = create.rule_colored(head, item, rule_width)
+        head, current = insert.rule_colored(head, item, rule_width)
 
         if options.show_text then
           node.insert_after(head, current, create.kern(-rule_width))
@@ -358,7 +359,7 @@ function process_basic(head)
 end -- function
 
 ------------------------------------------------------------------------
--- create
+-- base
 ------------------------------------------------------------------------
 
 function base.register(mode)
@@ -388,7 +389,7 @@ function base.unregister(mode)
   end
 end
 
-base.marker_start = create.marker_start
-base.marker_stop = create.marker_stop
+base.marker_start = insert.marker_start
+base.marker_stop = insert.marker_stop
 
 return base
