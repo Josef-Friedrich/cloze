@@ -99,14 +99,11 @@
 % \end{clozepar}
 \newenvironment{clozepar}%
 {%
+  \par%
   \directlua{register("par")}%
   \clozefont%
-  \par%
-  \strut%
-  \clozemarker{clozepar-start}%
 }%
 {%
-  \clozemarker{clozepar-stop}%
   \par%
   \directlua{unregister("par")}%
 }
