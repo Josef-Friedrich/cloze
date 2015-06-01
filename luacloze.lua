@@ -351,17 +351,18 @@ function cloze.par(head)
   -- n = node
   local n = {}
 
-  for line in node.traverse_id(node.id("hlist"), head) do
+  for hlist in node.traverse_id(node.id("hlist"), head) do
 
-    l.width = line.width
+    l.width = hlist.width
 
-    n.current = line.head
-    n.rule = create.rule(l.width)
-    line.head = n.rule
-    n.rule.next = n.current
+    n.current = hlist.head
+    n.strut = create.rule(0)
+    hlist.head = n.strut
+    n.strut.next = n.current
 
-    node.insert_after(head,  n.rule, create.kern(-l.width))
-
+    head, n.rule = insert.rule_colored(head, n.strut, l.width)
+    head, n.kern = node.insert_after(head, n.rule, create.kern(-l.width))
+    node.insert_after(head, n.kern, create.color('text'))
   end
 
   return head
