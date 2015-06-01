@@ -98,9 +98,9 @@
 \newenvironment{clozepar}%
 {%
   \par%
-  \cloze@marker@start{par}%
   \directlua{register("par")}%
   \clozefont%
+  \strut\cloze@marker@start{par}%
 }%
 {%
   \cloze@marker@stop{par}%

@@ -64,6 +64,7 @@ function process_par(head)
     n.rule.next = n.current
 
     node.insert_after(head,  n.rule, create.kern(-l.width))
+
   end
 
   return head
@@ -240,6 +241,14 @@ function check_marker(item, value)
   else
     return false
   end
+end
+
+function check_start(item, mode)
+  return check_marker(item, mode .. '-start')
+end
+
+function check_stop(item, mode)
+  return check_marker(item, mode .. '-stop')
 end
 
 function get_start(current, value)

@@ -21,8 +21,12 @@ function create.color(option)
 
   if option == 'line' then
     data = options.linecolor
-  else
+  elseif option == 'text' then
     data = options.textcolor
+  elseif option == 'reset' then
+    data = ''
+  else
+    data = ''
   end
 
   return create.whatsit_colorstack(data)
