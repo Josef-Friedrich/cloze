@@ -1,5 +1,6 @@
 local check = {}
 local create = {}
+local base = {}
 
 WHATSIT_USERID = 3121978
 
@@ -162,32 +163,6 @@ end
 
 local GLUE = node.id("glue")
 
-function register(mode)
-  if not is_registered[mode] then
-    if mode == 'basic' then
-      luatexbase.add_to_callback('post_linebreak_filter', process_basic, mode, 1)
-    elseif mode == 'fix' then
-      luatexbase.add_to_callback('pre_linebreak_filter', process_fix, mode, 1)
-    elseif mode == 'end' then
-      luatexbase.add_to_callback('post_linebreak_filter', process_end, mode, 1)
-    else
-      luatexbase.add_to_callback('post_linebreak_filter', process_par, mode, 1)
-    end
-    is_registered[mode] = true
-  end
-end
-
-function unregister(mode)
-  if mode == 'basic' then
-    luatexbase.remove_from_callback('post_linebreak_filter', mode)
-  elseif mode == 'fix' then
-    luatexbase.remove_from_callback('pre_linebreak_filter', mode)
-  elseif mode == 'end' then
-    luatexbase.remove_from_callback('post_linebreak_filter', mode)
-  else
-    luatexbase.remove_from_callback('post_linebreak_filter', mode)
-  end
-end
 
 ---
 --
@@ -381,3 +356,39 @@ function process_basic(head)
 
   return head
 end -- function
+
+------------------------------------------------------------------------
+-- create
+------------------------------------------------------------------------
+
+function base.register(mode)
+  if not is_registered[mode] then
+    if mode == 'basic' then
+      luatexbase.add_to_callback('post_linebreak_filter', process_basic, mode, 1)
+    elseif mode == 'fix' then
+      luatexbase.add_to_callback('pre_linebreak_filter', process_fix, mode, 1)
+    elseif mode == 'end' then
+      luatexbase.add_to_callback('post_linebreak_filter', process_end, mode, 1)
+    else
+      luatexbase.add_to_callback('post_linebreak_filter', process_par, mode, 1)
+    end
+    is_registered[mode] = true
+  end
+end
+
+function base.unregister(mode)
+  if mode == 'basic' then
+    luatexbase.remove_from_callback('post_linebreak_filter', mode)
+  elseif mode == 'fix' then
+    luatexbase.remove_from_callback('pre_linebreak_filter', mode)
+  elseif mode == 'end' then
+    luatexbase.remove_from_callback('post_linebreak_filter', mode)
+  else
+    luatexbase.remove_from_callback('post_linebreak_filter', mode)
+  end
+end
+
+base.marker_start = create.marker_start
+base.marker_stop = create.marker_stop
+
+return base

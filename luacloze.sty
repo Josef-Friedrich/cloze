@@ -7,8 +7,7 @@
 \RequirePackage{kvoptions}
 
 \directlua{
-  require("luacloze")
-  create = require("create")
+  luacloze = require("luacloze")
 }
 
 % Inspired by:
@@ -65,7 +64,7 @@
 % \cloze{Lorem ipsum}
 %%
 \newcommand{\cloze}[1]{%
-  \directlua{register("basic")}%
+  \directlua{luacloze.register("basic")}%
   \cloze@marker@start{basic}%
   {%
     \clozefont%
@@ -82,7 +81,7 @@
 % Creates a cloze on one line with a fixed length.
 %%
 \newcommand{\clozefix}[2][]{%
-  \directlua{register("fix")}%
+  \directlua{luacloze.register("fix")}%
   \cloze@marker@start{fix}%
   {%
     \clozefont%
@@ -98,14 +97,14 @@
 \newenvironment{clozepar}%
 {%
   \par%
-  \directlua{register("par")}%
+  \directlua{luacloze.register("par")}%
   \clozefont%
   \strut\cloze@marker@start{par}%
 }%
 {%
   \cloze@marker@stop{par}%
   \par%
-  \directlua{unregister("par")}%
+  \directlua{luacloze.unregister("par")}%
 }
 
 %%
@@ -150,12 +149,12 @@
 % \cloze@marker
 %%
 \newcommand{\cloze@marker@start}[1]{%
-  \directlua{create.marker_start("#1")}%
+  \directlua{luacloze.marker_start("#1")}%
 }
 
 %%
 % \cloze@marker
 %%
 \newcommand{\cloze@marker@stop}[1]{%
-  \strut\directlua{create.marker_stop("#1")}%
+  \strut\directlua{luacloze.marker_stop("#1")}%
 }
