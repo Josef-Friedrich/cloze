@@ -1,3 +1,4 @@
+local check = {}
 local create = {}
 
 WHATSIT_USERID = 3121978
@@ -5,13 +6,13 @@ WHATSIT_USERID = 3121978
 options = {}
 options.show_text = true
 
-is_registered = {}
+local is_registered = {}
 
 ------------------------------------------------------------------------
 -- check
 ------------------------------------------------------------------------
 
-function check_marker(item, value)
+function check.marker(item, value)
   if item.id == node.id('whatsit')
       and item.subtype == 44
       and item.user_id == WHATSIT_USERID
@@ -22,24 +23,24 @@ function check_marker(item, value)
   end
 end
 
-function check_start(item, mode)
-  return check_marker(item, mode .. '-start')
+function check.start(item, mode)
+  return check.marker(item, mode .. '-start')
 end
 
-function check_stop(item, mode)
-  return check_marker(item, mode .. '-stop')
+function check.stop(item, mode)
+  return check.marker(item, mode .. '-stop')
 end
 
-function get_start(current, value)
-    if check_marker(current, value .. '-start') then
+function check.get_start(current, value)
+    if check.marker(current, value .. '-start') then
       return current
     else
       return false
     end
 end
 
-function get_stop(current, value)
-    if check_marker(current, value .. '-stop') then
+function check.get_stop(current, value)
+    if check.marker(current, value .. '-stop') then
       return current
     else
       return false
@@ -230,8 +231,8 @@ function process_fix(head)
 
   n.start, n.stop = false
   for current in node.traverse_id(node.id('whatsit'), head) do
-    if not n.start then n.start = get_start(current, 'fix') end
-    if not n.stop then n.stop = get_stop(current, 'fix') end
+    if not n.start then n.start = check.get_start(current, 'fix') end
+    if not n.stop then n.stop = check.get_stop(current, 'fix') end
 
     if n.start and n.stop then
       make_clozefix(head, n.start, n.stop)
@@ -338,7 +339,7 @@ function process_basic(head)
 
     while item do
 
-      if check_marker(item, "basic-start") or INIT_CLOZE then
+      if check.marker(item, "basic-start") or INIT_CLOZE then
         node.insert_after(line.head, item, create.color('text'))
 
         INIT_CLOZE = false
@@ -348,7 +349,7 @@ function process_basic(head)
 
           LINE_END = true
 
-          if check_marker(end_node.next, "basic-stop") then
+          if check.marker(end_node.next, "basic-stop") then
             LINE_END = false
             break
           end
