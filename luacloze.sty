@@ -101,7 +101,7 @@
   \par%
   \directlua{luacloze.register("par")}%
   \clozefont%
-  \strut\cloze@marker@start{par}%
+  \cloze@marker@start{par}%
 }%
 {%
   \cloze@marker@stop{par}%
@@ -120,7 +120,6 @@
   \cloze@marker@start{end}%
   #1%
   \newline%
-  \strut%
   \cloze@marker@stop{end}%
 }
 
@@ -151,7 +150,7 @@
 % \cloze@marker
 %%
 \newcommand{\cloze@marker@start}[1]{%
-  \directlua{luacloze.marker_start("#1")}%
+  \strut\directlua{luacloze.marker_start("#1")}%
 }
 
 %%

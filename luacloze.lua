@@ -400,6 +400,9 @@ end
 
 function base.get_options(localoptions)
   options = localoptions
+  if options.show_text == nil then
+    options.show_text = true
+  end
 end
 
 base.marker_start = insert.marker_start
