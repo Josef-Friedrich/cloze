@@ -100,7 +100,7 @@
 \newenvironment{clozepar}%
 {%
   \directlua{register("par")}%
-  \strut\clozemarker{clozepar-start}%
+  \clozefont\par\strut\clozemarker{clozepar-start}%
 }%
 {\clozemarker{clozepar-stop}\par}
 

@@ -13,13 +13,13 @@ is_registered = {}
 function register(mode)
   if not is_registered[mode] then
     if mode == 'basic' then
-      luatexbase.add_to_callback('post_linebreak_filter', process_basic, mode)
+      luatexbase.add_to_callback('post_linebreak_filter', process_basic, mode, 1)
     elseif mode == 'fix' then
-      luatexbase.add_to_callback('pre_linebreak_filter', process_fix, mode)
+      luatexbase.add_to_callback('pre_linebreak_filter', process_fix, mode, 1)
     elseif mode == 'end' then
-      luatexbase.add_to_callback('post_linebreak_filter', process_end, mode)
+      luatexbase.add_to_callback('post_linebreak_filter', process_end, mode, 1)
     else
-      luatexbase.add_to_callback('post_linebreak_filter', process_par, mode)
+      luatexbase.add_to_callback('post_linebreak_filter', process_par, mode, 1)
     end
     is_registered[mode] = true
   end
@@ -36,31 +36,22 @@ end
 --
 ---
 function process_par(head)
+  -- l = lenght
+  local l = {}
+
+  -- n = node
+  local n = {}
 
   for line in node.traverse_id(node.id("hlist"), head) do
 
-    if line.subtype == 1 then
-      local rule = create.rule(line.width)
-      print(rule)
-    end
+    l.width = line.width
 
-    current = line.head
+    n.current = line.head
+    n.rule = create.rule(l.width)
+    line.head = n.rule
+    n.rule.next = n.current
 
-    node.insert_after(current, current, create.rule("20cm"))
-
-
-    while current do
-      -- print(current)
-      if check_marker(current, 'clozepar-start') then
-        -- print('begin')
-      end
-
-      if check_marker(current, 'clozepar-stop') then
-        -- print('end')
-      end
-      current = current.next
-    end
-
+    node.insert_after(head,  n.rule, create.kern(-l.width))
   end
 
   return head
