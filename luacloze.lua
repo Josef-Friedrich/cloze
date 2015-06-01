@@ -235,6 +235,8 @@ function cloze.basic(head)
   return head
 end -- function
 
+-- mode: fix -----------------------------------------------------------
+
 function cloze.fix_align_options(option)
   option = string.lower(option)
 
@@ -330,12 +332,16 @@ function cloze.fix(head)
   return head
 end
 
+-- mode: toend ---------------------------------------------------------
+
 ---
 --
 ---
 function cloze.toend(head)
   return head
 end
+
+-- mode: par -----------------------------------------------------------
 
 ---
 --
