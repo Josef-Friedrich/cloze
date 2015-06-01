@@ -3,14 +3,12 @@ local create = {}
 local insert = {}
 local cloze = {}
 local base = {}
+base.options = {}
+local is_registered = {}
 
 WHATSIT_USERID = 3121978
 
-options = {}
-options.show_text = true
-
-local is_registered = {}
-
+local options
 ------------------------------------------------------------------------
 -- check
 ------------------------------------------------------------------------
@@ -398,6 +396,10 @@ function base.unregister(mode)
   else
     luatexbase.remove_from_callback('post_linebreak_filter', mode)
   end
+end
+
+function base.get_options(localoptions)
+  options = localoptions
 end
 
 base.marker_start = insert.marker_start

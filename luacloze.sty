@@ -28,8 +28,8 @@
 \DeclareStringOption[l]{align}
 \DeclareStringOption[6cm]{width}
 
-\DeclareVoidOption{show}{\directlua{options.show_text = true}}
-\DeclareVoidOption{hide}{\directlua{options.show_text = false}}
+\DeclareVoidOption{show}{\directlua{luacloze.options.show_text = true}}
+\DeclareVoidOption{hide}{\directlua{luacloze.options.show_text = false}}
 
 \ProcessKeyvalOptions{LC}
 
@@ -40,12 +40,14 @@
   \definecolor{clozetextcolor}{rgb}{\LC@textcolor}%
 %
   \directlua{
-    options.thickness = '\LC@thickness'
-    options.descender = '\LC@descender'
-    options.linecolor = '\pdf@colorstack{clozelinecolor}'
-    options.textcolor = '\pdf@colorstack{clozetextcolor}'
-    options.width = '\LC@width'
-    options.align = '\LC@align'
+    luacloze.options.thickness = '\LC@thickness'
+    luacloze.options.descender = '\LC@descender'
+    luacloze.options.linecolor = '\pdf@colorstack{clozelinecolor}'
+    luacloze.options.textcolor = '\pdf@colorstack{clozetextcolor}'
+    luacloze.options.width = '\LC@width'
+    luacloze.options.align = '\LC@align'
+
+    luacloze.get_options(luacloze.options)
   }%
 }
 
@@ -125,12 +127,12 @@
 %%
 % \showclozetext
 %%
-\newcommand{\showclozetext}{\directlua{options.show_text = true}}
+\newcommand{\showclozetext}{\directlua{luacloze.options.show_text = true}}
 
 %%
 % \hideclozetext
 %%
-\newcommand{\hideclozetext}{\directlua{options.show_text = false}}
+\newcommand{\hideclozetext}{\directlua{luacloze.options.show_text = false}}
 
 %-----------------------------------------------------------------------
 % Formats
