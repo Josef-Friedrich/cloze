@@ -93,4 +93,16 @@ function create.whatsit_userdefined(value)
   return node
 end
 
+function create.write_whatsit(value)
+  node.write(create.whatsit_userdefined(value))
+end
+
+function create.marker_start(value)
+  create.write_whatsit(value .. '-start')
+end
+
+function create.marker_stop(value)
+  create.write_whatsit(value .. '-stop')
+end
+
 return create

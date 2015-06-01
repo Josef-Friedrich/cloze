@@ -78,8 +78,8 @@ function process_fix(head)
 
   n.start, n.stop = false
   for current in node.traverse_id(node.id('whatsit'), head) do
-    if not n.start then n.start = get_start(current, 'clozefix') end
-    if not n.stop then n.stop = get_stop(current, 'clozefix') end
+    if not n.start then n.start = get_start(current, 'fix') end
+    if not n.stop then n.stop = get_stop(current, 'fix') end
 
     if n.start and n.stop then
       make_clozefix(head, n.start, n.stop)
@@ -186,7 +186,7 @@ function process_basic(head)
 
     while item do
 
-      if check_marker(item, "cloze-start") or INIT_CLOZE then
+      if check_marker(item, "basic-start") or INIT_CLOZE then
         node.insert_after(line.head, item, create.color('text'))
 
         INIT_CLOZE = false
@@ -196,7 +196,7 @@ function process_basic(head)
 
           LINE_END = true
 
-          if check_marker(end_node.next, "cloze-stop") then
+          if check_marker(end_node.next, "basic-stop") then
             LINE_END = false
             break
           end

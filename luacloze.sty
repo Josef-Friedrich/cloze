@@ -65,16 +65,16 @@
 % \cloze{Lorem ipsum}
 %%
 \newcommand{\cloze}[1]{%
-  \directlua{register("basic")}%%
+  \directlua{register("basic")}%
   \strut%
-  \clozemarker{cloze-start}%
+  \cloze@marker@start{basic}%
   {%
     \clozefont%
     \hspace{\clozemargin}%
     #1%
     \hspace{\clozemargin}%
   }%
-  \clozemarker{cloze-stop}%
+  \cloze@marker@stop{basic}%
 }
 
 %%
@@ -85,12 +85,12 @@
 \newcommand{\clozefix}[2][]{%
   \directlua{register("fix")}%
   \strut%
-  \clozemarker{clozefix-start}%
+  \cloze@marker@start{fix}%
   {%
     \clozefont%
     #2%
   }%
-  \clozemarker{clozefix-stop}%
+  \cloze@marker@stop{fix}%
 }
 
 %%
@@ -100,12 +100,14 @@
 \newenvironment{clozepar}%
 {%
   \par%
+  \cloze@marker@start{par}%
   \directlua{register("par")}%
   \clozefont%
 }%
 {%
   \par%
   \directlua{unregister("par")}%
+  \cloze@marker@stop{par}%
 }
 
 %%
@@ -115,12 +117,12 @@
 % to the end of the text line.
 %%
 \newcommand{\clozeend}[1]{%
-  \directlua{register("end")}%%
-  \clozemarker{begin-clozeend}%
+  \directlua{register("end")}%
+  \cloze@marker@start{end}%
   #1%
   \newline%
   \strut%
-  \clozemarker{end-clozeend}
+  \cloze@marker@stop{end}%
 }
 
 %%
@@ -147,11 +149,15 @@
 %-----------------------------------------------------------------------
 
 %%
-% \clozemarker
+% \cloze@marker
 %%
-\newcommand{\clozemarker}[1]{%
-  \directlua{
-    local whatsit = create.whatsit_userdefined("#1")
-    node.write(whatsit)
-  }%
+\newcommand{\cloze@marker@start}[1]{%
+  \directlua{create.marker_start("#1")}%
+}
+
+%%
+% \cloze@marker
+%%
+\newcommand{\cloze@marker@stop}[1]{%
+  \directlua{create.marker_stop("#1")}%
 }
