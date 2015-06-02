@@ -1,4 +1,5 @@
 local check = {}
+check.user_id = 3121978
 local create = {}
 local insert = {}
 local cache = {}
@@ -8,45 +9,15 @@ local base = {}
 base.options = {}
 local is_registered = {}
 
-WHATSIT_USERID = 3121978
-WHATSIT_USERID2 = 12345
-
 local options
 ------------------------------------------------------------------------
 -- check
 ------------------------------------------------------------------------
 
-function check.marker(item, value)
-  if item.id == node.id('whatsit')
-      and item.subtype == 44
-      and item.user_id == WHATSIT_USERID
-      and item.value == value then
-    return true
-  else
-    return false
-  end
-end
-
-function check.start(item, mode)
-  return check.marker(item, mode .. '-start')
-end
-
-function check.stop(item, mode)
-  return check.marker(item, mode .. '-stop')
-end
-
-function check.get_start(current, value)
-    if check.marker(current, value .. '-start') then
-      return current
-    else
-      return false
-    end
-end
-
 function check.is_marker(item)
   if item.id == node.id('whatsit')
       and item.subtype == 44
-      and item.user_id == WHATSIT_USERID2 then
+      and item.user_id == check.user_id then
     return true
   else
     return false
@@ -102,14 +73,6 @@ function check.get_by_mode_pos(item, mode, position)
   else
     return false
   end
-end
-
-function check.get_stop(current, value)
-    if check.marker(current, value .. '-stop') then
-      return current
-    else
-      return false
-    end
 end
 
 ------------------------------------------------------------------------
@@ -200,7 +163,7 @@ end
 function create.marker(index)
   local marker = node.new('whatsit','user_defined')
   marker.type = 100 -- number
-  marker.user_id = WHATSIT_USERID2
+  marker.user_id = check.user_id
   marker.value = index
 
   return marker
@@ -317,7 +280,7 @@ function cloze.basic(head)
 
     while item do
 
-      if check.marker(item, "basic-start") or INIT_CLOZE then
+      if check.mode_position(item, 'basic', 'start') or INIT_CLOZE then
         node.insert_after(line.head, item, create.color('text'))
 
         INIT_CLOZE = false
@@ -327,7 +290,7 @@ function cloze.basic(head)
 
           LINE_END = true
 
-          if check.marker(end_node.next, "basic-stop") then
+          if check.mode_position(end_node, 'basic', 'stop') then
             LINE_END = false
             break
           end
@@ -384,12 +347,8 @@ function cloze.fix_make(head, start, stop)
   -- l = length
   local l = {}
 
-  print(options.width)
-
   local loptions = check.get_marker_values(start)
   loptions = cache.process_local_options(loptions)
-
-  print('loptions:' .. loptions.width)
 
   l.width = tex.sp(loptions.width)
 
@@ -522,7 +481,7 @@ function base.register(mode)
       luatexbase.add_to_callback('post_linebreak_filter', cloze.basic, mode, 1)
     elseif mode == 'fix' then
       luatexbase.add_to_callback('pre_linebreak_filter', cloze.fix, mode, 1)
-    elseif mode == 'end' then
+    elseif mode == 'toend' then
       luatexbase.add_to_callback('post_linebreak_filter', cloze.toend, mode, 1)
     else
       luatexbase.add_to_callback('post_linebreak_filter', cloze.par, mode, 1)
@@ -536,7 +495,7 @@ function base.unregister(mode)
     luatexbase.remove_from_callback('post_linebreak_filter', mode)
   elseif mode == 'fix' then
     luatexbase.remove_from_callback('pre_linebreak_filter', mode)
-  elseif mode == 'end' then
+  elseif mode == 'toend' then
     luatexbase.remove_from_callback('post_linebreak_filter', mode)
   else
     luatexbase.remove_from_callback('post_linebreak_filter', mode)

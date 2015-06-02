@@ -71,15 +71,17 @@
 % \cloze{Lorem ipsum}
 %%
 \newcommand{\cloze}[1]{%
-  \directlua{luacloze.register("basic")}%
-  \cloze@marker@start{basic}%
+  \strut\directlua{
+    luacloze.register("basic")
+    luacloze.marker('basic', 'start')
+  }%
   {%
     \clozefont%
     \hspace{\clozemargin}%
     #1%
     \hspace{\clozemargin}%
   }%
-  \cloze@marker@stop{basic}%
+  \strut\directlua{luacloze.marker('basic', 'stop')}%
 }
 
 %%
@@ -113,14 +115,16 @@
 \newenvironment{clozepar}%
 {%
   \par%
-  \directlua{luacloze.register("par")}%
+  \directlua{
+    luacloze.register('par')
+    luacloze.marker('par', 'start')
+  }%
   \clozefont%
-  \cloze@marker@start{par}%
 }%
 {%
-  \cloze@marker@stop{par}%
+  \directlua{luacloze.marker('par', 'stop')}%
   \par%
-  \directlua{luacloze.unregister("par")}%
+  \directlua{luacloze.unregister('par')}%
 }
 
 %%
@@ -130,11 +134,11 @@
 % to the end of the text line.
 %%
 \newcommand{\clozeend}[1]{%
-  \directlua{register("end")}%
-  \cloze@marker@start{end}%
+  \directlua{register('toend')}%
+  \directlua{luacloze.marker('topar', 'start')}%
   #1%
   \newline%
-  \cloze@marker@stop{end}%
+  \directlua{luacloze.marker('topar', 'stop')}%
 }
 
 %%
@@ -155,22 +159,3 @@
 % \clozefont
 %%
 \newcommand{\clozefont}{\itshape}
-
-%-----------------------------------------------------------------------
-% Helper
-%-----------------------------------------------------------------------
-
-%%
-% \cloze@marker@start
-%%
-\newcommand{\cloze@marker@start}[1]{%
-  \strut\directlua{luacloze.marker_start("#1")}%
-}
-
-%%
-% \cloze@marker@stop
-%%
-\newcommand{\cloze@marker@stop}[1]{%
-  \strut\directlua{luacloze.marker_stop("#1")}%
-}
-
