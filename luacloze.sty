@@ -33,6 +33,11 @@
 
 \ProcessKeyvalOptions{LC}
 
+\define@key{LClocal}{width}[]{\def\LC@local@width{#1}}
+\define@key{LClocal}{descender}[]{\def\LC@local@descender{#1}}
+
+\setkeys{LClocal}{width,descender}%
+
 \newcommand{\pdf@colorstack}[1]{\csname\string\color@#1\endcsname}
 
 \newcommand{\setluavalues}{%
@@ -83,13 +88,21 @@
 % Creates a cloze on one line with a fixed length.
 %%
 \newcommand{\clozefix}[2][]{%
+  \setkeys{LClocal}{#1}%
   \directlua{luacloze.register("fix")}%
-  \cloze@marker@start{fix}%
+  \directlua{
+    local values = {
+      ['width'] = '\LC@local@width',
+      ['descender'] = '\LC@local@descender'
+    }
+    luacloze.marker('fix', 'start', values)
+  }%
   {%
     \clozefont%
     #2%
   }%
   \cloze@marker@stop{fix}%
+  \directlua{luacloze.marker('fix', 'stop')}%
 }
 
 %%
@@ -147,15 +160,16 @@
 %-----------------------------------------------------------------------
 
 %%
-% \cloze@marker
+% \cloze@marker@start
 %%
 \newcommand{\cloze@marker@start}[1]{%
   \strut\directlua{luacloze.marker_start("#1")}%
 }
 
 %%
-% \cloze@marker
+% \cloze@marker@stop
 %%
 \newcommand{\cloze@marker@stop}[1]{%
   \strut\directlua{luacloze.marker_stop("#1")}%
 }
+

@@ -1,12 +1,15 @@
 local check = {}
 local create = {}
 local insert = {}
+local cache = {}
+cache.storage = {}
 local cloze = {}
 local base = {}
 base.options = {}
 local is_registered = {}
 
 WHATSIT_USERID = 3121978
+WHATSIT_USERID2 = 12345
 
 local options
 ------------------------------------------------------------------------
@@ -38,6 +41,67 @@ function check.get_start(current, value)
     else
       return false
     end
+end
+
+function check.is_marker(item)
+  if item.id == node.id('whatsit')
+      and item.subtype == 44
+      and item.user_id == WHATSIT_USERID2 then
+    return true
+  else
+    return false
+  end
+end
+
+function check.get_marker_data(item)
+  if not check.is_marker(item) then
+    return false
+  else
+    return cache.get(item.value)
+  end
+end
+
+function check.get_marker_values(item)
+  local data = check.get_marker_data(item)
+  return data.values
+end
+
+function check.is_mode(item, mode)
+  local data = check.get_marker_data(item)
+
+  if data and data.mode == mode then
+    return true
+  else
+    return false
+  end
+end
+
+function check.is_position(item, position)
+  local data = check.get_marker_data(item)
+
+  if data and data.position == position then
+    return true
+  else
+    return false
+  end
+end
+
+function check.mode_position(item, mode, position)
+  local data = check.get_marker_data(item)
+
+  if data and data.mode == mode and data.position == position then
+    return true
+  else
+    return false
+  end
+end
+
+function check.get_by_mode_pos(item, mode, position)
+  if check.mode_position(item, mode, position) then
+    return item
+  else
+    return false
+  end
 end
 
 function check.get_stop(current, value)
@@ -131,6 +195,17 @@ function create.whatsit_userdefined(value)
   return node
 end
 
+---
+--
+function create.marker(index)
+  local marker = node.new('whatsit','user_defined')
+  marker.type = 100 -- number
+  marker.user_id = WHATSIT_USERID2
+  marker.value = index
+
+  return marker
+end
+
 ------------------------------------------------------------------------
 -- insert
 ------------------------------------------------------------------------
@@ -162,6 +237,52 @@ end
 
 function insert.marker_stop(value)
   insert.whatsit(value .. '-stop')
+end
+
+------------------------------------------------------------------------
+-- cache
+------------------------------------------------------------------------
+
+function cache.get_index()
+  if not cache.index then
+    cache.index = 0
+  end
+
+  cache.index = cache.index + 1
+  return cache.index
+end
+
+function cache.set(mode, position, values)
+  local index = cache.get_index()
+
+  local data = {
+    ['mode'] = mode,
+    ['position'] = position
+  }
+
+  if values then
+    data.values =  values
+  end
+
+  cache.storage[index] = data
+  return index
+end
+
+function cache.get(index)
+  return cache.storage[index]
+end
+
+function cache.process_local_options(loptions)
+  if not loptions then
+    loptions = {}
+  end
+  for key, value in pairs(options) do
+    if not loptions[key] then
+      loptions[key] = value
+    end
+  end
+
+  return loptions
 end
 
 ------------------------------------------------------------------------
@@ -256,7 +377,11 @@ end
 function cloze.fix_make(head, start, stop)
   -- l = length
   local l = {}
-  l.width = tex.sp(options.width)
+
+  local loptions = check.get_marker_values(start)
+  loptions = cache.process_local_options(loptions)
+
+  l.width = tex.sp(loptions.width)
 
   -- n = node
   local n = {}
@@ -318,8 +443,9 @@ function cloze.fix(head)
 
   n.start, n.stop = false
   for current in node.traverse_id(node.id('whatsit'), head) do
-    if not n.start then n.start = check.get_start(current, 'fix') end
-    if not n.stop then n.stop = check.get_stop(current, 'fix') end
+
+    if not n.start then n.start = check.get_by_mode_pos(current, 'fix', 'start') end
+    if not n.stop then n.stop = check.get_by_mode_pos(current, 'fix', 'stop') end
 
     if n.start and n.stop then
       cloze.fix_make(head, n.start, n.stop)
@@ -412,6 +538,12 @@ function base.get_options(localoptions)
   if options.show_text == nil then
     options.show_text = true
   end
+end
+
+function base.marker(mode, position, values)
+  local index = cache.set(mode, position, values)
+  local marker = create.marker(index)
+  node.write(marker)
 end
 
 base.marker_start = insert.marker_start

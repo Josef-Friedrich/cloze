@@ -1,13 +1,14 @@
 %!TEX program = lualatex
 \documentclass{article}
 \usepackage[width=5cm,align=R]{luacloze}
+\usepackage{luanodelist}
 
 \begin{document}
-Lorem ipsum \clozefix{dolor sit amet}, consectetur adipisicing. Lorem
+Lorem ipsum \clozefix[width=10cm]{dolor sit amet}, consectetur adipisicing. Lorem
 ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut \clozefix{labore et dolore magna} aliqua. Ut enim
+tempor incididunt ut \clozefix[width=2cm]{labore et dolore magna} aliqua. Ut enim
 ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-aliquip ex ea \clozefix{commodo} consequat. Duis aute irure dolor in
+aliquip ex ea \clozefix[width=3cm]{commodo} consequat. Duis aute irure dolor in
 reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
 pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
 qui officia deserunt mollit anim id est laborum.
