@@ -64,9 +64,6 @@
 % Public macros
 %-----------------------------------------------------------------------
 
-\newlength{\clozemargin}
-\setlength{\clozemargin}{0.1cm}
-
 %%
 % \cloze{Lorem ipsum}
 %%
@@ -84,9 +81,7 @@
   }%
   {%
     \clozefont%
-    \hspace{\clozemargin}%
     #2%
-    \hspace{\clozemargin}%
   }%
   \strut\directlua{luacloze.marker('basic', 'stop')}%
 }
