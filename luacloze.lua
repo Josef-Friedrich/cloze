@@ -26,26 +26,6 @@ function check.whatsit_marker(item)
   end
 end
 
-function check.is_mode(item, mode)
-  local data = get.marker_data(item)
-
-  if data and data.mode == mode then
-    return true
-  else
-    return false
-  end
-end
-
-function check.is_position(item, position)
-  local data = get.marker_data(item)
-
-  if data and data.position == position then
-    return true
-  else
-    return false
-  end
-end
-
 function check.marker(item, mode, position)
   local data = get.marker_data(item)
 
