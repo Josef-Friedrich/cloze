@@ -40,7 +40,7 @@
 
 \newcommand{\pdf@colorstack}[1]{\csname\string\color@#1\endcsname}
 
-\newcommand{\setluavalues}{%
+\newcommand{\set@lua@values}{%
   \definecolor{clozelinecolor}{rgb}{\LC@linecolor}%
   \definecolor{clozetextcolor}{rgb}{\LC@textcolor}%
 %
@@ -56,13 +56,16 @@
   }%
 }
 
-\setluavalues
-
-\newcommand{\setcloze}[1]{\setkeys{LC}{#1}\setluavalues}
+\set@lua@values
 
 %-----------------------------------------------------------------------
 % Public macros
 %-----------------------------------------------------------------------
+
+%%
+% \setcloze{key=value}
+%%
+\newcommand{\setcloze}[1]{\setkeys{LC}{#1}\set@lua@values}
 
 %%
 % \cloze{Lorem ipsum}
