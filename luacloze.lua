@@ -76,9 +76,9 @@ function create.color(option)
   elseif option == 'text' then
     data = options.textcolor
   elseif option == 'reset' then
-    data = ''
+    data = nil
   else
-    data = ''
+    data = nil
   end
 
   return create.whatsit_colorstack(data)
@@ -361,8 +361,16 @@ function cloze.par(head)
     n.strut.next = n.current
 
     head, n.rule = insert.rule_colored(head, n.strut, l.width)
-    head, n.kern = node.insert_after(head, n.rule, create.kern(-l.width))
-    node.insert_after(head, n.kern, create.color('text'))
+
+    if options.show_text then
+      head, n.kern = node.insert_after(head, n.rule, create.kern(-l.width))
+      node.insert_after(head, n.kern, create.color('text'))
+
+      n.tail = node.tail(n.current)
+      node.insert_after(n.current, n.tail, create.color('reset'))
+    else
+      n.rule.next = nil
+    end
   end
 
   return head
