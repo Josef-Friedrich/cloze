@@ -261,7 +261,13 @@ function cache.set(mode, position, values)
   }
 
   if values then
-    data.values =  values
+    local cleaned_values = {}
+    for key, value in pairs(values) do
+      if value ~= '' then
+        cleaned_values[key] = value
+      end
+    end
+    data.values = cleaned_values
   end
 
   cache.storage[index] = data
@@ -274,7 +280,7 @@ end
 
 function cache.process_local_options(loptions)
   if not loptions then
-    loptions = {}
+    local loptions = {}
   end
   for key, value in pairs(options) do
     if not loptions[key] then
@@ -378,8 +384,12 @@ function cloze.fix_make(head, start, stop)
   -- l = length
   local l = {}
 
+  print(options.width)
+
   local loptions = check.get_marker_values(start)
   loptions = cache.process_local_options(loptions)
+
+  print('loptions:' .. loptions.width)
 
   l.width = tex.sp(loptions.width)
 

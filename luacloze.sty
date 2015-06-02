@@ -26,7 +26,7 @@
 \DeclareStringOption[{0,0,0}]{linecolor}
 % Affects only \clozefix
 \DeclareStringOption[l]{align}
-\DeclareStringOption[6cm]{width}
+\DeclareStringOption[2cm]{width}
 
 \DeclareVoidOption{show}{\directlua{luacloze.options.show_text = true}}
 \DeclareVoidOption{hide}{\directlua{luacloze.options.show_text = false}}
@@ -88,6 +88,7 @@
 % Creates a cloze on one line with a fixed length.
 %%
 \newcommand{\clozefix}[2][]{%
+  \setkeys{LClocal}{width,descender}%
   \setkeys{LClocal}{#1}%
   \directlua{luacloze.register("fix")}%
   \directlua{
