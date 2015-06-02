@@ -70,15 +70,22 @@
 %%
 % \cloze{Lorem ipsum}
 %%
-\newcommand{\cloze}[1]{%
+\newcommand{\cloze}[2][]{%
+  \setkeys{LCL}{descender,hide=unset,show=unset}%
+  \setkeys{LCL}{#1}%
   \strut\directlua{
-    luacloze.register("basic")
-    luacloze.marker('basic', 'start')
+    luacloze.register('basic')
+    local values = {
+      ['descender'] = '\LCL@descender',
+      ['hide'] = '\LCL@hide',
+      ['show'] = '\LCL@show'
+    }
+    luacloze.marker('basic', 'start', values)
   }%
   {%
     \clozefont%
     \hspace{\clozemargin}%
-    #1%
+    #2%
     \hspace{\clozemargin}%
   }%
   \strut\directlua{luacloze.marker('basic', 'stop')}%
