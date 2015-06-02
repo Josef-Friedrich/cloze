@@ -15,6 +15,7 @@
 % would be extremely painful otherwise
 %   --Paul Isambert; TUGBoat Volume 31, Number 3, 2010
 
+% LC = luacloze
 \SetupKeyvalOptions{
   family=LC,
   prefix=LC@
@@ -33,10 +34,9 @@
 
 \ProcessKeyvalOptions{LC}
 
-\define@key{LClocal}{width}[]{\def\LC@local@width{#1}}
-\define@key{LClocal}{descender}[]{\def\LC@local@descender{#1}}
-
-\setkeys{LClocal}{width,descender}%
+% LCL = luacloze local
+\define@key{LCL}{width}[]{\def\LCL@width{#1}}
+\define@key{LCL}{descender}[]{\def\LCL@descender{#1}}
 
 \newcommand{\pdf@colorstack}[1]{\csname\string\color@#1\endcsname}
 
@@ -90,13 +90,13 @@
 % Creates a cloze on one line with a fixed length.
 %%
 \newcommand{\clozefix}[2][]{%
-  \setkeys{LClocal}{width,descender}%
-  \setkeys{LClocal}{#1}%
+  \setkeys{LCL}{width,descender}%
+  \setkeys{LCL}{#1}%
   \directlua{luacloze.register("fix")}%
   \strut\directlua{
     local values = {
-      ['width'] = '\LC@local@width',
-      ['descender'] = '\LC@local@descender'
+      ['width'] = '\LCL@width',
+      ['descender'] = '\LCL@descender'
     }
     luacloze.marker('fix', 'start', values)
   }%
