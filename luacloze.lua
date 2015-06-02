@@ -11,6 +11,7 @@ base.options = {}
 local is_registered = {}
 
 local options
+
 ------------------------------------------------------------------------
 -- check
 ------------------------------------------------------------------------
@@ -25,21 +26,8 @@ function check.whatsit_marker(item)
   end
 end
 
-function check.get_marker_data(item)
-  if not check.whatsit_marker(item) then
-    return false
-  else
-    return registry.get(item.value)
-  end
-end
-
-function get.marker_values(item)
-  local data = check.get_marker_data(item)
-  return data.values
-end
-
 function check.is_mode(item, mode)
-  local data = check.get_marker_data(item)
+  local data = get.marker_data(item)
 
   if data and data.mode == mode then
     return true
@@ -49,7 +37,7 @@ function check.is_mode(item, mode)
 end
 
 function check.is_position(item, position)
-  local data = check.get_marker_data(item)
+  local data = get.marker_data(item)
 
   if data and data.position == position then
     return true
@@ -59,13 +47,30 @@ function check.is_position(item, position)
 end
 
 function check.marker(item, mode, position)
-  local data = check.get_marker_data(item)
+  local data = get.marker_data(item)
 
   if data and data.mode == mode and data.position == position then
     return true
   else
     return false
   end
+end
+
+------------------------------------------------------------------------
+-- check
+------------------------------------------------------------------------
+
+function get.marker_data(item)
+  if not check.whatsit_marker(item) then
+    return false
+  else
+    return registry.get(item.value)
+  end
+end
+
+function get.marker_values(item)
+  local data = get.marker_data(item)
+  return data.values
 end
 
 function get.marker(item, mode, position)
