@@ -3,8 +3,8 @@ local get = {}
 check.user_id = 3121978
 local create = {}
 local insert = {}
-local cache = {}
-cache.storage = {}
+local registry = {}
+registry.storage = {}
 local cloze = {}
 local base = {}
 base.options = {}
@@ -29,7 +29,7 @@ function check.get_marker_data(item)
   if not check.whatsit_marker(item) then
     return false
   else
-    return cache.get(item.value)
+    return registry.get(item.value)
   end
 end
 
@@ -186,20 +186,20 @@ function insert.rule_colored(head, current, width, loptions)
 end
 
 ------------------------------------------------------------------------
--- cache
+-- registry
 ------------------------------------------------------------------------
 
-function cache.get_index()
-  if not cache.index then
-    cache.index = 0
+function registry.get_index()
+  if not registry.index then
+    registry.index = 0
   end
 
-  cache.index = cache.index + 1
-  return cache.index
+  registry.index = registry.index + 1
+  return registry.index
 end
 
-function cache.set(mode, position, values)
-  local index = cache.get_index()
+function registry.set(mode, position, values)
+  local index = registry.get_index()
 
   local data = {
     ['mode'] = mode,
@@ -216,15 +216,15 @@ function cache.set(mode, position, values)
     data.values = cleaned_values
   end
 
-  cache.storage[index] = data
+  registry.storage[index] = data
   return index
 end
 
-function cache.get(index)
-  return cache.storage[index]
+function registry.get(index)
+  return registry.storage[index]
 end
 
-function cache.process_local_options(loptions)
+function registry.process_local_options(loptions)
   if not loptions then
     local loptions = {}
   end
@@ -291,7 +291,7 @@ function cloze.basic(head)
         n.marker = get.marker(n.current, 'basic', 'start')
         if n.marker then
           t.options = get.marker_values(n.marker)
-          t.options = cache.process_local_options(t.options)
+          t.options = registry.process_local_options(t.options)
         end
 
         node.insert_after(hlist.head, n.current, create.color('text'))
@@ -360,7 +360,7 @@ function cloze.fix_make(head, start, stop)
   local l = {}
 
   local loptions = get.marker_values(start)
-  loptions = cache.process_local_options(loptions)
+  loptions = registry.process_local_options(loptions)
 
   l.width = tex.sp(loptions.width)
 
@@ -527,7 +527,7 @@ function base.get_options(localoptions)
 end
 
 function base.marker(mode, position, values)
-  local index = cache.set(mode, position, values)
+  local index = registry.set(mode, position, values)
   local marker = create.marker(index)
   node.write(marker)
 end
