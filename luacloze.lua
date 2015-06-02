@@ -238,8 +238,27 @@ function cache.process_local_options(loptions)
   if not loptions then
     local loptions = {}
   end
+
+  if loptions.show == 'unset' then
+    loptions.show = nil
+  end
+
+  if loptions.hide == 'unset' then
+    loptions.hide = nil
+  end
+
+  if loptions.hide then
+    loptions.show_text = false
+    loptions.hide = nil
+  end
+
+  if loptions.show then
+    loptions.show_text = true
+    loptions.show = nil
+  end
+
   for key, value in pairs(options) do
-    if not loptions[key] then
+    if loptions[key] == nil then
       loptions[key] = value
     end
   end
@@ -352,7 +371,7 @@ function cloze.fix_make(head, start, stop)
   n.stop = stop
 
   local loption = {}
-  loption.align = cloze.fix_align_options(options.align)
+  loption.align = cloze.fix_align_options(loptions.align)
 
   l.text_width = node.dimensions(n.start, n.stop)
 
@@ -376,7 +395,7 @@ function cloze.fix_make(head, start, stop)
 
   -- W[b] W[linecolor] R[length] W[colorreset] K[kern_start] W[textcolor]
   --   cloze test W[colorreset] K[kern_stop] W[e]
-  if options.show_text then
+  if loptions.show_text then
 
   -- Insert kerning for the gap at the beginning.
   head, n.kern_start = node.insert_after(head, n.line, create.kern(l.kern_start))

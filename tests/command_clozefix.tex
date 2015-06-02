@@ -1,16 +1,49 @@
 %!TEX program = lualatex
 \documentclass{article}
-\usepackage[width=1cm,align=R]{luacloze}
+\usepackage[width=8cm,show]{luacloze}
 %\usepackage{luanodelist}
 
-\begin{document}
-Lorem ipsum \clozefix[width=10cm,descender=-3mm]{dolor sit amet}, consectetur adipisicing. Lorem
 
-ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut \clozefix{labore et dolore magna} aliqua. Ut enim
-ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-aliquip ex ea \clozefix[width=3cm]{commodo} consequat. Duis aute irure dolor in
-reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
-qui officia deserunt mollit anim id est laborum.
+\begin{document}
+Lorem ipsum:
+
+\begin{itemize}
+\item \clozefix{Lorem ipsum dolor sit amet.}
+\item \clozefix{Consectetur adipisicing elit, sed do eiusmod.}
+\item \clozefix{Magna aliqua. Ut enim ad minim veniam.}
+\end{itemize}
+
+Dolor sit:
+
+\begin{enumerate}
+\item \clozefix{Lorem ipsum dolor sit amet.}
+\item \clozefix{Consectetur adipisicing elit, sed do eiusmod.}
+\item \clozefix{Magna aliqua. Ut enim ad minim veniam.}
+\end{enumerate}
+
+Align:
+
+\begin{itemize}
+\item \clozefix[align=left]{Left}
+\item \clozefix[align=center]{Center}
+\item \clozefix[align=right]{Right}
+\end{itemize}
+
+Width:
+
+\begin{itemize}
+\item \clozefix[width=2cm]{2cm}
+\item \clozefix[width=4cm]{4cm}
+\item \clozefix[width=6cm]{6cm}
+\end{itemize}
+
+Hide and show:
+
+\begin{enumerate}
+\item Hide: \clozefix[hide]{Lorem ipsum dolor sit amet.}
+\item Show: \clozefix[show]{Consectetur adipisicing elit, sed do eiusmod.}
+\item Hide: \clozefix[hide]{Magna aliqua. Ut enim ad minim veniam.}
+\end{enumerate}
+
+
 \end{document}

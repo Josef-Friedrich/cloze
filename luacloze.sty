@@ -30,8 +30,13 @@
 \ProcessKeyvalOptions{LC}
 
 % LCL = luacloze local
-\define@key{LCL}{width}[]{\def\LCL@width{#1}}
 \define@key{LCL}{descender}[]{\def\LCL@descender{#1}}
+% Affects only \clozefix
+\define@key{LCL}{align}[]{\def\LCL@align{#1}}
+\define@key{LCL}{width}[]{\def\LCL@width{#1}}
+\define@key{LCL}{hide}[true]{\def\LCL@hide{#1}}
+\define@key{LCL}{show}[true]{\def\LCL@show{#1}}
+
 
 \newcommand{\pdf@colorstack}[1]{\csname\string\color@#1\endcsname}
 
@@ -85,13 +90,16 @@
 % Creates a cloze on one line with a fixed length.
 %%
 \newcommand{\clozefix}[2][]{%
-  \setkeys{LCL}{width,descender}%
+  \setkeys{LCL}{width,descender,align,hide=unset,show=unset}%
   \setkeys{LCL}{#1}%
   \directlua{luacloze.register("fix")}%
   \strut\directlua{
     local values = {
+      ['descender'] = '\LCL@descender',
+      ['align'] = '\LCL@align',
       ['width'] = '\LCL@width',
-      ['descender'] = '\LCL@descender'
+      ['hide'] = '\LCL@hide',
+      ['show'] = '\LCL@show'
     }
     luacloze.marker('fix', 'start', values)
   }%
