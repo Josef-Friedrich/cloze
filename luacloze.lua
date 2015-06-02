@@ -113,22 +113,22 @@ end
 
 ---
 --
-function create.rule(width)
+function create.rule(width, loptions)
   -- Rule.
   local node = node.new(node.id('rule'))
 
   -- thickness = depth - height
-  if not options.descender then
-    options.descender = "3.4pt"
+  if not loptions.descender then
+    loptions.descender = "3.4pt"
   end
 
-  if not options.thickness then
-    options.thickness = "0.4pt"
+  if not loptions.thickness then
+    loptions.thickness = "0.4pt"
   end
 
-  local height = tex.sp(options.thickness) - tex.sp(options.descender)
+  local height = tex.sp(loptions.thickness) - tex.sp(loptions.descender)
 
-  node.depth = tex.sp(options.descender) -- 3.4pt
+  node.depth = tex.sp(loptions.descender) -- 3.4pt
   node.height = tex.sp(height) -- -3pt
   node.width = width
 
@@ -173,7 +173,7 @@ end
 -- insert
 ------------------------------------------------------------------------
 
-function insert.rule_colored(head, current, width)
+function insert.rule_colored(head, current, width, loptions)
 
   local color = {}
 
@@ -181,7 +181,7 @@ function insert.rule_colored(head, current, width)
   color.reset = create.whatsit_colorstack()
 
   -- Append rule and kern to the node list.
-  local rule = create.rule(width)
+  local rule = create.rule(width, loptions)
 
   head, new = node.insert_after(head, current, color.line)
   head, new = node.insert_after(head, new, rule)
@@ -379,7 +379,7 @@ function cloze.fix_make(head, start, stop)
   --   cloze test W[colorreset] K[n.kern_stop] W[n.end]
 
   -- Insert colored rule ()
-  head, n.line = insert.rule_colored(head, n.start, l.width)
+  head, n.line = insert.rule_colored(head, n.start, l.width, loptions)
 
   -- W[b] W[linecolor] R[length] W[colorreset] K[kern_start] W[textcolor]
   --   cloze test W[colorreset] K[kern_stop] W[e]
