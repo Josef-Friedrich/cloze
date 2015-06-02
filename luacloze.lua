@@ -85,7 +85,6 @@ end
 -- create
 ------------------------------------------------------------------------
 
--- Whatsit: colorstack
 function create.whatsit_colorstack(data)
   if not data then
     -- black
@@ -99,8 +98,6 @@ function create.whatsit_colorstack(data)
   return node
 end
 
----
---
 function create.color(option)
   local data
 
@@ -117,8 +114,6 @@ function create.color(option)
   return create.whatsit_colorstack(data)
 end
 
----
---
 function create.rule(width, loptions)
 
   if not loptions then
@@ -158,8 +153,6 @@ function create.glyph()
   return node
 end
 
----
---
 function create.marker(index)
   local marker = node.new('whatsit','user_defined')
   marker.type = 100 -- number
@@ -265,9 +258,6 @@ end
 -- cloze
 ------------------------------------------------------------------------
 
----
---
----
 function cloze.basic(head)
   local n = {} -- n = node
   local b = {} -- b = boolean
@@ -420,9 +410,6 @@ function cloze.fix_make(head, start, stop)
   end
 end
 
----
---
----
 function cloze.fix(head)
   -- n = node
   local n = {}
@@ -444,18 +431,12 @@ end
 
 -- mode: toend ---------------------------------------------------------
 
----
---
----
 function cloze.toend(head)
   return head
 end
 
 -- mode: par -----------------------------------------------------------
 
----
---
----
 function cloze.par(head)
   -- l = lenght
   local l = {}
