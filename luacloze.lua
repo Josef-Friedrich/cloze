@@ -498,7 +498,4 @@ function base.marker(mode, position, values)
   node.write(marker)
 end
 
-base.marker_start = insert.marker_start
-base.marker_stop = insert.marker_stop
-
 return base
