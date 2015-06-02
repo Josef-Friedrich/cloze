@@ -93,7 +93,7 @@
   \setkeys{LClocal}{width,descender}%
   \setkeys{LClocal}{#1}%
   \directlua{luacloze.register("fix")}%
-  \directlua{
+  \strut\directlua{
     local values = {
       ['width'] = '\LC@local@width',
       ['descender'] = '\LC@local@descender'
@@ -104,7 +104,7 @@
     \clozefont%
     #2%
   }%
-  \directlua{luacloze.marker('fix', 'stop')}%
+  \strut\directlua{luacloze.marker('fix', 'stop')}%
 }
 
 %%
@@ -114,30 +114,30 @@
 \newenvironment{clozepar}%
 {%
   \par%
-  \directlua{
+  \strut\directlua{
     luacloze.register('par')
     luacloze.marker('par', 'start')
   }%
   \clozefont%
 }%
 {%
-  \directlua{luacloze.marker('par', 'stop')}%
+  \strut\directlua{luacloze.marker('par', 'stop')}%
   \par%
   \directlua{luacloze.unregister('par')}%
 }
 
 %%
-% \clozeend{Lorem ipsum}
+% \clozetoend{Lorem ipsum}
 %
 % This command forces a line break and creates a cloze line that extends
 % to the end of the text line.
 %%
-\newcommand{\clozeend}[1]{%
-  \directlua{register('toend')}%
-  \directlua{luacloze.marker('topar', 'start')}%
+\newcommand{\clozetoend}[1]{%
+  \directlua{luacloze.register('toend')}%
+  \strut\directlua{luacloze.marker('topar', 'start')}%
   #1%
   \newline%
-  \directlua{luacloze.marker('topar', 'stop')}%
+  \strut\directlua{luacloze.marker('topar', 'stop')}%
 }
 
 %%

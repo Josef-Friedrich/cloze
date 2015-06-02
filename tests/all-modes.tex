@@ -1,0 +1,58 @@
+%!TEX program = lualatex
+\documentclass{article}
+\usepackage[width=8cm,show]{luacloze}
+
+\begin{document}
+
+\section{basic}
+
+Lorem ipsum dolor \cloze{sit amet}, consectetur adipisicing elit, sed do
+eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+minim veniam, quis nostrud exercitation \cloze{ullamco laboris} nisi ut
+aliquip ex ea commodo consequat. \cloze{Duis aute irure dolor in
+reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+pariatur.} Excepteur sint occaecat cupidatat non proident, sunt in culpa
+qui officia deserunt mollit anim id est laborum.
+
+\section{fix}
+
+Lorem ipsum dolor sit amet:
+
+\begin{enumerate}
+\item \clozefix{Consectetur adipisicing elit, sed do eiusmod.}
+\item \clozefix{Tempor incididunt ut labore et dolore magna.}
+\item \clozefix{Aliqua. Ut enim ad minim.}
+\end{enumerate}
+
+ute irure dolor in reprehenderit in voluptate
+velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+mollit anim id est laborum.
+
+\section{toend}
+
+Lorem ipsum dolor: \clozetoend{Sit amet, consectetur adipisicing elit,
+sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.}
+
+Ut enim ad minim: \clozetoend{Veniam, quis nostrud exercitation ullamco
+laboris nisi ut aliquip ex ea commodo consequat.}
+
+\section{par}
+
+\begin{clozepar}
+Lorem ipsum dolor sit amet.
+\end{clozepar}
+
+Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
+et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+
+\begin{clozepar}
+Exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+dolore eu fugiat nulla.
+\end{clozepar}
+
+Pariatur. Excepteur sint
+occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+mollit anim id est laborum.
+\end{document}

@@ -114,6 +114,11 @@ end
 ---
 --
 function create.rule(width, loptions)
+
+  if not loptions then
+    loptions = {}
+  end
+
   -- Rule.
   local node = node.new(node.id('rule'))
 
@@ -464,6 +469,11 @@ end
 ------------------------------------------------------------------------
 
 function base.register(mode)
+  if mode == 'par' then
+    luatexbase.add_to_callback('post_linebreak_filter', cloze.par, mode, 1)
+    return true
+  end
+
   if not is_registered[mode] then
     if mode == 'basic' then
       luatexbase.add_to_callback('post_linebreak_filter', cloze.basic, mode, 1)
@@ -472,7 +482,7 @@ function base.register(mode)
     elseif mode == 'toend' then
       luatexbase.add_to_callback('post_linebreak_filter', cloze.toend, mode, 1)
     else
-      luatexbase.add_to_callback('post_linebreak_filter', cloze.par, mode, 1)
+      return false
     end
     is_registered[mode] = true
   end
