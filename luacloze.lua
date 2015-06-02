@@ -190,18 +190,6 @@ function insert.rule_colored(head, current, width, loptions)
   return head, new
 end
 
-function insert.whatsit(value)
-  node.write(create.whatsit_userdefined(value))
-end
-
-function insert.marker_start(value)
-  insert.whatsit(value .. '-start')
-end
-
-function insert.marker_stop(value)
-  insert.whatsit(value .. '-stop')
-end
-
 ------------------------------------------------------------------------
 -- cache
 ------------------------------------------------------------------------
