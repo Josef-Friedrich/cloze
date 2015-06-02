@@ -1,4 +1,5 @@
 local check = {}
+local get = {}
 check.user_id = 3121978
 local create = {}
 local insert = {}
@@ -14,7 +15,7 @@ local options
 -- check
 ------------------------------------------------------------------------
 
-function check.is_marker(item)
+function check.whatsit_marker(item)
   if item.id == node.id('whatsit')
       and item.subtype == 44
       and item.user_id == check.user_id then
@@ -25,14 +26,14 @@ function check.is_marker(item)
 end
 
 function check.get_marker_data(item)
-  if not check.is_marker(item) then
+  if not check.whatsit_marker(item) then
     return false
   else
     return cache.get(item.value)
   end
 end
 
-function check.get_marker_values(item)
+function get.marker_values(item)
   local data = check.get_marker_data(item)
   return data.values
 end
@@ -57,7 +58,7 @@ function check.is_position(item, position)
   end
 end
 
-function check.mode_position(item, mode, position)
+function check.marker(item, mode, position)
   local data = check.get_marker_data(item)
 
   if data and data.mode == mode and data.position == position then
@@ -67,8 +68,8 @@ function check.mode_position(item, mode, position)
   end
 end
 
-function check.get_by_mode_pos(item, mode, position)
-  if check.mode_position(item, mode, position) then
+function get.marker(item, mode, position)
+  if check.marker(item, mode, position) then
     return item
   else
     return false
@@ -149,17 +150,6 @@ end
 function create.glyph()
   local node = node.new(node.id('glyph'))
   node.char = 34
-  return node
-end
-
----
---
-function create.whatsit_userdefined(value)
-  local node = node.new('whatsit','user_defined')
-  node.type = 115 -- string
-  node.user_id = WHATSIT_USERID
-  node.value = value
-
   return node
 end
 
@@ -274,58 +264,68 @@ end
 --
 ---
 function cloze.basic(head)
+  local n = {} -- n = node
+  local b = {} -- b = boolean
+  local l = {} -- l = length
+  local t = {} -- t = temp
 
-  for line in node.traverse_id(node.id("hlist"), head) do
+  for hlist in node.traverse_id(node.id("hlist"), head) do
 
     -- To make life easier: We add at the beginning of each line a blank
     -- user defined whatsit. Now we can add rule, color etc. nodes AFTER
     -- the first node of a line not BEFORE. AFTER is much more easier.
-    current = line.head
-    node.insert_before(current, current, create.whatsit_userdefined('cloze-anchor'))
-    line.head = current.prev
+    n.head = hlist.head
+    node.insert_before(n.head, n.head, create.rule(0))
+    hlist.head = n.head.prev
 
-    if LINE_END then
-      INIT_CLOZE = true
+    if b.line_end then
+      b.init_cloze = true
     end
 
-    local item = line.head
+    n.current = hlist.head
 
-    while item do
+    while n.current do
 
-      if check.mode_position(item, 'basic', 'start') or INIT_CLOZE then
-        node.insert_after(line.head, item, create.color('text'))
+      if check.marker(n.current, 'basic', 'start') or b.init_cloze then
 
-        INIT_CLOZE = false
+        n.marker = get.marker(n.current, 'basic', 'start')
+        if n.marker then
+          t.options = get.marker_values(n.marker)
+          t.options = cache.process_local_options(t.options)
+        end
 
-        local end_node = item
-        while end_node.next do
+        node.insert_after(hlist.head, n.current, create.color('text'))
 
-          LINE_END = true
+        b.init_cloze = false
 
-          if check.mode_position(end_node, 'basic', 'stop') then
-            LINE_END = false
+        n.stop = n.current
+        while n.stop.next do
+
+          b.line_end = true
+
+          if check.marker(n.stop, 'basic', 'stop') then
+            b.line_end = false
             break
           end
 
-          end_node = end_node.next
+          n.stop = n.stop.next
         end
 
-        local rule_width = node.dimensions(line.glue_set, line.glue_sign, line.glue_order, item, end_node.next)
+        l.line_width = node.dimensions(n.current, n.stop.next)
 
-        head, current = insert.rule_colored(head, item, rule_width)
+        head, n.line = insert.rule_colored(head, n.current, l.line_width, t.options)
 
-        if options.show_text then
-          node.insert_after(head, current, create.kern(-rule_width))
-          colorstack_reset = create.whatsit_colorstack()
-          node.insert_after(head, end_node, colorstack_reset)
+        if t.options.show_text then
+          node.insert_after(head, n.line, create.kern(-l.line_width))
+          node.insert_after(head, n.stop, create.color('reset'))
         else
-          current.next = end_node.next
-          end_node.prev = current.prev
+          n.line.next = n.stop.next
+          n.stop.prev = n.line.prev
         end
 
-        item = end_node.next
+        n.current = n.stop.next
       else
-        item = item.next
+        n.current = n.current.next
       end -- if
 
     end -- while
@@ -359,7 +359,7 @@ function cloze.fix_make(head, start, stop)
   -- l = length
   local l = {}
 
-  local loptions = check.get_marker_values(start)
+  local loptions = get.marker_values(start)
   loptions = cache.process_local_options(loptions)
 
   l.width = tex.sp(loptions.width)
@@ -425,8 +425,8 @@ function cloze.fix(head)
   n.start, n.stop = false
   for current in node.traverse_id(node.id('whatsit'), head) do
 
-    if not n.start then n.start = check.get_by_mode_pos(current, 'fix', 'start') end
-    if not n.stop then n.stop = check.get_by_mode_pos(current, 'fix', 'stop') end
+    if not n.start then n.start = get.marker(current, 'fix', 'start') end
+    if not n.stop then n.stop = get.marker(current, 'fix', 'stop') end
 
     if n.start and n.stop then
       cloze.fix_make(head, n.start, n.stop)
