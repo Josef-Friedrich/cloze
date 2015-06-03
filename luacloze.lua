@@ -285,7 +285,8 @@ function cloze.basic(head)
           n.stop = n.stop.next
         end
 
-        l.line_width = node.dimensions(n.current, n.stop.next)
+        l.line_width = node.dimensions(hlist.glue_set, hlist.glue_sign, hlist.glue_order, n.current, n.stop.next)
+        -- l.line_width = node.dimensions(n.current, n.stop.next)
 
         head, n.line = insert.rule_colored(head, n.current, l.line_width, t.options)
 
