@@ -10,45 +10,78 @@
   luacloze = require("luacloze")
 }
 
+%-----------------------------------------------------------------------
+% Global options
+%-----------------------------------------------------------------------
+
 % LC = luacloze
 \SetupKeyvalOptions{
   family=LC,
   prefix=LC@
 }
 
-\DeclareStringOption[0.4pt]{thickness}
-\DeclareStringOption[3pt]{descender}
-\DeclareStringOption[blue]{textcolor}
-\DeclareStringOption[black]{linecolor}
-% Affects only \clozefix
-\DeclareStringOption[l]{align}
-\DeclareStringOption[2cm]{width}
+% align
+\DeclareStringOption[l]{align} % Affects only \clozefix
 
-\DeclareVoidOption{show}{\directlua{luacloze.options.show_text = true}}
+% descender
+\DeclareStringOption[3pt]{descender}
+
+% hide
 \DeclareVoidOption{hide}{\directlua{luacloze.options.show_text = false}}
+
+% linecolor
+\DeclareStringOption[black]{linecolor}
+
+% show
+\DeclareVoidOption{show}{\directlua{luacloze.options.show_text = true}}
+
+% textcolor
+\DeclareStringOption[blue]{textcolor}
+
+% thickness
+\DeclareStringOption[0.4pt]{thickness}
+
+% width
+\DeclareStringOption[2cm]{width} % Affects only \clozefix
 
 \ProcessKeyvalOptions{LC}
 
+%-----------------------------------------------------------------------
+% Local options
+%-----------------------------------------------------------------------
+
 % LCL = luacloze local
+
+% align
+\define@key{LCL}{align}[]{\def\LCL@align{#1}} % Affects only \clozefix
+
+% descender
 \define@key{LCL}{descender}[]{\def\LCL@descender{#1}}
-% Affects only \clozefix
-\define@key{LCL}{align}[]{\def\LCL@align{#1}}
-\define@key{LCL}{width}[]{\def\LCL@width{#1}}
+
+% hide
 \define@key{LCL}{hide}[true]{\def\LCL@hide{#1}}
+
+% show
 \define@key{LCL}{show}[true]{\def\LCL@show{#1}}
 
+% width
+\define@key{LCL}{width}[]{\def\LCL@width{#1}} % Affects only \clozefix
+
+%-----------------------------------------------------------------------
+% Set global options
+%-----------------------------------------------------------------------
 
 \newcommand{\pdf@colorstack}[1]{\csname\string\color@#1\endcsname}
 
 \newcommand{\set@lua@values}{%
 %
   \directlua{
-    luacloze.options.thickness = '\LC@thickness'
+    luacloze.options.align = '\LC@align'
     luacloze.options.descender = '\LC@descender'
     luacloze.options.linecolor = '\pdf@colorstack{\LC@linecolor}'
     luacloze.options.textcolor = '\pdf@colorstack{\LC@textcolor}'
+    luacloze.options.thickness = '\LC@thickness'
     luacloze.options.width = '\LC@width'
-    luacloze.options.align = '\LC@align'
 
     luacloze.get_options(luacloze.options)
   }%
