@@ -246,11 +246,11 @@ function cloze.basic(head)
 
   for hlist in node.traverse_id(node.id("hlist"), head) do
 
-    -- To make life easier: We add at the beginning of each line a blank
-    -- user defined whatsit. Now we can add rule, color etc. nodes AFTER
+    -- To make life easier: We add at the beginning of each line a strut.
+    -- Now we can add rule, color etc. nodes AFTER
     -- the first node of a line not BEFORE. AFTER is much more easier.
     n.head = hlist.head
-    node.insert_before(n.head, n.head, create.rule(0))
+    n.strut = node.insert_before(n.head, n.head, create.rule(0))
     hlist.head = n.head.prev
 
     if b.line_end then
@@ -428,10 +428,9 @@ function cloze.par(head)
 
     l.width = hlist.width
 
-    n.current = hlist.head
-    n.strut = create.rule(0)
-    hlist.head = n.strut
-    n.strut.next = n.current
+    n.head = hlist.head
+    n.strut = node.insert_before(n.head, n.head, create.rule(0))
+    hlist.head = n.head.prev
 
     head, n.rule = insert.rule_colored(head, n.strut, l.width)
 
@@ -439,8 +438,8 @@ function cloze.par(head)
       head, n.kern = node.insert_after(head, n.rule, create.kern(-l.width))
       node.insert_after(head, n.kern, create.color('text'))
 
-      n.tail = node.tail(n.current)
-      node.insert_after(n.current, n.tail, create.color('reset'))
+      n.tail = node.tail(n.head)
+      node.insert_after(n.head, n.tail, create.color('reset'))
     else
       n.rule.next = nil
     end

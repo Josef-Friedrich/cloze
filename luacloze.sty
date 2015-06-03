@@ -18,8 +18,8 @@
 
 \DeclareStringOption[0.4pt]{thickness}
 \DeclareStringOption[3pt]{descender}
-\DeclareStringOption[{0,0,1}]{textcolor}
-\DeclareStringOption[{0,0,0}]{linecolor}
+\DeclareStringOption[blue]{textcolor}
+\DeclareStringOption[black]{linecolor}
 % Affects only \clozefix
 \DeclareStringOption[l]{align}
 \DeclareStringOption[2cm]{width}
@@ -41,14 +41,12 @@
 \newcommand{\pdf@colorstack}[1]{\csname\string\color@#1\endcsname}
 
 \newcommand{\set@lua@values}{%
-  \definecolor{clozelinecolor}{rgb}{\LC@linecolor}%
-  \definecolor{clozetextcolor}{rgb}{\LC@textcolor}%
 %
   \directlua{
     luacloze.options.thickness = '\LC@thickness'
     luacloze.options.descender = '\LC@descender'
-    luacloze.options.linecolor = '\pdf@colorstack{clozelinecolor}'
-    luacloze.options.textcolor = '\pdf@colorstack{clozetextcolor}'
+    luacloze.options.linecolor = '\pdf@colorstack{\LC@linecolor}'
+    luacloze.options.textcolor = '\pdf@colorstack{\LC@textcolor}'
     luacloze.options.width = '\LC@width'
     luacloze.options.align = '\LC@align'
 
