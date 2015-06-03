@@ -1,16 +1,49 @@
 %!TEX program = lualatex
 \documentclass{article}
 \usepackage[show]{luacloze}
-%\usepackage[callback=linebreak,interface=guided]{luanodelist}
 
 \begin{document}
 
 Lorem ipsum \cloze{dolor sit} amet.
 
-Lorem ipsum \cloze[hide]{dolor sit} amet.
+\section{Hide and show}
 
-Lorem ipsum \cloze{dolor sit} amet.
+\begin{itemize}
+\item Hide: \cloze[hide]{Lorem ipsum dolor sit amet.}
+\item Show: \cloze[show]{Consectetur adipisicing elit, sed do eiusmod.}
+\item Hide: \cloze[hide]{Magna aliqua. Ut enim ad minim veniam.}
+\end{itemize}
 
-Lorem ipsum \cloze[textcolor=green]{dolor sit} amet.
+\section{Text color}
+
+\begin{itemize}
+\item Black: \cloze[textcolor=black]{Lorem ipsum dolor sit amet.}
+\item Red: \cloze[textcolor=red]{Consectetur adipisicing elit, sed do eiusmod.}
+\item Green: \cloze[textcolor=green]{Magna aliqua. Ut enim ad minim veniam.}
+\end{itemize}
+
+\section{Line color}
+
+\begin{itemize}
+\item Black: \cloze[linecolor=black]{Lorem ipsum dolor sit amet.}
+\item Red: \cloze[linecolor=red]{Consectetur adipisicing elit, sed do eiusmod.}
+\item Green: \cloze[linecolor=green]{Magna aliqua. Ut enim ad minim veniam.}
+\end{itemize}
+
+\section{Thickness}
+
+\begin{itemize}
+\item 1mm: \cloze[thickness=1mm]{Lorem ipsum dolor sit amet.}
+\item 2mm: \cloze[thickness=2mm]{Consectetur adipisicing elit, sed do eiusmod.}
+\item 3mm: \cloze[thickness=3mm]{Magna aliqua. Ut enim ad minim veniam.}
+\end{itemize}
+
+\section{Descender}
+
+\begin{itemize}
+\item 1mm: \cloze[descender=1mm]{Lorem ipsum dolor sit amet.}
+\item 2mm: \cloze[descender=2mm]{Consectetur adipisicing elit, sed do eiusmod.}
+\item 3mm: \cloze[descender=3mm]{Magna aliqua. Ut enim ad minim veniam.}
+\end{itemize}
 
 \end{document}

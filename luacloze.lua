@@ -81,6 +81,10 @@ end
 function create.color(option, loptions)
   local data
 
+  if loptions == nil then
+    loptions = registry.process_local_options(loptions)
+  end
+
   if option == 'line' then
     data = loptions.linecolor
   elseif option == 'text' then
@@ -198,8 +202,8 @@ function registry.get(index)
 end
 
 function registry.process_local_options(loptions)
-  if not loptions then
-    local loptions = {}
+  if loptions == nil then
+    loptions = {}
   end
 
   if loptions.show == 'unset' then

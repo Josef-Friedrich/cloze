@@ -47,6 +47,28 @@
 \ProcessKeyvalOptions{LC}
 
 %-----------------------------------------------------------------------
+% Set global options
+%-----------------------------------------------------------------------
+
+\newcommand{\pdf@colorstack}[1]{\csname\string\color@#1\endcsname}
+
+\newcommand{\set@lua@values}{%
+%
+  \directlua{
+    luacloze.options.align = '\LC@align'
+    luacloze.options.descender = '\LC@descender'
+    luacloze.options.linecolor = '\pdf@colorstack{\LC@linecolor}'
+    luacloze.options.textcolor = '\pdf@colorstack{\LC@textcolor}'
+    luacloze.options.thickness = '\LC@thickness'
+    luacloze.options.width = '\LC@width'
+
+    luacloze.get_options(luacloze.options)
+  }%
+}
+
+\set@lua@values
+
+%-----------------------------------------------------------------------
 % Local options
 %-----------------------------------------------------------------------
 
@@ -76,27 +98,43 @@
 % width
 \define@key{LCL}{width}[]{\def\LCL@width{#1}} % Affects only \clozefix
 
-%-----------------------------------------------------------------------
-% Set global options
-%-----------------------------------------------------------------------
+\newcommand{\set@local@keys}[1]{%
+  \setkeys{LCL}{
+    align,
+    descender,
+    hide=unset,
+    linecolor,
+    show=unset,
+    textcolor,
+    thickness,
+    width,
+  }%
+  \setkeys{LCL}{#1}%
+}
 
-\newcommand{\pdf@colorstack}[1]{\csname\string\color@#1\endcsname}
-
-\newcommand{\set@lua@values}{%
-%
-  \directlua{
-    luacloze.options.align = '\LC@align'
-    luacloze.options.descender = '\LC@descender'
-    luacloze.options.linecolor = '\pdf@colorstack{\LC@linecolor}'
-    luacloze.options.textcolor = '\pdf@colorstack{\LC@textcolor}'
-    luacloze.options.thickness = '\LC@thickness'
-    luacloze.options.width = '\LC@width'
-
-    luacloze.get_options(luacloze.options)
+\newcommand{\set@start@marker}[1]{%
+  \strut\directlua{
+    luacloze.register('#1')
+    local values = {
+      ['align'] = '\LCL@align',
+      ['descender'] = '\LCL@descender',
+      ['hide'] = '\LCL@hide',
+      ['linecolor'] = '\LCL@linecolor',
+      ['show'] = '\LCL@show',
+      ['textcolor'] = '\LCL@textcolor',
+      ['thickness'] = '\LCL@thickness',
+      ['width'] = '\LCL@width',
+    }
+    luacloze.marker('#1', 'start', values)
   }%
 }
 
-\set@lua@values
+\newcommand{\set@stop@marker}[1]{%
+  \strut\directlua{
+    luacloze.marker('#1', 'stop')
+  }%
+}
+
 
 %-----------------------------------------------------------------------
 % Public macros
@@ -111,30 +149,13 @@
 % \cloze{Lorem ipsum}
 %%
 \newcommand{\cloze}[2][]{%
-  \setkeys{LCL}{
-    descender,
-    hide=unset,
-    linecolor,
-    show=unset,
-    textcolor
-  }%
-  \setkeys{LCL}{#1}%
-  \strut\directlua{
-    luacloze.register('basic')
-    local values = {
-      ['descender'] = '\LCL@descender',
-      ['hide'] = '\LCL@hide',
-      ['linecolor'] = '\LCL@linecolor',
-      ['show'] = '\LCL@show',
-      ['textcolor'] = '\LCL@textcolor',
-    }
-    luacloze.marker('basic', 'start', values)
-  }%
+  \set@local@keys{#1}%
+  \set@start@marker{basic}%
   {%
     \clozefont%
     #2%
   }%
-  \strut\directlua{luacloze.marker('basic', 'stop')}%
+  \set@stop@marker{basic}%
 }
 
 %%
@@ -143,36 +164,13 @@
 % Creates a cloze on one line with a fixed length.
 %%
 \newcommand{\clozefix}[2][]{%
-  \setkeys{LCL}{
-    align,
-    descender,
-    hide=unset,
-    linecolor,
-    show=unset,
-    textcolor,
-    thickness,
-    width,
-  }%
-  \setkeys{LCL}{#1}%
-  \directlua{luacloze.register("fix")}%
-  \strut\directlua{
-    local values = {
-      ['align'] = '\LCL@align',
-      ['descender'] = '\LCL@descender',
-      ['hide'] = '\LCL@hide',
-      ['linecolor'] = '\LCL@linecolor',
-      ['show'] = '\LCL@show',
-      ['textcolor'] = '\LCL@textcolor',
-      ['thickness'] = '\LCL@thickness',
-      ['width'] = '\LCL@width',
-    }
-    luacloze.marker('fix', 'start', values)
-  }%
+  \set@local@keys{#1}%
+  \set@start@marker{fix}%
   {%
     \clozefont%
     #2%
   }%
-  \strut\directlua{luacloze.marker('fix', 'stop')}%
+  \set@stop@marker{fix}%
 }
 
 %%
@@ -189,7 +187,7 @@
   \clozefont%
 }%
 {%
-  \strut\directlua{luacloze.marker('par', 'stop')}%
+  \set@stop@marker{par}%
   \par%
   \directlua{luacloze.unregister('par')}%
 }
@@ -201,10 +199,9 @@
 % to the end of the text line.
 %%
 \newcommand{\clozetoend}[1]{%
-  \directlua{luacloze.register('toend')}%
-  \strut\directlua{luacloze.marker('topar', 'start')}%
+  \set@start@marker{toend}%
   #1%
-  \strut\directlua{luacloze.marker('topar', 'stop')}%
+  \set@stop@marker{toend}%
   \par%
 }
 
