@@ -177,13 +177,11 @@
 % \begin{clozepar}
 % Lorem ipsum.
 % \end{clozepar}
-\newenvironment{clozepar}%
+\newenvironment{clozepar}[1][]%
 {%
   \par%
-  \strut\directlua{
-    luacloze.register('par')
-    luacloze.marker('par', 'start')
-  }%
+  \set@local@keys{#1}%
+  \set@start@marker{par}%
   \clozefont%
 }%
 {%

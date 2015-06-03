@@ -286,7 +286,6 @@ function cloze.basic(head)
         end
 
         l.line_width = node.dimensions(hlist.glue_set, hlist.glue_sign, hlist.glue_order, n.current, n.stop.next)
-        -- l.line_width = node.dimensions(n.current, n.stop.next)
 
         head, n.line = insert.rule_colored(head, n.current, l.line_width, t.options)
 
@@ -413,8 +412,16 @@ end
 function cloze.par(head)
   local l = {} -- length
   local n = {} -- node
+  local loptions
 
-  for hlist in node.traverse_id(node.id("hlist"), head) do
+  for hlist in node.traverse_id(node.id('hlist'), head) do
+
+    for whatsit in node.traverse_id(node.id('whatsit'), hlist.head) do
+      if check.marker(whatsit, 'par', 'start') then
+        loptions = get.marker_values(whatsit)
+        loptions = registry.process_local_options(loptions)
+      end
+    end
 
     l.width = hlist.width
 
@@ -422,11 +429,11 @@ function cloze.par(head)
     n.strut = node.insert_before(n.head, n.head, create.rule(0))
     hlist.head = n.head.prev
 
-    head, n.rule = insert.rule_colored(head, n.strut, l.width)
+    head, n.rule = insert.rule_colored(head, n.strut, l.width, loptions)
 
-    if options.show_text then
+    if loptions.show_text then
       head, n.kern = node.insert_after(head, n.rule, create.kern(-l.width))
-      node.insert_after(head, n.kern, create.color('text'))
+      node.insert_after(head, n.kern, create.color('text', loptions))
 
       n.tail = node.tail(n.head)
       node.insert_after(n.head, n.tail, create.color('reset'))
