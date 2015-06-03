@@ -1,27 +1,10 @@
 %!TEX program = lualatex
 \documentclass{article}
 \usepackage[width=8cm,show]{luacloze}
-%\usepackage{luanodelist}
-
 
 \begin{document}
-Lorem ipsum:
 
-\begin{itemize}
-\item \clozefix{Lorem ipsum dolor sit amet.}
-\item \clozefix{Consectetur adipisicing elit, sed do eiusmod.}
-\item \clozefix{Magna aliqua. Ut enim ad minim veniam.}
-\end{itemize}
-
-Dolor sit:
-
-\begin{enumerate}
-\item \clozefix{Lorem ipsum dolor sit amet.}
-\item \clozefix{Consectetur adipisicing elit, sed do eiusmod.}
-\item \clozefix{Magna aliqua. Ut enim ad minim veniam.}
-\end{enumerate}
-
-Align:
+\section{Align}
 
 \begin{itemize}
 \item \clozefix[align=left]{Left}
@@ -29,7 +12,7 @@ Align:
 \item \clozefix[align=right]{Right}
 \end{itemize}
 
-Width:
+\section{Width}
 
 \begin{itemize}
 \item \clozefix[width=2cm]{2cm}
@@ -37,13 +20,44 @@ Width:
 \item \clozefix[width=6cm]{6cm}
 \end{itemize}
 
-Hide and show:
+\section{Hide and show}
 
-\begin{enumerate}
+\begin{itemize}
 \item Hide: \clozefix[hide]{Lorem ipsum dolor sit amet.}
 \item Show: \clozefix[show]{Consectetur adipisicing elit, sed do eiusmod.}
 \item Hide: \clozefix[hide]{Magna aliqua. Ut enim ad minim veniam.}
-\end{enumerate}
+\end{itemize}
 
+\section{Text color}
+
+\begin{itemize}
+\item Black: \clozefix[textcolor=black]{Lorem ipsum dolor sit amet.}
+\item Red: \clozefix[textcolor=red]{Consectetur adipisicing elit, sed do eiusmod.}
+\item Green: \clozefix[textcolor=green]{Magna aliqua. Ut enim ad minim veniam.}
+\end{itemize}
+
+\section{Line color}
+
+\begin{itemize}
+\item Black: \clozefix[linecolor=black]{Lorem ipsum dolor sit amet.}
+\item Red: \clozefix[linecolor=red]{Consectetur adipisicing elit, sed do eiusmod.}
+\item Green: \clozefix[linecolor=green]{Magna aliqua. Ut enim ad minim veniam.}
+\end{itemize}
+
+\section{Thickness}
+
+\begin{itemize}
+\item 1mm: \clozefix[thickness=1mm]{Lorem ipsum dolor sit amet.}
+\item 2mm: \clozefix[thickness=2mm]{Consectetur adipisicing elit, sed do eiusmod.}
+\item 3mm: \clozefix[thickness=3mm]{Magna aliqua. Ut enim ad minim veniam.}
+\end{itemize}
+
+\section{Descender}
+
+\begin{itemize}
+\item 1mm: \clozefix[descender=1mm]{Lorem ipsum dolor sit amet.}
+\item 2mm: \clozefix[descender=2mm]{Consectetur adipisicing elit, sed do eiusmod.}
+\item 3mm: \clozefix[descender=3mm]{Magna aliqua. Ut enim ad minim veniam.}
+\end{itemize}
 
 \end{document}

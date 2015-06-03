@@ -78,13 +78,13 @@ function create.whatsit_colorstack(data)
   return node
 end
 
-function create.color(option)
+function create.color(option, loptions)
   local data
 
   if option == 'line' then
-    data = options.linecolor
+    data = loptions.linecolor
   elseif option == 'text' then
-    data = options.textcolor
+    data = loptions.textcolor
   elseif option == 'reset' then
     data = nil
   else
@@ -100,15 +100,13 @@ function create.rule(width, loptions)
     loptions = {}
   end
 
-  -- Rule.
   local node = node.new(node.id('rule'))
 
-  -- thickness = depth - height
-  if not loptions.descender then
+  if loptions.descender == nil then
     loptions.descender = "3.4pt"
   end
 
-  if not loptions.thickness then
+  if loptions.thickness == nil then
     loptions.thickness = "0.4pt"
   end
 
@@ -150,15 +148,12 @@ function insert.rule_colored(head, current, width, loptions)
 
   local color = {}
 
-  color.line = create.color('line')
-  color.reset = create.whatsit_colorstack()
-
   -- Append rule and kern to the node list.
   local rule = create.rule(width, loptions)
 
-  head, new = node.insert_after(head, current, color.line)
+  head, new = node.insert_after(head, current, create.color('line', loptions))
   head, new = node.insert_after(head, new, rule)
-  head, new = node.insert_after(head, new, color.reset)
+  head, new = node.insert_after(head, new, create.color('reset', loptions))
 
   return head, new
 end
@@ -269,7 +264,7 @@ function cloze.basic(head)
           t.options = registry.process_local_options(t.options)
         end
 
-        node.insert_after(hlist.head, n.current, create.color('text'))
+        node.insert_after(hlist.head, n.current, create.color('text', t.options))
 
         b.init_cloze = false
 
@@ -376,7 +371,7 @@ function cloze.fix_make(head, start, stop)
   head, n.kern_start = node.insert_after(head, n.line, create.kern(l.kern_start))
 
   -- Insert text color.
-  node.insert_after(head, n.kern_start, create.color('text'))
+  node.insert_after(head, n.kern_start, create.color('text', loptions))
 
   -- Reset text color.
   node.insert_before(head, n.stop, create.whatsit_colorstack())

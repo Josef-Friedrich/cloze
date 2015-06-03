@@ -61,8 +61,17 @@
 % hide
 \define@key{LCL}{hide}[true]{\def\LCL@hide{#1}}
 
+% linecolor
+\define@key{LCL}{linecolor}[]{\def\LCL@linecolor{\pdf@colorstack{#1}}}
+
 % show
 \define@key{LCL}{show}[true]{\def\LCL@show{#1}}
+
+% textcolor
+\define@key{LCL}{textcolor}[]{\def\LCL@textcolor{\pdf@colorstack{#1}}}
+
+% thickness
+\define@key{LCL}{thickness}[]{\def\LCL@thickness{#1}}
 
 % width
 \define@key{LCL}{width}[]{\def\LCL@width{#1}} % Affects only \clozefix
@@ -102,14 +111,22 @@
 % \cloze{Lorem ipsum}
 %%
 \newcommand{\cloze}[2][]{%
-  \setkeys{LCL}{descender,hide=unset,show=unset}%
+  \setkeys{LCL}{
+    descender,
+    hide=unset,
+    linecolor,
+    show=unset,
+    textcolor
+  }%
   \setkeys{LCL}{#1}%
   \strut\directlua{
     luacloze.register('basic')
     local values = {
       ['descender'] = '\LCL@descender',
       ['hide'] = '\LCL@hide',
-      ['show'] = '\LCL@show'
+      ['linecolor'] = '\LCL@linecolor',
+      ['show'] = '\LCL@show',
+      ['textcolor'] = '\LCL@textcolor',
     }
     luacloze.marker('basic', 'start', values)
   }%
@@ -126,16 +143,28 @@
 % Creates a cloze on one line with a fixed length.
 %%
 \newcommand{\clozefix}[2][]{%
-  \setkeys{LCL}{width,descender,align,hide=unset,show=unset}%
+  \setkeys{LCL}{
+    align,
+    descender,
+    hide=unset,
+    linecolor,
+    show=unset,
+    textcolor,
+    thickness,
+    width,
+  }%
   \setkeys{LCL}{#1}%
   \directlua{luacloze.register("fix")}%
   \strut\directlua{
     local values = {
-      ['descender'] = '\LCL@descender',
       ['align'] = '\LCL@align',
-      ['width'] = '\LCL@width',
+      ['descender'] = '\LCL@descender',
       ['hide'] = '\LCL@hide',
-      ['show'] = '\LCL@show'
+      ['linecolor'] = '\LCL@linecolor',
+      ['show'] = '\LCL@show',
+      ['textcolor'] = '\LCL@textcolor',
+      ['thickness'] = '\LCL@thickness',
+      ['width'] = '\LCL@width',
     }
     luacloze.marker('fix', 'start', values)
   }%
