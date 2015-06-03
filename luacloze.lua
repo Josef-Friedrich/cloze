@@ -112,8 +112,8 @@ function create.rule(width, loptions)
 
   local height = tex.sp(loptions.thickness) - tex.sp(loptions.descender)
 
-  node.depth = tex.sp(loptions.descender) -- 3.4pt
-  node.height = tex.sp(height) -- -3pt
+  node.depth = tex.sp(loptions.descender)
+  node.height = tex.sp(height)
   node.width = width
 
   return node
@@ -234,10 +234,10 @@ end
 ------------------------------------------------------------------------
 
 function cloze.basic(head)
-  local n = {} -- n = node
-  local b = {} -- b = boolean
-  local l = {} -- l = length
-  local t = {} -- t = temp
+  local n = {} -- node
+  local b = {} -- boolean
+  local l = {} -- length
+  local t = {} -- temp
 
   for hlist in node.traverse_id(node.id("hlist"), head) do
 
@@ -322,25 +322,19 @@ function cloze.fix_align_options(option)
 
 end
 
--- b whatsit begin marker
--- e whatsit end marker
--- t tmp
 function cloze.fix_make(head, start, stop)
-  -- l = length
-  local l = {}
+  local l = {} -- length
 
   local loptions = get.marker_values(start)
   loptions = registry.process_local_options(loptions)
 
   l.width = tex.sp(loptions.width)
 
-  -- n = node
-  local n = {}
-  -- loption = local option
+  local n = {} -- node
   n.start = start
   n.stop = stop
 
-  local loption = {}
+  local loption = {} -- local option
   loption.align = cloze.fix_align_options(loptions.align)
 
   l.text_width = node.dimensions(n.start, n.stop)
@@ -386,8 +380,7 @@ function cloze.fix_make(head, start, stop)
 end
 
 function cloze.fix(head)
-  -- n = node
-  local n = {}
+  local n = {} -- node
 
   n.start, n.stop = false
   for current in node.traverse_id(node.id('whatsit'), head) do
@@ -413,11 +406,8 @@ end
 -- mode: par -----------------------------------------------------------
 
 function cloze.par(head)
-  -- l = lenght
-  local l = {}
-
-  -- n = node
-  local n = {}
+  local l = {} -- length
+  local n = {} -- node
 
   for hlist in node.traverse_id(node.id("hlist"), head) do
 
