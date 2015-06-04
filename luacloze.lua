@@ -107,11 +107,11 @@ function create.rule(width, loptions)
   local node = node.new(node.id('rule'))
 
   if loptions.descender == nil then
-    loptions.descender = "3.4pt"
+    loptions.descender = '3.4pt'
   end
 
   if loptions.thickness == nil then
-    loptions.thickness = "0.4pt"
+    loptions.thickness = '0.4pt'
   end
 
   local height = tex.sp(loptions.thickness) - tex.sp(loptions.descender)
@@ -243,7 +243,7 @@ function cloze.basic(head)
   local l = {} -- length
   local t = {} -- temp
 
-  for hlist in node.traverse_id(node.id("hlist"), head) do
+  for hlist in node.traverse_id(node.id('hlist'), head) do
 
     -- To make life easier: We add at the beginning of each line a strut.
     -- Now we can add rule, color etc. nodes AFTER
