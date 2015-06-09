@@ -107,7 +107,7 @@ function create.rule(width, loptions)
   local node = node.new(node.id('rule'))
 
   if loptions.descender == nil or loptions.descender == '' then
-    loptions.descender = '3.4pt'
+    loptions.descender = '3pt'
   end
 
   if loptions.thickness == nil or loptions.thickness == '' then
@@ -173,6 +173,7 @@ end
 
 function insert.hfill(loptions)
   loptions = registry.process_local_options(loptions)
+  print(loptions.linecolor)
   node.write(create.hfill(loptions))
   node.write(create.kern(0))
 end
@@ -254,11 +255,15 @@ function registry.process_local_options(loptions)
     loptions.show = nil
   end
 
+  print(options.linecolor)
+
   for key, value in pairs(options) do
-    if loptions[key] == nil then
+    if loptions[key] == nil or loptions[key] == '' then
       loptions[key] = value
     end
   end
+
+   print(loptions.linecolor)
 
   return loptions
 end

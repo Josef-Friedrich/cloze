@@ -84,13 +84,13 @@
 \define@key{LCL}{hide}[true]{\def\LCL@hide{#1}}
 
 % linecolor
-\define@key{LCL}{linecolor}[]{\def\LCL@linecolor{\pdf@colorstack{#1}}}
+\define@key{LCL}{linecolor}[black]{\def\LCL@linecolor{\pdf@colorstack{#1}}}
 
 % show
 \define@key{LCL}{show}[true]{\def\LCL@show{#1}}
 
 % textcolor
-\define@key{LCL}{textcolor}[]{\def\LCL@textcolor{\pdf@colorstack{#1}}}
+\define@key{LCL}{textcolor}[blue]{\def\LCL@textcolor{\pdf@colorstack{#1}}}
 
 % thickness
 \define@key{LCL}{thickness}[]{\def\LCL@thickness{#1}}
@@ -232,7 +232,7 @@
 %%
 \newcommand{\clozefill}[2][]{%
   \set@local@keys{#1}%
-  \leavevmode
+  \strut
   \directlua{
     local loptions = {
       ['descender'] = '\LCL@descender',
@@ -243,4 +243,5 @@
     }
     luacloze.hfill(loptions)
   }%
+  \strut
 }
