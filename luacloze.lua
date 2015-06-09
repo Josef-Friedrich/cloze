@@ -14,9 +14,11 @@ local defaults = {}
 
 defaults.align = 'l'
 defaults.descender = '3pt'
-defaults.linecolor = 'black'
-defaults.textcolor = 'blue'
-defaults.tickness = '0.4pt'
+defaults.linecolor = '0 0 0 rg 0 0 0 RG' -- black
+defaults.resetcolor = '0 0 0 rg 0 0 0 RG' -- black
+defaults.show_text = true
+defaults.textcolor = '0 0 1 rg 0 0 1 RG' -- blue
+defaults.thickness = '0.4pt'
 defaults.width = '2cm'
 
 local options
@@ -91,7 +93,7 @@ function create.color(option, loptions)
   local data
 
   if loptions == nil then
-    loptions = registry.process_local_options(loptions)
+    loptions = registry.process_options(loptions)
   end
 
   if option == 'line' then
@@ -116,11 +118,11 @@ function create.rule(width, loptions)
   local node = node.new(node.id('rule'))
 
   if loptions.descender == nil or loptions.descender == '' then
-    loptions.descender = '3pt'
+    loptions.descender = defaults.descender
   end
 
   if loptions.thickness == nil or loptions.thickness == '' then
-    loptions.thickness = '0.4pt'
+    loptions.thickness = defaults.thickness
   end
 
   local height = tex.sp(loptions.thickness) - tex.sp(loptions.descender)
@@ -181,8 +183,7 @@ end
 ------------------------------------------------------------------------
 
 function insert.hfill(loptions)
-  loptions = registry.process_local_options(loptions)
-  print(loptions.linecolor)
+  loptions = registry.process_options(loptions)
   node.write(create.hfill(loptions))
   node.write(create.kern(0))
 end
@@ -241,7 +242,7 @@ function registry.get(index)
   return registry.storage[index]
 end
 
-function registry.process_local_options(loptions)
+function registry.process_options(loptions)
   if loptions == nil then
     loptions = {}
   end
@@ -264,15 +265,27 @@ function registry.process_local_options(loptions)
     loptions.show = nil
   end
 
-  print(options.linecolor)
+  loptions = registry.set_global_options(loptions)
 
+  return registry.set_defaults(loptions)
+end
+
+function registry.set_global_options(loptions)
   for key, value in pairs(options) do
     if loptions[key] == nil or loptions[key] == '' then
       loptions[key] = value
     end
   end
 
-   print(loptions.linecolor)
+  return loptions
+end
+
+function registry.set_defaults(loptions)
+  for k, v in pairs(defaults) do
+    if loptions[k] == '' then
+      loptions[k] = defaults[k]
+    end
+  end
 
   return loptions
 end
@@ -309,7 +322,7 @@ function cloze.basic(head)
         n.marker = get.marker(n.current, 'basic', 'start')
         if n.marker then
           t.options = get.marker_values(n.marker)
-          t.options = registry.process_local_options(t.options)
+          t.options = registry.process_options(t.options)
         end
 
         node.insert_after(hlist.head, n.current, create.color('text', t.options))
@@ -374,7 +387,7 @@ function cloze.fix_make(head, start, stop)
   local l = {} -- length
 
   local loptions = get.marker_values(start)
-  loptions = registry.process_local_options(loptions)
+  loptions = registry.process_options(loptions)
 
   l.width = tex.sp(loptions.width)
 
@@ -463,7 +476,7 @@ function cloze.par(head)
     for whatsit in node.traverse_id(node.id('whatsit'), hlist.head) do
       if check.marker(whatsit, 'par', 'start') then
         loptions = get.marker_values(whatsit)
-        loptions = registry.process_local_options(loptions)
+        loptions = registry.process_options(loptions)
       end
     end
 
