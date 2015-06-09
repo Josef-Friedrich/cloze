@@ -1,12 +1,8 @@
 %!TEX program = lualatex
 \documentclass{article}
 \usepackage[]{luacloze}
+\usepackage[interface=automatic,verbosity=2]{luanodelist}
 
 \begin{document}
-Lorem ipsum \cloze{dolor sit amet}\clozefill
-
-\clozefill\cloze{dolor sit amet}\clozefil\clozefill
-
-\clozefil lol\clozefil\par
-
+Lorem ipsum \cloze{dolor sit amet}\clozefill{}
 \end{document}

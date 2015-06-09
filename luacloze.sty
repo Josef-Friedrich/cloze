@@ -208,19 +208,39 @@
 %%
 \newcommand{\clozefont}{\itshape}
 
-\def\cloze@hrule{
-  \hrule
-    height \dimexpr-\LC@descender+\LC@thickness
-    depth \LC@descender%
-}
+%\def\cloze@hrule{
+%  \hrule
+%    height \dimexpr-\LC@descender+\LC@thickness
+%    depth \LC@descender%
+%}
 
-\def\cloze@fill#1{%
-  \leavevmode%
-  \leaders%
-  \cloze@hrule%
-  #1%
-  \kern 0pt%
-}
+%\def\cloze@fill#1{%
+%  \leavevmode%
+%  \leaders%
+%  \cloze@hrule%
+%  #1%
+%  \kern 0pt%
+%}
 
-\def\clozefill{\cloze@fill{\hfill}}
-\def\clozefil{\cloze@fill{\hfil}}
+%\def\clozefill{\cloze@fill{\hfill}}
+%\def\clozefil{\cloze@fill{\hfil}}
+
+%%
+% \clozefill{Lorem ipsum}
+%
+% Creates a cloze on one line with a fixed length.
+%%
+\newcommand{\clozefill}[2][]{%
+  \set@local@keys{#1}%
+  \leavevmode
+  \directlua{
+    local loptions = {
+      ['descender'] = '\LCL@descender',
+      ['linecolor'] = '\LCL@linecolor',
+      ['textcolor'] = '\LCL@textcolor',
+      ['thickness'] = '\LCL@thickness',
+      ['width'] = '\LCL@width',
+    }
+    luacloze.hfill(loptions)
+  }%
+}

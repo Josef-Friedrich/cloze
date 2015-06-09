@@ -106,18 +106,18 @@ function create.rule(width, loptions)
 
   local node = node.new(node.id('rule'))
 
-  if loptions.descender == nil then
+  if loptions.descender == nil or loptions.descender == '' then
     loptions.descender = '3.4pt'
   end
 
-  if loptions.thickness == nil then
+  if loptions.thickness == nil or loptions.thickness == '' then
     loptions.thickness = '0.4pt'
   end
 
   local height = tex.sp(loptions.thickness) - tex.sp(loptions.descender)
 
   node.depth = tex.sp(loptions.descender)
-  node.height = tex.sp(height)
+  node.height = height
   node.width = width
 
   return node
@@ -144,9 +144,39 @@ function create.marker(index)
   return marker
 end
 
+function create.hfill(loptions)
+  local glue = node.new('glue')
+  glue.subtype = 100
+
+  local glue_spec = node.new('glue_spec')
+  glue_spec.stretch = 65536
+  glue_spec.stretch_order = 3
+
+  glue.spec = glue_spec
+
+  -- local rule = node.new('rule')
+  -- rule.depth = tex.sp('3pt')
+  -- rule.height = - tex.sp('2.6pt')
+  -- rule.dir = 'TLT'
+
+  rule = create.rule(0, loptions)
+  rule.dir = 'TLT'
+
+  glue.leader = rule
+
+  return glue
+end
+
 ------------------------------------------------------------------------
 -- insert
 ------------------------------------------------------------------------
+
+function insert.hfill(loptions)
+  loptions = registry.process_local_options(loptions)
+  node.write(create.hfill(loptions))
+  node.write(create.kern(0))
+end
+
 
 function insert.rule_colored(head, current, width, loptions)
 
@@ -493,5 +523,7 @@ function base.marker(mode, position, values)
   local marker = create.marker(index)
   node.write(marker)
 end
+
+base.hfill = insert.hfill
 
 return base
