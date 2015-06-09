@@ -10,6 +10,15 @@ local base = {}
 base.options = {}
 local is_registered = {}
 
+local defaults = {}
+
+defaults.align = 'l'
+defaults.descender = '3pt'
+defaults.linecolor = 'black'
+defaults.textcolor = 'blue'
+defaults.tickness = '0.4pt'
+defaults.width = '2cm'
+
 local options
 
 ------------------------------------------------------------------------

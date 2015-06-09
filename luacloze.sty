@@ -22,28 +22,28 @@
 }
 
 % align
-\DeclareStringOption[l]{align} % Affects only \clozefix
+\DeclareStringOption{align} % Affects only \clozefix
 
 % descender
-\DeclareStringOption[3pt]{descender}
+\DeclareStringOption{descender}
 
 % hide
 \DeclareVoidOption{hide}{\directlua{luacloze.options.show_text = false}}
 
 % linecolor
-\DeclareStringOption[black]{linecolor}
+\DeclareStringOption{linecolor}
 
 % show
 \DeclareVoidOption{show}{\directlua{luacloze.options.show_text = true}}
 
 % textcolor
-\DeclareStringOption[blue]{textcolor}
+\DeclareStringOption{textcolor}
 
 % thickness
-\DeclareStringOption[0.4pt]{thickness}
+\DeclareStringOption{thickness}
 
 % width
-\DeclareStringOption[2cm]{width} % Affects only \clozefix
+\DeclareStringOption{width} % Affects only \clozefix
 
 \ProcessKeyvalOptions{LC}
 
