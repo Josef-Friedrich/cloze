@@ -5,6 +5,7 @@
 \RequirePackage{luatexbase-mcb}
 \RequirePackage{xcolor}
 \RequirePackage{kvoptions}
+\RequirePackage{ifmtarg}
 
 \directlua{
   luacloze = require("luacloze")
@@ -50,7 +51,9 @@
 % Set global options
 %-----------------------------------------------------------------------
 
-\newcommand{\pdf@colorstack}[1]{\csname\string\color@#1\endcsname}
+\newcommand{\pdf@colorstack}[1]{%
+  \@ifnotmtarg{#1}{\csname\string\color@#1\endcsname}%
+}
 
 \newcommand{\set@lua@values}{%
 %
