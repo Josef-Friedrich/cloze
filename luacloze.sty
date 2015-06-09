@@ -51,9 +51,7 @@
 % Set global options
 %-----------------------------------------------------------------------
 
-\newcommand{\pdf@colorstack}[1]{%
-  \@ifnotmtarg{#1}{\csname\string\color@#1\endcsname}%
-}
+\newcommand{\pdf@colorstack}[1]{\csname\string\color@#1\endcsname}
 
 \newcommand{\set@lua@values}{%
 %
@@ -87,13 +85,13 @@
 \define@key{LCL}{hide}[true]{\def\LCL@hide{#1}}
 
 % linecolor
-\define@key{LCL}{linecolor}[black]{\def\LCL@linecolor{\pdf@colorstack{#1}}}
+\define@key{LCL}{linecolor}[]{\def\LCL@linecolor{\pdf@colorstack{#1}}}
 
 % show
 \define@key{LCL}{show}[true]{\def\LCL@show{#1}}
 
 % textcolor
-\define@key{LCL}{textcolor}[blue]{\def\LCL@textcolor{\pdf@colorstack{#1}}}
+\define@key{LCL}{textcolor}[]{\def\LCL@textcolor{\pdf@colorstack{#1}}}
 
 % thickness
 \define@key{LCL}{thickness}[]{\def\LCL@thickness{#1}}
@@ -106,9 +104,9 @@
     align,
     descender,
     hide=unset,
-    linecolor=black,
+    linecolor,
     show=unset,
-    textcolor=blue,
+    textcolor,
     thickness,
     width,
   }%

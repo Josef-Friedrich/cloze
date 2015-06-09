@@ -110,21 +110,7 @@ function create.color(option, loptions)
 end
 
 function create.rule(width, loptions)
-
-  if not loptions then
-    loptions = {}
-  end
-
   local node = node.new(node.id('rule'))
-
-  if loptions.descender == nil or loptions.descender == '' then
-    loptions.descender = defaults.descender
-  end
-
-  if loptions.thickness == nil or loptions.thickness == '' then
-    loptions.thickness = defaults.thickness
-  end
-
   local height = tex.sp(loptions.thickness) - tex.sp(loptions.descender)
 
   node.depth = tex.sp(loptions.descender)
@@ -164,11 +150,6 @@ function create.hfill(loptions)
   glue_spec.stretch_order = 3
 
   glue.spec = glue_spec
-
-  -- local rule = node.new('rule')
-  -- rule.depth = tex.sp('3pt')
-  -- rule.height = - tex.sp('2.6pt')
-  -- rule.dir = 'TLT'
 
   rule = create.rule(0, loptions)
   rule.dir = 'TLT'
@@ -243,6 +224,7 @@ function registry.get(index)
 end
 
 function registry.process_options(loptions)
+  print('run run urn')
   if loptions == nil then
     loptions = {}
   end
@@ -265,9 +247,25 @@ function registry.process_options(loptions)
     loptions.show = nil
   end
 
+  if loptions.linecolor == '\\color@ ' then
+    loptions.linecolor = nil
+  end
+
+  if loptions.textcolor == '\\color@ ' then
+    loptions.textcolor = nil
+  end
+
+  registry.print_options(loptions, 'first')
+
   loptions = registry.set_global_options(loptions)
 
-  return registry.set_defaults(loptions)
+  registry.print_options(loptions, 'add globals')
+
+  loptions = registry.set_defaults(loptions)
+
+  registry.print_options(loptions, 'add defaults')
+
+  return loptions
 end
 
 function registry.set_global_options(loptions)
@@ -281,13 +279,19 @@ function registry.set_global_options(loptions)
 end
 
 function registry.set_defaults(loptions)
-  for k, v in pairs(defaults) do
-    if loptions[k] == '' then
-      loptions[k] = defaults[k]
+  for key, value in pairs(defaults) do
+    if loptions[key] == nil or loptions[key] == '' then
+      loptions[key] = value
     end
   end
 
   return loptions
+end
+
+function registry.print_options(loptions, identifier)
+  for key, value in pairs(loptions) do
+    print(identifier .. ': ' .. key .. ':' .. tostring(value) .. ':')
+  end
 end
 
 ------------------------------------------------------------------------
@@ -306,7 +310,7 @@ function cloze.basic(head)
     -- Now we can add rule, color etc. nodes AFTER
     -- the first node of a line not BEFORE. AFTER is much more easier.
     n.head = hlist.head
-    n.strut = node.insert_before(n.head, n.head, create.rule(0))
+    n.strut = node.insert_before(n.head, n.head, create.kern(0))
     hlist.head = n.head.prev
 
     if b.line_end then
@@ -483,7 +487,7 @@ function cloze.par(head)
     l.width = hlist.width
 
     n.head = hlist.head
-    n.strut = node.insert_before(n.head, n.head, create.rule(0))
+    n.strut = node.insert_before(n.head, n.head, create.kern(0))
     hlist.head = n.head.prev
 
     head, n.rule = insert.rule_colored(head, n.strut, l.width, loptions)
