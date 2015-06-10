@@ -3,23 +3,23 @@ local get = {}
 check.user_id = 3121978
 local create = {}
 local insert = {}
+
 local registry = {}
 registry.storage = {}
+registry.defaults = {
+  ['align'] = 'l',
+  ['descender'] = '3pt',
+  ['linecolor'] = '0 0 0 rg 0 0 0 RG', -- black
+  ['resetcolor'] = '0 0 0 rg 0 0 0 RG', -- black
+  ['show_text'] = true,
+  ['textcolor'] = '0 0 1 rg 0 0 1 RG', -- blue
+  ['thickness'] = '0.4pt',
+  ['width'] = '2cm',
+}
+
 local cloze = {}
 local base = {}
-base.options = {}
 local is_registered = {}
-
-local defaults = {}
-
-defaults.align = 'l'
-defaults.descender = '3pt'
-defaults.linecolor = '0 0 0 rg 0 0 0 RG' -- black
-defaults.resetcolor = '0 0 0 rg 0 0 0 RG' -- black
-defaults.show_text = true
-defaults.textcolor = '0 0 1 rg 0 0 1 RG' -- blue
-defaults.thickness = '0.4pt'
-defaults.width = '2cm'
 
 local options
 
@@ -48,7 +48,7 @@ function check.marker(item, mode, position)
 end
 
 ------------------------------------------------------------------------
--- check
+-- get
 ------------------------------------------------------------------------
 
 function get.marker_data(item)
@@ -224,18 +224,12 @@ function registry.get(index)
 end
 
 function registry.process_options(loptions)
-  print('run run urn')
+
   if loptions == nil then
     loptions = {}
   end
 
-  if loptions.show == 'unset' then
-    loptions.show = nil
-  end
-
-  if loptions.hide == 'unset' then
-    loptions.hide = nil
-  end
+  loptions = registry.unset_options(loptions)
 
   if loptions.hide then
     loptions.show_text = false
@@ -247,29 +241,32 @@ function registry.process_options(loptions)
     loptions.show = nil
   end
 
-  if loptions.linecolor == '\\color@ ' then
-    loptions.linecolor = nil
-  end
-
-  if loptions.textcolor == '\\color@ ' then
-    loptions.textcolor = nil
-  end
-
   registry.print_options(loptions, 'first')
 
-  loptions = registry.set_global_options(loptions)
+  loptions = registry.merge_global_options(loptions)
 
   registry.print_options(loptions, 'add globals')
 
-  loptions = registry.set_defaults(loptions)
+  loptions = registry.merge_defaults(loptions)
 
   registry.print_options(loptions, 'add defaults')
 
   return loptions
 end
 
-function registry.set_global_options(loptions)
-  for key, value in pairs(options) do
+-- Unset options which have the values 'unset' or '\color@ '
+function registry.unset_options(loptions)
+  for key, value in pairs(loptions) do
+    if value == 'unset' or value == '\\color@ ' then
+      loptions[key] = nil
+    end
+  end
+
+  return loptions
+end
+
+function registry.merge_global_options(loptions)
+  for key, value in pairs(registry.global_options) do
     if loptions[key] == nil or loptions[key] == '' then
       loptions[key] = value
     end
@@ -278,8 +275,8 @@ function registry.set_global_options(loptions)
   return loptions
 end
 
-function registry.set_defaults(loptions)
-  for key, value in pairs(defaults) do
+function registry.merge_defaults(loptions)
+  for key, value in pairs(registry.defaults) do
     if loptions[key] == nil or loptions[key] == '' then
       loptions[key] = value
     end
@@ -542,11 +539,9 @@ function base.unregister(mode)
   end
 end
 
-function base.get_options(localoptions)
-  options = localoptions
-  if options.show_text == nil then
-    options.show_text = true
-  end
+function base.set_global_options(options)
+  options.show_text = base.show_text
+  registry.global_options = options
 end
 
 function base.marker(mode, position, values)

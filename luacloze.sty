@@ -28,13 +28,13 @@
 \DeclareStringOption{descender}
 
 % hide
-\DeclareVoidOption{hide}{\directlua{luacloze.options.show_text = false}}
+\DeclareVoidOption{hide}{\directlua{luacloze.show_text = false}}
 
 % linecolor
 \DeclareStringOption{linecolor}
 
 % show
-\DeclareVoidOption{show}{\directlua{luacloze.options.show_text = true}}
+\DeclareVoidOption{show}{\directlua{luacloze.show_text = true}}
 
 % textcolor
 \DeclareStringOption{textcolor}
@@ -56,14 +56,16 @@
 \newcommand{\set@lua@values}{%
 %
   \directlua{
-    luacloze.options.align = '\LC@align'
-    luacloze.options.descender = '\LC@descender'
-    luacloze.options.linecolor = '\pdf@colorstack{\LC@linecolor}'
-    luacloze.options.textcolor = '\pdf@colorstack{\LC@textcolor}'
-    luacloze.options.thickness = '\LC@thickness'
-    luacloze.options.width = '\LC@width'
+    local options = {
+      ['align'] = '\LC@align',
+      ['descender'] = '\LC@descender',
+      ['linecolor'] = '\pdf@colorstack{\LC@linecolor}',
+      ['textcolor'] = '\pdf@colorstack{\LC@textcolor}',
+      ['thickness'] = '\LC@thickness',
+      ['width'] = '\LC@width',
+    }
 
-    luacloze.get_options(luacloze.options)
+    luacloze.set_global_options(options)
   }%
 }
 
@@ -101,14 +103,14 @@
 
 \newcommand{\set@local@keys}[1]{%
   \setkeys{LCL}{
-    align,
-    descender,
+    align=unset,
+    descender=unset,
     hide=unset,
-    linecolor,
+    linecolor=,
     show=unset,
-    textcolor,
-    thickness,
-    width,
+    textcolor=,
+    thickness=unset,
+    width=unset,
   }%
   \setkeys{LCL}{#1}%
 }
