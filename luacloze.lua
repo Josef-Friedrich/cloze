@@ -16,6 +16,9 @@ registry.defaults = {
   ['thickness'] = '0.4pt',
   ['width'] = '2cm',
 }
+registry.global_options = {}
+registry.local_options = {}
+registry.options = {}
 
 local cloze = {}
 local base = {}
@@ -38,35 +41,10 @@ function check.whatsit_marker(item)
 end
 
 function check.marker(item, mode, position)
-  local data = get.marker_data(item)
+  local data = registry.marker_data(item)
 
   if data and data.mode == mode and data.position == position then
     return true
-  else
-    return false
-  end
-end
-
-------------------------------------------------------------------------
--- get
-------------------------------------------------------------------------
-
-function get.marker_data(item)
-  if not check.whatsit_marker(item) then
-    return false
-  else
-    return registry.get(item.value)
-  end
-end
-
-function get.marker_values(item)
-  local data = get.marker_data(item)
-  return data.values
-end
-
-function get.marker(item, mode, position)
-  if check.marker(item, mode, position) then
-    return item
   else
     return false
   end
@@ -89,17 +67,13 @@ function create.whatsit_colorstack(data)
   return node
 end
 
-function create.color(option, loptions)
+function create.color(option)
   local data
 
-  if loptions == nil then
-    loptions = registry.process_options(loptions)
-  end
-
   if option == 'line' then
-    data = loptions.linecolor
+    data = registry.linecolor
   elseif option == 'text' then
-    data = loptions.textcolor
+    data = registry.textcolor
   elseif option == 'reset' then
     data = nil
   else
@@ -109,11 +83,11 @@ function create.color(option, loptions)
   return create.whatsit_colorstack(data)
 end
 
-function create.rule(width, loptions)
+function create.rule(width)
   local node = node.new(node.id('rule'))
-  local height = tex.sp(loptions.thickness) - tex.sp(loptions.descender)
+  local height = tex.sp(registry.thickness) - tex.sp(registry.descender)
 
-  node.depth = tex.sp(loptions.descender)
+  node.depth = tex.sp(registry.descender)
   node.height = height
   node.width = width
 
@@ -163,23 +137,22 @@ end
 -- insert
 ------------------------------------------------------------------------
 
-function insert.hfill(loptions)
-  loptions = registry.process_options(loptions)
-  node.write(create.hfill(loptions))
+function insert.hfill()
+  node.write(create.hfill())
   node.write(create.kern(0))
 end
 
 
-function insert.rule_colored(head, current, width, loptions)
+function insert.rule_colored(head, current, width)
 
   local color = {}
 
   -- Append rule and kern to the node list.
-  local rule = create.rule(width, loptions)
+  local rule = create.rule(width)
 
-  head, new = node.insert_after(head, current, create.color('line', loptions))
+  head, new = node.insert_after(head, current, create.color('line'))
   head, new = node.insert_after(head, new, rule)
-  head, new = node.insert_after(head, new, create.color('reset', loptions))
+  head, new = node.insert_after(head, new, create.color('reset'))
 
   return head, new
 end
@@ -223,72 +196,127 @@ function registry.get(index)
   return registry.storage[index]
 end
 
-function registry.process_options(loptions)
-
-  if loptions == nil then
-    loptions = {}
-  end
-
-  loptions = registry.unset_options(loptions)
-
-  if loptions.hide then
-    loptions.show_text = false
-    loptions.hide = nil
-  end
-
-  if loptions.show then
-    loptions.show_text = true
-    loptions.show = nil
-  end
-
-  registry.print_options(loptions, 'first')
-
-  loptions = registry.merge_global_options(loptions)
-
-  registry.print_options(loptions, 'add globals')
-
-  loptions = registry.merge_defaults(loptions)
-
-  registry.print_options(loptions, 'add defaults')
-
-  return loptions
-end
-
 -- Unset options which have the values 'unset' or '\color@ '
-function registry.unset_options(loptions)
-  for key, value in pairs(loptions) do
+function registry.merge_local_options()
+  local tmp = {}
+
+  tmp = registry.unset_options(registry.local_options)
+
+  if registry.local_options.hide then
+    tmp.show_text = false
+  end
+
+  if registry.local_options.show then
+    tmp.show_text = true
+  end
+
+  registry.options = tmp
+end
+
+function registry.unset_options(options)
+  local out = {}
+
+  for key, value in pairs(options) do
     if value == 'unset' or value == '\\color@ ' then
-      loptions[key] = nil
+      out[key] = nil
+    else
+      out[key] = value
     end
   end
 
-  return loptions
+  return out
 end
 
-function registry.merge_global_options(loptions)
+function registry.merge_global_options()
+  registry.global_options = registry.unset_options(registry.global_options)
   for key, value in pairs(registry.global_options) do
-    if loptions[key] == nil or loptions[key] == '' then
-      loptions[key] = value
+    if registry.options[key] == nil or registry.options[key] == '' then
+      registry.options[key] = value
     end
   end
-
-  return loptions
 end
 
-function registry.merge_defaults(loptions)
+function registry.merge_defaults()
   for key, value in pairs(registry.defaults) do
-    if loptions[key] == nil or loptions[key] == '' then
-      loptions[key] = value
+    if registry.options[key] == nil or registry.options[key] == '' then
+      registry.options[key] = value
     end
   end
-
-  return loptions
 end
 
-function registry.print_options(loptions, identifier)
-  for key, value in pairs(loptions) do
-    print(identifier .. ': ' .. key .. ':' .. tostring(value) .. ':')
+function registry.fix_align_options()
+  local align = string.lower(registry.options.align)
+  local result
+
+  if align == 'r' then
+    result = 'right'
+  elseif align == 'c' then
+    result = 'center'
+  elseif align == 'l' then
+    result = 'left'
+  else
+    result = align
   end
+
+  registry.options.align = align
+end
+
+function registry.move_to_base()
+  for key, value in pairs(registry.options) do
+    registry[key] = value
+  end
+end
+
+function registry.debug(table, identifier)
+  for key, value in pairs(table) do
+    print(identifier .. ' KEY: ' .. tostring(key) .. ' VALUE: ' .. tostring(value))
+  end
+end
+
+function registry.process_options()
+  registry.merge_local_options()
+
+  registry.debug(registry.options, 'merge_local_options')
+
+  registry.merge_global_options()
+  registry.merge_defaults()
+  registry.fix_align_options()
+
+  registry.debug(registry.options, 'second')
+
+  registry.move_to_base()
+end
+
+function registry.marker_data(item)
+  if not check.whatsit_marker(item) then
+    return false
+  else
+    return registry.get(item.value)
+  end
+end
+
+function registry.marker_values(item)
+  local data = registry.marker_data(item)
+  registry.local_options = data.values
+  return data.values
+end
+
+function registry.get_marker(item, mode, position)
+  local out
+
+  if check.marker(item, mode, position) then
+    registry.marker = item
+    out = item
+  else
+    out = false
+  end
+
+  if out and position == 'start' then
+    registry.marker_values(item)
+    registry.process_options()
+  end
+
+  return out
 end
 
 ------------------------------------------------------------------------
@@ -320,13 +348,9 @@ function cloze.basic(head)
 
       if check.marker(n.current, 'basic', 'start') or b.init_cloze then
 
-        n.marker = get.marker(n.current, 'basic', 'start')
-        if n.marker then
-          t.options = get.marker_values(n.marker)
-          t.options = registry.process_options(t.options)
-        end
+        n.marker = registry.get_marker(n.current, 'basic', 'start')
 
-        node.insert_after(hlist.head, n.current, create.color('text', t.options))
+        node.insert_after(hlist.head, n.current, create.color('text'))
 
         b.init_cloze = false
 
@@ -345,9 +369,9 @@ function cloze.basic(head)
 
         l.line_width = node.dimensions(hlist.glue_set, hlist.glue_sign, hlist.glue_order, n.current, n.stop.next)
 
-        head, n.line = insert.rule_colored(head, n.current, l.line_width, t.options)
+        head, n.line = insert.rule_colored(head, n.current, l.line_width)
 
-        if t.options.show_text then
+        if registry.show_text then
           node.insert_after(head, n.line, create.kern(-l.line_width))
           node.insert_after(head, n.stop, create.color('reset'))
         else
@@ -369,42 +393,21 @@ end -- function
 
 -- mode: fix -----------------------------------------------------------
 
-function cloze.fix_align_options(option)
-  option = string.lower(option)
-
-  if option == 'r' then
-    return 'right'
-  elseif option == 'c' then
-    return 'center'
-  elseif option == 'l' then
-    return 'left'
-  else
-    return option
-  end
-
-end
-
 function cloze.fix_make(head, start, stop)
   local l = {} -- length
 
-  local loptions = get.marker_values(start)
-  loptions = registry.process_options(loptions)
-
-  l.width = tex.sp(loptions.width)
+  l.width = tex.sp(registry.width)
 
   local n = {} -- node
   n.start = start
   n.stop = stop
 
-  local loption = {} -- local option
-  loption.align = cloze.fix_align_options(loptions.align)
-
   l.text_width = node.dimensions(n.start, n.stop)
 
-  if loption.align == 'right' then
+  if registry.align == 'right' then
     l.kern_start = -l.text_width
     l.kern_stop = 0
-  elseif loption.align == 'center' then
+  elseif registry.align == 'center' then
     l.half = (l.width - l.text_width) / 2
     l.kern_start = -l.half - l.text_width
     l.kern_stop = l.half
@@ -417,17 +420,17 @@ function cloze.fix_make(head, start, stop)
   --   cloze test W[colorreset] K[n.kern_stop] W[n.end]
 
   -- Insert colored rule ()
-  head, n.line = insert.rule_colored(head, n.start, l.width, loptions)
+  head, n.line = insert.rule_colored(head, n.start, l.width)
 
   -- W[b] W[linecolor] R[length] W[colorreset] K[kern_start] W[textcolor]
   --   cloze test W[colorreset] K[kern_stop] W[e]
-  if loptions.show_text then
+  if registry.show_text then
 
   -- Insert kerning for the gap at the beginning.
   head, n.kern_start = node.insert_after(head, n.line, create.kern(l.kern_start))
 
   -- Insert text color.
-  node.insert_after(head, n.kern_start, create.color('text', loptions))
+  node.insert_after(head, n.kern_start, create.color('text'))
 
   -- Reset text color.
   node.insert_before(head, n.stop, create.whatsit_colorstack())
@@ -447,8 +450,8 @@ function cloze.fix(head)
   n.start, n.stop = false
   for current in node.traverse_id(node.id('whatsit'), head) do
 
-    if not n.start then n.start = get.marker(current, 'fix', 'start') end
-    if not n.stop then n.stop = get.marker(current, 'fix', 'stop') end
+    if not n.start then n.start = registry.get_marker(current, 'fix', 'start') end
+    if not n.stop then n.stop = registry.get_marker(current, 'fix', 'stop') end
 
     if n.start and n.stop then
       cloze.fix_make(head, n.start, n.stop)
@@ -475,10 +478,7 @@ function cloze.par(head)
   for hlist in node.traverse_id(node.id('hlist'), head) do
 
     for whatsit in node.traverse_id(node.id('whatsit'), hlist.head) do
-      if check.marker(whatsit, 'par', 'start') then
-        loptions = get.marker_values(whatsit)
-        loptions = registry.process_options(loptions)
-      end
+      registry.get_marker(whatsit, 'par', 'start')
     end
 
     l.width = hlist.width
@@ -487,11 +487,11 @@ function cloze.par(head)
     n.strut = node.insert_before(n.head, n.head, create.kern(0))
     hlist.head = n.head.prev
 
-    head, n.rule = insert.rule_colored(head, n.strut, l.width, loptions)
+    head, n.rule = insert.rule_colored(head, n.strut, l.width)
 
     if loptions.show_text then
       head, n.kern = node.insert_after(head, n.rule, create.kern(-l.width))
-      node.insert_after(head, n.kern, create.color('text', loptions))
+      node.insert_after(head, n.kern, create.color('text'))
 
       n.tail = node.tail(n.head)
       node.insert_after(n.head, n.tail, create.color('reset'))

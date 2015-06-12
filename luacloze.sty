@@ -237,14 +237,14 @@
   \set@local@keys{#1}%
   \strut
   \directlua{
-    local loptions = {
+    local options = {
       ['descender'] = '\LCL@descender',
       ['linecolor'] = '\LCL@linecolor',
       ['textcolor'] = '\LCL@textcolor',
       ['thickness'] = '\LCL@thickness',
       ['width'] = '\LCL@width',
     }
-    luacloze.hfill(loptions)
+    luacloze.hfill(options)
   }%
   \strut
 }
