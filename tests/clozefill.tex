@@ -1,9 +1,20 @@
 %!TEX program = lualatex
 \documentclass{article}
-\usepackage[linecolor=green,descender=-3pt]{luacloze}
-\usepackage[interface=automatic,verbosity=2]{luanodelist}
+\usepackage{luacloze}
+%\usepackage[interface=automatic,verbosity=2]{luanodelist}
 
 \begin{document}
-Lorem ipsum \cloze{dolor sit amet}\clozefill{}
+\section{After cloze}
+
+Lorem ipsum \cloze{dolor sit amet}\clozefill
+
+\section{Before cloze}
+
+\clozefill\cloze{Lorem ipsum} dolor sit amet.
+
+\section{Local option: linecolor}
+
+Lorem ipsum \cloze{dolor sit amet}\clozefill[linecolor=green]
+
 \end{document}
 

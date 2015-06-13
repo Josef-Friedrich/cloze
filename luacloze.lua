@@ -115,7 +115,7 @@ function create.marker(index)
   return marker
 end
 
-function create.hfill(loptions)
+function create.hfill()
   local glue = node.new('glue')
   glue.subtype = 100
 
@@ -125,7 +125,7 @@ function create.hfill(loptions)
 
   glue.spec = glue_spec
 
-  rule = create.rule(0, loptions)
+  local rule = create.rule(0)
   rule.dir = 'TLT'
 
   glue.leader = rule
@@ -137,9 +137,13 @@ end
 -- insert
 ------------------------------------------------------------------------
 
-function insert.hfill()
+function insert.hfill(options)
+  registry.local_options = options
+  registry.process_options()
+
+  node.write(create.color('line'))
   node.write(create.hfill())
-  node.write(create.kern(0))
+  node.write(create.color('reset'))
 end
 
 
@@ -275,15 +279,9 @@ end
 
 function registry.process_options()
   registry.merge_local_options()
-
-  registry.debug(registry.options, 'merge_local_options')
-
   registry.merge_global_options()
   registry.merge_defaults()
   registry.fix_align_options()
-
-  registry.debug(registry.options, 'second')
-
   registry.move_to_base()
 end
 
