@@ -471,7 +471,6 @@ end
 function cloze.par(head)
   local l = {} -- length
   local n = {} -- node
-  local loptions
 
   for hlist in node.traverse_id(node.id('hlist'), head) do
 
@@ -487,7 +486,7 @@ function cloze.par(head)
 
     head, n.rule = insert.rule_colored(head, n.strut, l.width)
 
-    if loptions.show_text then
+    if registry.show_text then
       head, n.kern = node.insert_after(head, n.rule, create.kern(-l.width))
       node.insert_after(head, n.kern, create.color('text'))
 
