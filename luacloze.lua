@@ -205,16 +205,18 @@ function registry.merge_local_options()
   local tmp = {}
 
   tmp = registry.unset_options(registry.local_options)
-
-  if registry.local_options.hide then
-    tmp.show_text = false
-  end
-
-  if registry.local_options.show then
-    tmp.show_text = true
-  end
-
+  tmp.show_text = registry.set_show_text(registry.local_options)
   registry.options = tmp
+end
+
+function registry.set_show_text(options)
+  if options.hide == true then
+    return false
+  elseif options.show == true then
+    return true
+  else
+    return nil
+  end
 end
 
 function registry.unset_options(options)
@@ -280,6 +282,7 @@ end
 function registry.process_options()
   registry.merge_local_options()
   registry.merge_global_options()
+  registry.debug(registry.options, 'options')
   registry.merge_defaults()
   registry.fix_align_options()
   registry.move_to_base()
