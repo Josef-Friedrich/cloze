@@ -137,7 +137,6 @@
   }%
 }
 
-
 %-----------------------------------------------------------------------
 % Public macros
 %-----------------------------------------------------------------------
@@ -155,7 +154,7 @@
   \set@start@marker{basic}%
   {%
     \clozefont%
-    #2%
+    \kern5pt#2\kern5pt%
   }%
   \set@stop@marker{basic}%
 }
@@ -198,11 +197,15 @@
 % This command forces a line break and creates a cloze line that extends
 % to the end of the text line.
 %%
-\newcommand{\clozetoend}[1]{%
-  \set@start@marker{toend}%
-  #1%
-  \set@stop@marker{toend}%
-  \par%
+%\newcommand{\clozetoend}[2][]{%
+%  \set@start@marker{toend}%
+%  #1%
+%  \set@stop@marker{toend}%
+%  \par%
+%}
+
+\newcommand{\clozetoend}[2][]{%
+  \cloze[#1]{#2}\clozefill[#1]\par%
 }
 
 %%

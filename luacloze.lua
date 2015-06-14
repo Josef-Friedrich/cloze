@@ -282,7 +282,6 @@ end
 function registry.process_options()
   registry.merge_local_options()
   registry.merge_global_options()
-  registry.debug(registry.options, 'options')
   registry.merge_defaults()
   registry.fix_align_options()
   registry.move_to_base()
