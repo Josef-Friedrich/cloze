@@ -10,6 +10,22 @@
   luacloze = require("luacloze")
 }
 
+\newcommand{\set@options@global}{
+ \directlua{luacloze.set_is_global(true)}
+}
+
+\set@options@global
+
+\newcommand{\set@options@local}{
+  \directlua{luacloze.set_is_global(false)}
+}
+
+\newcommand{\set@option}[2][]{
+  \directlua{luacloze.set_option('#1', '#2')}
+}
+
+\newcommand{\pdf@colorstack}[1]{\csname\string\color@#1\endcsname}
+
 %-----------------------------------------------------------------------
 % Global options
 %-----------------------------------------------------------------------
@@ -22,53 +38,35 @@
 
 % align
 \DeclareStringOption{align} % Affects only \clozefix
+\define@key{LC}{align}[]{\set@option[align]{#1}}
 
 % descender
 \DeclareStringOption{descender}
+\define@key{LC}{descender}[]{\set@option[descender]{#1}}
 
 % hide
-\DeclareVoidOption{hide}{\directlua{luacloze.show_text = false}}
+\DeclareVoidOption{hide}{\set@option[hide]{true}}
 
 % linecolor
 \DeclareStringOption{linecolor}
+\define@key{LC}{linecolor}[]{\set@option[linecolor]{\pdf@colorstack{#1}}}
 
 % show
-\DeclareVoidOption{show}{\directlua{luacloze.show_text = true}}
+\DeclareVoidOption{show}{\set@option[show]{true}}
 
 % textcolor
 \DeclareStringOption{textcolor}
+\define@key{LC}{textcolor}[]{\set@option[]{\pdf@colorstack{#1}}}
 
 % thickness
 \DeclareStringOption{thickness}
+\define@key{LC}{thickness}[]{\set@option[thickness]{#1}}
 
 % width
 \DeclareStringOption{width} % Affects only \clozefix
+\define@key{LC}{width}[]{\set@option[width]{#1}}
 
 \ProcessKeyvalOptions{LC}
-
-%-----------------------------------------------------------------------
-% Set global options
-%-----------------------------------------------------------------------
-
-\newcommand{\pdf@colorstack}[1]{\csname\string\color@#1\endcsname}
-
-\newcommand{\set@lua@values}{%
-%
-  \directlua{
-    local options = {
-      ['align'] = '\LC@align',
-      ['descender'] = '\LC@descender',
-      ['linecolor'] = '\pdf@colorstack{\LC@linecolor}',
-      ['textcolor'] = '\pdf@colorstack{\LC@textcolor}',
-      ['thickness'] = '\LC@thickness',
-      ['width'] = '\LC@width',
-    }
-
-    luacloze.set_global_options(options)
-  }%
-}
-
-\set@lua@values
 
 %-----------------------------------------------------------------------
 % Local options
@@ -99,6 +97,8 @@
 
 % width
 \define@key{LCL}{width}[]{\def\LCL@width{#1}} % Affects only \clozefix
+
+
 
 \newcommand{\set@local@keys}[1]{%
   \setkeys{LCL}{

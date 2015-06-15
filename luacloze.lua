@@ -174,6 +174,26 @@ function registry.get_index()
   return registry.index
 end
 
+function registry.set_option(key, value)
+  if value == '' or value == '\\color@ ' then
+    return false
+  end
+
+
+
+  if registry.is_global == true then
+    registry.global_options[key] = value
+  else
+    registry.local_options[key] = value
+  end
+  print(registry.global_options['align'])
+
+end
+
+function registry.set_is_global(value)
+  registry.is_global = value
+end
+
 function registry.set(mode, position, values)
   local index = registry.get_index()
 
@@ -550,5 +570,8 @@ function base.marker(mode, position, values)
 end
 
 base.hfill = insert.hfill
+
+base.set_option = registry.set_option
+base.set_is_global = registry.set_is_global
 
 return base
