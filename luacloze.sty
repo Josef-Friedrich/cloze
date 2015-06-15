@@ -10,24 +10,27 @@
   luacloze = require("luacloze")
 }
 
-\newcommand{\set@options@global}{
- \directlua{luacloze.set_is_global(true)}
+\newcommand{\set@to@global}{%
+ \directlua{luacloze.set_is_global(true)}%
 }
 
-\set@options@global
+\set@to@global
 
-\newcommand{\set@options@local}{
-  \directlua{luacloze.set_is_global(false)}
+\newcommand{\set@to@local}{%
+  \directlua{
+  luacloze.unset_local_options()
+  luacloze.set_is_global(false)
+  }%
 }
 
-\newcommand{\set@option}[2][]{
-  \directlua{luacloze.set_option('#1', '#2')}
+\newcommand{\set@option}[2][]{%
+  \directlua{luacloze.set_option('#1', '#2')}%
 }
 
 \newcommand{\pdf@colorstack}[1]{\csname\string\color@#1\endcsname}
 
 %-----------------------------------------------------------------------
-% Global options
+% Options
 %-----------------------------------------------------------------------
 
 % LC = luacloze
@@ -68,66 +71,15 @@
 
 \ProcessKeyvalOptions{LC}
 
-%-----------------------------------------------------------------------
-% Local options
-%-----------------------------------------------------------------------
-
-% LCL = luacloze local
-
-% align
-\define@key{LCL}{align}[]{\def\LCL@align{#1}} % Affects only \clozefix
-
-% descender
-\define@key{LCL}{descender}[]{\def\LCL@descender{#1}}
-
-% hide
-\define@key{LCL}{hide}[true]{\def\LCL@hide{#1}}
-
-% linecolor
-\define@key{LCL}{linecolor}[]{\def\LCL@linecolor{\pdf@colorstack{#1}}}
-
-% show
-\define@key{LCL}{show}[true]{\def\LCL@show{#1}}
-
-% textcolor
-\define@key{LCL}{textcolor}[]{\def\LCL@textcolor{\pdf@colorstack{#1}}}
-
-% thickness
-\define@key{LCL}{thickness}[]{\def\LCL@thickness{#1}}
-
-% width
-\define@key{LCL}{width}[]{\def\LCL@width{#1}} % Affects only \clozefix
-
-
-
-\newcommand{\set@local@keys}[1]{%
-  \setkeys{LCL}{
-    align=unset,
-    descender=unset,
-    hide=unset,
-    linecolor=,
-    show=unset,
-    textcolor=,
-    thickness=unset,
-    width=unset,
-  }%
-  \setkeys{LCL}{#1}%
+\newcommand{\set@local@options}[1]{%
+  \set@to@local%
+  \kvsetkeys{LC}{#1}%
 }
 
 \newcommand{\set@start@marker}[1]{%
   \strut\directlua{
     luacloze.register('#1')
-    local values = {
-      ['align'] = '\LCL@align',
-      ['descender'] = '\LCL@descender',
-      ['hide'] = '\LCL@hide',
-      ['linecolor'] = '\LCL@linecolor',
-      ['show'] = '\LCL@show',
-      ['textcolor'] = '\LCL@textcolor',
-      ['thickness'] = '\LCL@thickness',
-      ['width'] = '\LCL@width',
-    }
-    luacloze.marker('#1', 'start', values)
+    luacloze.marker('#1', 'start')
   }%
 }
 
@@ -144,13 +96,16 @@
 %%
 % \setcloze{key=value}
 %%
-\newcommand{\setcloze}[1]{\setkeys{LC}{#1}\set@lua@values}
+\newcommand{\setcloze}[1]{%
+  \set@to@global%
+  \kvsetkeys{LC}{#1}%
+}
 
 %%
 % \cloze{Lorem ipsum}
 %%
 \newcommand{\cloze}[2][]{%
-  \set@local@keys{#1}%
+  \set@local@options{#1}%
   \set@start@marker{basic}%
   {%
     \clozefont%
@@ -165,7 +120,7 @@
 % Creates a cloze on one line with a fixed length.
 %%
 \newcommand{\clozefix}[2][]{%
-  \set@local@keys{#1}%
+  \set@local@options{#1}%
   \set@start@marker{fix}%
   {%
     \clozefont%
@@ -181,7 +136,7 @@
 \newenvironment{clozepar}[1][]%
 {%
   \par%
-  \set@local@keys{#1}%
+  \set@local@options{#1}%
   \set@start@marker{par}%
   \clozefont%
 }%
@@ -236,17 +191,8 @@
 % Creates a cloze on one line with a fixed length.
 %%
 \newcommand{\clozefill}[1][]{%
-  \set@local@keys{#1}%
+  \set@local@options{#1}%
   \strut
-  \directlua{
-    local options = {
-      ['descender'] = '\LCL@descender',
-      ['linecolor'] = '\LCL@linecolor',
-      ['textcolor'] = '\LCL@textcolor',
-      ['thickness'] = '\LCL@thickness',
-      ['width'] = '\LCL@width',
-    }
-    luacloze.hfill(options)
-  }%
+  \directlua{luacloze.hfill()}%
   \strut
 }

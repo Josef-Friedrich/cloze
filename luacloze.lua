@@ -179,22 +179,22 @@ function registry.set_option(key, value)
     return false
   end
 
-
-
   if registry.is_global == true then
     registry.global_options[key] = value
   else
     registry.local_options[key] = value
   end
-  print(registry.global_options['align'])
-
 end
 
 function registry.set_is_global(value)
   registry.is_global = value
 end
 
-function registry.set(mode, position, values)
+function registry.unset_local_options()
+  registry.local_options = {}
+end
+
+function registry.set(mode, position)
   local index = registry.get_index()
 
   local data = {
@@ -202,9 +202,9 @@ function registry.set(mode, position, values)
     ['position'] = position
   }
 
-  if values then
+  if registry.local_options then
     local cleaned_values = {}
-    for key, value in pairs(values) do
+    for key, value in pairs(registry.local_options) do
       if value ~= '' then
         cleaned_values[key] = value
       end
@@ -563,8 +563,8 @@ function base.set_global_options(options)
   registry.global_options = options
 end
 
-function base.marker(mode, position, values)
-  local index = registry.set(mode, position, values)
+function base.marker(mode, position)
+  local index = registry.set(mode, position)
   local marker = create.marker(index)
   node.write(marker)
 end
@@ -573,5 +573,6 @@ base.hfill = insert.hfill
 
 base.set_option = registry.set_option
 base.set_is_global = registry.set_is_global
+base.unset_local_options = registry.unset_local_options
 
 return base
