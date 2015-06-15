@@ -11,6 +11,7 @@ registry.defaults = {
   ['align'] = 'l',
   ['descender'] = '3pt',
   ['linecolor'] = '0 0 0 rg 0 0 0 RG', -- black
+  ['margin'] = '3pt',
   ['resetcolor'] = '0 0 0 rg 0 0 0 RG', -- black
   ['show_text'] = true,
   ['textcolor'] = '0 0 1 rg 0 0 1 RG', -- blue
@@ -146,14 +147,11 @@ function insert.hfill()
 end
 
 function insert.margin()
-  registry.process_options()
-  node.write(create.kern(registry.margin))
+  local kern = create.kern(tex.sp(registry.margin))
+  node.write(kern)
 end
 
 function insert.rule_colored(head, current, width)
-
-  local color = {}
-
   -- Append rule and kern to the node list.
   local rule = create.rule(width)
 
@@ -565,9 +563,11 @@ function base.marker(mode, position)
 end
 
 base.hfill = insert.hfill
+base.margin = insert.margin
 
 base.set_option = registry.set_option
 base.set_is_global = registry.set_is_global
 base.unset_local_options = registry.unset_local_options
+base.process_options = registry.process_options
 
 return base

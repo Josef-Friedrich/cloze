@@ -54,6 +54,10 @@
 \DeclareStringOption{linecolor}
 \define@key{LC}{linecolor}[]{\set@option[linecolor]{\pdf@colorstack{#1}}}
 
+% margin
+\DeclareStringOption{margin}
+\define@key{LC}{margin}[]{\set@option[margin]{#1}}
+
 % show
 \DeclareVoidOption{show}{\set@option[show]{true}}
 
@@ -80,6 +84,7 @@
   \strut\directlua{
     luacloze.register('#1')
     luacloze.marker('#1', 'start')
+    luacloze.process_options()
   }%
 }
 
@@ -87,6 +92,12 @@
   \strut\directlua{
     luacloze.marker('#1', 'stop')
   }%
+}
+
+\newcommand{\cloze@margin}[1]{%
+  \directlua{luacloze.margin()}%
+  #1%
+  \directlua{luacloze.margin()}%
 }
 
 %-----------------------------------------------------------------------
@@ -109,7 +120,7 @@
   \set@start@marker{basic}%
   {%
     \clozefont%
-    \kern5pt#2\kern5pt%
+    \cloze@margin{#2}%
   }%
   \set@stop@marker{basic}%
 }
@@ -124,7 +135,7 @@
   \set@start@marker{fix}%
   {%
     \clozefont%
-    #2%
+    \cloze@margin{#2}%
   }%
   \set@stop@marker{fix}%
 }
