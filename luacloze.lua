@@ -1,6 +1,7 @@
 local check = {}
-local get = {}
 check.user_id = 3121978
+
+local get = {}
 local create = {}
 local insert = {}
 
@@ -137,15 +138,17 @@ end
 -- insert
 ------------------------------------------------------------------------
 
-function insert.hfill(options)
-  registry.local_options = options
+function insert.hfill()
   registry.process_options()
-
   node.write(create.color('line'))
   node.write(create.hfill())
   node.write(create.color('reset'))
 end
 
+function insert.margin()
+  registry.process_options()
+  node.write(create.kern(registry.margin))
+end
 
 function insert.rule_colored(head, current, width)
 
