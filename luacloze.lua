@@ -220,41 +220,33 @@ function registry.get(index)
   return registry.storage[index]
 end
 
--- Unset options which have the values 'unset' or '\color@ '
-function registry.merge_local_options()
-  local tmp = {}
-
-  tmp = registry.unset_options(registry.local_options)
-  tmp.show_text = registry.set_show_text(registry.local_options)
-  registry.options = tmp
-end
-
 function registry.set_show_text(options)
-  if options.hide == true then
+  if not options then
+    return nil
+  end
+
+  if options.hide == true or options.hide == 'true'  then
     return false
-  elseif options.show == true then
+  elseif options.show == true or options.show == 'true'  then
     return true
   else
     return nil
   end
 end
 
-function registry.unset_options(options)
-  local out = {}
-
-  for key, value in pairs(options) do
-    if value == 'unset' or value == '\\color@ ' then
-      out[key] = nil
-    else
-      out[key] = value
-    end
+-- Unset options which have the values 'unset' or '\color@ '
+function registry.merge_local_options()
+  if registry.local_options then
+    registry.options = registry.local_options
+  else
+    registry.options = {}
   end
-
-  return out
+  registry.options.show_text = registry.set_show_text(registry.local_options)
 end
 
 function registry.merge_global_options()
-  registry.global_options = registry.unset_options(registry.global_options)
+  registry.global_options.show_text = registry.set_show_text(registry.global_options)
+
   for key, value in pairs(registry.global_options) do
     if registry.options[key] == nil or registry.options[key] == '' then
       registry.options[key] = value
