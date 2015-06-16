@@ -1,0 +1,382 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2015 by Josef Friedrich <jf@josef-friedrich>
+% ----------------------------------------------------------------------
+% This work may be distributed and/or modified under the % conditions of
+% the LaTeX Project Public License, either version 1.3 % of this license
+% or (at your option) any later version. % The latest version of this
+% license is in:
+%
+%   http://www.latex-project.org/lppl.txt
+%
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+%
+% The Current Maintainer of this work is Josef Friedrih.
+%
+% This work consists of the files cloze.dtx and cloze.ins
+% and the derived filebase cloze.sty.
+%
+% \fi
+%
+% \iffalse
+%<*driver>
+\ProvidesFile{cloze.dtx}
+%</driver>
+%<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+%<package>\ProvidesPackage{cloze}
+%<*package>
+    [2015/06/16 v0.1 Package to typeset cloze worksheets or cloze tests]
+%</package>
+%
+%<*driver>
+\documentclass{ltxdoc}
+\usepackage{cloze}
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+\begin{document}
+  \DocInput{cloze.dtx}
+  \PrintChanges
+  \PrintIndex
+\end{document}
+%</driver>
+% \fi
+%
+% \CheckSum{109}
+%
+% \CharacterTable
+%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%   Digits        \0\1\2\3\4\5\6\7\8\9
+%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%   Dollar        \$     Percent       \%     Ampersand     \&
+%   Acute accent  \'     Left paren    \(     Right paren   \)
+%   Asterisk      \*     Plus          \+     Comma         \,
+%   Minus         \-     Point         \.     Solidus       \/
+%   Colon         \:     Semicolon     \;     Less than     \<
+%   Equals        \=     Greater than  \>     Question mark \?
+%   Commercial at \@     Left bracket  \[     Backslash     \\
+%   Right bracket \]     Circumflex    \^     Underscore    \_
+%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%   Right brace   \}     Tilde         \~}
+%
+%
+% \changes{v0.1}{2015/06/16}{Converted to DTX file}
+%
+% \DoNotIndex{\newcommand,\newenvironment}
+%
+% \providecommand*{\url}{\texttt}
+% \GetFileInfo{cloze.dtx}
+% \title{The \textsf{cloze} package}
+% \author{Josef Friedrich \\ \url{jf@josef-friedrich.de}}
+% \date{\fileversion~from \filedate}
+%
+% \maketitle
+%
+% \section{Introduction}
+%
+% Put text here.
+%
+% \section{Usage}
+%
+% Put text here.
+%
+% \DescribeMacro{\setcloze}
+%
+%
+% \DescribeMacro{\cloze}
+%
+%
+% \DescribeMacro{\clozefix}
+%
+%
+% \DescribeEnv{clozepar}
+%
+%
+% \DescribeMacro{\clozetoend}
+%
+%
+% \DescribeMacro{\clozefont}
+%
+%
+% \DescribeMacro{\clozefill}
+%
+%
+% \StopEventually{}
+%
+% \section{Implementation}
+%
+% \iffalse
+%<*package>
+% \fi
+%
+%    \begin{macrocode}
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{cloze}
+\RequirePackage{luatexbase-mcb}
+\RequirePackage{xcolor}
+\RequirePackage{kvoptions}
+\directlua{
+  cloze = require("cloze")
+}
+%    \end{macrocode}
+%
+% \subsection{Internal macros}
+%
+% \begin{macro}{\cloze@set@to@global}
+%    \begin{macrocode}
+\def\cloze@set@to@global{%
+ \directlua{cloze.set_is_global(true)}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\cloze@set@to@local}
+%    \begin{macrocode}
+\def\cloze@set@to@local{%
+  \directlua{
+  cloze.unset_local_options()
+  cloze.set_is_global(false)
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\cloze@set@option}
+%    \begin{macrocode}
+\def\cloze@set@option[#1]#2{%
+  \directlua{cloze.set_option('#1', '#2')}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\cloze@color}
+%    \begin{macrocode}
+\def\cloze@color#1{\csname\string\color@#1\endcsname}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\cloze@set@local@options}
+%    \begin{macrocode}
+\def\cloze@set@local@options#1{%
+  \cloze@set@to@local%
+  \kvsetkeys{LC}{#1}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\cloze@start@marker}
+%    \begin{macrocode}
+\def\cloze@start@marker#1{%
+  \strut\directlua{
+    cloze.register('#1')
+    cloze.marker('#1', 'start')
+    cloze.process_options()
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\cloze@stop@marker}
+%    \begin{macrocode}
+\def\cloze@stop@marker#1{%
+  \strut\directlua{
+    cloze.marker('#1', 'stop')
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\cloze@margin}
+%    \begin{macrocode}
+\def\cloze@margin#1{%
+  \directlua{cloze.margin()}%
+  #1%
+  \directlua{cloze.margin()}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{Options}
+%
+%    \begin{macrocode}
+\cloze@set@to@global
+%    \end{macrocode}
+% LC = cloze
+%    \begin{macrocode}
+\SetupKeyvalOptions{
+  family=LC,
+  prefix=LC@
+}
+%    \end{macrocode}
+%
+%
+% \subsubsection{Option 'align'}
+%    \begin{macrocode}
+\DeclareStringOption{align} % Affects only \clozefix
+\define@key{LC}{align}[]{\cloze@set@option[align]{#1}}
+%    \end{macrocode}
+%
+%
+% \subsubsection{Option 'descender'}
+%    \begin{macrocode}
+\DeclareStringOption{descender}
+\define@key{LC}{descender}[]{\cloze@set@option[descender]{#1}}
+%    \end{macrocode}
+%
+%
+% \subsubsection{Option 'hide'}
+%    \begin{macrocode}
+\DeclareVoidOption{hide}{\cloze@set@option[hide]{true}}
+%    \end{macrocode}
+%
+%
+% \subsubsection{Option 'linecolor'}
+%    \begin{macrocode}
+\DeclareStringOption{linecolor}
+\define@key{LC}{linecolor}[]{\cloze@set@option[linecolor]{\cloze@color{#1}}}
+%    \end{macrocode}
+%
+%
+% \subsubsection{Option 'margin'}
+%    \begin{macrocode}
+\DeclareStringOption{margin}
+\define@key{LC}{margin}[]{\cloze@set@option[margin]{#1}}
+%    \end{macrocode}
+%
+%
+% \subsubsection{Option 'show'}
+%    \begin{macrocode}
+\DeclareVoidOption{show}{\cloze@set@option[show]{true}}
+%    \end{macrocode}
+%
+%
+% \subsubsection{Option 'textcolor'}
+%    \begin{macrocode}
+\DeclareStringOption{textcolor}
+\define@key{LC}{textcolor}[]{\cloze@set@option[textcolor]{\cloze@color{#1}}}
+%    \end{macrocode}
+%
+%
+% \subsubsection{Option 'thickness'}
+%    \begin{macrocode}
+\DeclareStringOption{thickness}
+\define@key{LC}{thickness}[]{\cloze@set@option[thickness]{#1}}
+%    \end{macrocode}
+%
+%
+% \subsubsection{Option 'width'}
+%    \begin{macrocode}
+\DeclareStringOption{width} % Affects only \clozefix
+\define@key{LC}{width}[]{\cloze@set@option[width]{#1}}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\ProcessKeyvalOptions{LC}
+%    \end{macrocode}
+%
+% \subsection{Public macros}
+%
+% \begin{macro}{\setcloze}
+%    \begin{macrocode}
+\newcommand{\setcloze}[1]{%
+  \cloze@set@to@global%
+  \kvsetkeys{LC}{#1}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\cloze}
+%    \begin{macrocode}
+\newcommand{\cloze}[2][]{%
+  \cloze@set@local@options{#1}%
+  \cloze@start@marker{basic}%
+  {%
+    \clozefont%
+    \cloze@margin{#2}%
+  }%
+  \cloze@stop@marker{basic}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\clozefix}
+% Creates a cloze on one line with a fixed length.
+%    \begin{macrocode}
+\newcommand{\clozefix}[2][]{%
+  \cloze@set@local@options{#1}%
+  \cloze@start@marker{fix}%
+  {%
+    \clozefont%
+    \cloze@margin{#2}%
+  }%
+  \cloze@stop@marker{fix}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{environment}{clozepar}
+%    \begin{macrocode}
+\newenvironment{clozepar}[1][]%
+{%
+  \par%
+  \cloze@set@local@options{#1}%
+  \cloze@start@marker{par}%
+  \clozefont%
+}%
+{%
+  \cloze@stop@marker{par}%
+  \par%
+  \directlua{cloze.unregister('par')}%
+}
+%    \end{macrocode}
+% \end{environment}
+%
+%
+% \begin{macro}{\clozetoend}
+%    \begin{macrocode}
+\newcommand{\clozetoend}[2][]{%
+  \cloze[#1]{#2}\clozefill[#1]\par%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\clozefont}
+%    \begin{macrocode}
+\newcommand{\clozefont}{\itshape}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\clozefill}
+% Creates a cloze on one line with a fixed length.
+%    \begin{macrocode}
+\newcommand{\clozefill}[1][]{%
+  \cloze@set@local@options{#1}%
+  \strut
+  \directlua{cloze.hfill()}%
+  \strut
+}%    \end{macrocode}
+% \end{macro}
+%
+%
+% \iffalse
+%</package>
+% \fi
+%
+% \Finale
+\endinput

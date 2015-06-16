@@ -1,6 +1,9 @@
 *.DS_Store
 *.aux
+*.fdb_latexmk
+*.glo
+*.idx
 *.log
 *.pdf
-*.fdb_latexmk
 *.synctex.gz
+*.sty
