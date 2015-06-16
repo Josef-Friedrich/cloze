@@ -571,11 +571,11 @@ function insert.rule_colored(head, current, width)
 
   return head, new
 end
-
-------------------------------------------------------------------------
--- registry
-------------------------------------------------------------------------
-
+%    \end{macrocode}
+% \subsubsection{registry}
+% Functions to deal with option handling and storing them in a lua table
+%
+%    \begin{macrocode}
 function registry.get_index()
   if not registry.index then
     registry.index = 0
@@ -741,11 +741,9 @@ function registry.get_marker(item, mode, position)
 
   return out
 end
-
-------------------------------------------------------------------------
--- cloze
-------------------------------------------------------------------------
-
+%    \end{macrocode}
+% \subsubsection{cloze}
+%    \begin{macrocode}
 function cloze.basic(head)
   local n = {} -- node
   local b = {} -- boolean
@@ -925,9 +923,10 @@ function cloze.par(head)
   return head
 end
 
-------------------------------------------------------------------------
--- base
-------------------------------------------------------------------------
+%    \end{macrocode}
+% \subsubsection{base}
+% Base functions which are accessible in the sty file.
+%    \begin{macrocode}
 
 function base.register(mode)
   if mode == 'par' then
