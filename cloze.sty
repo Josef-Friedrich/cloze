@@ -1,29 +1,29 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{luacloze}
+\ProvidesPackage{cloze}
 
 \RequirePackage{luatexbase-mcb}
 \RequirePackage{xcolor}
 \RequirePackage{kvoptions}
 
 \directlua{
-  luacloze = require("luacloze")
+  cloze = require("cloze")
 }
 
 \newcommand{\set@to@global}{%
- \directlua{luacloze.set_is_global(true)}%
+ \directlua{cloze.set_is_global(true)}%
 }
 
 \set@to@global
 
 \newcommand{\set@to@local}{%
   \directlua{
-  luacloze.unset_local_options()
-  luacloze.set_is_global(false)
+  cloze.unset_local_options()
+  cloze.set_is_global(false)
   }%
 }
 
 \newcommand{\set@option}[2][]{%
-  \directlua{luacloze.set_option('#1', '#2')}%
+  \directlua{cloze.set_option('#1', '#2')}%
 }
 
 \newcommand{\pdf@colorstack}[1]{\csname\string\color@#1\endcsname}
@@ -32,7 +32,7 @@
 % Options
 %-----------------------------------------------------------------------
 
-% LC = luacloze
+% LC = cloze
 \SetupKeyvalOptions{
   family=LC,
   prefix=LC@
@@ -81,22 +81,22 @@
 
 \newcommand{\set@start@marker}[1]{%
   \strut\directlua{
-    luacloze.register('#1')
-    luacloze.marker('#1', 'start')
-    luacloze.process_options()
+    cloze.register('#1')
+    cloze.marker('#1', 'start')
+    cloze.process_options()
   }%
 }
 
 \newcommand{\set@stop@marker}[1]{%
   \strut\directlua{
-    luacloze.marker('#1', 'stop')
+    cloze.marker('#1', 'stop')
   }%
 }
 
 \newcommand{\cloze@margin}[1]{%
-  \directlua{luacloze.margin()}%
+  \directlua{cloze.margin()}%
   #1%
-  \directlua{luacloze.margin()}%
+  \directlua{cloze.margin()}%
 }
 
 %-----------------------------------------------------------------------
@@ -153,7 +153,7 @@
 {%
   \set@stop@marker{par}%
   \par%
-  \directlua{luacloze.unregister('par')}%
+  \directlua{cloze.unregister('par')}%
 }
 
 %%
@@ -203,6 +203,6 @@
 \newcommand{\clozefill}[1][]{%
   \set@local@options{#1}%
   \strut
-  \directlua{luacloze.hfill()}%
+  \directlua{cloze.hfill()}%
   \strut
 }
