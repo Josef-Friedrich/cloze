@@ -30,7 +30,6 @@
 %<*package>
     [2015/06/16 v0.1 Package to typeset cloze worksheets or cloze tests]
 %</package>
-%
 %<*driver>
 \documentclass{ltxdoc}
 \usepackage{cloze}
@@ -92,7 +91,6 @@
 %
 % \DescribeMacro{\clozefix}
 %
-%
 % \DescribeEnv{clozepar}
 %
 %
@@ -112,6 +110,7 @@
 % \iffalse
 %<*package>
 % \fi
+% \subsection{Header}
 %
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
@@ -124,7 +123,9 @@
 }
 %    \end{macrocode}
 %
+%
 % \subsection{Internal macros}
+%
 %
 % \begin{macro}{\cloze@set@to@global}
 %    \begin{macrocode}
@@ -222,6 +223,7 @@
 %
 %
 % \subsubsection{Option 'align'}
+%
 %    \begin{macrocode}
 \DeclareStringOption{align} % Affects only \clozefix
 \define@key{LC}{align}[]{\cloze@set@option[align]{#1}}
@@ -229,6 +231,7 @@
 %
 %
 % \subsubsection{Option 'descender'}
+%
 %    \begin{macrocode}
 \DeclareStringOption{descender}
 \define@key{LC}{descender}[]{\cloze@set@option[descender]{#1}}
@@ -236,12 +239,14 @@
 %
 %
 % \subsubsection{Option 'hide'}
+%
 %    \begin{macrocode}
 \DeclareVoidOption{hide}{\cloze@set@option[hide]{true}}
 %    \end{macrocode}
 %
 %
 % \subsubsection{Option 'linecolor'}
+%
 %    \begin{macrocode}
 \DeclareStringOption{linecolor}
 \define@key{LC}{linecolor}[]{\cloze@set@option[linecolor]{\cloze@color{#1}}}
@@ -249,6 +254,7 @@
 %
 %
 % \subsubsection{Option 'margin'}
+%
 %    \begin{macrocode}
 \DeclareStringOption{margin}
 \define@key{LC}{margin}[]{\cloze@set@option[margin]{#1}}
@@ -256,12 +262,14 @@
 %
 %
 % \subsubsection{Option 'show'}
+%
 %    \begin{macrocode}
 \DeclareVoidOption{show}{\cloze@set@option[show]{true}}
 %    \end{macrocode}
 %
 %
 % \subsubsection{Option 'textcolor'}
+%
 %    \begin{macrocode}
 \DeclareStringOption{textcolor}
 \define@key{LC}{textcolor}[]{\cloze@set@option[textcolor]{\cloze@color{#1}}}
@@ -269,6 +277,7 @@
 %
 %
 % \subsubsection{Option 'thickness'}
+%
 %    \begin{macrocode}
 \DeclareStringOption{thickness}
 \define@key{LC}{thickness}[]{\cloze@set@option[thickness]{#1}}
@@ -370,7 +379,8 @@
   \strut
   \directlua{cloze.hfill()}%
   \strut
-}%    \end{macrocode}
+}
+%    \end{macrocode}
 % \end{macro}
 %
 %
