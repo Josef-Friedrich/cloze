@@ -13,29 +13,29 @@
 % Local macros
 %-----------------------------------------------------------------------
 
-\newcommand{\cloze@set@to@global}{%
+\def\cloze@set@to@global{%
  \directlua{cloze.set_is_global(true)}%
 }
 
-\newcommand{\cloze@set@to@local}{%
+\def\cloze@set@to@local{%
   \directlua{
   cloze.unset_local_options()
   cloze.set_is_global(false)
   }%
 }
 
-\newcommand{\cloze@set@option}[2][]{%
+\def\cloze@set@option[#1]#2{%
   \directlua{cloze.set_option('#1', '#2')}%
 }
 
-\newcommand{\cloze@color}[1]{\csname\string\color@#1\endcsname}
+\def\cloze@color#1{\csname\string\color@#1\endcsname}
 
-\newcommand{\cloze@set@local@options}[1]{%
+\def\cloze@set@local@options#1{%
   \cloze@set@to@local%
   \kvsetkeys{LC}{#1}%
 }
 
-\newcommand{\cloze@start@marker}[1]{%
+\def\cloze@start@marker#1{%
   \strut\directlua{
     cloze.register('#1')
     cloze.marker('#1', 'start')
@@ -43,13 +43,13 @@
   }%
 }
 
-\newcommand{\cloze@stop@marker}[1]{%
+\def\cloze@stop@marker#1{%
   \strut\directlua{
     cloze.marker('#1', 'stop')
   }%
 }
 
-\newcommand{\cloze@margin}[1]{%
+\def\cloze@margin#1{%
   \directlua{cloze.margin()}%
   #1%
   \directlua{cloze.margin()}%
