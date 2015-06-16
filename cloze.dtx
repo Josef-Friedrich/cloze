@@ -437,11 +437,9 @@ local base = {}
 local is_registered = {}
 
 local options
-
-------------------------------------------------------------------------
--- check
-------------------------------------------------------------------------
-
+%    \end{macrocode}
+% \subsubsection{Check functions}
+%    \begin{macrocode}
 function check.whatsit_marker(item)
   if item.id == node.id('whatsit')
       and item.subtype == 44
@@ -451,7 +449,9 @@ function check.whatsit_marker(item)
     return false
   end
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function check.marker(item, mode, position)
   local data = registry.marker_data(item)
 
@@ -461,11 +461,9 @@ function check.marker(item, mode, position)
     return false
   end
 end
-
-------------------------------------------------------------------------
--- create
-------------------------------------------------------------------------
-
+%    \end{macrocode}
+% \subsubsection{Create functions}
+%    \begin{macrocode}
 function create.whatsit_colorstack(data)
   if not data then
     -- black
@@ -478,7 +476,9 @@ function create.whatsit_colorstack(data)
 
   return node
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function create.color(option)
   local data
 
@@ -494,7 +494,9 @@ function create.color(option)
 
   return create.whatsit_colorstack(data)
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function create.rule(width)
   local node = node.new(node.id('rule'))
   local height = tex.sp(registry.thickness) - tex.sp(registry.descender)
@@ -505,19 +507,25 @@ function create.rule(width)
 
   return node
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function create.kern(kern)
   local node = node.new(node.id('kern'))
   node.kern = kern
   return node
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function create.glyph()
   local node = node.new(node.id('glyph'))
   node.char = 34
   return node
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function create.marker(index)
   local marker = node.new('whatsit','user_defined')
   marker.type = 100 -- number
@@ -526,7 +534,9 @@ function create.marker(index)
 
   return marker
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function create.hfill()
   local glue = node.new('glue')
   glue.subtype = 100
@@ -544,23 +554,27 @@ function create.hfill()
 
   return glue
 end
-
-------------------------------------------------------------------------
--- insert
-------------------------------------------------------------------------
-
+%    \end{macrocode}
+%
+% \subsubsection{Insert functions}
+%
+%    \begin{macrocode}
 function insert.hfill()
   registry.process_options()
   node.write(create.color('line'))
   node.write(create.hfill())
   node.write(create.color('reset'))
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function insert.margin()
   local kern = create.kern(tex.sp(registry.margin))
   node.write(kern)
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function insert.rule_colored(head, current, width)
   -- Append rule and kern to the node list.
   local rule = create.rule(width)
@@ -584,7 +598,9 @@ function registry.get_index()
   registry.index = registry.index + 1
   return registry.index
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function registry.set_option(key, value)
   if value == '' or value == '\\color@ ' then
     return false
@@ -596,15 +612,21 @@ function registry.set_option(key, value)
     registry.local_options[key] = value
   end
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function registry.set_is_global(value)
   registry.is_global = value
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function registry.unset_local_options()
   registry.local_options = {}
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function registry.set(mode, position)
   local index = registry.get_index()
 
@@ -626,11 +648,15 @@ function registry.set(mode, position)
   registry.storage[index] = data
   return index
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function registry.get(index)
   return registry.storage[index]
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function registry.set_show_text(options)
   if not options then
     return nil
@@ -644,7 +670,9 @@ function registry.set_show_text(options)
     return nil
   end
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 -- Unset options which have the values 'unset' or '\color@ '
 function registry.merge_local_options()
   if registry.local_options then
@@ -654,7 +682,9 @@ function registry.merge_local_options()
   end
   registry.options.show_text = registry.set_show_text(registry.local_options)
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function registry.merge_global_options()
   registry.global_options.show_text = registry.set_show_text(registry.global_options)
 
@@ -664,7 +694,9 @@ function registry.merge_global_options()
     end
   end
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function registry.merge_defaults()
   for key, value in pairs(registry.defaults) do
     if registry.options[key] == nil or registry.options[key] == '' then
@@ -672,7 +704,9 @@ function registry.merge_defaults()
     end
   end
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function registry.fix_align_options()
   local align = string.lower(registry.options.align)
   local result
@@ -689,19 +723,25 @@ function registry.fix_align_options()
 
   registry.options.align = align
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function registry.move_to_base()
   for key, value in pairs(registry.options) do
     registry[key] = value
   end
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function registry.debug(table, identifier)
   for key, value in pairs(table) do
     print(identifier .. ' KEY: ' .. tostring(key) .. ' VALUE: ' .. tostring(value))
   end
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function registry.process_options()
   registry.merge_local_options()
   registry.merge_global_options()
@@ -709,7 +749,9 @@ function registry.process_options()
   registry.fix_align_options()
   registry.move_to_base()
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function registry.marker_data(item)
   if not check.whatsit_marker(item) then
     return false
@@ -717,13 +759,17 @@ function registry.marker_data(item)
     return registry.get(item.value)
   end
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function registry.marker_values(item)
   local data = registry.marker_data(item)
   registry.local_options = data.values
   return data.values
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function registry.get_marker(item, mode, position)
   local out
 
@@ -811,9 +857,9 @@ function cloze.basic(head)
 
   return head
 end -- function
-
--- mode: fix -----------------------------------------------------------
-
+%    \end{macrocode}
+% Make cloze for macro clozefix
+%    \begin{macrocode}
 function cloze.fix_make(head, start, stop)
   local l = {} -- length
 
@@ -864,7 +910,9 @@ function cloze.fix_make(head, start, stop)
     n.line.next = n.stop.next
   end
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function cloze.fix(head)
   local n = {} -- node
 
@@ -882,15 +930,15 @@ function cloze.fix(head)
 
   return head
 end
-
--- mode: toend ---------------------------------------------------------
-
+%    \end{macrocode}
+% TODO: delete
+%    \begin{macrocode}
 function cloze.toend(head)
   return head
 end
-
--- mode: par -----------------------------------------------------------
-
+%    \end{macrocode}
+% Call for environment clozpar
+%    \begin{macrocode}
 function cloze.par(head)
   local l = {} -- length
   local n = {} -- node
@@ -922,12 +970,13 @@ function cloze.par(head)
 
   return head
 end
-
 %    \end{macrocode}
+%
 % \subsubsection{base}
+%
 % Base functions which are accessible in the sty file.
+%
 %    \begin{macrocode}
-
 function base.register(mode)
   if mode == 'par' then
     luatexbase.add_to_callback('post_linebreak_filter', cloze.par, mode, 1)
@@ -961,26 +1010,33 @@ function base.unregister(mode)
     luatexbase.remove_from_callback('post_linebreak_filter', mode)
   end
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function base.set_global_options(options)
   options.show_text = base.show_text
   registry.global_options = options
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function base.marker(mode, position)
   local index = registry.set(mode, position)
   local marker = create.marker(index)
   node.write(marker)
 end
-
+%    \end{macrocode}
+% Publish some functions to sty file.
+%    \begin{macrocode}
 base.hfill = insert.hfill
 base.margin = insert.margin
-
 base.set_option = registry.set_option
 base.set_is_global = registry.set_is_global
 base.unset_local_options = registry.unset_local_options
 base.process_options = registry.process_options
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 return base
 %    \end{macrocode}
 % \iffalse
