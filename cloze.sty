@@ -9,24 +9,24 @@
   cloze = require("cloze")
 }
 
-\newcommand{\set@to@global}{%
+\newcommand{\cloze@set@to@global}{%
  \directlua{cloze.set_is_global(true)}%
 }
 
-\set@to@global
+\cloze@set@to@global
 
-\newcommand{\set@to@local}{%
+\newcommand{\cloze@set@to@local}{%
   \directlua{
   cloze.unset_local_options()
   cloze.set_is_global(false)
   }%
 }
 
-\newcommand{\set@option}[2][]{%
+\newcommand{\cloze@set@option}[2][]{%
   \directlua{cloze.set_option('#1', '#2')}%
 }
 
-\newcommand{\pdf@colorstack}[1]{\csname\string\color@#1\endcsname}
+\newcommand{\cloze@color}[1]{\csname\string\color@#1\endcsname}
 
 %-----------------------------------------------------------------------
 % Options
@@ -40,46 +40,46 @@
 
 % align
 \DeclareStringOption{align} % Affects only \clozefix
-\define@key{LC}{align}[]{\set@option[align]{#1}}
+\define@key{LC}{align}[]{\cloze@set@option[align]{#1}}
 
 % descender
 \DeclareStringOption{descender}
-\define@key{LC}{descender}[]{\set@option[descender]{#1}}
+\define@key{LC}{descender}[]{\cloze@set@option[descender]{#1}}
 
 % hide
-\DeclareVoidOption{hide}{\set@option[hide]{true}}
+\DeclareVoidOption{hide}{\cloze@set@option[hide]{true}}
 
 % linecolor
 \DeclareStringOption{linecolor}
-\define@key{LC}{linecolor}[]{\set@option[linecolor]{\pdf@colorstack{#1}}}
+\define@key{LC}{linecolor}[]{\cloze@set@option[linecolor]{\cloze@color{#1}}}
 
 % margin
 \DeclareStringOption{margin}
-\define@key{LC}{margin}[]{\set@option[margin]{#1}}
+\define@key{LC}{margin}[]{\cloze@set@option[margin]{#1}}
 
 % show
-\DeclareVoidOption{show}{\set@option[show]{true}}
+\DeclareVoidOption{show}{\cloze@set@option[show]{true}}
 
 % textcolor
 \DeclareStringOption{textcolor}
-\define@key{LC}{textcolor}[]{\set@option[textcolor]{\pdf@colorstack{#1}}}
+\define@key{LC}{textcolor}[]{\cloze@set@option[textcolor]{\cloze@color{#1}}}
 
 % thickness
 \DeclareStringOption{thickness}
-\define@key{LC}{thickness}[]{\set@option[thickness]{#1}}
+\define@key{LC}{thickness}[]{\cloze@set@option[thickness]{#1}}
 
 % width
 \DeclareStringOption{width} % Affects only \clozefix
-\define@key{LC}{width}[]{\set@option[width]{#1}}
+\define@key{LC}{width}[]{\cloze@set@option[width]{#1}}
 
 \ProcessKeyvalOptions{LC}
 
-\newcommand{\set@local@options}[1]{%
-  \set@to@local%
+\newcommand{\cloze@set@local@options}[1]{%
+  \cloze@set@to@local%
   \kvsetkeys{LC}{#1}%
 }
 
-\newcommand{\set@start@marker}[1]{%
+\newcommand{\cloze@start@marker}[1]{%
   \strut\directlua{
     cloze.register('#1')
     cloze.marker('#1', 'start')
@@ -87,7 +87,7 @@
   }%
 }
 
-\newcommand{\set@stop@marker}[1]{%
+\newcommand{\cloze@stop@marker}[1]{%
   \strut\directlua{
     cloze.marker('#1', 'stop')
   }%
@@ -107,7 +107,7 @@
 % \setcloze{key=value}
 %%
 \newcommand{\setcloze}[1]{%
-  \set@to@global%
+  \cloze@set@to@global%
   \kvsetkeys{LC}{#1}%
 }
 
@@ -115,13 +115,13 @@
 % \cloze{Lorem ipsum}
 %%
 \newcommand{\cloze}[2][]{%
-  \set@local@options{#1}%
-  \set@start@marker{basic}%
+  \cloze@set@local@options{#1}%
+  \cloze@start@marker{basic}%
   {%
     \clozefont%
     \cloze@margin{#2}%
   }%
-  \set@stop@marker{basic}%
+  \cloze@stop@marker{basic}%
 }
 
 %%
@@ -130,13 +130,13 @@
 % Creates a cloze on one line with a fixed length.
 %%
 \newcommand{\clozefix}[2][]{%
-  \set@local@options{#1}%
-  \set@start@marker{fix}%
+  \cloze@set@local@options{#1}%
+  \cloze@start@marker{fix}%
   {%
     \clozefont%
     \cloze@margin{#2}%
   }%
-  \set@stop@marker{fix}%
+  \cloze@stop@marker{fix}%
 }
 
 %%
@@ -146,12 +146,12 @@
 \newenvironment{clozepar}[1][]%
 {%
   \par%
-  \set@local@options{#1}%
-  \set@start@marker{par}%
+  \cloze@set@local@options{#1}%
+  \cloze@start@marker{par}%
   \clozefont%
 }%
 {%
-  \set@stop@marker{par}%
+  \cloze@stop@marker{par}%
   \par%
   \directlua{cloze.unregister('par')}%
 }
@@ -163,9 +163,9 @@
 % to the end of the text line.
 %%
 %\newcommand{\clozetoend}[2][]{%
-%  \set@start@marker{toend}%
+%  \cloze@start@marker{toend}%
 %  #1%
-%  \set@stop@marker{toend}%
+%  \cloze@stop@marker{toend}%
 %  \par%
 %}
 
@@ -201,7 +201,7 @@
 % Creates a cloze on one line with a fixed length.
 %%
 \newcommand{\clozefill}[1][]{%
-  \set@local@options{#1}%
+  \cloze@set@local@options{#1}%
   \strut
   \directlua{cloze.hfill()}%
   \strut
