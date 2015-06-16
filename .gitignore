@@ -4,6 +4,7 @@
 *.glo
 *.idx
 *.log
+*.lua
 *.pdf
 *.synctex.gz
 *.sty
