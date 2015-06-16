@@ -9,11 +9,13 @@
   cloze = require("cloze")
 }
 
+%-----------------------------------------------------------------------
+% Local macros
+%-----------------------------------------------------------------------
+
 \newcommand{\cloze@set@to@global}{%
  \directlua{cloze.set_is_global(true)}%
 }
-
-\cloze@set@to@global
 
 \newcommand{\cloze@set@to@local}{%
   \directlua{
@@ -28,9 +30,36 @@
 
 \newcommand{\cloze@color}[1]{\csname\string\color@#1\endcsname}
 
+\newcommand{\cloze@set@local@options}[1]{%
+  \cloze@set@to@local%
+  \kvsetkeys{LC}{#1}%
+}
+
+\newcommand{\cloze@start@marker}[1]{%
+  \strut\directlua{
+    cloze.register('#1')
+    cloze.marker('#1', 'start')
+    cloze.process_options()
+  }%
+}
+
+\newcommand{\cloze@stop@marker}[1]{%
+  \strut\directlua{
+    cloze.marker('#1', 'stop')
+  }%
+}
+
+\newcommand{\cloze@margin}[1]{%
+  \directlua{cloze.margin()}%
+  #1%
+  \directlua{cloze.margin()}%
+}
+
 %-----------------------------------------------------------------------
 % Options
 %-----------------------------------------------------------------------
+
+\cloze@set@to@global
 
 % LC = cloze
 \SetupKeyvalOptions{
@@ -73,31 +102,6 @@
 \define@key{LC}{width}[]{\cloze@set@option[width]{#1}}
 
 \ProcessKeyvalOptions{LC}
-
-\newcommand{\cloze@set@local@options}[1]{%
-  \cloze@set@to@local%
-  \kvsetkeys{LC}{#1}%
-}
-
-\newcommand{\cloze@start@marker}[1]{%
-  \strut\directlua{
-    cloze.register('#1')
-    cloze.marker('#1', 'start')
-    cloze.process_options()
-  }%
-}
-
-\newcommand{\cloze@stop@marker}[1]{%
-  \strut\directlua{
-    cloze.marker('#1', 'stop')
-  }%
-}
-
-\newcommand{\cloze@margin}[1]{%
-  \directlua{cloze.margin()}%
-  #1%
-  \directlua{cloze.margin()}%
-}
 
 %-----------------------------------------------------------------------
 % Public macros
