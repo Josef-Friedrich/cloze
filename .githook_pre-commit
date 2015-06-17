@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # Extensions:
-EXT="aux fdb_latexmk glo idx log out pdf synctex.gz"
+EXT="aux fdb_latexmk glo gls ilg ind idx log out pdf synctex.gz toc"
 
 # Symlink to .git/hooks/pre-commit
 #	cd .git/hook
