@@ -862,6 +862,30 @@ function cloze.basic(head)
 end -- function
 %    \end{macrocode}
 % Make cloze for macro clozefix
+%
+% Node list (show text)
+%
+% \begin{enumerate}
+% \item W[n.start]
+% \item R[n.line]
+% \item K[n.kern\_start]
+% \item W[textcolor]
+% \item W[colorreset]
+% \item K[n.kern\_stop]
+% \item W[n.stop]
+% \end{enumerate}
+%
+% Node list (hide text)
+%
+% \begin{enumerate}
+% \item W[n.start]
+% \item W[linecolor]
+% \item R[length]
+% \item W[colorreset]
+% \item K[kern\_start]
+% \item W[textcolor]
+% \end{enumerate}
+%
 %    \begin{macrocode}
 function cloze.fix_make(head, start, stop)
   local l = {} -- length
@@ -886,29 +910,13 @@ function cloze.fix_make(head, start, stop)
     l.kern_stop = l.width - l.text_width
   end
 
-  -- W[n.start] R[n.line] K[n.kern_start] W[textcolor]
-  --   cloze test W[colorreset] K[n.kern_stop] W[n.end]
-
-  -- Insert colored rule ()
   head, n.line = insert.rule_colored(head, n.start, l.width)
 
-  -- W[b] W[linecolor] R[length] W[colorreset] K[kern_start] W[textcolor]
-  --   cloze test W[colorreset] K[kern_stop] W[e]
   if registry.show_text then
-
-  -- Insert kerning for the gap at the beginning.
-  head, n.kern_start = node.insert_after(head, n.line, create.kern(l.kern_start))
-
-  -- Insert text color.
-  node.insert_after(head, n.kern_start, create.color('text'))
-
-  -- Reset text color.
-  node.insert_before(head, n.stop, create.whatsit_colorstack())
-
-  -- Insert kerning for the gap at the end.
-  node.insert_before(head, n.stop, create.kern(l.kern_stop))
-
-  -- W[b] W[linecolor] R[length] W[colorreset] K[kern_start] W[e]
+    head, n.kern_start = node.insert_after(head, n.line, create.kern(l.kern_start))
+    node.insert_after(head, n.kern_start, create.color('text'))
+    node.insert_before(head, n.stop, create.whatsit_colorstack())
+    node.insert_before(head, n.stop, create.kern(l.kern_stop))
   else
     n.line.next = n.stop.next
   end
