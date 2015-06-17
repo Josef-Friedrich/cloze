@@ -2,10 +2,13 @@
 *.aux
 *.fdb_latexmk
 *.glo
+*.gls
 *.idx
+*.ilg
+*.ind
 *.log
 *.lua
 *.pdf
-*.synctex.gz
 *.sty
+*.synctex.gz
 *.toc
