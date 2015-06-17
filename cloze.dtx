@@ -248,11 +248,11 @@ https://github.com/Josef-Friedrich/cloze
 %    \end{macrocode}
 %
 %
-% \paragraph{Option 'descender'}
+% \paragraph{Option 'distance'}
 %
 %    \begin{macrocode}
-\DeclareStringOption{descender}
-\define@key{LC}{descender}[]{\cloze@set@option[descender]{#1}}
+\DeclareStringOption{distance}
+\define@key{LC}{distance}[]{\cloze@set@option[distance]{#1}}
 %    \end{macrocode}
 %
 %
@@ -419,7 +419,7 @@ local registry = {}
 registry.storage = {}
 registry.defaults = {
   ['align'] = 'l',
-  ['descender'] = '3pt',
+  ['distance'] = '3pt',
   ['linecolor'] = '0 0 0 rg 0 0 0 RG', -- black
   ['margin'] = '3pt',
   ['resetcolor'] = '0 0 0 rg 0 0 0 RG', -- black
@@ -499,9 +499,9 @@ end
 %    \begin{macrocode}
 function create.rule(width)
   local node = node.new(node.id('rule'))
-  local height = tex.sp(registry.thickness) - tex.sp(registry.descender)
+  local height = tex.sp(registry.thickness) - tex.sp(registry.distance)
 
-  node.depth = tex.sp(registry.descender)
+  node.depth = tex.sp(registry.distance)
   node.height = height
   node.width = width
 
