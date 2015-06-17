@@ -112,13 +112,13 @@ https://github.com/Josef-Friedrich/cloze
 % \DescribeEnv{clozepar}
 %
 %
-% \DescribeMacro{\clozetoend}
+% \DescribeMacro{\clozefil}
 %
 %
 % \DescribeMacro{\clozefont}
 %
 %
-% \DescribeMacro{\clozefill}
+% \DescribeMacro{\clozelinefil}
 %
 %
 % \StopEventually{}
@@ -373,10 +373,10 @@ https://github.com/Josef-Friedrich/cloze
 % \end{environment}
 %
 %
-% \begin{macro}{\clozetoend}
+% \begin{macro}{\clozefil}
 %    \begin{macrocode}
-\newcommand{\clozetoend}[2][]{%
-  \cloze[#1]{#2}\clozefill[#1]\par%
+\newcommand{\clozefil}[2][]{%
+  \cloze[#1]{#2}\clozelinefil[#1]%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -389,10 +389,10 @@ https://github.com/Josef-Friedrich/cloze
 % \end{macro}
 %
 %
-% \begin{macro}{\clozefill}
+% \begin{macro}{\clozelinefil}
 % Creates a cloze on one line with a fixed length.
 %    \begin{macrocode}
-\newcommand{\clozefill}[1][]{%
+\newcommand{\clozelinefil}[1][]{%
   \cloze@set@local@options{#1}%
   \strut
   \directlua{cloze.hfill()}%
@@ -586,7 +586,9 @@ function insert.rule_colored(head, current, width)
   return head, new
 end
 %    \end{macrocode}
+%
 % \subsubsection{registry}
+%
 % Functions to deal with option handling and storing them in a lua table
 %
 %    \begin{macrocode}
@@ -931,12 +933,6 @@ function cloze.fix(head)
   return head
 end
 %    \end{macrocode}
-% TODO: delete
-%    \begin{macrocode}
-function cloze.toend(head)
-  return head
-end
-%    \end{macrocode}
 % Call for environment clozpar
 %    \begin{macrocode}
 function cloze.par(head)
@@ -988,8 +984,6 @@ function base.register(mode)
       luatexbase.add_to_callback('post_linebreak_filter', cloze.basic, mode, 1)
     elseif mode == 'fix' then
       luatexbase.add_to_callback('pre_linebreak_filter', cloze.fix, mode, 1)
-    elseif mode == 'toend' then
-      luatexbase.add_to_callback('post_linebreak_filter', cloze.toend, mode, 1)
     else
       return false
     end
@@ -1004,8 +998,6 @@ function base.unregister(mode)
     luatexbase.remove_from_callback('post_linebreak_filter', mode)
   elseif mode == 'fix' then
     luatexbase.remove_from_callback('pre_linebreak_filter', mode)
-  elseif mode == 'toend' then
-    luatexbase.remove_from_callback('post_linebreak_filter', mode)
   else
     luatexbase.remove_from_callback('post_linebreak_filter', mode)
   end
