@@ -94,7 +94,9 @@ https://github.com/Josef-Friedrich/cloze
 %
 % \section{Introduction}
 %
-% Put text here.
+% \emph{cloze} is a \LaTeX{} package to generate cloze tests. It uses
+% the capabilities of the modern \TeX{} engine \emph{Lua\TeX}. Therefor
+% you must use Lua\LaTeX{} to produce documents containing clozes.
 %
 % \section{Usage}
 %
@@ -102,24 +104,35 @@ https://github.com/Josef-Friedrich/cloze
 %
 % \DescribeMacro{\setcloze}
 %
-%
 % \DescribeMacro{\cloze}
-%
 %
 % \DescribeMacro{\clozefix}
 %
+% \DescribeMacro{\clozefil}
 %
 % \DescribeEnv{clozepar}
 %
-%
-% \DescribeMacro{\clozefil}
-%
-%
 % \DescribeMacro{\clozefont}
-%
 %
 % \DescribeMacro{\clozelinefil}
 %
+% \section{Options}
+%
+% \subsection{align}
+%
+% Only the macro \cmd{\clozefix} takes the option \texttt{align} into account.
+% Possible values are \texttt{left}, \texttt{center} and \texttt{right}.
+% This option only makes sense, if the width of the cloze line is larger
+% than the width of the cloze text.
+%
+% \noindent\clozefix[align=left,width=8cm]{Lorem ipsum}
+% (\texttt{align=left})
+%
+% \noindent\clozefix[align=center,width=8cm]{Lorem ipsum}
+% (\texttt{align=center})
+%
+% \noindent\clozefix[align=right,width=8cm]{Lorem ipsum}
+% (\texttt{align=right})
 %
 % \StopEventually{}
 %
