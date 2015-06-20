@@ -116,14 +116,16 @@ https://github.com/Josef-Friedrich/cloze
 %
 % \DescribeMacro{\clozelinefil}
 %
+%
 % \section{Options}
 %
-% \subsection{align}
 %
-% Only the macro \cmd{\clozefix} takes the option \texttt{align} into account.
-% Possible values are \texttt{left}, \texttt{center} and \texttt{right}.
-% This option only makes sense, if the width of the cloze line is larger
-% than the width of the cloze text.
+% \subsection{Option 'align'}
+%
+% Only the macro \cmd{\clozefix} takes the option \texttt{align} into
+% account. Possible values are \texttt{left}, \texttt{center} and
+% \texttt{right}. This option only makes sense, if the width of the
+% cloze line is larger than the width of the cloze text.
 %
 % \noindent\clozefix[align=left,width=8cm]{Lorem ipsum}
 % (\texttt{align=left})
@@ -133,6 +135,18 @@ https://github.com/Josef-Friedrich/cloze
 %
 % \noindent\clozefix[align=right,width=8cm]{Lorem ipsum}
 % (\texttt{align=right})
+%
+%
+% \subsection{Options 'hide' and 'show'}
+%
+% The cloze text is displayed by default. Use the option \texttt{hide}
+% to remove the cloze text from the output.  If you accidentally specify
+% both options, the option \texttt{hide} is "stronger".
+%
+% \noindent \cmd{\cloze[hide]}\marg{dolor}:
+% Lorem ipsum \cloze[hide]{dolor} sit amet. \\
+% \cmd{\cloze[show]}\marg{dolor}:
+% Lorem ipsum \cloze[show]{dolor} sit amet.
 %
 % \StopEventually{}
 %
