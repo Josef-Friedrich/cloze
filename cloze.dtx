@@ -33,21 +33,25 @@
 %<*driver>
 \documentclass{ltxdoc}
 \usepackage{cloze}
+\usepackage{paralist}
+
+\setlength{\fboxrule}{0.2pt}
+\setlength{\fboxsep}{8pt}
 
 \makeatletter
-\newcommand{\@minipagerestore}{\setlength{\parindent}{15pt}}
+\newcommand{\@minipagerestore}{\setlength{\parindent}{10pt}}
 \makeatother
 
 \newsavebox{\examplebox}
 \newenvironment{example}{%
   \medskip%
   \begin{lrbox}{\examplebox}%
-  \begin{minipage}{0.8\linewidth}%
+  \begin{minipage}{0.9\linewidth}%
 }{%
   \end{minipage}%
   \end{lrbox}%
   \noindent%
-  \hspace{1.5cm}%
+  \hspace{0.03\linewidth}%
   \fbox{\usebox{\examplebox}}%
   \medskip%
 }
@@ -121,7 +125,7 @@ https://github.com/Josef-Friedrich/cloze
 %
 % Put text here.
 %
-% \DescribeMacro{\setcloze}
+% \DescribeMacro{\setcloze} sdsdfsdf sdf sdf sdf sdf sdf sdf sdf
 %
 % \subsection{Command \cmd{\cloze}}
 % \DescribeMacro{\cloze}
@@ -133,13 +137,33 @@ https://github.com/Josef-Friedrich/cloze
 % exercitation ullamco laboris nisi} ut aliquip ex ea commodo consequat.
 % \end{example}
 %
+%
 % \subsection{Command \cmd{\clozefix}}
 % \DescribeMacro{\clozefix}
 %
+% \begin{example}
+% \noindent Lorem ipsum dolor sit amet:
+% \begin{compactenum}
+% \item \clozefix[width=5cm]{consectetur}
+% \item \clozefix[width=5cm]{adipisicing}
+% \item \clozefix[width=5cm]{elit}
+% \end{compactenum}
+% sed do eiusmod.
+% \end{example}
+%
+%
+% \subsection{Command \cmd{\clozefil}}
 % \DescribeMacro{\clozefil}
 %
+% \begin{example}
+% Lorem ipsum dolor sit amet, \clozefil{consectetur adipisicing elit, sed
+% do eiusmod.}
 %
-% \subsection{Environment \cmd{clozepar}}
+% Ut enim \clozefil{ad minim veniam} exercitation.
+% \end{example}
+%
+%
+% \subsection{Environment \texttt{clozepar}}
 % \DescribeEnv{clozepar}
 %
 % \begin{example}
