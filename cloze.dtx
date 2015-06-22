@@ -35,6 +35,8 @@
 \usepackage{cloze}
 \usepackage{paralist}
 
+\MakeShortVerb{\|}
+
 \setlength{\fboxrule}{0.2pt}
 \setlength{\fboxsep}{8pt}
 
@@ -123,12 +125,12 @@ https://github.com/Josef-Friedrich/cloze
 %
 % \section{Usage}
 %
-% Put text here.
-%
-% \DescribeMacro{\setcloze} sdsdfsdf sdf sdf sdf sdf sdf sdf sdf
+% At the moment there are three commands and one environment to generate
+% cloze text: \cmd{\cloze}, \cmd{\clozefix}, \cmd{\clozefil} and
+% \texttt{clozepar}.
 %
 % \subsection{Command \cmd{\cloze}}
-% \DescribeMacro{\cloze}
+% \DescribeMacro{\cloze} \cmd{\cloze}\oarg{options}\marg{some text}
 %
 % \begin{example}
 % Lorem ipsum \cloze{dolor} sit amet, \cloze{consectetur} adipisicing
@@ -139,7 +141,7 @@ https://github.com/Josef-Friedrich/cloze
 %
 %
 % \subsection{Command \cmd{\clozefix}}
-% \DescribeMacro{\clozefix}
+% \DescribeMacro{\clozefix} \cmd{\clozefix}\oarg{options}\marg{some text}
 %
 % \begin{example}
 % \noindent Lorem ipsum dolor sit amet:
@@ -153,7 +155,7 @@ https://github.com/Josef-Friedrich/cloze
 %
 %
 % \subsection{Command \cmd{\clozefil}}
-% \DescribeMacro{\clozefil}
+% \DescribeMacro{\clozefil} \cmd{\clozefil}\oarg{options}\marg{some text}
 %
 % \begin{example}
 % Lorem ipsum dolor sit amet, \clozefil{consectetur adipisicing elit, sed
@@ -164,7 +166,7 @@ https://github.com/Josef-Friedrich/cloze
 %
 %
 % \subsection{Environment \texttt{clozepar}}
-% \DescribeEnv{clozepar}
+% \DescribeEnv{clozepar} |\begin{clozepar}some text\end{clozepar}|
 %
 % \begin{example}
 % Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
@@ -181,15 +183,13 @@ https://github.com/Josef-Friedrich/cloze
 % officia deserunt mollit anim id est laborum.
 % \end{example}
 %
-%
-%
 % \DescribeMacro{\clozefont}
 %
 % \DescribeMacro{\clozelinefil}
 %
 %
 % \section{Options}
-%
+% \DescribeMacro{\setcloze}
 %
 % \subsection{Option 'align'}
 %
