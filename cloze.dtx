@@ -32,7 +32,7 @@
 %</package>
 %<*driver>
 \documentclass{ltxdoc}
-\usepackage{cloze}
+\usepackage[show]{cloze}
 \usepackage{paralist}
 
 \MakeShortVerb{\|}
@@ -127,9 +127,10 @@ or manually:
 %
 % \providecommand*{\url}{\texttt}
 % \GetFileInfo{cloze.dtx}
-% \title{The \cloze{cloze} package}
-% \author{Josef Friedrich \\ \url{josef@friedrich.rocks}}
+% \title{The \cloze{cloze} package\thanks{Robert-Michael Huber, Paul Isambert}}
+% \author{Josef Friedrich\\ \url{josef@friedrich.rocks}}
 % \date{\fileversion~from \filedate}
+%
 %
 % \maketitle
 %
@@ -139,9 +140,32 @@ or manually:
 %
 % \section{Introduction}
 %
-% \emph{cloze} is a \LaTeX{} package to generate cloze tests. It uses
+% \emph{cloze} is a \LaTeX{} package to generate cloze texts. It uses
 % the capabilities of the modern \TeX{} engine \emph{Lua\TeX}. Therefor
 % you must use Lua\LaTeX{} to produce documents containing clozes.
+%
+% The main feature of the package is, that you can show and hide the
+% cloze text without layout chance. The cloze text disappears.
+%
+% \newcommand{\clozelorem}{%
+% Lorem ipsum \cloze{dolor sit} amet, consectetur \cloze{adipisicing}
+% elit, sed do eiusmod tempor incididunt ut labore et \cloze{dolore magna}
+% aliqua. Ut enim ad minim veniam, quis nostrud \cloze{exercitation}
+% ullamco laboris nisi ut \cloze{aliquip} ex ea commodo consequat.%
+% }
+%
+% \begin{example}
+% \clozelorem
+% \end{example}
+%
+% \setcloze{hide}
+% The command |\setcloze{hide}| will show only gaps and cloze lines.
+%
+% \begin{example}
+% \clozelorem
+% \end{example}
+%
+% \setcloze{show}
 %
 % \section{Usage}
 %
@@ -161,7 +185,11 @@ or manually:
 %
 %
 % \subsection{Command \cmd{\clozefix}}
-% \DescribeMacro{\clozefix} \cmd{\clozefix}\oarg{options}\marg{some text}
+% \DescribeMacro{\clozefix}%
+% The command \cmd{\clozefix} produces clozes with a fixed width. The
+% clozes are by default
+% \directlua{tex.print(cloze.get_defaults('width'))} wide.
+% \cmd{\clozefix}\oarg{options}\marg{some text}
 %
 % \begin{example}
 % \noindent Lorem ipsum dolor sit amet:
@@ -913,6 +941,12 @@ function registry.get_marker(item, mode, position)
   return out
 end
 %    \end{macrocode}
+%
+%    \begin{macrocode}
+function registry.get_defaults(key)
+  return registry.defaults[key]
+end
+%    \end{macrocode}
 % \subsubsection{cloze}
 %    \begin{macrocode}
 function cloze.basic(head)
@@ -1157,6 +1191,7 @@ base.set_option = registry.set_option
 base.set_is_global = registry.set_is_global
 base.unset_local_options = registry.unset_local_options
 base.process_options = registry.process_options
+base.get_defaults = registry.get_defaults
 %    \end{macrocode}
 %
 %    \begin{macrocode}
