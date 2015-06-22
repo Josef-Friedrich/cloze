@@ -144,8 +144,8 @@ or manually:
 % the capabilities of the modern \TeX{} engine \emph{Lua\TeX}. Therefor
 % you must use Lua\LaTeX{} to produce documents containing clozes.
 %
-% The main feature of the package is, that you can show and hide the
-% cloze text without layout chance. The cloze text disappears.
+% The main feature of the package is, that you can freely show and hide
+% the cloze text without changing the position of any other letter.
 %
 % \newcommand{\clozelorem}{%
 % Lorem ipsum \cloze{dolor sit} amet, consectetur \cloze{adipisicing}
@@ -159,7 +159,10 @@ or manually:
 % \end{example}
 %
 % \setcloze{hide}
-% The command |\setcloze{hide}| will show only gaps and cloze lines.
+%
+% The command |\setcloze{hide}| will show gaps and cloze lines, no cloze
+% text. You can put the two boxes above and below to each other  and
+% they will fit perfectly.
 %
 % \begin{example}
 % \clozelorem
@@ -575,13 +578,13 @@ local registry = {}
 registry.storage = {}
 registry.defaults = {
   ['align'] = 'l',
-  ['distance'] = '3pt',
+  ['distance'] = '1.5pt',
   ['linecolor'] = '0 0 0 rg 0 0 0 RG', -- black
   ['margin'] = '3pt',
   ['resetcolor'] = '0 0 0 rg 0 0 0 RG', -- black
   ['show_text'] = true,
   ['textcolor'] = '0 0 1 rg 0 0 1 RG', -- blue
-  ['thickness'] = '0.4pt',
+  ['thickness'] = '0.1pt',
   ['width'] = '2cm',
 }
 registry.global_options = {}
