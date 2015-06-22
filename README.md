@@ -9,3 +9,23 @@ nutzt die Möglichkeiten der modernen TeX-Engine LuaTeX.
 # Repository
 
 https://github.com/Josef-Friedrich/cloze
+
+# Installation
+
+Get source:
+
+    git clone git@github.com:Josef-Friedrich/cloze.git
+    cd cloze
+
+Compile:
+
+    make
+
+or manually:
+
+    luatex cloze.ins
+    lualatex cloze.dtx
+    makeindex -s gglo.ist -o cloze.gls cloze.glo
+    makeindex -s gind.ist -o cloze.ind cloze.idx
+    lualatex cloze.dtx
+
