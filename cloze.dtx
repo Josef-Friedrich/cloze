@@ -409,7 +409,10 @@ or manually:
 % \paragraph{Option 'hide'}
 %
 %    \begin{macrocode}
-\DeclareVoidOption{hide}{\cloze@set@option[hide]{true}}
+\DeclareVoidOption{hide}{
+  \cloze@set@option[hide]{true}
+  \cloze@set@option[show]{false}
+}
 %    \end{macrocode}
 %
 %
@@ -432,7 +435,10 @@ or manually:
 % \paragraph{Option 'show'}
 %
 %    \begin{macrocode}
-\DeclareVoidOption{show}{\cloze@set@option[show]{true}}
+\DeclareVoidOption{show}{
+  \cloze@set@option[show]{true}
+  \cloze@set@option[hide]{false}
+}
 %    \end{macrocode}
 %
 %
@@ -723,10 +729,9 @@ function insert.margin()
   node.write(kern)
 end
 %    \end{macrocode}
-%
+% Append rule and kern to the node list.
 %    \begin{macrocode}
 function insert.rule_colored(head, current, width)
-  -- Append rule and kern to the node list.
   local rule = create.rule(width)
 
   head, new = node.insert_after(head, current, create.color('line'))
