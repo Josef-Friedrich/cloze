@@ -64,6 +64,14 @@
 
 \newcommand{\expdesc}[1]{(|#1|)}
 
+\newcommand{\desc}[1]{%
+  \hfill%
+  \expdesc{#1}%
+  \par%
+}
+
+\def\tt#1{\texttt{#1}}
+
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -206,7 +214,7 @@ Ut enim \clozefil{ad minim veniam} exercitation.
 % clozepar
 %%
 
-\subsection{Environment \texttt{clozepar}}
+\subsection{Environment \tt{clozepar}}
 \DescribeEnv{clozepar} |\begin{clozepar}| \dots \textit{some text}
 \dots |\end{clozepar}|
 
@@ -231,14 +239,14 @@ officia deserunt mollit anim id est laborum.
 % Options
 %-----------------------------------------------------------------------
 
-\section{Options}
+\section{The options}
 \DescribeMacro{\setcloze}
 
 %%
 % align
 %%
 
-\subsection{Option 'align'}
+\subsection{The option \tt{align}}
 
 Only the macro \cmd{\clozefix} takes the option \texttt{align} into
 account. Possible values are \texttt{left}, \texttt{center} and
@@ -247,11 +255,8 @@ cloze line is larger than the width of the cloze text.
 
 \newcommand{\optionsalign}[1]{%
   \noindent%
-  \clozefix[align=#1,width=8cm]%
-  {Lorem ipsum}%
-  \hfill%
-  \expdesc{#1}%
-  \par%
+  \clozefix[align=#1,width=8cm]{Lorem ipsum}%
+  \desc{#1}%
 }
 
 \begin{clozeexample}
@@ -264,7 +269,7 @@ cloze line is larger than the width of the cloze text.
 % distance
 %%
 
-\subsection{Option 'distance'}
+\subsection{The option \tt{distance}}
 
 \newcommand{\optiondistance}[1]{%
   \noindent%
@@ -283,7 +288,7 @@ cloze line is larger than the width of the cloze text.
 % hide and show
 %%
 
-\subsection{Options 'hide' and 'show'}
+\subsection{The options \tt{hide} and \tt{show}}
 
 The cloze text is displayed by default. Use the option \texttt{hide} to
 remove the cloze text from the output.  If you accidentally specify both
@@ -292,9 +297,7 @@ options, the last option "wins".
 \newcommand{\optionshow}[1]{%
   \noindent%
   Lorem ipsum \cloze[#1]{dolor sit amet}, consectetur \cloze[#1]{adipisicing} elit.%
-  \hfill%
-  \expdesc{#1}%
-  \par%
+  \desc{#1}%
 }
 
 \begin{clozeexample}
@@ -306,7 +309,24 @@ options, the last option "wins".
 % margin
 %%
 
-\subsection{Option 'margin'}\label{sec:option-margin}
+\subsection{The option \texttt{margin}}\label{sec:option-margin}
+
+The option |margin| indicates how far the cloze line sticks up from the
+cloze text. The option can be used with the commands \cmd{\cloze},
+\cmd{\clozefix} and \cmd{\clozefil}.
+
+\newcommand{\optionmargin}[1]{%
+  Lorem ipsum \cloze[margin=#1]{dolor} sit amet.%
+  \desc{#1}%
+}
+
+\begin{clozeexample}
+\optionmargin{0pt}
+\optionmargin{5mm}
+\optionmargin{1cm}
+\optionmargin{6em}
+\optionmargin{-4pt}
+\end{clozeexample}
 
   \DocInput{cloze.dtx}
   \PrintChanges
