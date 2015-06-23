@@ -187,11 +187,10 @@ Excepteur \cloze{sint} occaecat \cloze{cupidatat} non proident.
 
 \subsection{Command \cmd{\clozefix}}
 
-\DescribeMacro{\clozefix}%
+\DescribeMacro{\clozefix} \cmd{\clozefix}\oarg{options}\marg{some text}:
 The command \cmd{\clozefix} produces clozes with a fixed width. The
-clozes are by default
-\directlua{tex.print(cloze.get_defaults('width'))} wide.
-\cmd{\clozefix}\oarg{options}\marg{some text}
+clozes are by default \tt{\getdefaults{width}} wide.
+
 
 \begin{clozeexample}
 \noindent Lorem ipsum dolor sit amet:
@@ -208,12 +207,13 @@ sed do eiusmod.
 %%
 
 \subsection{Command \cmd{\clozefil}}
-\DescribeMacro{\clozefil} \cmd{\clozefil}\oarg{options}\marg{some text}
+\DescribeMacro{\clozefil} \cmd{\clozefil}\oarg{options}\marg{some text}:
+
 
 \begin{clozeexample}
 Lorem ipsum dolor sit amet, \clozefil{consectetur adipisicing elit, sed
 do eiusmod.}
-
+e
 Ut enim \clozefil{ad minim veniam} exercitation.
 \end{clozeexample}
 
@@ -222,8 +222,10 @@ Ut enim \clozefil{ad minim veniam} exercitation.
 %%
 
 \subsection{Environment \tt{clozepar}}
-\DescribeEnv{clozepar} |\begin{clozepar}| \dots \textit{some text}
-\dots |\end{clozepar}|
+\DescribeEnv{clozepar} |\begin{clozepar}|\oarg{options} \dots
+\textit{some text} \dots |\end{clozepar}|: The environment \tt{clozepar}
+transforms a complete paragraph into a cloze. The options |align|,
+|margin| and |width| have no effect on this environment.
 
 \begin{clozeexample}
 Lorem ipsum dolor sit amet, consectetur adipisicing elit ullamco laboris
