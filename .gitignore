@@ -8,6 +8,7 @@
 *.ind
 *.log
 *.lua
+*.out
 *.pdf
 *.sty
 *.synctex.gz
