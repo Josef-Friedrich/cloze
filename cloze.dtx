@@ -219,18 +219,16 @@ Ut enim \clozefil{ad minim veniam} exercitation.
 \dots |\end{clozepar}|
 
 \begin{clozeexample}
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua.
+Lorem ipsum dolor sit amet, consectetur adipisicing elit ullamco laboris
+nisi.
 
 \begin{clozepar}
 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
 ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-pariatur.
+reprehenderit in voluptate velit esse cillum.
 \end{clozepar}
 
-Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-officia deserunt mollit anim id est laborum.
+Excepteur sint occaecat cupidatat non proident.
 \end{clozeexample}
 
 \DescribeMacro{\clozelinefil}
@@ -296,13 +294,46 @@ options, the last option "wins".
 
 \newcommand{\optionshow}[1]{%
   \noindent%
-  Lorem ipsum \cloze[#1]{dolor sit amet}, consectetur \cloze[#1]{adipisicing} elit.%
+  Lorem ipsum \cloze[#1]{dolor sit amet}, consectetur
+  \cloze[#1]{adipisicing} elit.%
   \desc{#1}%
 }
 
 \begin{clozeexample}
 \optionshow{hide}
 \optionshow{show}
+\end{clozeexample}
+
+%%
+% linecolor and textcolor
+%%
+
+\subsection{The options \tt{linecolor} and \tt{textcolor}}
+
+Values for both color options are color names used by the xcolor
+package. To define your own color use the following command:
+
+|\definecolor{myclozecolor}{rgb}{0.1,0.4,0.6}|
+\definecolor{myclozecolor}{rgb}{0.1,0.4,0.6}
+
+\newcommand{\optioncolor}[2]{%
+  \clozefil[#1=#2]{Lorem ipsum dolor sit amet, consectetur} %
+  \expdesc{#2}%
+  \par%
+}
+
+\begin{clozeexample}
+\optioncolor{textcolor}{myclozecolor}
+\optioncolor{textcolor}{red}
+\optioncolor{textcolor}{green}
+\end{clozeexample}
+
+You can use the same color names to colorize the cloze lines.
+
+\begin{clozeexample}
+\optioncolor{linecolor}{myclozecolor}
+\optioncolor{linecolor}{red}
+\optioncolor{linecolor}{green}
 \end{clozeexample}
 
 %%
@@ -327,6 +358,44 @@ cloze text. The option can be used with the commands \cmd{\cloze},
 \optionmargin{6em}
 \optionmargin{-4pt}
 \end{clozeexample}
+
+
+%%
+% thickness
+%%
+
+\subsection{The option \texttt{thickness}}
+
+\newcommand{\optionthickness}[1]{%
+  Lorem \cloze[thickness=#1]{ipsum dolor sit} amet.%
+  \desc{#1}%
+}
+
+\begin{clozeexample}
+\optionthickness{0.01pt}
+\optionthickness{1pt}
+\optionthickness{2pt}
+\end{clozeexample}
+
+
+%%
+% width
+%%
+
+\subsection{The option \texttt{width}}
+
+\newcommand{\optionwidth}[1]{%
+  Lorem \clozefix[width=#1]{dolor} amet.%
+  \desc{#1}%
+}
+
+\begin{clozeexample}
+\optionwidth{3cm}
+\optionwidth{5cm}
+\optionwidth{7cm}
+\end{clozeexample}
+
+
 
   \DocInput{cloze.dtx}
   \PrintChanges
