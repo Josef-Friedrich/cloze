@@ -58,6 +58,12 @@
   \medskip%
 }
 
+\newcommand{\getdefaults}[1]{%
+  \directlua{tex.print(cloze.get_defaults('#1'))}%
+}
+
+\newcommand{\expdesc}[1]{(|#1|)}
+
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -239,15 +245,38 @@ account. Possible values are \texttt{left}, \texttt{center} and
 \texttt{right}. This option only makes sense, if the width of the
 cloze line is larger than the width of the cloze text.
 
+\newcommand{\optionsalign}[1]{%
+  \noindent%
+  \clozefix[align=#1,width=8cm]%
+  {Lorem ipsum}%
+  \hfill%
+  \expdesc{#1}%
+  \par%
+}
+
 \begin{clozeexample}
-\noindent\clozefix[align=left,width=6cm]{Lorem ipsum}
-(\texttt{align=left})
+\optionsalign{left}
+\optionsalign{center}
+\optionsalign{right}
+\end{clozeexample}
 
-\noindent\clozefix[align=center,width=6cm]{Lorem ipsum}
-(\texttt{align=center})
+%%
+% distance
+%%
 
-\noindent\clozefix[align=right,width=6cm]{Lorem ipsum}
-(\texttt{align=right})
+\subsection{Option 'distance'}
+
+\newcommand{\optiondistance}[1]{%
+  \noindent%
+  \clozefil[distance=#1]{Lorem ipsum dolor sit amet.}
+  \expdesc{#1}
+  \par%
+}
+
+\begin{clozeexample}
+\optiondistance{\getdefaults{distance}}
+\optiondistance{3pt}
+\optiondistance{-3pt}
 \end{clozeexample}
 
 %%
@@ -258,13 +287,19 @@ cloze line is larger than the width of the cloze text.
 
 The cloze text is displayed by default. Use the option \texttt{hide} to
 remove the cloze text from the output.  If you accidentally specify both
-options, the option \texttt{hide} is "stronger".
+options, the last option "wins".
+
+\newcommand{\optionshow}[1]{%
+  \noindent%
+  Lorem ipsum \cloze[#1]{dolor sit amet}, consectetur \cloze[#1]{adipisicing} elit.%
+  \hfill%
+  \expdesc{#1}%
+  \par%
+}
 
 \begin{clozeexample}
-\noindent\cmd{\cloze[hide]}\marg{dolor}:
-Lorem ipsum \cloze[hide]{dolor} sit amet. \\
-\noindent\cmd{\cloze[show]}\marg{dolor}:
-Lorem ipsum \cloze[show]{dolor} sit amet.
+\optionshow{hide}
+\optionshow{show}
 \end{clozeexample}
 
 %%
@@ -474,9 +509,9 @@ or manually:
 % \paragraph{Option 'hide'}
 %
 %    \begin{macrocode}
-\DeclareVoidOption{hide}{
-  \cloze@set@option[hide]{true}
-  \cloze@set@option[show]{false}
+\DeclareVoidOption{hide}{%
+  \cloze@set@option[hide]{true}%
+  \cloze@set@option[show]{false}%
 }
 %    \end{macrocode}
 %
@@ -500,9 +535,9 @@ or manually:
 % \paragraph{Option 'show'}
 %
 %    \begin{macrocode}
-\DeclareVoidOption{show}{
-  \cloze@set@option[show]{true}
-  \cloze@set@option[hide]{false}
+\DeclareVoidOption{show}{%
+  \cloze@set@option[show]{true}%
+  \cloze@set@option[hide]{false}%
 }
 %    \end{macrocode}
 %
