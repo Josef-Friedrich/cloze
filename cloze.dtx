@@ -76,6 +76,10 @@
 \setcounter{tocdepth}{5}
 \tableofcontents
 
+%-----------------------------------------------------------------------
+% Introduction
+%-----------------------------------------------------------------------
+
 \section{Introduction}
 
 \emph{cloze} is a \LaTeX{} package to generate cloze texts. It uses
@@ -108,25 +112,34 @@ other and they will fit perfectly.
 
 \setcloze{show}
 
+%-----------------------------------------------------------------------
+% Usage
+%-----------------------------------------------------------------------
+
 \section{Usage}
 
 At the moment there are three commands and one environment to generate
 cloze text: \cmd{\cloze}, \cmd{\clozefix}, \cmd{\clozefil} and
 |clozepar|.
 
+%%
+% \cloze
+%%
+
 \subsection{Command \cmd{\cloze}}
 
-\DescribeMacro{\cloze} \cmd{\cloze}\oarg{options}\marg{some text}:
-The command \cmd{\cloze} behaves similar to a command that underlines
-the text. \cmd{\cloze} does not prevent line breaks. The width of a
-cloze is pending on the number of letters and the font used. The only
-option which affects the widths of a cloze is the option |margin|. \ref{sec:option-margin}
+\DescribeMacro{\cloze} \cmd{\cloze}\oarg{options}\marg{some text}: The
+command \cmd{\cloze} behaves similar to a command that underlines the
+text. \cmd{\cloze} does not prevent line breaks. The width of a cloze is
+pending on the number of letters and the font used. The only option
+which affects the widths of a cloze is the option |margin|.
+\ref{sec:option-margin}
 
 \begin{clozeexample}
 Lorem ipsum \cloze{dolor} sit amet, \cloze{consectetur} adipisicing
 elit, sed do eiusmod tempor incididunt ut labore et dolore
-\cloze{magna aliqua. Ut enim ad minim veniam, quis nostrud
-exercitation ullamco laboris nisi} ut aliquip ex ea commodo consequat.
+\cloze{magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+ullamco laboris nisi} ut aliquip ex ea commodo consequat.
 \end{clozeexample}
 
 \DescribeMacro{\clozefont} The cloze font can be changed by redefining
@@ -147,7 +160,12 @@ Excepteur \cloze{sint} occaecat \cloze{cupidatat} non proident.
 \end{clozeexample}
 \renewcommand{\clozefont}{\itshape}
 
+%%
+% \clozefix
+%%
+
 \subsection{Command \cmd{\clozefix}}
+
 \DescribeMacro{\clozefix}%
 The command \cmd{\clozefix} produces clozes with a fixed width. The
 clozes are by default
@@ -164,6 +182,10 @@ clozes are by default
 sed do eiusmod.
 \end{clozeexample}
 
+%%
+% \clozefil
+%%
+
 \subsection{Command \cmd{\clozefil}}
 \DescribeMacro{\clozefil} \cmd{\clozefil}\oarg{options}\marg{some text}
 
@@ -174,17 +196,21 @@ do eiusmod.}
 Ut enim \clozefil{ad minim veniam} exercitation.
 \end{clozeexample}
 
+%%
+% clozepar
+%%
+
 \subsection{Environment \texttt{clozepar}}
 \DescribeEnv{clozepar} |\begin{clozepar}| \dots \textit{some text}
 \dots |\end{clozepar}|
 
 \begin{clozeexample}
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-eiusmod tempor incididunt ut labore et dolore magna aliqua.
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua.
 
 \begin{clozepar}
-Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
+ut aliquip ex ea commodo consequat. Duis aute irure dolor in
 reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
 pariatur.
 \end{clozepar}
@@ -195,8 +221,16 @@ officia deserunt mollit anim id est laborum.
 
 \DescribeMacro{\clozelinefil}
 
+%-----------------------------------------------------------------------
+% Options
+%-----------------------------------------------------------------------
+
 \section{Options}
 \DescribeMacro{\setcloze}
+
+%%
+% align
+%%
 
 \subsection{Option 'align'}
 
@@ -216,11 +250,15 @@ cloze line is larger than the width of the cloze text.
 (\texttt{align=right})
 \end{clozeexample}
 
+%%
+% hide and show
+%%
+
 \subsection{Options 'hide' and 'show'}
 
-The cloze text is displayed by default. Use the option \texttt{hide}
-to remove the cloze text from the output.  If you accidentally specify
-both options, the option \texttt{hide} is "stronger".
+The cloze text is displayed by default. Use the option \texttt{hide} to
+remove the cloze text from the output.  If you accidentally specify both
+options, the option \texttt{hide} is "stronger".
 
 \begin{clozeexample}
 \noindent\cmd{\cloze[hide]}\marg{dolor}:
@@ -228,6 +266,10 @@ Lorem ipsum \cloze[hide]{dolor} sit amet. \\
 \noindent\cmd{\cloze[show]}\marg{dolor}:
 Lorem ipsum \cloze[show]{dolor} sit amet.
 \end{clozeexample}
+
+%%
+% margin
+%%
 
 \subsection{Option 'margin'}\label{sec:option-margin}
 
@@ -242,8 +284,8 @@ Lorem ipsum \cloze[show]{dolor} sit amet.
 EN: `cloze` is a LaTeX package to generate cloze. It uses the
 capabilities of the modern TeX engine LuaTex.
 
-DE: `cloze` ist a LaTeX-Paket zum Erstellen von Lückentexten. Es
-nutzt die Möglichkeiten der modernen TeX-Engine LuaTeX.
+DE: `cloze` ist a LaTeX-Paket zum Erstellen von Lückentexten. Es nutzt
+die Möglichkeiten der modernen TeX-Engine LuaTeX.
 
 # Repository
 
