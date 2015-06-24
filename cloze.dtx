@@ -733,7 +733,7 @@ or manually:
   \cloze@set@local@options{#1}%
   \cloze@start@marker{basic}%
   {%
-    \clozefont%
+    \clozefont\relax%
     \cloze@margin{#2}%
   }%
   \cloze@stop@marker{basic}%
@@ -749,7 +749,7 @@ or manually:
   \cloze@set@local@options{#1}%
   \cloze@start@marker{fix}%
   {%
-    \clozefont%
+    \clozefont\relax%
     \cloze@margin{#2}%
   }%
   \cloze@stop@marker{fix}%
@@ -765,7 +765,7 @@ or manually:
   \par%
   \cloze@set@local@options{#1}%
   \cloze@start@marker{par}%
-  \clozefont%
+  \clozefont\relax%
 }%
 {%
   \cloze@stop@marker{par}%
