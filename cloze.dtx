@@ -41,7 +41,6 @@
   urlcolor=red,
 ]{hyperref}
 
-
 \MakeShortVerb{\|}
 
 \setlength{\fboxrule}{0.2pt}
@@ -80,6 +79,8 @@
 \def\tt#1{\texttt{#1}}
 
 \def\secref#1{(\rightarrow\ \ref{#1})}
+
+\newcommand{\option}[2]{\tt{[#1=}\meta{#2}\tt{]}:}
 
 \EnableCrossrefs
 \CodelineIndex
@@ -205,7 +206,7 @@ Excepteur \cloze{sint} occaecat \cloze{cupidatat} non proident.
 % \clozefix
 %%
 
-\subsubsection{The command \cmd{\clozefix}}
+\subsubsection{The command \cmd{\clozefix}}\label{sec:command-clozefix}
 
 \DescribeMacro{\clozefix} \cmd{\clozefix}\oarg{options}\marg{some text}:
 The command \cmd{\clozefix} produces clozes with a fixed width. The
@@ -229,7 +230,10 @@ sed do eiusmod.
 \subsubsection{The command \cmd{\clozefil}}
 
 \DescribeMacro{\clozefil} \cmd{\clozefil}\oarg{options}\marg{some text}:
-
+The name of the command is inspired by the \cmd{\hfil}, \cmd{\hfill},
+\cmd{\hfilll} etc. commands. \cmd{\clozefil} -- written only with one
+\emph{l} at the end -- fills out all available horizontal space with a
+cloze line.
 
 \begin{clozeexample}
 Lorem ipsum dolor sit amet, \clozefil{consectetur adipisicing elit, sed
@@ -266,6 +270,8 @@ Excepteur sint occaecat cupidatat non proident.
 
 \DescribeMacro{\clozelinefil}
 
+
+
 %-----------------------------------------------------------------------
 % Options
 %-----------------------------------------------------------------------
@@ -282,10 +288,10 @@ Excepteur sint occaecat cupidatat non proident.
 
 \subsubsection{The option \tt{align}}\label{sec:option-align}
 
-Only the macro \cmd{\clozefix} takes the option \texttt{align} into
-account. Possible values are \texttt{left}, \texttt{center} and
-\texttt{right}. This option only makes sense, if the width of the
-cloze line is larger than the width of the cloze text.
+\option{align}{left/center/right} Only the macro \cmd{\clozefix} takes the
+option \texttt{align} into account. Possible values are \texttt{left},
+\texttt{center} and \texttt{right}. This option only makes sense, if the
+width of the cloze line is larger than the width of the cloze text.
 
 \newcommand{\optionsalign}[1]{%
   \noindent%
@@ -305,10 +311,10 @@ cloze line is larger than the width of the cloze text.
 
 \subsubsection{The option \tt{distance}}
 
-The option |distance| specifies the spacing between the baseline and the
-cloze line. The larger the dimension of the option |distance|, the more
-moves the cloze line down. Negative values cause the cloze line to
-appear above the baseline. The default value is
+\option{distance}{dimen} The option |distance| specifies the spacing
+between the baseline and the cloze line. The larger the dimension of the
+option |distance|, the more moves the cloze line down. Negative values
+cause the cloze line to appear above the baseline. The default value is
 \tt{\getdefaults{distance}}.
 
 \newcommand{\optiondistance}[1]{%
@@ -356,8 +362,9 @@ options -- |hide| and |show| -- the last option "wins".
 \label{sec:option-linecolor}
 \label{sec:option-textcolor}
 
-Values for both color options are color names used by the xcolor
-package. To define your own color use the following command:
+\option{linecolor}{color name} Values for both color options are color
+names used by the xcolor package. To define your own color use the
+following command:
 
 |\definecolor{myclozecolor}{rgb}{0.1,0.4,0.6}|
 \definecolor{myclozecolor}{rgb}{0.1,0.4,0.6}
@@ -388,9 +395,10 @@ You can use the same color names to colorize the cloze lines.
 
 \subsubsection{The option \tt{margin}}\label{sec:option-margin}
 
-The option |margin| indicates how far the cloze line sticks up from the
-cloze text. The option can be used with the commands \cmd{\cloze},
-\cmd{\clozefix} and \cmd{\clozefil}.
+\option{margin}{dimen} The option |margin| indicates how far the cloze
+line sticks up from the cloze text. The option can be used with the
+commands \cmd{\cloze}, \cmd{\clozefix} and \cmd{\clozefil}. The default
+value of the option is \tt{\getdefaults{margin}}.
 
 \newcommand{\optionmargin}[1]{%
   Lorem ipsum \cloze[margin=#1]{dolor} sit amet.%
@@ -405,12 +413,14 @@ cloze text. The option can be used with the commands \cmd{\cloze},
 \optionmargin{-4pt}
 \end{clozeexample}
 
-
 %%
 % thickness
 %%
 
 \subsubsection{The option \tt{thickness}}\label{sec:option-thickness}
+
+\option{thickness}{dimen} The default value of the option is
+\tt{\getdefaults{thickness}}.
 
 \newcommand{\optionthickness}[1]{%
   Lorem \cloze[thickness=#1]{ipsum dolor sit} amet.%
@@ -423,12 +433,15 @@ cloze text. The option can be used with the commands \cmd{\cloze},
 \optionthickness{2pt}
 \end{clozeexample}
 
-
 %%
 % width
 %%
 
 \subsubsection{The option \tt{width}}\label{sec:option-width}
+
+\option{width}{dimen} The only command which can be changed by the
+option |width| is \cmd{\clozefix}. The default value of the option is
+\tt{\getdefaults{width}}.
 
 \newcommand{\optionwidth}[1]{%
   Lorem \clozefix[width=#1]{dolor} amet.%
