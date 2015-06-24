@@ -563,7 +563,7 @@ or manually:
 %    \begin{macrocode}
 \def\cloze@set@local@options#1{%
   \cloze@set@to@local%
-  \kvsetkeys{LC}{#1}%
+  \kvsetkeys{CLZ}{#1}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -608,11 +608,13 @@ or manually:
 %    \begin{macrocode}
 \cloze@set@to@global
 %    \end{macrocode}
-% LC = cloze
+%
+%
+% We use the abbreviation |CLZ| as family name and prefix.
 %    \begin{macrocode}
 \SetupKeyvalOptions{
-  family=LC,
-  prefix=LC@
+  family=CLZ,
+  prefix=CLZ@
 }
 %    \end{macrocode}
 %
@@ -622,7 +624,7 @@ or manually:
 % Affects only \cmd{\clozefix}.
 %    \begin{macrocode}
 \DeclareStringOption{align}
-\define@key{LC}{align}[]{\cloze@set@option[align]{#1}}
+\define@key{CLZ}{align}[]{\cloze@set@option[align]{#1}}
 %    \end{macrocode}
 %
 %
@@ -630,7 +632,7 @@ or manually:
 %
 %    \begin{macrocode}
 \DeclareStringOption{distance}
-\define@key{LC}{distance}[]{\cloze@set@option[distance]{#1}}
+\define@key{CLZ}{distance}[]{\cloze@set@option[distance]{#1}}
 %    \end{macrocode}
 %
 %
@@ -648,7 +650,7 @@ or manually:
 %
 %    \begin{macrocode}
 \DeclareStringOption{linecolor}
-\define@key{LC}{linecolor}[]{\cloze@set@option[linecolor]{\cloze@color{#1}}}
+\define@key{CLZ}{linecolor}[]{\cloze@set@option[linecolor]{\cloze@color{#1}}}
 %    \end{macrocode}
 %
 %
@@ -656,7 +658,7 @@ or manually:
 %
 %    \begin{macrocode}
 \DeclareStringOption{margin}
-\define@key{LC}{margin}[]{\cloze@set@option[margin]{#1}}
+\define@key{CLZ}{margin}[]{\cloze@set@option[margin]{#1}}
 %    \end{macrocode}
 %
 %
@@ -674,7 +676,7 @@ or manually:
 %
 %    \begin{macrocode}
 \DeclareStringOption{textcolor}
-\define@key{LC}{textcolor}[]{\cloze@set@option[textcolor]{\cloze@color{#1}}}
+\define@key{CLZ}{textcolor}[]{\cloze@set@option[textcolor]{\cloze@color{#1}}}
 %    \end{macrocode}
 %
 %
@@ -682,7 +684,7 @@ or manually:
 %
 %    \begin{macrocode}
 \DeclareStringOption{thickness}
-\define@key{LC}{thickness}[]{\cloze@set@option[thickness]{#1}}
+\define@key{CLZ}{thickness}[]{\cloze@set@option[thickness]{#1}}
 %    \end{macrocode}
 %
 %
@@ -690,11 +692,11 @@ or manually:
 % Affects only \cmd{\clozefix}
 %    \begin{macrocode}
 \DeclareStringOption{width}
-\define@key{LC}{width}[]{\cloze@set@option[width]{#1}}
+\define@key{CLZ}{width}[]{\cloze@set@option[width]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-\ProcessKeyvalOptions{LC}
+\ProcessKeyvalOptions{CLZ}
 %    \end{macrocode}
 %
 % \subsubsection{Public macros}
@@ -703,7 +705,7 @@ or manually:
 %    \begin{macrocode}
 \newcommand{\setcloze}[1]{%
   \cloze@set@to@global%
-  \kvsetkeys{LC}{#1}%
+  \kvsetkeys{CLZ}{#1}%
 }
 %    \end{macrocode}
 % \end{macro}
