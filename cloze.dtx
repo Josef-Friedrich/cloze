@@ -857,11 +857,11 @@ function create.whatsit_colorstack(data)
     data = '0 0 0 rg 0 0 0 RG'
   end
 
-  local node = node.new('whatsit', 'pdf_colorstack')
-  node.stack = 0
-  node.data = data
+  local whatsit = node.new('whatsit', 'pdf_colorstack')
+  whatsit.stack = 0
+  whatsit.data = data
 
-  return node
+  return whatsit
 end
 %    \end{macrocode}
 %
@@ -885,31 +885,31 @@ end
 %
 %    \begin{macrocode}
 function create.rule(width)
-  local node = node.new(node.id('rule'))
+  local rule = node.new(node.id('rule'))
   local thickness = tex.sp(registry.thickness)
   local distance = tex.sp(registry.distance)
 
-  node.depth = distance + thickness
-  node.height = - distance
-  node.width = width
+  rule.depth = distance + thickness
+  rule.height = - distance
+  rule.width = width
 
-  return node
+  return rule
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function create.kern(kern)
-  local node = node.new(node.id('kern'))
-  node.kern = kern
-  return node
+function create.kern(width)
+  local kern = node.new(node.id('kern'))
+  kern.kern = width
+  return kern
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function create.glyph()
-  local node = node.new(node.id('glyph'))
-  node.char = 34
-  return node
+  local glyph = node.new(node.id('glyph'))
+  glyph.char = 34
+  return glyph
 end
 %    \end{macrocode}
 %
