@@ -656,7 +656,9 @@ or manually:
 %
 %    \begin{macrocode}
 \DeclareStringOption{linecolor}
-\define@key{CLZ}{linecolor}[]{\cloze@set@option[linecolor]{\cloze@color{#1}}}
+\define@key{CLZ}{linecolor}[]{%
+  \cloze@set@option[linecolor]{\cloze@color{#1}}%
+}
 %    \end{macrocode}
 %
 %
@@ -682,7 +684,9 @@ or manually:
 %
 %    \begin{macrocode}
 \DeclareStringOption{textcolor}
-\define@key{CLZ}{textcolor}[]{\cloze@set@option[textcolor]{\cloze@color{#1}}}
+\define@key{CLZ}{textcolor}[]{%
+  \cloze@set@option[textcolor]{\cloze@color{#1}}%
+}
 %    \end{macrocode}
 %
 %
@@ -1090,13 +1094,15 @@ function registry.merge_local_options()
   else
     registry.options = {}
   end
-  registry.options.show_text = registry.set_show_text(registry.local_options)
+  registry.options.show_text =
+    registry.set_show_text(registry.local_options)
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function registry.merge_global_options()
-  registry.global_options.show_text = registry.set_show_text(registry.global_options)
+  registry.global_options.show_text =
+    registry.set_show_text(registry.global_options)
 
   for key, value in pairs(registry.global_options) do
     if registry.options[key] == nil or registry.options[key] == '' then
@@ -1146,7 +1152,11 @@ end
 %    \begin{macrocode}
 function registry.debug(table, identifier)
   for key, value in pairs(table) do
-    print(identifier .. ' KEY: ' .. tostring(key) .. ' VALUE: ' .. tostring(value))
+    local out = identifier .. ' KEY: '
+      .. tostring(key)
+      .. ' VALUE: '
+      .. tostring(value)
+    print(out)
   end
 end
 %    \end{macrocode}
@@ -1253,9 +1263,19 @@ function cloze.basic(head)
           n.stop = n.stop.next
         end
 
-        l.line_width = node.dimensions(hlist.glue_set, hlist.glue_sign, hlist.glue_order, n.current, n.stop.next)
+        l.line_width = node.dimensions(
+          hlist.glue_set,
+          hlist.glue_sign,
+          hlist.glue_order,
+          n.current,
+          n.stop.next
+        )
 
-        head, n.line = insert.rule_colored(head, n.current, l.line_width)
+        head, n.line = insert.rule_colored(
+          head,
+          n.current,
+          l.line_width
+        )
 
         if registry.show_text then
           node.insert_after(head, n.line, create.kern(-l.line_width))
@@ -1329,7 +1349,11 @@ function cloze.fix_make(head, start, stop)
   head, n.line = insert.rule_colored(head, n.start, l.width)
 
   if registry.show_text then
-    head, n.kern_start = node.insert_after(head, n.line, create.kern(l.kern_start))
+    head, n.kern_start = node.insert_after(
+      head,
+      n.line,
+      create.kern(l.kern_start)
+    )
     node.insert_after(head, n.kern_start, create.color('text'))
     node.insert_before(head, n.stop, create.whatsit_colorstack())
     node.insert_before(head, n.stop, create.kern(l.kern_stop))
@@ -1346,8 +1370,12 @@ function cloze.fix(head)
   n.start, n.stop = false
   for current in node.traverse_id(node.id('whatsit'), head) do
 
-    if not n.start then n.start = registry.get_marker(current, 'fix', 'start') end
-    if not n.stop then n.stop = registry.get_marker(current, 'fix', 'stop') end
+    if not n.start then
+      n.start = registry.get_marker(current, 'fix', 'start')
+    end
+    if not n.stop then
+      n.stop = registry.get_marker(current, 'fix', 'stop')
+    end
 
     if n.start and n.stop then
       cloze.fix_make(head, n.start, n.stop)
@@ -1379,7 +1407,11 @@ function cloze.par(head)
     head, n.rule = insert.rule_colored(head, n.strut, l.width)
 
     if registry.show_text then
-      head, n.kern = node.insert_after(head, n.rule, create.kern(-l.width))
+      head, n.kern = node.insert_after(
+        head,
+        n.rule,
+        create.kern(-l.width)
+      )
       node.insert_after(head, n.kern, create.color('text'))
 
       n.tail = node.tail(n.head)
@@ -1400,15 +1432,30 @@ end
 %    \begin{macrocode}
 function base.register(mode)
   if mode == 'par' then
-    luatexbase.add_to_callback('post_linebreak_filter', cloze.par, mode, 1)
+    luatexbase.add_to_callback(
+      'post_linebreak_filter',
+      cloze.par,
+      mode,
+      1
+    )
     return true
   end
 
   if not is_registered[mode] then
     if mode == 'basic' then
-      luatexbase.add_to_callback('post_linebreak_filter', cloze.basic, mode, 1)
+      luatexbase.add_to_callback(
+        'post_linebreak_filter',
+        cloze.basic,
+        mode,
+        1
+      )
     elseif mode == 'fix' then
-      luatexbase.add_to_callback('pre_linebreak_filter', cloze.fix, mode, 1)
+      luatexbase.add_to_callback(
+        'pre_linebreak_filter',
+        cloze.fix,
+        mode,
+        1
+      )
     else
       return false
     end
