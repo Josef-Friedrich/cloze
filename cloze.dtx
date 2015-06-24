@@ -612,8 +612,9 @@ or manually:
 %
 % \paragraph{The option \tt{align}}
 %
+% Affects only \cmd{\clozefix}.
 %    \begin{macrocode}
-\DeclareStringOption{align} % Affects only \clozefix
+\DeclareStringOption{align}
 \define@key{LC}{align}[]{\cloze@set@option[align]{#1}}
 %    \end{macrocode}
 %
@@ -679,8 +680,9 @@ or manually:
 %
 %
 % \paragraph{The option \tt{width}}
+% Affects only \cmd{\clozefix}
 %    \begin{macrocode}
-\DeclareStringOption{width} % Affects only \clozefix
+\DeclareStringOption{width}
 \define@key{LC}{width}[]{\cloze@set@option[width]{#1}}
 %    \end{macrocode}
 %
@@ -797,11 +799,15 @@ or manually:
 %    \begin{macrocode}
 local check = {}
 check.user_id = 3121978
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 local get = {}
 local create = {}
 local insert = {}
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 local registry = {}
 registry.storage = {}
 registry.defaults = {
@@ -818,11 +824,12 @@ registry.defaults = {
 registry.global_options = {}
 registry.local_options = {}
 registry.options = {}
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 local cloze = {}
 local base = {}
 local is_registered = {}
-
 local options
 %    \end{macrocode}
 % \subsubsection{Check functions}
@@ -853,8 +860,7 @@ end
 %    \begin{macrocode}
 function create.whatsit_colorstack(data)
   if not data then
-    -- black
-    data = '0 0 0 rg 0 0 0 RG'
+    data = '0 0 0 rg 0 0 0 RG' -- black
   end
 
   local whatsit = node.new('whatsit', 'pdf_colorstack')
@@ -1184,7 +1190,13 @@ function registry.get_defaults(key)
   return registry.defaults[key]
 end
 %    \end{macrocode}
+%
 % \subsubsection{cloze}
+%
+% To make life easier: We add at the beginning of each line a strut. Now
+% we can add rule, color etc. nodes AFTER the first node of a line not
+% BEFORE. AFTER is much more easier.
+%
 %    \begin{macrocode}
 function cloze.basic(head)
   local n = {} -- node
@@ -1194,9 +1206,6 @@ function cloze.basic(head)
 
   for hlist in node.traverse_id(node.id('hlist'), head) do
 
-    -- To make life easier: We add at the beginning of each line a strut.
-    -- Now we can add rule, color etc. nodes AFTER
-    -- the first node of a line not BEFORE. AFTER is much more easier.
     n.head = hlist.head
     n.strut = node.insert_before(n.head, n.head, create.kern(0))
     hlist.head = n.head.prev
