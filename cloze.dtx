@@ -305,6 +305,12 @@ cloze line is larger than the width of the cloze text.
 
 \subsubsection{The option \tt{distance}}
 
+The option |distance| specifies the spacing between the baseline and the
+cloze line. The larger the dimension of the option |distance|, the more
+moves the cloze line down. Negative values cause the cloze line to
+appear above the baseline. The default value is
+\tt{\getdefaults{distance}}.
+
 \newcommand{\optiondistance}[1]{%
   \noindent%
   \clozefil[distance=#1]{Lorem ipsum dolor sit amet.}
@@ -326,9 +332,9 @@ cloze line is larger than the width of the cloze text.
 \label{sec:option-hide}
 \label{sec:option-show}
 
-The cloze text is displayed by default. Use the option \texttt{hide} to
+By default the cloze text is displayed. Use the option \texttt{hide} to
 remove the cloze text from the output.  If you accidentally specify both
-options, the last option "wins".
+options -- |hide| and |show| -- the last option "wins".
 
 \newcommand{\optionshow}[1]{%
   \noindent%
@@ -839,7 +845,6 @@ registry.options = {}
 local cloze = {}
 local base = {}
 local is_registered = {}
-local options
 %    \end{macrocode}
 % \subsubsection{Check functions}
 %    \begin{macrocode}
