@@ -79,6 +79,8 @@
 
 \def\tt#1{\texttt{#1}}
 
+\def\secref#1{(\rightarrow\ \ref{#1})}
+
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -153,8 +155,8 @@ cloze text: \cmd{\cloze}, \cmd{\clozefix}, \cmd{\clozefil} and
 command \cmd{\cloze} behaves similar to a command that underlines the
 text. \cmd{\cloze} does not prevent line breaks. The width of a cloze is
 pending on the number of letters and the font used. The only option
-which affects the widths of a cloze is the option |margin|.
-\ref{sec:option-margin}
+which affects the widths of a cloze is the option |margin|
+\secref{sec:option-margin}.
 
 \begin{clozeexample}
 Lorem ipsum \cloze{dolor} sit amet, \cloze{consectetur} adipisicing
@@ -163,23 +165,39 @@ elit, sed do eiusmod tempor incididunt ut labore et dolore
 ullamco laboris nisi} ut aliquip ex ea commodo consequat.
 \end{clozeexample}
 
-\DescribeMacro{\clozefont} The cloze font can be changed by redefining
-the command \cmd{\clozefont}, e. g.
+%%
+% \setclozefont
+%%
 
-\renewcommand{\clozefont}{\Large}
-|\renewcommand{\clozefont}{\Large}|
+\subsection{Command \cmd{\setclozefont}}
+
+\DescribeMacro{\setclozefont}
+The cloze font can be changed by using the the command
+\cmd{\setclozefont}. \cmd{\setclozefont} redefines the command
+\cmd{\clozefont} which holds the font definition.
+According to this |\setclozefont{\Large}| has the same effect as
+|\renewcommand{\clozefont}{\Large}|.
+
+\setclozefont{\Large}
 
 \begin{clozeexample}
 Excepteur \cloze{sint} occaecat \cloze{cupidatat} non proident.
 \end{clozeexample}
 
-\renewcommand{\clozefont}{\ttfamily\normalsize}
-|\renewcommand{\clozefont}{\ttfamily\normalsize}|
+\noindent Please put in the command \cmd{\setclozefont} no color
+defintions, because that won't work. Use instead the option |textcolor|
+\secref{sec:option-textcolor}.
+
+|\setclozefont{\ttfamily\normalsize}| sets the cloze text to a
+normal sized typewriter font.
+
+\setclozefont{\ttfamily\normalsize}
 
 \begin{clozeexample}
 Excepteur \cloze{sint} occaecat \cloze{cupidatat} non proident.
 \end{clozeexample}
-\renewcommand{\clozefont}{\itshape}
+
+\setclozefont{\itshape}
 
 %%
 % \clozefix
@@ -253,7 +271,7 @@ Excepteur sint occaecat cupidatat non proident.
 % align
 %%
 
-\subsection{The option \tt{align}}
+\subsection{The option \tt{align}}\label{sec:option-align}
 
 Only the macro \cmd{\clozefix} takes the option \texttt{align} into
 account. Possible values are \texttt{left}, \texttt{center} and
@@ -296,6 +314,8 @@ cloze line is larger than the width of the cloze text.
 %%
 
 \subsection{The options \tt{hide} and \tt{show}}
+\label{sec:option-hide}
+\label{sec:option-show}
 
 The cloze text is displayed by default. Use the option \texttt{hide} to
 remove the cloze text from the output.  If you accidentally specify both
@@ -318,6 +338,8 @@ options, the last option "wins".
 %%
 
 \subsection{The options \tt{linecolor} and \tt{textcolor}}
+\label{sec:option-linecolor}
+\label{sec:option-textcolor}
 
 Values for both color options are color names used by the xcolor
 package. To define your own color use the following command:
@@ -373,7 +395,7 @@ cloze text. The option can be used with the commands \cmd{\cloze},
 % thickness
 %%
 
-\subsection{The option \tt{thickness}}
+\subsection{The option \tt{thickness}}\label{sec:option-thickness}
 
 \newcommand{\optionthickness}[1]{%
   Lorem \cloze[thickness=#1]{ipsum dolor sit} amet.%
@@ -391,7 +413,7 @@ cloze text. The option can be used with the commands \cmd{\cloze},
 % width
 %%
 
-\subsection{The option \tt{width}}
+\subsection{The option \tt{width}}\label{sec:option-width}
 
 \newcommand{\optionwidth}[1]{%
   Lorem \clozefix[width=#1]{dolor} amet.%
@@ -681,6 +703,17 @@ or manually:
 % \begin{macro}{\clozefont}
 %    \begin{macrocode}
 \newcommand{\clozefont}{\itshape}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\setclozefont}
+%    \begin{macrocode}
+\newcommand{\setclozefont}[1]{%
+  \renewcommand{\clozefont}[1]{%
+    #1%
+  }%
+}
 %    \end{macrocode}
 % \end{macro}
 %
