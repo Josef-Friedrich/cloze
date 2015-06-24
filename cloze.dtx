@@ -853,10 +853,11 @@ end
 %    \begin{macrocode}
 function create.rule(width)
   local node = node.new(node.id('rule'))
-  local height = tex.sp(registry.thickness) - tex.sp(registry.distance)
+  local thickness = tex.sp(registry.thickness)
+  local distance = tex.sp(registry.distance)
 
-  node.depth = tex.sp(registry.distance)
-  node.height = height
+  node.depth = distance + thickness
+  node.height = - distance
   node.width = width
 
   return node
@@ -1027,9 +1028,9 @@ function registry.set_show_text(options)
   end
 end
 %    \end{macrocode}
-%
+% Unset options which have the values '|unset|' or '|\color@ |'.
 %    \begin{macrocode}
--- Unset options which have the values 'unset' or '\color@ '
+
 function registry.merge_local_options()
   if registry.local_options then
     registry.options = registry.local_options
