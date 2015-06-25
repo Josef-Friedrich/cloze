@@ -868,6 +868,16 @@ or manually:
 % \fi
 % \subsection{The file \tt{cloze.lua}}
 %    \begin{macrocode}
+if not modules then modules = { } end modules ['cloze'] = {
+  version   = '0.1',
+  comment   = 'cloze',
+  author    = 'Josef Friedrich, R.-M. Huber',
+  copyright = 'Josef Friedrich, R.-M. Huber',
+  license   = 'GNU General Public License v. 2.0'
+}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 local check = {}
 check.user_id = 3121978
 %    \end{macrocode}
