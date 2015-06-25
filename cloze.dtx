@@ -94,7 +94,6 @@
 \author{Josef Friedrich\\ \url{josef@friedrich.rocks}}
 \date{\fileversion~from \filedate}
 
-
 \maketitle
 
 \setcounter{secnumdepth}{5}
@@ -154,6 +153,7 @@ cloze texts: \cmd{\cloze}, \cmd{\clozefix}, \cmd{\clozefil} and
 \subsection{The commands and environments}
 
 \subsubsection{\cmd{\cloze}}
+\label{sec:command-cloze}
 
 \DescribeMacro{\cloze} \cmd{\cloze}\oarg{options}\marg{some text}: The
 command \cmd{\cloze} is similar to a command that offers the possibility
@@ -174,6 +174,7 @@ ullamco laboris nisi} ut aliquip ex ea commodo consequat.
 %%
 
 \subsubsection{\cmd{\setclozefont}}
+\label{sec:command-setclozefont}
 
 \DescribeMacro{\setclozefont}
 The gap font can be changed by using the command
@@ -209,7 +210,8 @@ Excepteur \cloze{sint} occaecat \cloze{cupidatat} non proident.
 % \clozefix
 %%
 
-\subsubsection{\cmd{\clozefix}}\label{sec:command-clozefix}
+\subsubsection{\cmd{\clozefix}}
+\label{sec:command-clozefix}
 
 \DescribeMacro{\clozefix} \cmd{\clozefix}\oarg{options}\marg{some text}:
 The command \cmd{\clozefix} creates gaps with a fixed width. The
@@ -230,6 +232,7 @@ sed do eiusmod.
 %%
 
 \subsubsection{\cmd{\clozefil}}
+\label{sec:command-clozefil}
 
 \DescribeMacro{\clozefil} \cmd{\clozefil}\oarg{options}\marg{some text}:
 The name of the command is inspired by \cmd{\hfil}, \cmd{\hfill}, and
@@ -248,6 +251,7 @@ Ut enim \clozefil{ad minim veniam} exercitation.
 %%
 
 \subsubsection{\tt{clozepar}}
+\label{sec:command-clozepar}
 
 \DescribeEnv{clozepar} |\begin{clozepar}|\oarg{options} \dots
 \textit{some text} \dots |\end{clozepar}|: The environment \tt{clozepar}
@@ -272,6 +276,7 @@ Excepteur sint occaecat cupidatat non proident.
 %%
 
 \subsubsection{\cmd{\clozeline}}
+\label{sec:command-clozeline}
 
 \DescribeMacro{\clozeline}
 \cmd{\clozeline}\oarg{options}:
@@ -317,24 +322,57 @@ Lorem\clozelinefil
 
 \subsubsection{Local and global options}
 
-\DescribeMacro{\setcloze}
-The \emph{cloze} package differs between \emph{local} and \emph{global}
-options. Besides the possiblity to set \emph{global} options in the
-\cmd{\usepageckage}\oarg{global options}\marg{cloze} declaration, the
-cloze package offers a special command to set \emph{global} options:
+The \emph{cloze} package distinguishs between \emph{local} and
+\emph{global} options. Besides the possiblity to set \emph{global}
+options in the \cmd{\usepackage}\oarg{global options}\marg{cloze}
+declaration, the cloze package offers a special command to set
+\emph{global} options:
 \cmd{\setcloze}\marg{global options}
+
+\subsubsection{\cmd{\setcloze}}
+
+\DescribeMacro{\setcloze}
+\cmd{\setcloze}\marg{global options}: The command can set \emph{global}
+options for each paragraph.
+
+\begin{verbatim}
+\setcloze{textcolor=red} Lorem \cloze{ipsum} dolor \par
+\setcloze{textcolor=green} Lorem \cloze{ipsum} dolor
+\end{verbatim}
+
+\begin{clozeexample}
+\setcloze{textcolor=red} Lorem \cloze{ipsum} dolor \par
+\setcloze{textcolor=green} Lorem \cloze{ipsum} dolor
+\end{clozeexample}
+
+\cmd{\setcloze} does not change the options within a paragraph. As you
+can see in the example below the last \cmd{\setcloze} applies the color
+green for both gaps.
+
+\begin{verbatim}
+\setcloze{textcolor=red} Lorem \cloze{ipsum} dolor
+\setcloze{textcolor=green} Lorem \cloze{ipsum} dolor
+\end{verbatim}
+
+\begin{clozeexample}
+\setcloze{textcolor=red} Lorem \cloze{ipsum} dolor
+\setcloze{textcolor=green} Lorem \cloze{ipsum} dolor
+\end{clozeexample}
+
+\setcloze{textcolor=blue}
 
 %%
 % align
 %%
 
-\subsubsection{\tt{align}}\label{sec:option-align}
+\subsubsection{\tt{align}}
+\label{sec:option-align}
 
-\option{align}{left/center/right} Only the macro \cmd{\clozefix} takes
-the option \texttt{align} into account. Possible values are
-\texttt{left}, \texttt{center} and \texttt{right}. This option only
-makes sense, if the width of the line is larger than the width of the
-text.
+\option{align}{left/center/right}
+Only the macro \cmd{\clozefix} \secref{sec:command-clozefix} takes the
+option \tt{align} into account. Possible values are \tt{left},
+\tt{center} and \tt{right}. This option only makes sense, if the width
+of the line is larger than the width of the text.
 
 \newcommand{\optionsalign}[1]{%
   \noindent%
@@ -395,6 +433,8 @@ options -- |hide| and |show| -- the last option "wins".
 \begin{clozeexample}
 \optionshow{hide}
 \optionshow{show}
+\optionshow{show,hide}
+\optionshow{hide,show}
 \end{clozeexample}
 
 %%
