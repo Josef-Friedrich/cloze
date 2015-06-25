@@ -112,7 +112,7 @@ the capabilities of the modern \TeX{} engine \emph{Lua\TeX}. Therefore,
 you must use Lua\LaTeX{} to create documents containing gaps.
 
 The main feature of the package is that the formatting doesn't change
-when using the hide and show options.
+when using the |hide| and |show| \secref{sec:option-hide} options.
 
 \newcommand{\clozelorem}{%
 Lorem ipsum \cloze{dolor sit} amet, consectetur \cloze{adipisicing}
@@ -159,9 +159,8 @@ cloze texts: \cmd{\cloze}, \cmd{\clozefix}, \cmd{\clozefil} and
 command \cmd{\cloze} is similar to a command that offers the possibility
 to underline the texts. \cmd{\cloze} does not prevent line breaks. The
 width of a gap depends on the number of letters and the font used.
-The only option which affects the widths of a page is the option
-|margin|
-\secref{sec:option-margin}.
+The only option which affects the widths of a gap is the option
+|margin| \secref{sec:option-margin}.
 
 \begin{clozeexample}
 Lorem ipsum \cloze{dolor} sit amet, \cloze{consectetur} adipisicing
@@ -178,10 +177,12 @@ ullamco laboris nisi} ut aliquip ex ea commodo consequat.
 
 \DescribeMacro{\setclozefont}
 The gap font can be changed by using the command
-\cmd{\setclozefont}. \cmd{\setclozefont} redefines the command
+\cmd{\setclozefont}. \tt{\string\set\-cloze\-font} redefines the command
 \cmd{\clozefont} which contains the font definition.
-Thus, the command |\setclozefont{\Large}| has the same effect as
-|\renewcommand{\clozefont}{\Large}|.
+Thus, the command \tt{\string\setclozefont\string{\string\Large\string}}
+has the same effect as
+\tt{\string\re\-new\-com\-mand\string{\string\cloze\-font\string}%
+\string{\string\Large\string}}.
 
 \setclozefont{\Large}
 
@@ -189,8 +190,8 @@ Thus, the command |\setclozefont{\Large}| has the same effect as
 Excepteur \cloze{sint} occaecat \cloze{cupidatat} non proident.
 \end{clozeexample}
 
-\noindent Please do not put in any color definitions in
-\cmd{\setclozefont}, as it won't work. Use  the option
+\noindent Please do not put any color definitions in
+\cmd{\setclozefont}, as it won't work. Use the option
 |textcolor| instead \secref{sec:option-textcolor}.
 
 |\setclozefont{\ttfamily\normalsize}| changes the gap text for example
@@ -300,7 +301,7 @@ veniam,
 
 \DescribeMacro{\clozelinefil}
 \cmd{\clozelinefil}\oarg{options}:
-\DescribeMacro{\clozelinefil} This command \cmd{\clozelinefil} fills the
+This command \cmd{\clozelinefil} fills the
 complete available horizontal space with a line. Moreover,
 \cmd{\clozelinefil} was used to create \cmd{\clozefil}.
 
@@ -317,6 +318,11 @@ Lorem\clozelinefil
 \subsubsection{Local and global options}
 
 \DescribeMacro{\setcloze}
+The \emph{cloze} package differs between \emph{local} and \emph{global}
+options. Besides the possiblity to set \emph{global} options in the
+\cmd{\usepageckage}\oarg{global options}\marg{cloze} declaration, the
+cloze package offers a special command to set \emph{global} options:
+\cmd{\setcloze}\marg{global options}
 
 %%
 % align
