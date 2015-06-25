@@ -1100,18 +1100,6 @@ end
 % table.
 %
 %    \begin{macrocode}
-function registry.check_whatsit_marker(item)
-  if item.id == node.id('whatsit')
-      and item.subtype == 44
-      and item.user_id == registry.user_id then
-    return true
-  else
-    return false
-  end
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
 function registry.check_marker(item, mode, position)
   local data = registry.marker_data(item)
 
@@ -1122,6 +1110,9 @@ function registry.check_marker(item, mode, position)
   end
 end
 %    \end{macrocode}
+%
+% |registry.index| is a counter. Increase the counter by one and then
+% return it.
 %
 %    \begin{macrocode}
 function registry.get_index()
@@ -1293,10 +1284,12 @@ end
 %
 %    \begin{macrocode}
 function registry.marker_data(item)
-  if not registry.check_whatsit_marker(item) then
-    return false
-  else
+  if item.id == node.id('whatsit')
+    and item.subtype == 44
+    and item.user_id == registry.user_id then
     return registry.get(item.value)
+  else
+    return false
   end
 end
 %    \end{macrocode}
