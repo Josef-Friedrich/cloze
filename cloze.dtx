@@ -266,11 +266,27 @@ reprehenderit in voluptate velit esse cillum.
 Excepteur sint occaecat cupidatat non proident.
 \end{clozeexample}
 
+%%
+% \clozeline
+%%
+
+\subsubsection{The command \cmd{\clozeline}}
+
+\DescribeMacro{\clozeline}
+
+\begin{clozeexample}
+Ut enim ad \clozeline minim veniam, quis nostrud exercitation ullamco laboris nisi
+ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+reprehenderit in voluptate velit esse cillum.
+\end{clozeexample}
+
+%%
+% \clozelinefil
+%%
+
 \subsubsection{The command \cmd{\clozelinefil}}
 
 \DescribeMacro{\clozelinefil}
-
-
 
 %-----------------------------------------------------------------------
 % Options
@@ -810,14 +826,24 @@ or manually:
 % \end{macro}
 %
 %
+% \begin{macro}{\clozeline}
+%
+%    \begin{macrocode}
+\newcommand{\clozeline}[1][]{%
+  \cloze@set@local@options{#1}%
+  \directlua{cloze.line()}
+}
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}{\clozelinefil}
-% Creates a cloze on one line with a fixed length.
+%
 %    \begin{macrocode}
 \newcommand{\clozelinefil}[1][]{%
   \cloze@set@local@options{#1}%
-  \strut
+  \strut%
   \directlua{cloze.hfill()}%
-  \strut
+  \strut%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -988,6 +1014,15 @@ function insert.hfill()
   registry.process_options()
   node.write(create.color('line'))
   node.write(create.hfill())
+  node.write(create.color('reset'))
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function insert.cloze_line()
+  registry.process_options()
+  node.write(create.color('line'))
+  node.write(create.rule(tex.sp(registry.width)))
   node.write(create.color('reset'))
 end
 %    \end{macrocode}
@@ -1506,6 +1541,7 @@ end
 % Publish some functions to sty file.
 %    \begin{macrocode}
 base.hfill = insert.hfill
+base.line = insert.cloze_line
 base.margin = insert.margin
 base.set_option = registry.set_option
 base.set_is_global = registry.set_is_global
