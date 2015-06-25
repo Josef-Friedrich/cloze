@@ -274,11 +274,23 @@ Excepteur sint occaecat cupidatat non proident.
 \subsubsection{The command \cmd{\clozeline}}
 
 \DescribeMacro{\clozeline}
+\cmd{\clozeline}\oarg{options}:
+To create a cloze line of a certain width, use the command
+\cmd{\clozeline}. The default width of the line is
+\tt{\getdefaults{width}}. In combination with the other cloze commands
+you can build for example an irregular alignment of the cloze text.
 
 \begin{clozeexample}
-Ut enim ad \clozeline minim veniam, quis nostrud exercitation ullamco laboris nisi
-ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-reprehenderit in voluptate velit esse cillum.
+\begin{verbatim}
+Ut enim ad
+\clozeline[width=1cm]\cloze{minim}\clozeline[width=3cm]
+minim veniam
+\end{verbatim}
+\end{clozeexample}
+
+\begin{clozeexample}
+Ut enim ad \clozeline[width=1cm]\cloze{minim}\clozeline[width=3cm] minim
+veniam,
 \end{clozeexample}
 
 %%
@@ -832,7 +844,7 @@ or manually:
 %    \begin{macrocode}
 \newcommand{\clozeline}[1][]{%
   \cloze@set@local@options{#1}%
-  \directlua{cloze.line()}
+  \directlua{cloze.line()}%
 }
 %    \end{macrocode}
 % \end{macro}
