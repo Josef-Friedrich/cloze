@@ -930,11 +930,6 @@ if not modules then modules = { } end modules ['cloze'] = {
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-local check = {}
-check.user_id = 3121978
-%    \end{macrocode}
-%
-%    \begin{macrocode}
 local get = {}
 local create = {}
 local insert = {}
@@ -942,6 +937,7 @@ local insert = {}
 %
 %    \begin{macrocode}
 local registry = {}
+registry.user_id = 3121978
 registry.storage = {}
 registry.defaults = {
   ['align'] = 'l',
@@ -964,30 +960,7 @@ local cloze = {}
 local base = {}
 local is_registered = {}
 %    \end{macrocode}
-% \subsubsection{Check functions}
-%    \begin{macrocode}
-function check.whatsit_marker(item)
-  if item.id == node.id('whatsit')
-      and item.subtype == 44
-      and item.user_id == check.user_id then
-    return true
-  else
-    return false
-  end
-end
-%    \end{macrocode}
 %
-%    \begin{macrocode}
-function check.marker(item, mode, position)
-  local data = registry.marker_data(item)
-
-  if data and data.mode == mode and data.position == position then
-    return true
-  else
-    return false
-  end
-end
-%    \end{macrocode}
 % \subsubsection{Create functions}
 %    \begin{macrocode}
 function create.whatsit_colorstack(data)
@@ -1055,7 +1028,7 @@ end
 function create.marker(index)
   local marker = node.new('whatsit','user_defined')
   marker.type = 100 -- number
-  marker.user_id = check.user_id
+  marker.user_id = registry.user_id
   marker.value = index
 
   return marker
@@ -1125,6 +1098,30 @@ end
 %
 % Functions to deal with option handling and storing them in a lua
 % table.
+%
+%    \begin{macrocode}
+function registry.check_whatsit_marker(item)
+  if item.id == node.id('whatsit')
+      and item.subtype == 44
+      and item.user_id == registry.user_id then
+    return true
+  else
+    return false
+  end
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function registry.check_marker(item, mode, position)
+  local data = registry.marker_data(item)
+
+  if data and data.mode == mode and data.position == position then
+    return true
+  else
+    return false
+  end
+end
+%    \end{macrocode}
 %
 %    \begin{macrocode}
 function registry.get_index()
@@ -1296,7 +1293,7 @@ end
 %
 %    \begin{macrocode}
 function registry.marker_data(item)
-  if not check.whatsit_marker(item) then
+  if not registry.check_whatsit_marker(item) then
     return false
   else
     return registry.get(item.value)
@@ -1316,7 +1313,7 @@ end
 function registry.get_marker(item, mode, position)
   local out
 
-  if check.marker(item, mode, position) then
+  if registry.check_marker(item, mode, position) then
     registry.marker = item
     out = item
   else
@@ -1365,7 +1362,7 @@ function cloze.basic(head)
 
     while n.current do
 
-      if check.marker(n.current, 'basic', 'start') or b.init_cloze then
+      if registry.check_marker(n.current, 'basic', 'start') or b.init_cloze then
 
         n.marker = registry.get_marker(n.current, 'basic', 'start')
 
@@ -1378,7 +1375,7 @@ function cloze.basic(head)
 
           b.line_end = true
 
-          if check.marker(n.stop, 'basic', 'stop') then
+          if registry.check_marker(n.stop, 'basic', 'stop') then
             b.line_end = false
             break
           end
