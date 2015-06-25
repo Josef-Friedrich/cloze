@@ -560,9 +560,7 @@ or manually:
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{cloze}
-\RequirePackage{luatexbase-mcb}
-\RequirePackage{xcolor}
-\RequirePackage{kvoptions}
+\RequirePackage{luatexbase-mcb,fontspec,xcolor,kvoptions}
 \directlua{
   cloze = require("cloze")
 }
