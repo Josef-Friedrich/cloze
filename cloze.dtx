@@ -108,11 +108,11 @@
 \section{Introduction}
 
 \emph{cloze} is a \LaTeX{} package to generate cloze texts. It uses
-the capabilities of the modern \TeX{} engine \emph{Lua\TeX}. Therefor
-you must use Lua\LaTeX{} to produce documents containing clozes.
+the capabilities of the modern \TeX{} engine \emph{Lua\TeX}. Therefore,
+you must use Lua\LaTeX{} to create documents containing gaps.
 
-The main feature of the package is, that you can freely show and hide
-the cloze text without changing the position of any other letter.
+The main feature of the package is that the formatting doesn't change
+when using the hide and show options.
 
 \newcommand{\clozelorem}{%
 Lorem ipsum \cloze{dolor sit} amet, consectetur \cloze{adipisicing}
@@ -127,9 +127,9 @@ ullamco laboris nisi ut \cloze{aliquip} ex ea commodo consequat.%
 
 \setcloze{hide}
 
-The command |\setcloze{hide}| will only show gaps and cloze lines, not
-the cloze text. You can put the two boxes above and below to each
-other and they will fit perfectly.
+The command |\setcloze{hide}| only shows gaps.
+When you put both texts on top of each other you will see that they
+perfectly match.
 
 \begin{clozeexample}
 \clozelorem
@@ -143,8 +143,8 @@ other and they will fit perfectly.
 
 \section{Usage}
 
-At the moment there are three commands and one environment to generate
-cloze text: \cmd{\cloze}, \cmd{\clozefix}, \cmd{\clozefil} and
+There are three commands and one environment to generate
+cloze texts: \cmd{\cloze}, \cmd{\clozefix}, \cmd{\clozefil} and
 |clozepar|.
 
 %%
@@ -156,10 +156,11 @@ cloze text: \cmd{\cloze}, \cmd{\clozefix}, \cmd{\clozefil} and
 \subsubsection{The command \cmd{\cloze}}
 
 \DescribeMacro{\cloze} \cmd{\cloze}\oarg{options}\marg{some text}: The
-command \cmd{\cloze} behaves similar to a command that underlines the
-text. \cmd{\cloze} does not prevent line breaks. The width of a cloze is
-pending on the number of letters and the font used. The only option
-which affects the widths of a cloze is the option |margin|
+command \cmd{\cloze} is similar to a command that offers the possibility
+to underline the texts. \cmd{\cloze} does not prevent line breaks. The
+width of a gap depends on the number of letters and the font used.
+The only option which affects the widths of a page is the option
+|margin|
 \secref{sec:option-margin}.
 
 \begin{clozeexample}
@@ -176,10 +177,10 @@ ullamco laboris nisi} ut aliquip ex ea commodo consequat.
 \subsubsection{The command \cmd{\setclozefont}}
 
 \DescribeMacro{\setclozefont}
-The cloze font can be changed by using the the command
+The gap font can be changed by using the command
 \cmd{\setclozefont}. \cmd{\setclozefont} redefines the command
-\cmd{\clozefont} which holds the font definition.
-According to this |\setclozefont{\Large}| has the same effect as
+\cmd{\clozefont} which contains the font definition.
+Thus, the command |\setclozefont{\Large}| has the same effect as
 |\renewcommand{\clozefont}{\Large}|.
 
 \setclozefont{\Large}
@@ -188,12 +189,12 @@ According to this |\setclozefont{\Large}| has the same effect as
 Excepteur \cloze{sint} occaecat \cloze{cupidatat} non proident.
 \end{clozeexample}
 
-\noindent Please put in the command \cmd{\setclozefont} no color
-defintions, because that won't work. Use instead the option |textcolor|
-\secref{sec:option-textcolor}.
+\noindent Please do not put in any color definitions in
+\cmd{\setclozefont}, as it won't work. Use  the option
+|textcolor| instead \secref{sec:option-textcolor}.
 
-|\setclozefont{\ttfamily\normalsize}| sets the cloze text for example to
-a normal sized typewriter font.
+|\setclozefont{\ttfamily\normalsize}| changes the gap text for example
+into a normal sized typewriter font.
 
 \setclozefont{\ttfamily\normalsize}
 
@@ -210,9 +211,8 @@ Excepteur \cloze{sint} occaecat \cloze{cupidatat} non proident.
 \subsubsection{The command \cmd{\clozefix}}\label{sec:command-clozefix}
 
 \DescribeMacro{\clozefix} \cmd{\clozefix}\oarg{options}\marg{some text}:
-The command \cmd{\clozefix} produces clozes with a fixed width. The
-clozes are by default \tt{\getdefaults{width}} wide.
-
+The command \cmd{\clozefix} creates gaps with a fixed width. The
+clozes are default concering the width \tt{\getdefaults{width}}.
 
 \begin{clozeexample}
 \noindent Lorem ipsum dolor sit amet:
@@ -231,10 +231,9 @@ sed do eiusmod.
 \subsubsection{The command \cmd{\clozefil}}
 
 \DescribeMacro{\clozefil} \cmd{\clozefil}\oarg{options}\marg{some text}:
-The name of the command is inspired by the \cmd{\hfil}, \cmd{\hfill},
-\cmd{\hfilll} etc. commands. \cmd{\clozefil} -- written only with one
-\emph{l} at the end -- fills out all available horizontal space with a
-cloze line.
+The name of the command is inspired by \cmd{\hfil}, \cmd{\hfill}, and
+\cmd{\hfilll}. Only \cmd{\clozefil} fills out all available horizontal
+spaces with a line.
 
 \begin{clozeexample}
 Lorem ipsum dolor sit amet, \clozefil{consectetur adipisicing elit, sed
@@ -251,7 +250,7 @@ Ut enim \clozefil{ad minim veniam} exercitation.
 
 \DescribeEnv{clozepar} |\begin{clozepar}|\oarg{options} \dots
 \textit{some text} \dots |\end{clozepar}|: The environment \tt{clozepar}
-transforms a complete paragraph into a cloze. The options |align|,
+transforms a complete paragraph into a cloze text. The options |align|,
 |margin| and |width| have no effect on this environment.
 
 \begin{clozeexample}
@@ -278,7 +277,7 @@ Excepteur sint occaecat cupidatat non proident.
 To create a cloze line of a certain width, use the command
 \cmd{\clozeline}. The default width of the line is
 \tt{\getdefaults{width}}. In combination with the other cloze commands
-you can build for example an irregular alignment of the cloze text.
+you can create for example an irregular alignment of the cloze text.
 
 \begin{clozeexample}
 \begin{verbatim}
@@ -301,9 +300,9 @@ veniam,
 
 \DescribeMacro{\clozelinefil}
 \cmd{\clozelinefil}\oarg{options}:
-\cmd{\clozelinefil} fills out all available horizontal space with a
-cloze line. There is only this command. \cmd{\clozelinefill} or
-\cmd{\clozelinefilll} are nonexistent at the moment.
+\DescribeMacro{\clozelinefil} This command \cmd{\clozelinefil} fills the
+complete available horizontal space with a line. Moreover,
+\cmd{\clozelinefil} was used to create \cmd{\clozefil}.
 
 \begin{clozeexample}
 Lorem\clozelinefil
@@ -325,10 +324,11 @@ Lorem\clozelinefil
 
 \subsubsection{The option \tt{align}}\label{sec:option-align}
 
-\option{align}{left/center/right} Only the macro \cmd{\clozefix} takes the
-option \texttt{align} into account. Possible values are \texttt{left},
-\texttt{center} and \texttt{right}. This option only makes sense, if the
-width of the cloze line is larger than the width of the cloze text.
+\option{align}{left/center/right} Only the macro \cmd{\clozefix} takes
+the option \texttt{align} into account. Possible values are
+\texttt{left}, \texttt{center} and \texttt{right}. This option only
+makes sense, if the width of the line is larger than the width of the
+text.
 
 \newcommand{\optionsalign}[1]{%
   \noindent%
@@ -566,9 +566,7 @@ or manually:
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{cloze}
-\RequirePackage{luatexbase-mcb}
-\RequirePackage{xcolor}
-\RequirePackage{kvoptions}
+\RequirePackage{luatexbase-mcb,fontspec,xcolor,kvoptions}
 \directlua{
   cloze = require("cloze")
 }
@@ -875,6 +873,16 @@ or manually:
 %<*lua>
 % \fi
 % \subsection{The file \tt{cloze.lua}}
+%    \begin{macrocode}
+if not modules then modules = { } end modules ['cloze'] = {
+  version   = '0.1',
+  comment   = 'cloze',
+  author    = 'Josef Friedrich, R.-M. Huber',
+  copyright = 'Josef Friedrich, R.-M. Huber',
+  license   = 'GNU General Public License v. 2.0'
+}
+%    \end{macrocode}
+%
 %    \begin{macrocode}
 local check = {}
 check.user_id = 3121978
