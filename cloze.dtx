@@ -153,7 +153,7 @@ cloze texts: \cmd{\cloze}, \cmd{\clozefix}, \cmd{\clozefil} and
 
 \subsection{The commands and environments}
 
-\subsubsection{The command \cmd{\cloze}}
+\subsubsection{\cmd{\cloze}}
 
 \DescribeMacro{\cloze} \cmd{\cloze}\oarg{options}\marg{some text}: The
 command \cmd{\cloze} is similar to a command that offers the possibility
@@ -174,7 +174,7 @@ ullamco laboris nisi} ut aliquip ex ea commodo consequat.
 % \setclozefont
 %%
 
-\subsubsection{The command \cmd{\setclozefont}}
+\subsubsection{\cmd{\setclozefont}}
 
 \DescribeMacro{\setclozefont}
 The gap font can be changed by using the command
@@ -208,7 +208,7 @@ Excepteur \cloze{sint} occaecat \cloze{cupidatat} non proident.
 % \clozefix
 %%
 
-\subsubsection{The command \cmd{\clozefix}}\label{sec:command-clozefix}
+\subsubsection{\cmd{\clozefix}}\label{sec:command-clozefix}
 
 \DescribeMacro{\clozefix} \cmd{\clozefix}\oarg{options}\marg{some text}:
 The command \cmd{\clozefix} creates gaps with a fixed width. The
@@ -228,7 +228,7 @@ sed do eiusmod.
 % \clozefil
 %%
 
-\subsubsection{The command \cmd{\clozefil}}
+\subsubsection{\cmd{\clozefil}}
 
 \DescribeMacro{\clozefil} \cmd{\clozefil}\oarg{options}\marg{some text}:
 The name of the command is inspired by \cmd{\hfil}, \cmd{\hfill}, and
@@ -246,7 +246,7 @@ Ut enim \clozefil{ad minim veniam} exercitation.
 % clozepar
 %%
 
-\subsubsection{The environment \tt{clozepar}}
+\subsubsection{\tt{clozepar}}
 
 \DescribeEnv{clozepar} |\begin{clozepar}|\oarg{options} \dots
 \textit{some text} \dots |\end{clozepar}|: The environment \tt{clozepar}
@@ -270,7 +270,7 @@ Excepteur sint occaecat cupidatat non proident.
 % \clozeline
 %%
 
-\subsubsection{The command \cmd{\clozeline}}
+\subsubsection{\cmd{\clozeline}}
 
 \DescribeMacro{\clozeline}
 \cmd{\clozeline}\oarg{options}:
@@ -296,7 +296,7 @@ veniam,
 % \clozelinefil
 %%
 
-\subsubsection{The command \cmd{\clozelinefil}}
+\subsubsection{\cmd{\clozelinefil}}
 
 \DescribeMacro{\clozelinefil}
 \cmd{\clozelinefil}\oarg{options}:
@@ -322,7 +322,7 @@ Lorem\clozelinefil
 % align
 %%
 
-\subsubsection{The option \tt{align}}\label{sec:option-align}
+\subsubsection{\tt{align}}\label{sec:option-align}
 
 \option{align}{left/center/right} Only the macro \cmd{\clozefix} takes
 the option \texttt{align} into account. Possible values are
@@ -346,7 +346,7 @@ text.
 % distance
 %%
 
-\subsubsection{The option \tt{distance}}
+\subsubsection{\tt{distance}}
 
 \option{distance}{dimen} The option |distance| specifies the spacing
 between the baseline and the cloze line. The larger the dimension of the
@@ -371,7 +371,7 @@ cause the cloze line to appear above the baseline. The default value is
 % hide and show
 %%
 
-\subsubsection{The options \tt{hide} and \tt{show}}
+\subsubsection{\tt{hide} and \tt{show}}
 \label{sec:option-hide}
 \label{sec:option-show}
 
@@ -395,7 +395,7 @@ options -- |hide| and |show| -- the last option "wins".
 % linecolor and textcolor
 %%
 
-\subsubsection{The options \tt{linecolor} and \tt{textcolor}}
+\subsubsection{\tt{linecolor} and \tt{textcolor}}
 \label{sec:option-linecolor}
 \label{sec:option-textcolor}
 
@@ -430,7 +430,7 @@ You can use the same color names to colorize the cloze lines.
 % margin
 %%
 
-\subsubsection{The option \tt{margin}}\label{sec:option-margin}
+\subsubsection{\tt{margin}}\label{sec:option-margin}
 
 \option{margin}{dimen} The option |margin| indicates how far the cloze
 line sticks up from the cloze text. The option can be used with the
@@ -454,7 +454,7 @@ value of the option is \tt{\getdefaults{margin}}.
 % thickness
 %%
 
-\subsubsection{The option \tt{thickness}}\label{sec:option-thickness}
+\subsubsection{\tt{thickness}}\label{sec:option-thickness}
 
 \option{thickness}{dimen} The default value of the option is
 \tt{\getdefaults{thickness}}.
@@ -474,7 +474,7 @@ value of the option is \tt{\getdefaults{margin}}.
 % width
 %%
 
-\subsubsection{The option \tt{width}}\label{sec:option-width}
+\subsubsection{\tt{width}}\label{sec:option-width}
 
 \option{width}{dimen} The only command which can be changed by the
 option |width| is \cmd{\clozefix}. The default value of the option is
@@ -673,7 +673,7 @@ or manually:
 %    \end{macrocode}
 %
 %
-% \paragraph{The option \tt{align}}
+% \paragraph{\tt{align}}
 %
 % Affects only \cmd{\clozefix}.
 %    \begin{macrocode}
@@ -682,7 +682,7 @@ or manually:
 %    \end{macrocode}
 %
 %
-% \paragraph{The option \tt{distance}}
+% \paragraph{\tt{distance}}
 %
 %    \begin{macrocode}
 \DeclareStringOption{distance}
@@ -690,7 +690,7 @@ or manually:
 %    \end{macrocode}
 %
 %
-% \paragraph{The option \tt{hide}}
+% \paragraph{\tt{hide}}
 %
 %    \begin{macrocode}
 \DeclareVoidOption{hide}{%
@@ -700,7 +700,7 @@ or manually:
 %    \end{macrocode}
 %
 %
-% \paragraph{The option \tt{linecolor}}
+% \paragraph{\tt{linecolor}}
 %
 %    \begin{macrocode}
 \DeclareStringOption{linecolor}
@@ -710,7 +710,7 @@ or manually:
 %    \end{macrocode}
 %
 %
-% \paragraph{The option \tt{margin}}
+% \paragraph{\tt{margin}}
 %
 %    \begin{macrocode}
 \DeclareStringOption{margin}
@@ -718,7 +718,7 @@ or manually:
 %    \end{macrocode}
 %
 %
-% \paragraph{The option \tt{show}}
+% \paragraph{\tt{show}}
 %
 %    \begin{macrocode}
 \DeclareVoidOption{show}{%
@@ -728,7 +728,7 @@ or manually:
 %    \end{macrocode}
 %
 %
-% \paragraph{The option \tt{textcolor}}
+% \paragraph{\tt{textcolor}}
 %
 %    \begin{macrocode}
 \DeclareStringOption{textcolor}
@@ -738,7 +738,7 @@ or manually:
 %    \end{macrocode}
 %
 %
-% \paragraph{The option \tt{thickness}}
+% \paragraph{\tt{thickness}}
 %
 %    \begin{macrocode}
 \DeclareStringOption{thickness}
@@ -746,7 +746,7 @@ or manually:
 %    \end{macrocode}
 %
 %
-% \paragraph{The option \tt{width}}
+% \paragraph{\tt{width}}
 % Affects only \cmd{\clozefix}
 %    \begin{macrocode}
 \DeclareStringOption{width}
