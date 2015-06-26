@@ -981,10 +981,12 @@ registry.storage = {}
 registry.defaults = {
   ['align'] = 'l',
   ['distance'] = '1.5pt',
+  ['hide'] = false,
   ['linecolor'] = '0 0 0 rg 0 0 0 RG', -- black
   ['margin'] = '3pt',
   ['resetcolor'] = '0 0 0 rg 0 0 0 RG', -- black
   ['show_text'] = true,
+  ['show'] = true,
   ['textcolor'] = '0 0 1 rg 0 0 1 RG', -- blue
   ['thickness'] = '0.1pt',
   ['width'] = '2cm',
@@ -1020,9 +1022,9 @@ function create.color(option)
   local data
 
   if option == 'line' then
-    data = registry.linecolor
+    data = registry.get_value('linecolor')
   elseif option == 'text' then
-    data = registry.textcolor
+    data = registry.get_value('textcolor')
   elseif option == 'reset' then
     data = nil
   else
@@ -1036,8 +1038,8 @@ end
 %    \begin{macrocode}
 function create.rule(width)
   local rule = node.new(node.id('rule'))
-  local thickness = tex.sp(registry.thickness)
-  local distance = tex.sp(registry.distance)
+  local thickness = tex.sp(registry.get_value('thickness'))
+  local distance = tex.sp(registry.get_value('distance'))
 
   rule.depth = distance + thickness
   rule.height = - distance
@@ -1215,7 +1217,7 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function registry.get(index)
+function registry.get_storage(index)
   return registry.storage[index]
 end
 %    \end{macrocode}
@@ -1326,7 +1328,7 @@ function registry.marker_data(item)
   if item.id == node.id('whatsit')
     and item.subtype == 44
     and item.user_id == registry.user_id then
-    return registry.get(item.value)
+    return registry.get_storage(item.value)
   else
     return false
   end
@@ -1359,12 +1361,45 @@ function registry.get_marker(item, mode, position)
 
   return out
 end
+
+function registry.get_value(key)
+  if registry.has_value(registry.local_options[key]) then
+    return registry.local_options[key]
+  end
+
+  if registry.has_value(registry.global_options[key]) then
+    return registry.global_options[key]
+  end
+
+  return registry.defaults[key]
+end
+
+function registry.has_value(value)
+  if value == nil or value == '' or value == '\\color@ ' then
+    return false
+  else
+    return true
+  end
+end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function registry.get_defaults(key)
   return registry.defaults[key]
 end
+
+function registry.show_cloze_text()
+  if
+    registry.get_value('show') == true
+  or
+    registry.get_value('show') == 'true'
+  then
+    return true
+  else
+    return false
+  end
+end
+
 %    \end{macrocode}
 %
 % \subsubsection{cloze}
@@ -1429,7 +1464,7 @@ function cloze.basic(head)
           l.line_width
         )
 
-        if registry.show_text then
+        if registry.show_cloze_text() then
           node.insert_after(head, n.line, create.kern(-l.line_width))
           node.insert_after(head, n.stop, create.color('reset'))
         else
@@ -1500,7 +1535,7 @@ function cloze.fix_make(head, start, stop)
 
   head, n.line = insert.rule_colored(head, n.start, l.width)
 
-  if registry.show_text then
+  if registry.show_cloze_text() then
     head, n.kern_start = node.insert_after(
       head,
       n.line,
@@ -1558,7 +1593,7 @@ function cloze.par(head)
 
     head, n.rule = insert.rule_colored(head, n.strut, l.width)
 
-    if registry.show_text then
+    if registry.show_cloze_text() then
       head, n.kern = node.insert_after(
         head,
         n.rule,
