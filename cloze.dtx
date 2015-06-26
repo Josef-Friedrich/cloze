@@ -714,7 +714,6 @@ or manually:
   \strut\directlua{
     cloze.register('#1')
     cloze.marker('#1', 'start')
-    cloze.process_options()
   }%
 }
 %    \end{macrocode}
@@ -1118,7 +1117,7 @@ end
 %
 %    \begin{macrocode}
 function insert.margin()
-  local kern = create.kern(tex.sp(registry.margin))
+  local kern = create.kern(tex.sp(registry.get_value('margin')))
   node.write(kern)
 end
 %    \end{macrocode}
