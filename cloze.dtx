@@ -968,9 +968,7 @@ if not modules then modules = { } end modules ['cloze'] = {
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-local get = {}
-local create = {}
-local insert = {}
+local nodex = {}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -992,7 +990,6 @@ registry.defaults = {
 }
 registry.global_options = {}
 registry.local_options = {}
-registry.options = {}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -1003,7 +1000,7 @@ local is_registered = {}
 %
 % \subsubsection{Create functions}
 %    \begin{macrocode}
-function create.whatsit_colorstack(data)
+function nodex.create_colorstack(data)
   if not data then
     data = '0 0 0 rg 0 0 0 RG' -- black
   end
@@ -1017,7 +1014,7 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function create.color(option)
+function nodex.create_color(option)
   local data
 
   if option == 'line' then
@@ -1030,12 +1027,12 @@ function create.color(option)
     data = nil
   end
 
-  return create.whatsit_colorstack(data)
+  return nodex.create_colorstack(data)
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function create.rule(width)
+function nodex.create_rule(width)
   local rule = node.new(node.id('rule'))
   local thickness = tex.sp(registry.get_value('thickness'))
   local distance = tex.sp(registry.get_value('distance'))
@@ -1049,7 +1046,7 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function create.kern(width)
+function nodex.create_kern(width)
   local kern = node.new(node.id('kern'))
   kern.kern = width
   return kern
@@ -1057,7 +1054,7 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function create.glyph()
+function nodex.create_glyph()
   local glyph = node.new(node.id('glyph'))
   glyph.char = 34
   return glyph
@@ -1065,7 +1062,7 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function create.marker(index)
+function nodex.create_marker(index)
   local marker = node.new('whatsit','user_defined')
   marker.type = 100 -- number
   marker.user_id = registry.user_id
@@ -1076,7 +1073,7 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function create.hfill()
+function nodex.create_hfill()
   local glue = node.new('glue')
   glue.subtype = 100
 
@@ -1086,7 +1083,7 @@ function create.hfill()
 
   glue.spec = glue_spec
 
-  local rule = create.rule(0)
+  local rule = nodex.create_rule(0)
   rule.dir = 'TLT'
 
   glue.leader = rule
@@ -1098,35 +1095,35 @@ end
 % \subsubsection{Insert functions}
 %
 %    \begin{macrocode}
-function insert.hfill()
-  node.write(create.color('line'))
-  node.write(create.hfill())
-  node.write(create.color('reset'))
+function nodex.insert_hfill()
+  node.write(nodex.create_color('line'))
+  node.write(nodex.create_hfill())
+  node.write(nodex.create_color('reset'))
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function insert.cloze_line()
-  node.write(create.color('line'))
-  node.write(create.rule(tex.sp(registry.get_value('width'))))
-  node.write(create.color('reset'))
+function nodex.insert_line()
+  node.write(nodex.create_color('line'))
+  node.write(nodex.create_rule(tex.sp(registry.get_value('width'))))
+  node.write(nodex.create_color('reset'))
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function insert.margin()
-  local kern = create.kern(tex.sp(registry.get_value('margin')))
+function nodex.insert_margin()
+  local kern = nodex.create_kern(tex.sp(registry.get_value('margin')))
   node.write(kern)
 end
 %    \end{macrocode}
 % Append rule and kern to the node list.
 %    \begin{macrocode}
-function insert.rule_colored(head, current, width)
-  local rule = create.rule(width)
+function nodex.insert_line_colored(head, current, width)
+  local rule = nodex.create_rule(width)
 
-  head, new = node.insert_after(head, current, create.color('line'))
+  head, new = node.insert_after(head, current, nodex.create_color('line'))
   head, new = node.insert_after(head, new, rule)
-  head, new = node.insert_after(head, new, create.color('reset'))
+  head, new = node.insert_after(head, new, nodex.create_color('reset'))
 
   return head, new
 end
@@ -1272,7 +1269,9 @@ function registry.get_marker(item, mode, position)
 
   return out
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function registry.get_value(key)
   if registry.has_value(registry.local_options[key]) then
     return registry.local_options[key]
@@ -1284,7 +1283,9 @@ function registry.get_value(key)
 
   return registry.defaults[key]
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function registry.has_value(value)
   if value == nil or value == '' or value == '\\color@ ' then
     return false
@@ -1298,7 +1299,9 @@ end
 function registry.get_defaults(key)
   return registry.defaults[key]
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function registry.show_cloze_text()
   if
     registry.get_value('show') == true
@@ -1310,7 +1313,6 @@ function registry.show_cloze_text()
     return false
   end
 end
-
 %    \end{macrocode}
 %
 % \subsubsection{cloze}
@@ -1329,7 +1331,7 @@ function cloze.basic(head)
   for hlist in node.traverse_id(node.id('hlist'), head) do
 
     n.head = hlist.head
-    n.strut = node.insert_before(n.head, n.head, create.kern(0))
+    n.strut = node.insert_before(n.head, n.head, nodex.create_kern(0))
     hlist.head = n.head.prev
 
     if b.line_end then
@@ -1344,7 +1346,7 @@ function cloze.basic(head)
 
         n.marker = registry.get_marker(n.current, 'basic', 'start')
 
-        node.insert_after(hlist.head, n.current, create.color('text'))
+        node.insert_after(hlist.head, n.current, nodex.create_color('text'))
 
         b.init_cloze = false
 
@@ -1369,15 +1371,15 @@ function cloze.basic(head)
           n.stop.next
         )
 
-        head, n.line = insert.rule_colored(
+        head, n.line = nodex.insert_line_colored(
           head,
           n.current,
           l.line_width
         )
 
         if registry.show_cloze_text() then
-          node.insert_after(head, n.line, create.kern(-l.line_width))
-          node.insert_after(head, n.stop, create.color('reset'))
+          node.insert_after(head, n.line, nodex.create_kern(-l.line_width))
+          node.insert_after(head, n.stop, nodex.create_color('reset'))
         else
           n.line.next = n.stop.next
           n.stop.prev = n.line.prev
@@ -1446,17 +1448,17 @@ function cloze.fix_make(head, start, stop)
     l.kern_stop = l.width - l.text_width
   end
 
-  head, n.line = insert.rule_colored(head, n.start, l.width)
+  head, n.line = nodex.insert_line_colored(head, n.start, l.width)
 
   if registry.show_cloze_text() then
     head, n.kern_start = node.insert_after(
       head,
       n.line,
-      create.kern(l.kern_start)
+      nodex.create_kern(l.kern_start)
     )
-    node.insert_after(head, n.kern_start, create.color('text'))
-    node.insert_before(head, n.stop, create.whatsit_colorstack())
-    node.insert_before(head, n.stop, create.kern(l.kern_stop))
+    node.insert_after(head, n.kern_start, nodex.create_color('text'))
+    node.insert_before(head, n.stop, nodex.create_colorstack())
+    node.insert_before(head, n.stop, nodex.create_kern(l.kern_stop))
   else
     n.line.next = n.stop.next
   end
@@ -1501,21 +1503,21 @@ function cloze.par(head)
     l.width = hlist.width
 
     n.head = hlist.head
-    n.strut = node.insert_before(n.head, n.head, create.kern(0))
+    n.strut = node.insert_before(n.head, n.head, nodex.create_kern(0))
     hlist.head = n.head.prev
 
-    head, n.rule = insert.rule_colored(head, n.strut, l.width)
+    head, n.rule = nodex.insert_line_colored(head, n.strut, l.width)
 
     if registry.show_cloze_text() then
       head, n.kern = node.insert_after(
         head,
         n.rule,
-        create.kern(-l.width)
+        nodex.create_kern(-l.width)
       )
-      node.insert_after(head, n.kern, create.color('text'))
+      node.insert_after(head, n.kern, nodex.create_color('text'))
 
       n.tail = node.tail(n.head)
-      node.insert_after(n.head, n.tail, create.color('reset'))
+      node.insert_after(n.head, n.tail, nodex.create_color('reset'))
     else
       n.rule.next = nil
     end
@@ -1586,15 +1588,15 @@ end
 %    \begin{macrocode}
 function base.marker(mode, position)
   local index = registry.set(mode, position)
-  local marker = create.marker(index)
+  local marker = nodex.create_marker(index)
   node.write(marker)
 end
 %    \end{macrocode}
 % Publish some functions to sty file.
 %    \begin{macrocode}
-base.hfill = insert.hfill
-base.line = insert.cloze_line
-base.margin = insert.margin
+base.hfill = nodex.insert_hfill
+base.line = nodex.insert_line
+base.margin = nodex.insert_margin
 base.set_option = registry.set_option
 base.set_is_global = registry.set_is_global
 base.unset_local_options = registry.unset_local_options
