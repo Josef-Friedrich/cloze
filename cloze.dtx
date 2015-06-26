@@ -1111,7 +1111,7 @@ end
 function insert.cloze_line()
   registry.process_options()
   node.write(create.color('line'))
-  node.write(create.rule(tex.sp(registry.width)))
+  node.write(create.rule(tex.sp(registry.get_value('width'))))
   node.write(create.color('reset'))
 end
 %    \end{macrocode}
@@ -1513,7 +1513,7 @@ end -- function
 function cloze.fix_make(head, start, stop)
   local l = {} -- length
 
-  l.width = tex.sp(registry.width)
+  l.width = tex.sp(registry.get_value('width'))
 
   local n = {} -- node
   n.start = start
@@ -1521,10 +1521,12 @@ function cloze.fix_make(head, start, stop)
 
   l.text_width = node.dimensions(n.start, n.stop)
 
-  if registry.align == 'right' then
+  local align = registry.get_value('align')
+
+  if align == 'right' then
     l.kern_start = -l.text_width
     l.kern_stop = 0
-  elseif registry.align == 'center' then
+  elseif align == 'center' then
     l.half = (l.width - l.text_width) / 2
     l.kern_start = -l.half - l.text_width
     l.kern_stop = l.half
