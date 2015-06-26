@@ -399,12 +399,13 @@ of the line is larger than the width of the text.
 %%
 
 \subsubsection{\tt{distance}}
+\label{sec:option-distance}
 
 \option{distance}{dimen}:
-The option |distance| specifies the spacing between the baseline and the
-cloze line. The larger the dimension of the option |distance|, the more
-moves the cloze line down. Negative values cause the cloze line to
-appear above the baseline. The default value is
+The option |distance| specifies the spacing between the baseline of the
+text and the gap line. The larger the dimension of the option
+|distance|, the more moves the line down. Negative values cause the line
+to appear above the baseline. The default value is
 \tt{\getdefaults{distance}}.
 
 \newcommand{\optiondistance}[1]{%
@@ -464,6 +465,7 @@ package. To define your own color use the following command:
 \definecolor{myclozecolor}{rgb}{0.1,0.4,0.6}
 
 \newcommand{\optioncolor}[2]{%
+  \noindent%
   \clozefil[#1=#2]{Lorem ipsum dolor sit amet, consectetur} %
   \expdesc{#2}%
   \par%
@@ -487,15 +489,17 @@ You can use the same color names to colorize the cloze lines.
 % margin
 %%
 
-\subsubsection{\tt{margin}}\label{sec:option-margin}
+\subsubsection{\tt{margin}}
+\label{sec:option-margin}
 
 \option{margin}{dimen}:
-The option |margin| indicates how far the cloze line sticks up from the
-cloze text. The option can be used with the commands \cmd{\cloze},
-\cmd{\clozefix} and \cmd{\clozefil}. The default value of the option is
+The option |margin| indicates how far the line sticks up from the text.
+The option can be used with the commands \cmd{\cloze}, \cmd{\clozefix}
+and \cmd{\clozefil}. The default value of the option is
 \tt{\getdefaults{margin}}.
 
 \newcommand{\optionmargin}[1]{%
+  \noindent%
   Lorem ipsum \cloze[margin=#1]{dolor} sit amet.%
   \desc{#1}%
 }
@@ -508,17 +512,37 @@ cloze text. The option can be used with the commands \cmd{\cloze},
 \optionmargin{-4pt}
 \end{clozeexample}
 
+% Folgt ein Satzzeichen direkt auf eine Lücke, so findet der
+% Zeilenumbruch erst nach dem Satzzeichen statt. Auch ein noch so großer
+% Wert für |margin| beeinflusst dieses Verhalten nicht.
+Is a punctation mark placed directly after a gap, then the line breaks
+after this punctation mark. Even the most large value of |margin| does
+not affect this behavior.
+
+\begin{clozeexample}
+\setcloze{margin=3mm}
+\cloze{Lorem}, \cloze{ipsum}. \cloze{dolor}; \cloze{sit}: \cloze{amet},
+\cloze{consectetur}. \cloze{adipisicing}; \cloze{elit}: \cloze{sed},
+\cloze{do}. \cloze{eiusmod}; \cloze{tempor}.
+\end{clozeexample}
+
+\setcloze{margin=3pt}
+
 %%
 % thickness
 %%
 
-\subsubsection{\tt{thickness}}\label{sec:option-thickness}
+\subsubsection{\tt{thickness}}
+\label{sec:option-thickness}
 
 \option{thickness}{dimen}:
-The default value of the option is
-\tt{\getdefaults{thickness}}.
+The option |thickness| indicates how thick the line is. The option
+|distance| \secref{sec:option-distance} is not affected by this option,
+because the bottom of the line moves down. The default value of this
+option is \tt{\getdefaults{thickness}}.
 
 \newcommand{\optionthickness}[1]{%
+  \noindent%
   Lorem \cloze[thickness=#1]{ipsum dolor sit} amet.%
   \desc{#1}%
 }
@@ -541,6 +565,7 @@ The only command which can be changed by the option |width| is
 \tt{\getdefaults{width}}.
 
 \newcommand{\optionwidth}[1]{%
+  \noindent%
   Lorem \clozefix[width=#1]{dolor} amet.%
   \desc{#1}%
 }
