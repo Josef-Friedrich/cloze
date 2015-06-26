@@ -1099,7 +1099,6 @@ end
 %
 %    \begin{macrocode}
 function insert.hfill()
-  registry.process_options()
   node.write(create.color('line'))
   node.write(create.hfill())
   node.write(create.color('reset'))
@@ -1108,7 +1107,6 @@ end
 %
 %    \begin{macrocode}
 function insert.cloze_line()
-  registry.process_options()
   node.write(create.color('line'))
   node.write(create.rule(tex.sp(registry.get_value('width'))))
   node.write(create.color('reset'))
@@ -1236,91 +1234,6 @@ function registry.set_show_text(options)
   end
 end
 %    \end{macrocode}
-% Unset options which have the values '|unset|' or '|\color@ |'.
-%    \begin{macrocode}
-
-function registry.merge_local_options()
-  if registry.local_options then
-    registry.options = registry.local_options
-  else
-    registry.options = {}
-  end
-  registry.options.show_text =
-    registry.set_show_text(registry.local_options)
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function registry.merge_global_options()
-  registry.global_options.show_text =
-    registry.set_show_text(registry.global_options)
-
-  for key, value in pairs(registry.global_options) do
-    if registry.options[key] == nil or registry.options[key] == '' then
-      registry.options[key] = value
-    end
-  end
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function registry.merge_defaults()
-  for key, value in pairs(registry.defaults) do
-    if registry.options[key] == nil or registry.options[key] == '' then
-      registry.options[key] = value
-    end
-  end
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function registry.fix_align_options()
-  local align = string.lower(registry.options.align)
-  local result
-
-  if align == 'r' then
-    result = 'right'
-  elseif align == 'c' then
-    result = 'center'
-  elseif align == 'l' then
-    result = 'left'
-  else
-    result = align
-  end
-
-  registry.options.align = align
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function registry.move_to_base()
-  for key, value in pairs(registry.options) do
-    registry[key] = value
-  end
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function registry.debug(table, identifier)
-  for key, value in pairs(table) do
-    local out = identifier .. ' KEY: '
-      .. tostring(key)
-      .. ' VALUE: '
-      .. tostring(value)
-    print(out)
-  end
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function registry.process_options()
-  registry.merge_local_options()
-  registry.merge_global_options()
-  registry.merge_defaults()
-  registry.fix_align_options()
-  registry.move_to_base()
-end
-%    \end{macrocode}
 %
 %    \begin{macrocode}
 function registry.marker_data(item)
@@ -1355,7 +1268,6 @@ function registry.get_marker(item, mode, position)
 
   if out and position == 'start' then
     registry.marker_values(item)
-    registry.process_options()
   end
 
   return out
@@ -1686,7 +1598,6 @@ base.margin = insert.margin
 base.set_option = registry.set_option
 base.set_is_global = registry.set_is_global
 base.unset_local_options = registry.unset_local_options
-base.process_options = registry.process_options
 base.get_defaults = registry.get_defaults
 %    \end{macrocode}
 %
