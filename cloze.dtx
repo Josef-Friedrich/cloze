@@ -995,7 +995,7 @@ registry.local_options = {}
 %    \begin{macrocode}
 local cloze = {}
 local base = {}
-local is_registered = {}
+base.is_registered = {}
 %    \end{macrocode}
 %
 % \subsubsection{Create functions}
@@ -1543,7 +1543,7 @@ function base.register(mode)
     return true
   end
 
-  if not is_registered[mode] then
+  if not base.is_registered[mode] then
     if mode == 'basic' then
       luatexbase.add_to_callback(
         'post_linebreak_filter',
@@ -1561,7 +1561,7 @@ function base.register(mode)
     else
       return false
     end
-    is_registered[mode] = true
+    base.is_registered[mode] = true
   end
 end
 %    \end{macrocode}
