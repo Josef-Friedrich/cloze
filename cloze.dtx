@@ -81,7 +81,7 @@
 
 \def\secref#1{(\rightarrow\ \ref{#1})}
 
-\newcommand{\option}[2]{\tt{[#1=}\meta{#2}\tt{]}:}
+\newcommand{\option}[2]{\tt{[#1=}\meta{#2}\tt{]}}
 
 \EnableCrossrefs
 \CodelineIndex
@@ -320,6 +320,10 @@ Lorem\clozelinefil
 
 \subsection{The options}
 
+%%
+% Local and global options
+%%
+
 \subsubsection{Local and global options}
 
 The \emph{cloze} package distinguishs between \emph{local} and
@@ -328,6 +332,10 @@ options in the \cmd{\usepackage}\oarg{global options}\marg{cloze}
 declaration, the cloze package offers a special command to set
 \emph{global} options:
 \cmd{\setcloze}\marg{global options}
+
+%%
+% \setcloze
+%%
 
 \subsubsection{\cmd{\setcloze}}
 
@@ -368,7 +376,7 @@ green for both gaps.
 \subsubsection{\tt{align}}
 \label{sec:option-align}
 
-\option{align}{left/center/right}
+\option{align}{left/center/right}:
 Only the macro \cmd{\clozefix} \secref{sec:command-clozefix} takes the
 option \tt{align} into account. Possible values are \tt{left},
 \tt{center} and \tt{right}. This option only makes sense, if the width
@@ -392,10 +400,11 @@ of the line is larger than the width of the text.
 
 \subsubsection{\tt{distance}}
 
-\option{distance}{dimen} The option |distance| specifies the spacing
-between the baseline and the cloze line. The larger the dimension of the
-option |distance|, the more moves the cloze line down. Negative values
-cause the cloze line to appear above the baseline. The default value is
+\option{distance}{dimen}:
+The option |distance| specifies the spacing between the baseline and the
+cloze line. The larger the dimension of the option |distance|, the more
+moves the cloze line down. Negative values cause the cloze line to
+appear above the baseline. The default value is
 \tt{\getdefaults{distance}}.
 
 \newcommand{\optiondistance}[1]{%
@@ -419,8 +428,9 @@ cause the cloze line to appear above the baseline. The default value is
 \label{sec:option-hide}
 \label{sec:option-show}
 
-By default the cloze text is displayed. Use the option \texttt{hide} to
-remove the cloze text from the output.  If you accidentally specify both
+\tt{[hide]} and \tt{[show]}:
+By default the cloze text is displayed. Use the option |hide| to remove
+the cloze text from the output.  If you accidentally specify both
 options -- |hide| and |show| -- the last option "wins".
 
 \newcommand{\optionshow}[1]{%
@@ -445,9 +455,10 @@ options -- |hide| and |show| -- the last option "wins".
 \label{sec:option-linecolor}
 \label{sec:option-textcolor}
 
-\option{linecolor}{color name} Values for both color options are color
-names used by the xcolor package. To define your own color use the
-following command:
+\option{linecolor}{color name} and
+\option{textcolor}{color name}:
+Values for both color options are color names used by the xcolor
+package. To define your own color use the following command:
 
 |\definecolor{myclozecolor}{rgb}{0.1,0.4,0.6}|
 \definecolor{myclozecolor}{rgb}{0.1,0.4,0.6}
@@ -478,10 +489,11 @@ You can use the same color names to colorize the cloze lines.
 
 \subsubsection{\tt{margin}}\label{sec:option-margin}
 
-\option{margin}{dimen} The option |margin| indicates how far the cloze
-line sticks up from the cloze text. The option can be used with the
-commands \cmd{\cloze}, \cmd{\clozefix} and \cmd{\clozefil}. The default
-value of the option is \tt{\getdefaults{margin}}.
+\option{margin}{dimen}:
+The option |margin| indicates how far the cloze line sticks up from the
+cloze text. The option can be used with the commands \cmd{\cloze},
+\cmd{\clozefix} and \cmd{\clozefil}. The default value of the option is
+\tt{\getdefaults{margin}}.
 
 \newcommand{\optionmargin}[1]{%
   Lorem ipsum \cloze[margin=#1]{dolor} sit amet.%
@@ -502,7 +514,8 @@ value of the option is \tt{\getdefaults{margin}}.
 
 \subsubsection{\tt{thickness}}\label{sec:option-thickness}
 
-\option{thickness}{dimen} The default value of the option is
+\option{thickness}{dimen}:
+The default value of the option is
 \tt{\getdefaults{thickness}}.
 
 \newcommand{\optionthickness}[1]{%
@@ -522,8 +535,9 @@ value of the option is \tt{\getdefaults{margin}}.
 
 \subsubsection{\tt{width}}\label{sec:option-width}
 
-\option{width}{dimen} The only command which can be changed by the
-option |width| is \cmd{\clozefix}. The default value of the option is
+\option{width}{dimen}:
+The only command which can be changed by the option |width| is
+\cmd{\clozefix}. The default value of the option is
 \tt{\getdefaults{width}}.
 
 \newcommand{\optionwidth}[1]{%
