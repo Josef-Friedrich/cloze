@@ -52,13 +52,13 @@
 
 \newsavebox{\examplebox}
 \newenvironment{clozeexample}{%
+  \noindent%
   \begin{lrbox}{\examplebox}%
   \begin{minipage}{0.9\textwidth}%
   \footnotesize%
 }{%
   \end{minipage}%
   \end{lrbox}%
-  \noindent%
   \begin{center}%
     \fbox{\usebox{\examplebox}}%
   \end{center}%
@@ -67,18 +67,20 @@
 \definecolor{grayline}{gray}{0.9}
 \definecolor{graybackground}{gray}{0.97}
 
-\newsavebox{\ltxbox}
+\newsavebox{\codebox}
 \newenvironment{code}{%
-  \begin{lrbox}{\ltxbox}%
+  \noindent%
+  \begin{lrbox}{\codebox}%
   \begin{minipage}{0.9\textwidth}%
 }{%
   \end{minipage}%
   \end{lrbox}%
-  \noindent%
   \begin{center}%
-    \fcolorbox{grayline}{graybackground}{\usebox{\ltxbox}}%
+    \fcolorbox{grayline}{graybackground}{\usebox{\codebox}}%
   \end{center}%
 }
+
+\newcommand{\tighten}{\vspace{-6pt}}
 
 \newcommand{\getdefaults}[1]{%
   \directlua{tex.print(cloze.get_defaults('#1'))}%
@@ -308,6 +310,8 @@ minim veniam
 \end{verbatim}
 \end{code}
 
+\tighten
+
 \begin{clozeexample}
 Ut enim ad \clozeline[width=1cm]\cloze{minim}\clozeline[width=3cm] minim
 veniam,
@@ -365,6 +369,8 @@ options for each paragraph.
 \end{verbatim}
 \end{code}
 
+\tighten
+
 \begin{clozeexample}
 \clozeset{textcolor=red} Lorem \cloze{ipsum} dolor \par
 \clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
@@ -380,6 +386,8 @@ green for both gaps.
 \clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
 \end{verbatim}
 \end{code}
+
+\tighten
 
 \begin{clozeexample}
 \clozeset{textcolor=red} Lorem \cloze{ipsum} dolor
@@ -409,6 +417,7 @@ default values. It has no effect on the \emph{local} options.
 \end{verbatim}
 \end{code}
 
+\tighten
 
 \clozeset{thickness=3mm,linecolor=yellow,textcolor=magenta,margin=-2pt}
 
@@ -420,6 +429,8 @@ Very \cloze{silly} global \cloze{options}.
 |\clozereset|
 \end{code}
 \clozereset
+
+\tighten
 
 \begin{clozeexample}
 \cloze{Relax!} We can reset \cloze{those} options.
@@ -440,6 +451,8 @@ Very \cloze{silly} global \cloze{options}.
 \end{code}
 \clozehide
 
+\tighten
+
 \begin{clozeexample}
 Lorem \cloze{ipsum dolor sit} amet, consectetur \cloze{adipisicing}
 elit.
@@ -449,6 +462,8 @@ elit.
 |\clozeshow|
 \end{code}
 \clozeshow
+
+\tighten
 
 \begin{clozeexample}
 Lorem \cloze{ipsum dolor sit} amet, consectetur \cloze{adipisicing}
