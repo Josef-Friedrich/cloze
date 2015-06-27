@@ -1157,7 +1157,7 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function nodex.create_rule(width)
+function nodex.create_line(width)
   local rule = node.new(node.id('rule'))
   local thickness = tex.sp(registry.get_value('thickness'))
   local distance = tex.sp(registry.get_value('distance'))
@@ -1170,30 +1170,32 @@ function nodex.create_rule(width)
 end
 %    \end{macrocode}
 %
+% Append rule and kern to the node list.
+%    \begin{macrocode}
+function nodex.insert_line(head, current, width)
+  local rule = nodex.create_line(width)
+
+  head, new = node.insert_after(head, current, nodex.create_color('line'))
+  head, new = node.insert_after(head, new, rule)
+  head, new = node.insert_after(head, new, nodex.create_color('reset'))
+
+  return head, new
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function nodex.write_line()
+  node.write(nodex.create_color('line'))
+  node.write(nodex.create_line(tex.sp(registry.get_value('width'))))
+  node.write(nodex.create_color('reset'))
+end
+%    \end{macrocode}
+%
 %    \begin{macrocode}
 function nodex.create_kern(width)
   local kern = node.new(node.id('kern'))
   kern.kern = width
   return kern
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function nodex.create_glyph()
-  local glyph = node.new(node.id('glyph'))
-  glyph.char = 34
-  return glyph
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function nodex.create_marker(index)
-  local marker = node.new('whatsit','user_defined')
-  marker.type = 100 -- number
-  marker.user_id = registry.user_id
-  marker.value = index
-
-  return marker
 end
 %    \end{macrocode}
 %
@@ -1208,7 +1210,7 @@ function nodex.create_hfill()
 
   glue.spec = glue_spec
 
-  local rule = nodex.create_rule(0)
+  local rule = nodex.create_line(0)
   rule.dir = 'TLT'
 
   glue.leader = rule
@@ -1220,7 +1222,7 @@ end
 % \subsubsection{Insert functions}
 %
 %    \begin{macrocode}
-function nodex.insert_hfill()
+function nodex.write_hfill()
   node.write(nodex.create_color('line'))
   node.write(nodex.create_hfill())
   node.write(nodex.create_color('reset'))
@@ -1228,29 +1230,9 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function nodex.insert_line()
-  node.write(nodex.create_color('line'))
-  node.write(nodex.create_rule(tex.sp(registry.get_value('width'))))
-  node.write(nodex.create_color('reset'))
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function nodex.insert_margin()
+function nodex.write_margin()
   local kern = nodex.create_kern(tex.sp(registry.get_value('margin')))
   node.write(kern)
-end
-%    \end{macrocode}
-% Append rule and kern to the node list.
-%    \begin{macrocode}
-function nodex.insert_line_colored(head, current, width)
-  local rule = nodex.create_rule(width)
-
-  head, new = node.insert_after(head, current, nodex.create_color('line'))
-  head, new = node.insert_after(head, new, rule)
-  head, new = node.insert_after(head, new, nodex.create_color('reset'))
-
-  return head, new
 end
 %    \end{macrocode}
 %
@@ -1258,6 +1240,17 @@ end
 %
 % Functions to deal with option handling and storing them in a lua
 % table.
+%
+%    \begin{macrocode}
+function registry.create_marker(index)
+  local marker = node.new('whatsit','user_defined')
+  marker.type = 100 -- number
+  marker.user_id = registry.user_id
+  marker.value = index
+
+  return marker
+end
+%    \end{macrocode}
 %
 %    \begin{macrocode}
 function registry.check_marker(item, mode, position)
@@ -1310,7 +1303,6 @@ function registry.unset_local_options()
   registry.local_options = {}
 end
 %    \end{macrocode}
-%
 %
 %    \begin{macrocode}
 function registry.unset_global_options()
@@ -1492,7 +1484,7 @@ function cloze.basic(head)
           n.stop.next
         )
 
-        head, n.line = nodex.insert_line_colored(
+        head, n.line = nodex.insert_line(
           head,
           n.current,
           l.line_width
@@ -1569,7 +1561,7 @@ function cloze.fix_make(head, start, stop)
     l.kern_stop = l.width - l.text_width
   end
 
-  head, n.line = nodex.insert_line_colored(head, n.start, l.width)
+  head, n.line = nodex.insert_line(head, n.start, l.width)
 
   if registry.show_cloze_text() then
     head, n.kern_start = node.insert_after(
@@ -1627,7 +1619,7 @@ function cloze.par(head)
     n.strut = node.insert_before(n.head, n.head, nodex.create_kern(0))
     hlist.head = n.head.prev
 
-    head, n.rule = nodex.insert_line_colored(head, n.strut, l.width)
+    head, n.rule = nodex.insert_line(head, n.strut, l.width)
 
     if registry.show_cloze_text() then
       head, n.kern = node.insert_after(
@@ -1709,15 +1701,15 @@ end
 %    \begin{macrocode}
 function base.marker(mode, position)
   local index = registry.set(mode, position)
-  local marker = nodex.create_marker(index)
+  local marker = registry.create_marker(index)
   node.write(marker)
 end
 %    \end{macrocode}
 % Publish some functions to sty file.
 %    \begin{macrocode}
-base.hfill = nodex.insert_hfill
-base.line = nodex.insert_line
-base.margin = nodex.insert_margin
+base.hfill = nodex.write_hfill
+base.line = nodex.write_line
+base.margin = nodex.write_margin
 base.set_option = registry.set_option
 base.set_is_global = registry.set_is_global
 base.unset_local_options = registry.unset_local_options
