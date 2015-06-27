@@ -1220,22 +1220,11 @@ end
 %    \begin{macrocode}
 function registry.set(mode, position)
   local index = registry.get_index()
-
   local data = {
     ['mode'] = mode,
     ['position'] = position
   }
-
-  if registry.local_options then
-    local cleaned_values = {}
-    for key, value in pairs(registry.local_options) do
-      if value ~= '' then
-        cleaned_values[key] = value
-      end
-    end
-    data.values = cleaned_values
-  end
-
+  data.values = registry.local_options
   registry.storage[index] = data
   return index
 end
