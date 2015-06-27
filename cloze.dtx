@@ -370,6 +370,63 @@ green for both gaps.
 \clozereset
 
 %%
+% \clozereset
+%%
+
+\subsubsection{\cmd{\clozereset}}
+
+\DescribeMacro{\clozereset}
+\cmd{\clozereset}: The command resets all \emph{global} options to the
+default values. It has no effect on the \emph{local} options.
+
+\begin{verbatim}
+\clozeset{
+  thickness=3mm,
+  linecolor=yellow,
+  textcolor=magenta,
+  margin=-2pt
+}
+\end{verbatim}
+
+
+\clozeset{thickness=3mm,linecolor=yellow,textcolor=magenta,margin=-2pt}
+
+\begin{clozeexample}
+Very \cloze{silly} global \cloze{options}.
+\end{clozeexample}
+
+|\clozereset|
+\clozereset
+
+\begin{clozeexample}
+\cloze{Relax!} We can reset \cloze{those} options.
+\end{clozeexample}
+
+%%
+% \clozereset
+%%
+
+\subsubsection{\cmd{\clozeshow} and \cmd{\clozehide}}
+
+\DescribeMacro{\clozeshow} \DescribeMacro{\clozehide}
+\cmd{\clozeshow} and \cmd{\clozehide}: This commands are shortcuts for
+\cmd{\clozeset}\marg{show} and \cmd{\clozeset}\marg{hide}.
+
+|\clozehide| \clozehide
+
+\begin{clozeexample}
+Lorem \cloze{ipsum dolor sit} amet, consectetur \cloze{adipisicing}
+elit.
+\end{clozeexample}
+
+|\clozeshow| \clozeshow
+
+\begin{clozeexample}
+Lorem \cloze{ipsum dolor sit} amet, consectetur \cloze{adipisicing}
+elit.
+\end{clozeexample}
+
+%%
 % align
 %%
 
