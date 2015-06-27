@@ -367,7 +367,7 @@ green for both gaps.
 \setcloze{textcolor=green} Lorem \cloze{ipsum} dolor
 \end{clozeexample}
 
-\setcloze{textcolor=blue}
+\clozereset
 
 %%
 % align
@@ -526,7 +526,7 @@ not affect this behavior.
 \cloze{do}. \cloze{eiusmod}; \cloze{tempor}.
 \end{clozeexample}
 
-\setcloze{margin=3pt}
+\clozereset
 
 %%
 % thickness
@@ -852,6 +852,13 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\clozereset}
+%    \begin{macrocode}
+\newcommand{\clozereset}{%
+  \directlua{cloze.reset()}
+}
+%    \end{macrocode}
+% \end{macro}
 %
 % \begin{macro}{\clozefont}
 %    \begin{macrocode}
@@ -1186,6 +1193,13 @@ function registry.unset_local_options()
 end
 %    \end{macrocode}
 %
+%
+%    \begin{macrocode}
+function registry.unset_global_options()
+  registry.global_options = {}
+end
+%    \end{macrocode}
+
 %    \begin{macrocode}
 function registry.set(mode, position)
   local index = registry.get_index()
@@ -1600,6 +1614,7 @@ base.margin = nodex.insert_margin
 base.set_option = registry.set_option
 base.set_is_global = registry.set_is_global
 base.unset_local_options = registry.unset_local_options
+base.reset = registry.unset_global_options
 base.get_defaults = registry.get_defaults
 %    \end{macrocode}
 %
