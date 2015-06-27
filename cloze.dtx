@@ -124,9 +124,9 @@ ullamco laboris nisi ut \cloze{aliquip} ex ea commodo consequat.%
 \clozelorem
 \end{clozeexample}
 
-\setcloze{hide}
+\clozeset{hide}
 
-The command |\setcloze{hide}| only shows gaps.
+The command |\clozeset{hide}| only shows gaps.
 When you put both texts on top of each other you will see that they
 perfectly match.
 
@@ -134,7 +134,7 @@ perfectly match.
 \clozelorem
 \end{clozeexample}
 
-\setcloze{show}
+\clozeset{show}
 
 %-----------------------------------------------------------------------
 % Usage
@@ -170,41 +170,41 @@ ullamco laboris nisi} ut aliquip ex ea commodo consequat.
 \end{clozeexample}
 
 %%
-% \setclozefont
+% \clozesetfont
 %%
 
-\subsubsection{\cmd{\setclozefont}}
+\subsubsection{\cmd{\clozesetfont}}
 \label{sec:command-setclozefont}
 
-\DescribeMacro{\setclozefont}
+\DescribeMacro{\clozesetfont}
 The gap font can be changed by using the command
-\cmd{\setclozefont}. \tt{\string\set\-cloze\-font} redefines the command
+\cmd{\clozesetfont}. \tt{\string\set\-cloze\-font} redefines the command
 \cmd{\clozefont} which contains the font definition.
-Thus, the command \tt{\string\setclozefont\string{\string\Large\string}}
+Thus, the command \tt{\string\clozesetfont\string{\string\Large\string}}
 has the same effect as
 \tt{\string\re\-new\-com\-mand\string{\string\cloze\-font\string}%
 \string{\string\Large\string}}.
 
-\setclozefont{\Large}
+\clozesetfont{\Large}
 
 \begin{clozeexample}
 Excepteur \cloze{sint} occaecat \cloze{cupidatat} non proident.
 \end{clozeexample}
 
 \noindent Please do not put any color definitions in
-\cmd{\setclozefont}, as it won't work. Use the option
+\cmd{\clozesetfont}, as it won't work. Use the option
 |textcolor| instead \secref{sec:option-textcolor}.
 
-|\setclozefont{\ttfamily\normalsize}| changes the gap text for example
+|\clozesetfont{\ttfamily\normalsize}| changes the gap text for example
 into a normal sized typewriter font.
 
-\setclozefont{\ttfamily\normalsize}
+\clozesetfont{\ttfamily\normalsize}
 
 \begin{clozeexample}
 Excepteur \cloze{sint} occaecat \cloze{cupidatat} non proident.
 \end{clozeexample}
 
-\setclozefont{\itshape}
+\clozesetfont{\itshape}
 
 %%
 % \clozefix
@@ -331,40 +331,40 @@ The \emph{cloze} package distinguishs between \emph{local} and
 options in the \cmd{\usepackage}\oarg{global options}\marg{cloze}
 declaration, the cloze package offers a special command to set
 \emph{global} options:
-\cmd{\setcloze}\marg{global options}
+\cmd{\clozeset}\marg{global options}
 
 %%
-% \setcloze
+% \clozeset
 %%
 
-\subsubsection{\cmd{\setcloze}}
+\subsubsection{\cmd{\clozeset}}
 
-\DescribeMacro{\setcloze}
-\cmd{\setcloze}\marg{global options}: The command can set \emph{global}
+\DescribeMacro{\clozeset}
+\cmd{\clozeset}\marg{global options}: The command can set \emph{global}
 options for each paragraph.
 
 \begin{verbatim}
-\setcloze{textcolor=red} Lorem \cloze{ipsum} dolor \par
-\setcloze{textcolor=green} Lorem \cloze{ipsum} dolor
+\clozeset{textcolor=red} Lorem \cloze{ipsum} dolor \par
+\clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
 \end{verbatim}
 
 \begin{clozeexample}
-\setcloze{textcolor=red} Lorem \cloze{ipsum} dolor \par
-\setcloze{textcolor=green} Lorem \cloze{ipsum} dolor
+\clozeset{textcolor=red} Lorem \cloze{ipsum} dolor \par
+\clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
 \end{clozeexample}
 
-\cmd{\setcloze} does not change the options within a paragraph. As you
-can see in the example below the last \cmd{\setcloze} applies the color
+\cmd{\clozeset} does not change the options within a paragraph. As you
+can see in the example below the last \cmd{\clozeset} applies the color
 green for both gaps.
 
 \begin{verbatim}
-\setcloze{textcolor=red} Lorem \cloze{ipsum} dolor
-\setcloze{textcolor=green} Lorem \cloze{ipsum} dolor
+\clozeset{textcolor=red} Lorem \cloze{ipsum} dolor
+\clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
 \end{verbatim}
 
 \begin{clozeexample}
-\setcloze{textcolor=red} Lorem \cloze{ipsum} dolor
-\setcloze{textcolor=green} Lorem \cloze{ipsum} dolor
+\clozeset{textcolor=red} Lorem \cloze{ipsum} dolor
+\clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
 \end{clozeexample}
 
 \clozereset
@@ -520,7 +520,7 @@ after this punctation mark. Even the most large value of |margin| does
 not affect this behavior.
 
 \begin{clozeexample}
-\setcloze{margin=3mm}
+\clozeset{margin=3mm}
 \cloze{Lorem}, \cloze{ipsum}. \cloze{dolor}; \cloze{sit}: \cloze{amet},
 \cloze{consectetur}. \cloze{adipisicing}; \cloze{elit}: \cloze{sed},
 \cloze{do}. \cloze{eiusmod}; \cloze{tempor}.
@@ -843,9 +843,9 @@ or manually:
 %
 % \subsubsection{Public macros}
 %
-% \begin{macro}{\setcloze}
+% \begin{macro}{\clozeset}
 %    \begin{macrocode}
-\newcommand{\setcloze}[1]{%
+\newcommand{\clozeset}[1]{%
   \cloze@set@to@global%
   \kvsetkeys{CLZ}{#1}%
 }
@@ -860,6 +860,23 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\clozeshow}
+%    \begin{macrocode}
+\newcommand{\clozeshow}{%
+  \clozeset{show}
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozehide}
+%    \begin{macrocode}
+\newcommand{\clozehide}{%
+  \clozeset{hide}
+}
+%    \end{macrocode}
+% \end{macro}
+%
+
 % \begin{macro}{\clozefont}
 %    \begin{macrocode}
 \newcommand{\clozefont}{\itshape}
@@ -867,9 +884,9 @@ or manually:
 % \end{macro}
 %
 %
-% \begin{macro}{\setclozefont}
+% \begin{macro}{\clozesetfont}
 %    \begin{macrocode}
-\newcommand{\setclozefont}[1]{%
+\newcommand{\clozesetfont}[1]{%
   \renewcommand{\clozefont}[1]{%
     #1%
   }%
