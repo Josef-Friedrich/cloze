@@ -1241,6 +1241,8 @@ end
 % Functions to deal with option handling and storing them in a lua
 % table.
 %
+% \paragraph{Marker processing}
+%
 %    \begin{macrocode}
 function registry.create_marker(index)
   local marker = node.new('whatsit','user_defined')
@@ -1254,7 +1256,7 @@ end
 %
 %    \begin{macrocode}
 function registry.check_marker(item, mode, position)
-  local data = registry.marker_data(item)
+  local data = registry.get_marker_data(item)
 
   if data and data.mode == mode and data.position == position then
     return true
@@ -1263,6 +1265,47 @@ function registry.check_marker(item, mode, position)
   end
 end
 %    \end{macrocode}
+%
+%    \begin{macrocode}
+function registry.get_marker(item, mode, position)
+  local out
+
+  if registry.check_marker(item, mode, position) then
+    registry.marker = item
+    out = item
+  else
+    out = false
+  end
+
+  if out and position == 'start' then
+    registry.get_marker_values(item)
+  end
+
+  return out
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function registry.get_marker_data(item)
+  if item.id == node.id('whatsit')
+    and item.subtype == 44
+    and item.user_id == registry.user_id then
+    return registry.get_storage(item.value)
+  else
+    return false
+  end
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function registry.get_marker_values(item)
+  local data = registry.get_marker_data(item)
+  registry.local_options = data.values
+  return data.values
+end
+%    \end{macrocode}
+%
+% \paragraph{Storage functions}
 %
 % |registry.index| is a counter. Increase the counter by one and then
 % return it.
@@ -1277,6 +1320,27 @@ function registry.get_index()
   return registry.index
 end
 %    \end{macrocode}
+%
+%    \begin{macrocode}
+function registry.set_storage(mode, position)
+  local index = registry.get_index()
+  local data = {
+    ['mode'] = mode,
+    ['position'] = position
+  }
+  data.values = registry.local_options
+  registry.storage[index] = data
+  return index
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function registry.get_storage(index)
+  return registry.storage[index]
+end
+%    \end{macrocode}
+%
+% \paragraph{Option processing}
 %
 %    \begin{macrocode}
 function registry.set_option(key, value)
@@ -1307,80 +1371,6 @@ end
 %    \begin{macrocode}
 function registry.unset_global_options()
   registry.global_options = {}
-end
-%    \end{macrocode}
-
-%    \begin{macrocode}
-function registry.set(mode, position)
-  local index = registry.get_index()
-  local data = {
-    ['mode'] = mode,
-    ['position'] = position
-  }
-  data.values = registry.local_options
-  registry.storage[index] = data
-  return index
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function registry.get_storage(index)
-  return registry.storage[index]
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function registry.set_show_text(options)
-  if not options then
-    return nil
-  end
-
-  if options.hide == true or options.hide == 'true'  then
-    return false
-  elseif options.show == true or options.show == 'true'  then
-    return true
-  else
-    return nil
-  end
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function registry.marker_data(item)
-  if item.id == node.id('whatsit')
-    and item.subtype == 44
-    and item.user_id == registry.user_id then
-    return registry.get_storage(item.value)
-  else
-    return false
-  end
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function registry.marker_values(item)
-  local data = registry.marker_data(item)
-  registry.local_options = data.values
-  return data.values
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function registry.get_marker(item, mode, position)
-  local out
-
-  if registry.check_marker(item, mode, position) then
-    registry.marker = item
-    out = item
-  else
-    out = false
-  end
-
-  if out and position == 'start' then
-    registry.marker_values(item)
-  end
-
-  return out
 end
 %    \end{macrocode}
 %
@@ -1415,7 +1405,7 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function registry.show_cloze_text()
+function registry.get_value_show()
   if
     registry.get_value('show') == true
   or
@@ -1490,7 +1480,7 @@ function cloze.basic(head)
           l.line_width
         )
 
-        if registry.show_cloze_text() then
+        if registry.get_value_show() then
           node.insert_after(head, n.line, nodex.create_kern(-l.line_width))
           node.insert_after(head, n.stop, nodex.create_color('reset'))
         else
@@ -1563,7 +1553,7 @@ function cloze.fix_make(head, start, stop)
 
   head, n.line = nodex.insert_line(head, n.start, l.width)
 
-  if registry.show_cloze_text() then
+  if registry.get_value_show() then
     head, n.kern_start = node.insert_after(
       head,
       n.line,
@@ -1621,7 +1611,7 @@ function cloze.par(head)
 
     head, n.rule = nodex.insert_line(head, n.strut, l.width)
 
-    if registry.show_cloze_text() then
+    if registry.get_value_show() then
       head, n.kern = node.insert_after(
         head,
         n.rule,
@@ -1700,7 +1690,7 @@ end
 %
 %    \begin{macrocode}
 function base.marker(mode, position)
-  local index = registry.set(mode, position)
+  local index = registry.set_storage(mode, position)
   local marker = registry.create_marker(index)
   node.write(marker)
 end
