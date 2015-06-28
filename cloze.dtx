@@ -31,7 +31,7 @@
     [2015/06/16 v0.1 Package to typeset cloze worksheets or cloze tests]
 %</package>
 %<*driver>
-\documentclass[draft]{ltxdoc}
+\documentclass{ltxdoc}
 \usepackage[show]{cloze}
 \usepackage{paralist}
 \usepackage{titlesec}
@@ -111,7 +111,11 @@
 \providecommand*{\url}{\texttt}
 \GetFileInfo{cloze.dtx}
 \title{The \cloze{cloze} package\thanks{Robert-Michael Huber, Paul Isambert}}
-\author{Josef Friedrich\\ \url{josef@friedrich.rocks}}
+\author{%
+  Josef Friedrich\\%
+  \url{josef@friedrich.rocks}\\%
+  \href{https://github.com/Josef-Friedrich/cloze}{github.com/Josef-Friedrich/cloze}%
+}
 \date{\fileversion~from \filedate}
 
 \maketitle
@@ -565,7 +569,12 @@ options -- |hide| and |show| -- the last option "wins".
 Values for both color options are color names used by the xcolor
 package. To define your own color use the following command:
 
-|\definecolor{myclozecolor}{rgb}{0.1,0.4,0.6}|
+\begin{code}
+\begin{verbatim}
+\definecolor{myclozecolor}{rgb}{0.1,0.4,0.6}
+\cloze[textcolor=myclozecolor]{Lorem ipsum}
+\end{verbatim}
+\end{code}
 \definecolor{myclozecolor}{rgb}{0.1,0.4,0.6}
 
 \newcommand{\optioncolor}[2]{%
@@ -574,6 +583,8 @@ package. To define your own color use the following command:
   \expdesc{#2}%
   \par%
 }
+
+\tighten
 
 \begin{clozeexample}
 \optioncolor{textcolor}{myclozecolor}
