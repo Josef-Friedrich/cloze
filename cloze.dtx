@@ -1524,16 +1524,18 @@ end
 %
 % Node list (show text)
 %
-% \begin{enumerate}
-% \item W[n.start]
-% \item R[n.line]
-% \item K[n.kern\_start]
-% \item W[textcolor]
-% \item W[colorreset]
-% \item K[n.kern\_stop]
-% \item W[n.stop]
-% \end{enumerate}
-%
+% \begin{tabular}{lll}
+% \textbf{type} & \textbf{substye} & \textbf{variable} \\
+% |whatsit| & |user_definded| & |n.start| \\
+% |rule| & & |n.line| \\
+% |kern| & & |n.kern_start| \\
+% |whatsit| & |pdf_colorstack| & |textcolor| \\
+% |glyphs| & & Text to show \\
+% |whatsit| & |pdf_colorstack| & |colorreset| \\
+% |kern| & & |n.kern_stop| \\
+% |whatsit| & |user_definded| & |n.stop| \\
+% \end{tabular}
+
 % Node list (hide text)
 %
 % \begin{enumerate}
