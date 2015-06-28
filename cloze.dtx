@@ -198,7 +198,7 @@ ullamco laboris nisi} ut aliquip ex ea commodo consequat.
 
 \DescribeMacro{\clozesetfont}
 The gap font can be changed by using the command
-\cmd{\clozesetfont}. \tt{\string\set\-cloze\-font} redefines the command
+\cmd{\clozesetfont}. \tt{\string\cloze\-set\-font} redefines the command
 \cmd{\clozefont} which contains the font definition.
 Thus, the command \tt{\string\clozesetfont\string{\string\Large\string}}
 has the same effect as
@@ -1126,7 +1126,11 @@ local base = {}
 base.is_registered = {}
 %    \end{macrocode}
 %
-% \subsubsection{Create functions}
+% \subsubsection{Node precessing}
+%
+% nodex = node extended
+%
+% \paragraph{color}
 %    \begin{macrocode}
 function nodex.create_colorstack(data)
   if not data then
@@ -1158,6 +1162,8 @@ function nodex.create_color(option)
   return nodex.create_colorstack(data)
 end
 %    \end{macrocode}
+%
+% \paragraph{Line}
 %
 %    \begin{macrocode}
 function nodex.create_line(width)
@@ -1194,13 +1200,7 @@ function nodex.write_line()
 end
 %    \end{macrocode}
 %
-%    \begin{macrocode}
-function nodex.create_kern(width)
-  local kern = node.new(node.id('kern'))
-  kern.kern = width
-  return kern
-end
-%    \end{macrocode}
+% \paragraph{hfill}
 %
 %    \begin{macrocode}
 function nodex.create_hfill()
@@ -1222,13 +1222,21 @@ function nodex.create_hfill()
 end
 %    \end{macrocode}
 %
-% \subsubsection{Insert functions}
-%
 %    \begin{macrocode}
 function nodex.write_hfill()
   node.write(nodex.create_color('line'))
   node.write(nodex.create_hfill())
   node.write(nodex.create_color('reset'))
+end
+%    \end{macrocode}
+%
+% \paragraph{Margin}
+%
+%    \begin{macrocode}
+function nodex.create_kern(width)
+  local kern = node.new(node.id('kern'))
+  kern.kern = width
+  return kern
 end
 %    \end{macrocode}
 %
@@ -1494,14 +1502,12 @@ function cloze.basic(head)
         n.current = n.stop.next
       else
         n.current = n.current.next
-      end -- if
-
-    end -- while
-
-  end -- for
+      end
+    end
+  end
 
   return head
-end -- function
+end
 %    \end{macrocode}
 % Make cloze for macro clozefix
 %
