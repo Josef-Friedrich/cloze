@@ -763,11 +763,14 @@ or manually:
 % \fi
 % \MacroTopsep = 10pt plus 2pt minus 2pt
 % \MacrocodeTopsep = 10pt plus 1.2pt minus 1pt
+%
+% \makeatletter
+% \c@CodelineNo 25 \relax
+% \makeatother
+%
 % \subsection{The file \tt{cloze.sty}}
 %
 %    \begin{macrocode}
-\NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{cloze}
 \RequirePackage{luatexbase-mcb,fontspec,xcolor,kvoptions}
 \directlua{
   cloze = require("cloze")
@@ -1097,6 +1100,11 @@ or manually:
 %</package>
 %<*lua>
 % \fi
+%
+% \makeatletter
+% \c@CodelineNo 0 \relax
+% \makeatother
+%
 % \subsection{The file \tt{cloze.lua}}
 %    \begin{macrocode}
 if not modules then modules = { } end modules ['cloze'] = {
