@@ -1642,6 +1642,42 @@ function cloze.fix(head)
 end
 %    \end{macrocode}
 % Call for environment clozpar
+%
+% \paragraph*{Node lists}
+%
+% \paragraph*{Show text:}
+%
+% \noindent
+% \begin{tabular}{llll}
+% \textbf{Variable name} &
+% \textbf{Node type} &
+% \textbf{Node subtype} &
+% \textbf{Parameter} \\
+% \hline
+%
+% `n.strut` & `kern` &  & width = 0  \\
+% `n.line` & `rule` &  & `l.width` (Width from hlist) \\
+% `n.kern` & `kern` & & `-l.width` \\
+% `n.color_text` & `whatsit` & `pdf_colorstack` & Text color \\
+%  & `glyphs` & & Text to show \\
+% `n.tail` & `glyph` &  & Last glyph in hlist \\
+% `n.color_reset` & `whatsit` & `pdf_colorstack` & Reset color \\
+% \end{tabular}
+%
+% \paragraph*{Hide text:}
+%
+% \noindent
+% \begin{tabular}{llll}
+% \textbf{Variable name} &
+% \textbf{Node type} &
+% \textbf{Node subtype} &
+% \textbf{Parameter} \\
+% \hline
+%
+% `n.strut` & `kern` &  & width = 0  \\
+% `n.line` & `rule` &  & `l.width` (Width from hlist) \\
+% \end{tabular}
+%
 %    \begin{macrocode}
 function cloze.par(head)
   local l = {} -- length
@@ -1656,23 +1692,22 @@ function cloze.par(head)
     l.width = hlist.width
 
     n.head = hlist.head
-    n.strut = node.insert_before(n.head, n.head, nodex.create_kern(0))
+    n.strut = nodex.create_kern(0)
+    n.strut = node.insert_before(n.head, n.head, n.strut)
     hlist.head = n.head.prev
 
-    head, n.rule = nodex.insert_line(head, n.strut, l.width)
+    head, n.line = nodex.insert_line(head, n.strut, l.width)
 
     if registry.get_value_show() then
-      head, n.kern = node.insert_after(
-        head,
-        n.rule,
-        nodex.create_kern(-l.width)
-      )
-      node.insert_after(head, n.kern, nodex.create_color('text'))
-
+      n.kern = nodex.create_kern(-l.width)
+      head, n.kern = node.insert_after(head, n.line, n.kern)
+      n.color_text = nodex.create_color('text')
+      node.insert_after(head, n.kern, n.color_text)
       n.tail = node.tail(n.head)
-      node.insert_after(n.head, n.tail, nodex.create_color('reset'))
+      n.color_reset = nodex.create_color('reset')
+      node.insert_after(n.head, n.tail, n.color_reset)
     else
-      n.rule.next = nil
+      n.line.next = nil
     end
   end
 
