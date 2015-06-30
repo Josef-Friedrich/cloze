@@ -103,6 +103,8 @@
 
 \newcommand{\option}[2]{\tt{[#1=}\meta{#2}\tt{]}}
 
+\newcommand{\luafunction}[1]{\marginpar{\raggedleft\MacroFont\tt{#1}}}
+
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -1151,7 +1153,9 @@ base.is_registered = {}
 %
 % nodex = node extended
 %
+%
 % \paragraph{color}
+% \luafunction{create\_colorstack}
 %    \begin{macrocode}
 function nodex.create_colorstack(data)
   if not data then
@@ -1165,7 +1169,7 @@ function nodex.create_colorstack(data)
   return whatsit
 end
 %    \end{macrocode}
-%
+% \luafunction{create\_color}
 %    \begin{macrocode}
 function nodex.create_color(option)
   local data
@@ -1185,7 +1189,7 @@ end
 %    \end{macrocode}
 %
 % \paragraph{Line}
-%
+% \luafunction{create\_line}
 %    \begin{macrocode}
 function nodex.create_line(width)
   local rule = node.new(node.id('rule'))
@@ -1217,6 +1221,7 @@ end
 % `n.color_reset` & `whatsit` & `pdf_colorstack` & Reset color \\
 % \end{tabular}
 %
+% \luafunction{insert\_line}
 %    \begin{macrocode}
 function nodex.insert_line(head, current, width)
   local n = {} -- node
@@ -1228,7 +1233,7 @@ function nodex.insert_line(head, current, width)
   return node.insert_after(head, n.line, n.color_reset)
 end
 %    \end{macrocode}
-%
+% \luafunction{write\_line}
 %    \begin{macrocode}
 function nodex.write_line()
   node.write(nodex.create_color('line'))
@@ -1239,6 +1244,7 @@ end
 %
 % \paragraph{hfill}
 %
+% \luafunction{create\_hfill}
 %    \begin{macrocode}
 function nodex.create_hfill()
   local glue = node.new('glue')
@@ -1259,6 +1265,7 @@ function nodex.create_hfill()
 end
 %    \end{macrocode}
 %
+% \luafunction{write\_hfill}
 %    \begin{macrocode}
 function nodex.write_hfill()
   node.write(nodex.create_color('line'))
@@ -1269,6 +1276,7 @@ end
 %
 % \paragraph{Margin}
 %
+% \luafunction{create\_kern}
 %    \begin{macrocode}
 function nodex.create_kern(width)
   local kern = node.new(node.id('kern'))
@@ -1277,6 +1285,7 @@ function nodex.create_kern(width)
 end
 %    \end{macrocode}
 %
+% \luafunction{write\_margin}
 %    \begin{macrocode}
 function nodex.write_margin()
   local kern = nodex.create_kern(tex.sp(registry.get_value('margin')))
@@ -1291,6 +1300,7 @@ end
 %
 % \paragraph{Marker processing}
 %
+% \luafunction{create\_marker}
 %    \begin{macrocode}
 function registry.create_marker(index)
   local marker = node.new('whatsit','user_defined')
@@ -1302,6 +1312,7 @@ function registry.create_marker(index)
 end
 %    \end{macrocode}
 %
+% \luafunction{check\_marker}
 %    \begin{macrocode}
 function registry.check_marker(item, mode, position)
   local data = registry.get_marker_data(item)
@@ -1314,6 +1325,7 @@ function registry.check_marker(item, mode, position)
 end
 %    \end{macrocode}
 %
+% \luafunction{get\_marker}
 %    \begin{macrocode}
 function registry.get_marker(item, mode, position)
   local out
@@ -1333,6 +1345,7 @@ function registry.get_marker(item, mode, position)
 end
 %    \end{macrocode}
 %
+% \luafunction{get\_marker\_data}
 %    \begin{macrocode}
 function registry.get_marker_data(item)
   if item.id == node.id('whatsit')
@@ -1345,6 +1358,7 @@ function registry.get_marker_data(item)
 end
 %    \end{macrocode}
 %
+% \luafunction{get\_marker\_values}
 %    \begin{macrocode}
 function registry.get_marker_values(item)
   local data = registry.get_marker_data(item)
@@ -1358,6 +1372,7 @@ end
 % `registry.index` is a counter. Increase the counter by one and then
 % return it.
 %
+% \luafunction{get\_index}
 %    \begin{macrocode}
 function registry.get_index()
   if not registry.index then
@@ -1369,6 +1384,7 @@ function registry.get_index()
 end
 %    \end{macrocode}
 %
+% \luafunction{set\_storage}
 %    \begin{macrocode}
 function registry.set_storage(mode, position)
   local index = registry.get_index()
@@ -1382,6 +1398,7 @@ function registry.set_storage(mode, position)
 end
 %    \end{macrocode}
 %
+% \luafunction{get\_storage}
 %    \begin{macrocode}
 function registry.get_storage(index)
   return registry.storage[index]
@@ -1390,6 +1407,7 @@ end
 %
 % \paragraph{Option processing}
 %
+% \luafunction{set\_option}
 %    \begin{macrocode}
 function registry.set_option(key, value)
   if value == '' or value == '\\color@ ' then
@@ -1404,24 +1422,28 @@ function registry.set_option(key, value)
 end
 %    \end{macrocode}
 %
+% \luafunction{set\_is\_global}
 %    \begin{macrocode}
 function registry.set_is_global(value)
   registry.is_global = value
 end
 %    \end{macrocode}
 %
+% \luafunction{unset\_local\_options}
 %    \begin{macrocode}
 function registry.unset_local_options()
   registry.local_options = {}
 end
 %    \end{macrocode}
 %
+% \luafunction{unset\_global\_options}
 %    \begin{macrocode}
 function registry.unset_global_options()
   registry.global_options = {}
 end
 %    \end{macrocode}
 %
+% \luafunction{get\_value}
 %    \begin{macrocode}
 function registry.get_value(key)
   if registry.has_value(registry.local_options[key]) then
@@ -1436,6 +1458,7 @@ function registry.get_value(key)
 end
 %    \end{macrocode}
 %
+% \luafunction{has\_value}
 %    \begin{macrocode}
 function registry.has_value(value)
   if value == nil or value == '' or value == '\\color@ ' then
@@ -1446,12 +1469,14 @@ function registry.has_value(value)
 end
 %    \end{macrocode}
 %
+% \luafunction{get\_defaults}
 %    \begin{macrocode}
 function registry.get_defaults(key)
   return registry.defaults[key]
 end
 %    \end{macrocode}
 %
+% \luafunction{get\_value\_show}
 %    \begin{macrocode}
 function registry.get_value_show()
   if
@@ -1472,6 +1497,7 @@ end
 % we can add rule, color etc. nodes AFTER the first node of a line not
 % BEFORE. AFTER is much more easier.
 %
+% \luafunction{basic}
 %    \begin{macrocode}
 function cloze.basic(head)
   local n = {} -- node
@@ -1585,6 +1611,7 @@ end
 % `n.stop` & `whatsit` & `user_definded` & `index` \\
 % \end{tabular}
 %
+% \luafunction{fix\_make}
 %    \begin{macrocode}
 function cloze.fix_make(head, start, stop)
   local l = {} -- length
@@ -1628,6 +1655,7 @@ function cloze.fix_make(head, start, stop)
 end
 %    \end{macrocode}
 %
+% \luafunction{fix}
 %    \begin{macrocode}
 function cloze.fix(head)
   local n = {} -- node
@@ -1688,6 +1716,7 @@ end
 % `n.line` & `rule` &  & `l.width` (Width from hlist) \\
 % \end{tabular}
 %
+% \luafunction{par}
 %    \begin{macrocode}
 function cloze.par(head)
   local l = {} -- length
@@ -1729,6 +1758,7 @@ end
 %
 % Base functions which are accessible in the sty file.
 %
+% \luafunction{register}
 %    \begin{macrocode}
 function base.register(mode)
   if mode == 'par' then
@@ -1764,6 +1794,8 @@ function base.register(mode)
 end
 %    \end{macrocode}
 % Register the callbacks.
+%
+% \luafunction{unregister}
 %    \begin{macrocode}
 function base.unregister(mode)
   if mode == 'basic' then
@@ -1776,6 +1808,7 @@ function base.unregister(mode)
 end
 %    \end{macrocode}
 %
+% \luafunction{set\_global\_options}
 %    \begin{macrocode}
 function base.set_global_options(options)
   options.show_text = base.show_text
@@ -1783,6 +1816,7 @@ function base.set_global_options(options)
 end
 %    \end{macrocode}
 %
+% \luafunction{marker}
 %    \begin{macrocode}
 function base.marker(mode, position)
   local index = registry.set_storage(mode, position)
