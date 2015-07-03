@@ -195,6 +195,15 @@ elit, sed do eiusmod tempor incididunt ut labore et dolore
 ullamco laboris nisi} ut aliquip ex ea commodo consequat.
 \end{clozeexample}
 
+It is possible to underline a complete paragraph.
+
+\begin{clozeexample}
+\cloze{Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+ex ea commodo consequat.}
+\end{clozeexample}
+
 %%
 % \clozesetfont
 %%
@@ -1508,79 +1517,14 @@ end
 % we can add rule, color etc. nodes AFTER the first node of a line not
 % BEFORE. AFTER is much more easier.
 %
-% \luafunction{basic}
 %    \begin{macrocode}
-function cloze.basic_old(head)
+function nodex.strut_to_hlist(hlist)
   local n = {} -- node
-  local b = {} -- boolean
-  local l = {} -- length
-  local t = {} -- temp
-
-  for hlist in node.traverse_id(node.id('hlist'), head) do
-
-    n.head = hlist.head
-    n.strut = node.insert_before(n.head, n.head, nodex.create_kern(0))
-    hlist.head = n.head.prev
-
-    if b.line_end then
-      b.init_cloze = true
-    end
-
-    n.current = hlist.head
-
-    while n.current do
-
-      if registry.check_marker(n.current, 'basic', 'start') or b.init_cloze then
-
-        n.marker = registry.get_marker(n.current, 'basic', 'start')
-
-        node.insert_after(hlist.head, n.current, nodex.create_color('text'))
-
-        b.init_cloze = false
-
-        n.stop = n.current
-        while n.stop.next do
-
-          b.line_end = true
-
-          if registry.check_marker(n.stop, 'basic', 'stop') then
-            b.line_end = false
-            break
-          end
-
-          n.stop = n.stop.next
-        end
-
-        l.line_width = node.dimensions(
-          hlist.glue_set,
-          hlist.glue_sign,
-          hlist.glue_order,
-          n.current,
-          n.stop.next
-        )
-
-        head, n.line = nodex.insert_line(
-          head,
-          n.current,
-          l.line_width
-        )
-
-        if registry.get_value_show() then
-          node.insert_after(head, n.line, nodex.create_kern(-l.line_width))
-          node.insert_after(head, n.stop, nodex.create_color('reset'))
-        else
-          n.line.next = n.stop.next
-          n.stop.prev = n.line.prev
-        end
-
-        n.current = n.stop.next
-      else
-        n.current = n.current.next
-      end
-    end
-  end
-
-  return head
+  n.head = hlist.head
+  n.kern = nodex.create_kern(0)
+  n.strut = node.insert_before(n.head, n.head, n.kern)
+  hlist.head = n.head.prev
+  return hlist, n.strut
 end
 %    \end{macrocode}
 %
@@ -1593,9 +1537,6 @@ function cloze.basic_make(head, hlist, start, stop)
   if not start or not stop then
     return
   end
-
-  print("start" .. tostring(start))
-  print("stop" .. tostring(stop))
 
   n.start = start
   n.stop = stop
@@ -1634,10 +1575,7 @@ function cloze.basic(head)
   local t = {} -- temp
 
   for hlist in node.traverse_id(node.id('hlist'), head) do
-
-    n.head = hlist.head
-    n.strut = node.insert_before(n.head, n.head, nodex.create_kern(0))
-    hlist.head = n.head.prev
+    hlist = nodex.strut_to_hlist(hlist)
 
     if b.line_end then
       b.init_cloze = true
@@ -1649,16 +1587,16 @@ function cloze.basic(head)
 
       if registry.check_marker(n.current, 'basic', 'start') or b.init_cloze then
         b.init_cloze = false
-        n.start = registry.get_marker(n.current, 'basic', 'start')
-        n.stop = n.current
+        n.start = n.current
 
-        while n.stop do
+        while n.current do
           b.line_end = true
+          n.stop = n.current
           if registry.check_marker(n.stop, 'basic', 'stop') then
             b.line_end = false
             break
           end
-          n.stop = n.stop.next
+          n.current = n.current.next
         end
 
         cloze.basic_make(head, hlist, n.start, n.stop)
