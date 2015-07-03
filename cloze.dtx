@@ -195,13 +195,64 @@ elit, sed do eiusmod tempor incididunt ut labore et dolore
 ullamco laboris nisi} ut aliquip ex ea commodo consequat.
 \end{clozeexample}
 
-It is possible to underline a complete paragraph.
+It is possible to convert a complete paragraph into a "gap". But don't
+forget: There is a special environment for this: \tt{clozepar}.
 
 \begin{clozeexample}
 \cloze{Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
 minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
 ex ea commodo consequat.}
+\end{clozeexample}
+
+Hypenation should work with \cmd{\cloze} also. Let's try some long
+German words:
+
+\begin{clozeexample}
+es
+\cloze{Te\-le\-kom\-mu\-ni\-ka\-tions\-ü\-ber\-wach\-ungs\-ver\-ord\-nung}
+geht
+\cloze{Un\-ter\-neh\-mens\-steu\-er\-fort\-ent\-wick\-lungs\-ge\-setz}
+\cloze{Ab\-teil\-ungs\-lei\-ter\-in}
+\cloze{Ober\-kom\-mi\-sar\-in}
+auch
+\cloze{Fil\-lial\-lei\-ter\-in}
+kurz
+\cloze{Ober\-kom\-mi\-sar\-in}
+\cloze{Un\-ter\-neh\-mens\-steu\-er\-fort\-ent\-wick\-lungs\-ge\-setz}
+\cloze{Fil\-lial\-lei\-ter\-in}
+\cloze{Metz\-ger\-mei\-ster\-in}
+in
+\cloze{Ab\-teil\-ungs\-lei\-ter\-in}
+der
+\cloze{Ober\-kom\-mi\-sar\-in}
+\cloze{Hoch\-lei\-stungs\-flüs\-sig\-keits\-chro\-ma\-to\-gra\-phie}
+\cloze{Fil\-lial\-lei\-ter\-in}
+Kürze
+\cloze{Un\-ter\-neh\-mens\-steu\-er\-fort\-ent\-wick\-lungs\-ge\-setz}
+\cloze{Metz\-ger\-mei\-ster\-in}
+liegt
+\cloze{Ab\-teil\-ungs\-lei\-ter\-in}
+die
+\cloze{Metz\-ger\-mei\-ster\-in}
+\cloze{Ab\-teil\-ungs\-lei\-ter\-in}
+Würze
+\cloze{Ober\-kom\-mi\-sar\-in}
+\cloze{Fil\-lial\-lei\-ter\-in}
+\cloze{Hoch\-lei\-stungs\-flüs\-sig\-keits\-chro\-ma\-to\-gra\-phie}
+\cloze{Metz\-ger\-mei\-ster\-in}
+\cloze{Ab\-teil\-ungs\-lei\-ter\-in}
+ein
+\cloze{Ober\-kom\-mi\-sar\-in}
+paar
+\cloze{Fil\-lial\-lei\-ter\-in}
+kurze
+\cloze{Metz\-ger\-mei\-ster\-in}
+Wörter
+\cloze{Ab\-teil\-ungs\-lei\-ter\-in}
+\cloze{Ober\-kom\-mi\-sar\-in}
+\cloze{Fil\-lial\-lei\-ter\-in}
+\cloze{Metz\-ger\-mei\-ster\-in}
 \end{clozeexample}
 
 %%
@@ -1566,7 +1617,7 @@ function cloze.basic_make(head, hlist, start, stop)
 end
 %    \end{macrocode}
 %
-% \luafunction{basic\_new}
+% \luafunction{basic}
 %    \begin{macrocode}
 function cloze.basic(head)
   local n = {} -- node
