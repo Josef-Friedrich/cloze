@@ -1162,6 +1162,21 @@ base.is_registered = {}
 %
 % nodex = node extended
 %
+% To make life easier: We add at the beginning of each line a strut. Now
+% we can add rule, color etc. nodes AFTER the first node of a line not
+% BEFORE. AFTER is much more easier.
+%
+%    \begin{macrocode}
+function nodex.strut_to_hlist(hlist)
+  local n = {} -- node
+  n.head = hlist.head
+  n.kern = nodex.create_kern(0)
+  n.strut = node.insert_before(n.head, n.head, n.kern)
+  hlist.head = n.head.prev
+  return hlist, n.strut, n.head
+end
+%    \end{macrocode}
+%
 % \paragraph{color}
 %
 % \luafunction{create\_colorstack}
@@ -1513,21 +1528,6 @@ end
 %
 % \subsubsection{cloze}
 %
-% To make life easier: We add at the beginning of each line a strut. Now
-% we can add rule, color etc. nodes AFTER the first node of a line not
-% BEFORE. AFTER is much more easier.
-%
-%    \begin{macrocode}
-function nodex.strut_to_hlist(hlist)
-  local n = {} -- node
-  n.head = hlist.head
-  n.kern = nodex.create_kern(0)
-  n.strut = node.insert_before(n.head, n.head, n.kern)
-  hlist.head = n.head.prev
-  return hlist, n.strut
-end
-%    \end{macrocode}
-%
 % \luafunction{basic\_make}
 %    \begin{macrocode}
 function cloze.basic_make(head, hlist, start, stop)
@@ -1769,11 +1769,7 @@ function cloze.par(head)
 
     l.width = hlist.width
 
-    n.head = hlist.head
-    n.strut = nodex.create_kern(0)
-    n.strut = node.insert_before(n.head, n.head, n.strut)
-    hlist.head = n.head.prev
-
+    hlist, n.strut, n.head = nodex.strut_to_hlist(hlist)
     head, n.line = nodex.insert_line(head, n.strut, l.width)
 
     if registry.get_value_show() then
