@@ -1149,12 +1149,12 @@ local base = {}
 base.is_registered = {}
 %    \end{macrocode}
 %
-% \subsubsection{Node precessing}
+% \subsubsection{Node precessing (nodex)}
 %
 % nodex = node extended
 %
-%
 % \paragraph{color}
+%
 % \luafunction{create\_colorstack}
 %    \begin{macrocode}
 function nodex.create_colorstack(data)
@@ -1295,10 +1295,22 @@ end
 %
 % \subsubsection{registry}
 %
-% Functions to deal with option handling and storing them in a lua
-% table.
-%
+% Functions that deal with option handling.
+
 % \paragraph{Marker processing}
+%
+% A marker is a whatsit node of the subtype `user_defined`. A marker has
+% two purposes:
+%
+% \begin{enumerate}
+% \item Mark the begin and the end of a gap.
+% \item Store a index number, that points to Lua table, which holds some
+% additional data like the local options.
+% \end{enumerate}
+%
+% We create a user defined whatsit node that can store a numerical value
+% (type = 100). That is our marker. As `user_id` we select a large
+% number.
 %
 % \luafunction{create\_marker}
 %    \begin{macrocode}
@@ -1307,7 +1319,6 @@ function registry.create_marker(index)
   marker.type = 100 -- number
   marker.user_id = registry.user_id
   marker.value = index
-
   return marker
 end
 %    \end{macrocode}
@@ -1499,7 +1510,7 @@ end
 %
 % \luafunction{basic}
 %    \begin{macrocode}
-function cloze.basic(head)
+function cloze.basic_old(head)
   local n = {} -- node
   local b = {} -- boolean
   local l = {} -- length
@@ -1572,6 +1583,96 @@ function cloze.basic(head)
   return head
 end
 %    \end{macrocode}
+%
+% \luafunction{basic\_make}
+%    \begin{macrocode}
+function cloze.basic_make(head, hlist, start, stop)
+  local n = {}
+  local l = {}
+
+  if not start or not stop then
+    return
+  end
+
+  print("start" .. tostring(start))
+  print("stop" .. tostring(stop))
+
+  n.start = start
+  n.stop = stop
+
+  l.width = node.dimensions(
+    hlist.glue_set,
+    hlist.glue_sign,
+    hlist.glue_order,
+    n.start,
+    n.stop
+  )
+
+  head, n.line = nodex.insert_line(head, n.start, l.width)
+  n.color_text = nodex.create_color('text')
+  head, n.color_text = node.insert_after(hlist.head, n.line, n.color_text)
+
+  if registry.get_value_show() then
+    n.kern = nodex.create_kern(-l.width)
+    node.insert_after(head, n.color_text, n.kern)
+    n.color_reset = nodex.create_color('reset')
+    node.insert_after(head, n.stop, n.color_reset)
+  else
+    n.line.next = n.stop.next
+    n.stop.prev = n.line.prev
+  end
+
+end
+%    \end{macrocode}
+%
+% \luafunction{basic\_new}
+%    \begin{macrocode}
+function cloze.basic(head)
+  local n = {} -- node
+  local b = {} -- boolean
+  local l = {} -- length
+  local t = {} -- temp
+
+  for hlist in node.traverse_id(node.id('hlist'), head) do
+
+    n.head = hlist.head
+    n.strut = node.insert_before(n.head, n.head, nodex.create_kern(0))
+    hlist.head = n.head.prev
+
+    if b.line_end then
+      b.init_cloze = true
+    end
+
+    n.current = hlist.head
+
+    while n.current do
+
+      if registry.check_marker(n.current, 'basic', 'start') or b.init_cloze then
+        b.init_cloze = false
+        n.start = registry.get_marker(n.current, 'basic', 'start')
+        n.stop = n.current
+
+        while n.stop do
+          b.line_end = true
+          if registry.check_marker(n.stop, 'basic', 'stop') then
+            b.line_end = false
+            break
+          end
+          n.stop = n.stop.next
+        end
+
+        cloze.basic_make(head, hlist, n.start, n.stop)
+        n.current = n.stop
+      else
+        n.current = n.current.next
+      end
+    end
+  end
+
+  return head
+end
+%    \end{macrocode}
+%
 % Make cloze for macro clozefix
 %
 % \paragraph*{Node lists}
