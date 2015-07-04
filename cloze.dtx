@@ -105,6 +105,24 @@
 
 \newcommand{\luafunction}[1]{\marginpar{\raggedleft\MacroFont\tt{#1}}}
 
+\newcommand{\nodelistheader}{
+  \hline
+  \textbf{Variable name} &
+  \textbf{Node type} &
+  \textbf{Node subtype} &
+  \textbf{Parameter} \\
+  \hline
+}
+
+\newenvironment{nodelist}{
+  \noindent
+  \begin{tabular}{llll}
+  \nodelistheader
+}{
+  \hline
+  \end{tabular}
+}
+
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -1361,18 +1379,11 @@ end
 %
 % \paragraph*{Node list}
 %
-% \noindent
-% \begin{tabular}{llll}
-% \textbf{Variable name} &
-% \textbf{Node type} &
-% \textbf{Node subtype} &
-% \textbf{Parameter} \\
-% \hline
-%
+% \begin{nodelist}
 % |n.color_line| & |whatsit| & |pdf_colorstack| & Line color \\
 % |n.line| & |rule| &  & |width| \\
 % |n.color_reset| & |whatsit| & |pdf_colorstack| & Reset color \\
-% \end{tabular}
+% \end{nodelist}
 %
 % \luafunction{insert\_line}
 %    \begin{macrocode}
@@ -1763,14 +1774,7 @@ end
 %
 % \paragraph*{Show text:}
 %
-% \noindent
-% \begin{tabular}{llll}
-% \textbf{Variable name} &
-% \textbf{Node type} &
-% \textbf{Node subtype} &
-% \textbf{Parameter} \\
-% \hline
-%
+% \begin{nodelist}
 % |n.start| & |whatsit| & |user_definded| & |index| \\
 % |n.line| & |rule| &  & |l.width| \\
 % |n.kern_start| & |kern| & & Depends on |align| \\
@@ -1779,22 +1783,15 @@ end
 % |n.color_reset| & |whatsit| & |pdf_colorstack| & Reset color \\
 % |n.kern_stop| & |kern| & & Depends on |align| \\
 % |n.stop| & |whatsit| & |user_definded| & |index| \\
-% \end{tabular}
+% \end{nodelist}
 %
 % \paragraph*{Hide text:}
 %
-% \noindent
-% \begin{tabular}{llll}
-% \textbf{Variable name} &
-% \textbf{Node type} &
-% \textbf{Node subtype} &
-% \textbf{Parameter} \\
-% \hline
-%
+% \begin{nodelist}
 % |n.start| & |whatsit| & |user_definded| & |index| \\
 % |n.line| & |rule| &  & |l.width| \\
 % |n.stop| & |whatsit| & |user_definded| & |index| \\
-% \end{tabular}
+% \end{nodelist}
 %
 % \luafunction{fix\_make}
 %    \begin{macrocode}
@@ -1870,14 +1867,7 @@ end
 %
 % \paragraph*{Show text:}
 %
-% \noindent
-% \begin{tabular}{llll}
-% \textbf{Variable name} &
-% \textbf{Node type} &
-% \textbf{Node subtype} &
-% \textbf{Parameter} \\
-% \hline
-%
+% \begin{nodelist}
 % |n.strut| & |kern| &  & width = 0  \\
 % |n.line| & |rule| &  & |l.width| (Width from hlist) \\
 % |n.kern| & |kern| & & |-l.width| \\
@@ -1885,21 +1875,14 @@ end
 %  & |glyphs| & & Text to show \\
 % |n.tail| & |glyph| &  & Last glyph in hlist \\
 % |n.color_reset| & |whatsit| & |pdf_colorstack| & Reset color \\
-% \end{tabular}
+% \end{nodelist}
 %
 % \paragraph*{Hide text:}
 %
-% \noindent
-% \begin{tabular}{llll}
-% \textbf{Variable name} &
-% \textbf{Node type} &
-% \textbf{Node subtype} &
-% \textbf{Parameter} \\
-% \hline
-%
-% |n.strut| & |kern| &  & width = 0  \\
+% \begin{nodelist}
+% |n.strut| & |kern| &  & width = 0 \\
 % |n.line| & |rule| &  & |l.width| (Width from hlist) \\
-% \end{tabular}
+% \end{nodelist}
 %
 % \luafunction{par}
 %    \begin{macrocode}
