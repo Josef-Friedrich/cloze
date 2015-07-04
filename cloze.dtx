@@ -843,8 +843,26 @@ or manually:
 %
 % \subsection{The file \tt{cloze.sty}}
 %
+% This four packages are used to build \emph{cloze}:
+%
+% \begin{itemize}
+% \item \href{https://www.ctan.org/pkg/fontspec}{fontspec} is not
+% necessarily required. When using Lua\LaTeX{} it is good form to load
+% it. Apart from this the package supplies helpful messages, when you
+% compile a Lua\LaTeX{} document with pdf\LaTeX{}.
+%
+% \item \href{https://www.ctan.org/pkg/luatexbase}{luatexbase} allows to
+% register multiple Lua callbacks.
+%
+% \item \href{https://www.ctan.org/pkg/kvoptions}{kvoptions} takes the
+% handling of the options.
+%
+% \item \href{https://www.ctan.org/pkg/xcolor}{xcolor} is required to
+% colorize the text and the line of cloze text.
+% \end{itemize}
+%
 %    \begin{macrocode}
-\RequirePackage{luatexbase-mcb,fontspec,xcolor,kvoptions}
+\RequirePackage{fontspec,luatexbase-mcb,kvoptions,xcolor}
 \directlua{
   cloze = require("cloze")
 }
@@ -1231,6 +1249,9 @@ or manually:
 % \makeatother
 %
 % \subsection{The file \tt{cloze.lua}}
+%
+% \paragraph{Initialisation of the function tables}
+%
 %    \begin{macrocode}
 if not modules then modules = { } end modules ['cloze'] = {
   version   = '0.1',
@@ -1274,24 +1295,11 @@ base.is_registered = {}
 %
 % \subsubsection{Node precessing (nodex)}
 %
-% nodex = node extended
+% All functions in this section are stored in a table called |nodex|.
+% |nodex| is a abbreviation for \emph{node eXtended}. The |nodex| table
+% bundles all functions, which extend the buildin |node| library.
 %
-% To make life easier: We add at the beginning of each line a strut. Now
-% we can add rule, color etc. nodes AFTER the first node of a line not
-% BEFORE. AFTER is much more easier.
-%
-%    \begin{macrocode}
-function nodex.strut_to_hlist(hlist)
-  local n = {} -- node
-  n.head = hlist.head
-  n.kern = nodex.create_kern(0)
-  n.strut = node.insert_before(n.head, n.head, n.kern)
-  hlist.head = n.head.prev
-  return hlist, n.strut, n.head
-end
-%    \end{macrocode}
-%
-% \paragraph{color}
+% \paragraph{Color handling (color)}
 %
 % \luafunction{create\_colorstack}
 %    \begin{macrocode}
@@ -1326,7 +1334,8 @@ function nodex.create_color(option)
 end
 %    \end{macrocode}
 %
-% \paragraph{Line}
+% \paragraph{Line handling (line)}
+%
 % \luafunction{create\_line}
 %    \begin{macrocode}
 function nodex.create_line(width)
@@ -1380,11 +1389,11 @@ function nodex.write_line()
 end
 %    \end{macrocode}
 %
-% \paragraph{hfill}
+% \paragraph{Handling of extendable lines (linefil)}
 %
-% \luafunction{create\_hfill}
+% \luafunction{create\_linefil}
 %    \begin{macrocode}
-function nodex.create_hfill()
+function nodex.create_linefil()
   local glue = node.new('glue')
   glue.subtype = 100
 
@@ -1403,16 +1412,16 @@ function nodex.create_hfill()
 end
 %    \end{macrocode}
 %
-% \luafunction{write\_hfill}
+% \luafunction{write\_linefil}
 %    \begin{macrocode}
-function nodex.write_hfill()
+function nodex.write_linefil()
   node.write(nodex.create_color('line'))
-  node.write(nodex.create_hfill())
+  node.write(nodex.create_linefil())
   node.write(nodex.create_color('reset'))
 end
 %    \end{macrocode}
 %
-% \paragraph{Margin}
+% \paragraph{Kern handling (kern)}
 %
 % \luafunction{create\_kern}
 %    \begin{macrocode}
@@ -1420,6 +1429,21 @@ function nodex.create_kern(width)
   local kern = node.new(node.id('kern'))
   kern.kern = width
   return kern
+end
+%    \end{macrocode}
+%
+% To make life easier: We add at the beginning of each line a strut. Now
+% we can add rule, color etc. nodes AFTER the first node of a line not
+% BEFORE. AFTER is much more easier.
+%
+%    \begin{macrocode}
+function nodex.strut_to_hlist(hlist)
+  local n = {} -- node
+  n.head = hlist.head
+  n.kern = nodex.create_kern(0)
+  n.strut = node.insert_before(n.head, n.head, n.kern)
+  hlist.head = n.head.prev
+  return hlist, n.strut, n.head
 end
 %    \end{macrocode}
 %
@@ -1431,11 +1455,11 @@ function nodex.write_margin()
 end
 %    \end{macrocode}
 %
-% \subsubsection{registry}
+% \subsubsection{Option handling (registry)}
 %
 % Functions that deal with option handling.
-
-% \paragraph{Marker processing}
+%
+% \paragraph{Marker processing (marker)}
 %
 % A marker is a whatsit node of the subtype |user_defined|. A marker has
 % two purposes:
@@ -1516,7 +1540,7 @@ function registry.get_marker_values(item)
 end
 %    \end{macrocode}
 %
-% \paragraph{Storage functions}
+% \paragraph{Storage functions (storage)}
 %
 % |registry.index| is a counter. Increase the counter by one and then
 % return it.
@@ -1554,7 +1578,7 @@ function registry.get_storage(index)
 end
 %    \end{macrocode}
 %
-% \paragraph{Option processing}
+% \paragraph{Option processing (option)}
 %
 % \luafunction{set\_option}
 %    \begin{macrocode}
@@ -1640,7 +1664,9 @@ function registry.get_value_show()
 end
 %    \end{macrocode}
 %
-% \subsubsection{cloze}
+% \subsubsection{Assembly to cloze texts (cloze)}
+%
+%
 %
 % \luafunction{basic\_make}
 %    \begin{macrocode}
@@ -1903,7 +1929,7 @@ function cloze.par(head)
 end
 %    \end{macrocode}
 %
-% \subsubsection{base}
+% \subsubsection{Basic module functions (base)}
 %
 % Base functions which are accessible in the sty file.
 %
@@ -1975,7 +2001,7 @@ end
 %    \end{macrocode}
 % Publish some functions to sty file.
 %    \begin{macrocode}
-base.hfill = nodex.write_hfill
+base.hfill = nodex.write_linefil
 base.line = nodex.write_line
 base.margin = nodex.write_margin
 base.set_option = registry.set_option
