@@ -12,7 +12,7 @@
 % and version 1.3 or later is part of all distributions of LaTeX
 % version 2005/12/01 or later.
 %
-% This work has the LPPL maintenance status `maintained'.
+% This work has the LPPL maintenance status |maintained'.
 %
 % The Current Maintainer of this work is Josef Friedrih.
 %
@@ -44,7 +44,7 @@
   urlcolor=red,
 ]{hyperref}
 
-\MakeShortVerb{\`}
+\MakeShortVerb{\|}
 
 \setlength{\fboxrule}{0.2pt}
 \setlength{\fboxsep}{4pt}
@@ -89,7 +89,7 @@
   \directlua{tex.print(cloze.get_defaults('#1'))}%
 }
 
-\newcommand{\expdesc}[1]{(`#1`)}
+\newcommand{\expdesc}[1]{(|#1|)}
 
 \newcommand{\desc}[1]{%
   \hfill%
@@ -143,7 +143,7 @@ lualatex cloze-text.tex
 \end{code}
 
 The main feature of the package is that the formatting doesn't change
-when using the `hide` and `show` \secref{sec:option-hide} options.
+when using the |hide| and |show| \secref{sec:option-hide} options.
 
 \newcommand{\clozelorem}{%
 Lorem ipsum \cloze{dolor sit} amet, consectetur \cloze{adipisicing}
@@ -158,7 +158,7 @@ ullamco laboris nisi ut \cloze{aliquip} ex ea commodo consequat.%
 
 \clozeset{hide}
 
-The command `\clozeset{hide}` only shows gaps. When you put both texts
+The command |\clozeset{hide}| only shows gaps. When you put both texts
 on top of each other you will see that they perfectly match.
 
 \begin{clozeexample}
@@ -175,7 +175,7 @@ on top of each other you will see that they perfectly match.
 
 There are three commands and one environment to generate
 cloze texts: \cmd{\cloze}, \cmd{\clozefix}, \cmd{\clozefil} and
-`clozepar`.
+|clozepar|.
 
 %%
 % \cloze
@@ -191,7 +191,7 @@ command \cmd{\cloze} is similar to a command that offers the possibility
 to underline the texts. \cmd{\cloze} does not prevent line breaks. The
 width of a gap depends on the number of letters and the font used.
 The only option which affects the widths of a gap is the option
-`margin` \secref{sec:option-margin}.
+|margin| \secref{sec:option-margin}.
 
 \begin{clozeexample}
 Lorem ipsum \cloze{dolor} sit amet, \cloze{consectetur} adipisicing
@@ -285,9 +285,9 @@ Excepteur \cloze{sint} occaecat \cloze{cupidatat} non proident.
 
 \noindent Please do not put any color definitions in
 \cmd{\clozesetfont}, as it won't work. Use the option
-`textcolor` instead \secref{sec:option-textcolor}.
+|textcolor| instead \secref{sec:option-textcolor}.
 
-`\clozesetfont{\ttfamily\normalsize}` changes the gap text for example
+|\clozesetfont{\ttfamily\normalsize}| changes the gap text for example
 into a normal sized typewriter font.
 
 \clozesetfont{\ttfamily\normalsize}
@@ -345,10 +345,10 @@ Ut enim \clozefil{ad minim veniam} exercitation.
 \subsubsection{\tt{clozepar}}
 \label{sec:command-clozepar}
 
-\DescribeEnv{clozepar} `\begin{clozepar}`\oarg{options} \dots
-\textit{some text} \dots `\end{clozepar}`: The environment \tt{clozepar}
-transforms a complete paragraph into a cloze text. The options `align`,
-`margin` and `width` have no effect on this environment.
+\DescribeEnv{clozepar} |\begin{clozepar}|\oarg{options} \dots
+\textit{some text} \dots |\end{clozepar}|: The environment \tt{clozepar}
+transforms a complete paragraph into a cloze text. The options |align|,
+|margin| and |width| have no effect on this environment.
 
 \begin{clozeexample}
 Lorem ipsum dolor sit amet, consectetur adipisicing elit ullamco laboris
@@ -504,7 +504,7 @@ Very \cloze{silly} global \cloze{options}.
 \end{clozeexample}
 
 \begin{code}
-`\clozereset`
+|\clozereset|
 \end{code}
 \clozereset
 
@@ -527,7 +527,7 @@ Very \cloze{silly} global \cloze{options}.
 \cmd{\clozeset}\marg{show} and \cmd{\clozeset}\marg{hide}.
 
 \begin{code}
-`\clozehide`
+|\clozehide|
 \end{code}
 \clozehide
 
@@ -539,7 +539,7 @@ elit.
 \end{clozeexample}
 
 \begin{code}
-`\clozeshow`
+|\clozeshow|
 \end{code}
 \clozeshow
 
@@ -583,9 +583,9 @@ of the line is larger than the width of the text.
 \label{sec:option-distance}
 
 \option{distance}{dimen}:
-The option `distance` specifies the spacing between the baseline of the
+The option |distance| specifies the spacing between the baseline of the
 text and the gap line. The larger the dimension of the option
-`distance`, the more moves the line down. Negative values cause the line
+|distance|, the more moves the line down. Negative values cause the line
 to appear above the baseline. The default value is
 \tt{\getdefaults{distance}}.
 
@@ -611,9 +611,9 @@ to appear above the baseline. The default value is
 \label{sec:option-show}
 
 \tt{[hide]} and \tt{[show]}:
-By default the cloze text is displayed. Use the option `hide` to remove
+By default the cloze text is displayed. Use the option |hide| to remove
 the cloze text from the output.  If you accidentally specify both
-options -- `hide` and `show` -- the last option "wins".
+options -- |hide| and |show| -- the last option "wins".
 
 \newcommand{\optionshow}[1]{%
   \noindent%
@@ -681,7 +681,7 @@ You can use the same color names to colorize the cloze lines.
 \label{sec:option-margin}
 
 \option{margin}{dimen}:
-The option `margin` indicates how far the line sticks up from the text.
+The option |margin| indicates how far the line sticks up from the text.
 The option can be used with the commands \cmd{\cloze}, \cmd{\clozefix}
 and \cmd{\clozefil}. The default value of the option is
 \tt{\getdefaults{margin}}.
@@ -702,9 +702,9 @@ and \cmd{\clozefil}. The default value of the option is
 
 % Folgt ein Satzzeichen direkt auf eine Lücke, so findet der
 % Zeilenumbruch erst nach dem Satzzeichen statt. Auch ein noch so großer
-% Wert für `margin` beeinflusst dieses Verhalten nicht.
+% Wert für |margin| beeinflusst dieses Verhalten nicht.
 Is a punctation mark placed directly after a gap, then the line breaks
-after this punctation mark. Even the most large value of `margin` does
+after this punctation mark. Even the most large value of |margin| does
 not affect this behavior.
 
 \begin{clozeexample}
@@ -724,8 +724,8 @@ not affect this behavior.
 \label{sec:option-thickness}
 
 \option{thickness}{dimen}:
-The option `thickness` indicates how thick the line is. The option
-`distance` \secref{sec:option-distance} is not affected by this option,
+The option |thickness| indicates how thick the line is. The option
+|distance| \secref{sec:option-distance} is not affected by this option,
 because the bottom of the line moves down. The default value of this
 option is \tt{\getdefaults{thickness}}.
 
@@ -748,7 +748,7 @@ option is \tt{\getdefaults{thickness}}.
 \subsubsection{\tt{width}}\label{sec:option-width}
 
 \option{width}{dimen}:
-The only command which can be changed by the option `width` is
+The only command which can be changed by the option |width| is
 \cmd{\clozefix} \secref{sec:command-clozefix}. The default value of the
 option is \tt{\getdefaults{width}}.
 
@@ -772,10 +772,10 @@ option is \tt{\getdefaults{width}}.
 %<*readme>
 # Description
 
-EN: `cloze` is a LaTeX package to generate cloze. It uses the
+EN: |cloze| is a LaTeX package to generate cloze. It uses the
 capabilities of the modern TeX engine LuaTex.
 
-DE: `cloze` ist a LaTeX-Paket zum Erstellen von Lückentexten. Es nutzt
+DE: |cloze| ist a LaTeX-Paket zum Erstellen von Lückentexten. Es nutzt
 die Möglichkeiten der modernen TeX-Engine LuaTeX.
 
 # Repository
@@ -946,13 +946,13 @@ or manually:
 % \href{https://www.ctan.org/pkg/keyval}{keyval}.
 %
 % At start all values are declared as global options. At the Lua side
-% all values are now stored in the `registry.global_options` table.
+% all values are now stored in the |registry.global_options| table.
 %
 %    \begin{macrocode}
 \cloze@set@to@global
 %    \end{macrocode}
 %
-% We use the abbreviation `CLZ` for \emph{cloze} as family name and
+% We use the abbreviation |CLZ| for \emph{cloze} as family name and
 % prefix.
 %
 %    \begin{macrocode}
@@ -965,7 +965,7 @@ or manually:
 % \paragraph{\tt{align}}
 %
 % \noindent Please read the section \secref{sec:option-align} how to use
-% the option `align`. `align` affects only the command \cmd{\clozefix}
+% the option |align|. |align| affects only the command \cmd{\clozefix}
 % \secref{sec:command-clozefix}.
 %
 %    \begin{macrocode}
@@ -976,7 +976,7 @@ or manually:
 % \paragraph{\tt{distance}}
 %
 % \noindent Please read the section \secref{sec:option-distance} how to
-% use the option `distance`.
+% use the option |distance|.
 %
 %    \begin{macrocode}
 \DeclareStringOption{distance}
@@ -985,10 +985,10 @@ or manually:
 %
 % \paragraph{\tt{hide}}
 %
-% \noindent If the option `hide` appears in the commands, `hide` will be
-% set to \emph{true} and `show` to \emph{false} on the Lua side. Please
+% \noindent If the option |hide| appears in the commands, |hide| will be
+% set to \emph{true} and |show| to \emph{false} on the Lua side. Please
 % read the section \secref{sec:option-hide} how to use the option
-% `hide`.
+% |hide|.
 %
 %    \begin{macrocode}
 \DeclareVoidOption{hide}{%
@@ -1000,7 +1000,7 @@ or manually:
 % \paragraph{\tt{linecolor}}
 %
 % \noindent Please read the section \secref{sec:option-linecolor} how to
-% use the option `linecolor`.
+% use the option |linecolor|.
 %
 %    \begin{macrocode}
 \DeclareStringOption{linecolor}
@@ -1012,7 +1012,7 @@ or manually:
 % \paragraph{\tt{margin}}
 %
 % \noindent Please read the section \secref{sec:option-margin} how to
-% use the option `margin`.
+% use the option |margin|.
 %
 %    \begin{macrocode}
 \DeclareStringOption{margin}
@@ -1021,10 +1021,10 @@ or manually:
 %
 % \paragraph{\tt{show}}
 %
-% \noindent If the option `show` appears in the commands, `show` will be
-% set to \emph{true} and `true` to \emph{false} on the Lua side. Please
+% \noindent If the option |show| appears in the commands, |show| will be
+% set to \emph{true} and |true| to \emph{false} on the Lua side. Please
 % read the section \secref{sec:option-show} how to use the option
-% `show`.
+% |show|.
 %
 %    \begin{macrocode}
 \DeclareVoidOption{show}{%
@@ -1036,7 +1036,7 @@ or manually:
 % \paragraph{\tt{textcolor}}
 %
 % \noindent Please read the section \secref{sec:option-textcolor} how to
-% use the option `textcolor`.
+% use the option |textcolor|.
 %
 %    \begin{macrocode}
 \DeclareStringOption{textcolor}
@@ -1048,7 +1048,7 @@ or manually:
 % \paragraph{\tt{thickness}}
 %
 % \noindent Please read the section \secref{sec:option-thickness} how to
-% use the option `thickness`.
+% use the option |thickness|.
 %
 %    \begin{macrocode}
 \DeclareStringOption{thickness}
@@ -1058,7 +1058,7 @@ or manually:
 % \paragraph{\tt{width}}
 %
 % \noindent Please read the section \secref{sec:option-width} how to use
-% the option `width`. `width` affects only the command \cmd{\clozefix}
+% the option |width|. |width| affects only the command \cmd{\clozefix}
 % \secref{sec:command-clozefix}.
 %
 %    \begin{macrocode}
@@ -1072,7 +1072,7 @@ or manually:
 %
 % \subsubsection{Public macros}
 %
-% All public macros are prefixed with `\cloze`.
+% All public macros are prefixed with |\cloze|.
 %
 % \begin{macro}{\clozeset}
 % The usage of the command \cmd{\clozeset} is described in detail in
@@ -1169,7 +1169,7 @@ or manually:
 % \end{macro}
 %
 % \begin{environment}{clozepar}
-% The usage of the environment `clozepar` is described in detail in
+% The usage of the environment |clozepar| is described in detail in
 % section \secref{sec:command-clozepar}.
 %    \begin{macrocode}
 \newenvironment{clozepar}[1][]%
@@ -1354,9 +1354,9 @@ end
 % \textbf{Parameter} \\
 % \hline
 %
-% `n.color_line` & `whatsit` & `pdf_colorstack` & Line color \\
-% `n.line` & `rule` &  & `width` \\
-% `n.color_reset` & `whatsit` & `pdf_colorstack` & Reset color \\
+% |n.color_line| & |whatsit| & |pdf_colorstack| & Line color \\
+% |n.line| & |rule| &  & |width| \\
+% |n.color_reset| & |whatsit| & |pdf_colorstack| & Reset color \\
 % \end{tabular}
 %
 % \luafunction{insert\_line}
@@ -1437,7 +1437,7 @@ end
 
 % \paragraph{Marker processing}
 %
-% A marker is a whatsit node of the subtype `user_defined`. A marker has
+% A marker is a whatsit node of the subtype |user_defined|. A marker has
 % two purposes:
 %
 % \begin{enumerate}
@@ -1447,7 +1447,7 @@ end
 % \end{enumerate}
 %
 % We create a user defined whatsit node that can store a numerical value
-% (type = 100). That is our marker. As `user_id` we select a large
+% (type = 100). That is our marker. As |user_id| we select a large
 % number.
 %
 % \luafunction{create\_marker}
@@ -1518,7 +1518,7 @@ end
 %
 % \paragraph{Storage functions}
 %
-% `registry.index` is a counter. Increase the counter by one and then
+% |registry.index| is a counter. Increase the counter by one and then
 % return it.
 %
 % \luafunction{get\_index}
@@ -1739,14 +1739,14 @@ end
 % \textbf{Parameter} \\
 % \hline
 %
-% `n.start` & `whatsit` & `user_definded` & `index` \\
-% `n.line` & `rule` &  & `l.width` \\
-% `n.kern_start` & `kern` & & Depends on `align` \\
-% `n.color_text` & `whatsit` & `pdf_colorstack` & Text color \\
-%  & `glyphs` & & Text to show \\
-% `n.color_reset` & `whatsit` & `pdf_colorstack` & Reset color \\
-% `n.kern_stop` & `kern` & & Depends on `align` \\
-% `n.stop` & `whatsit` & `user_definded` & `index` \\
+% |n.start| & |whatsit| & |user_definded| & |index| \\
+% |n.line| & |rule| &  & |l.width| \\
+% |n.kern_start| & |kern| & & Depends on |align| \\
+% |n.color_text| & |whatsit| & |pdf_colorstack| & Text color \\
+%  & |glyphs| & & Text to show \\
+% |n.color_reset| & |whatsit| & |pdf_colorstack| & Reset color \\
+% |n.kern_stop| & |kern| & & Depends on |align| \\
+% |n.stop| & |whatsit| & |user_definded| & |index| \\
 % \end{tabular}
 %
 % \paragraph*{Hide text:}
@@ -1759,9 +1759,9 @@ end
 % \textbf{Parameter} \\
 % \hline
 %
-% `n.start` & `whatsit` & `user_definded` & `index` \\
-% `n.line` & `rule` &  & `l.width` \\
-% `n.stop` & `whatsit` & `user_definded` & `index` \\
+% |n.start| & |whatsit| & |user_definded| & |index| \\
+% |n.line| & |rule| &  & |l.width| \\
+% |n.stop| & |whatsit| & |user_definded| & |index| \\
 % \end{tabular}
 %
 % \luafunction{fix\_make}
@@ -1846,13 +1846,13 @@ end
 % \textbf{Parameter} \\
 % \hline
 %
-% `n.strut` & `kern` &  & width = 0  \\
-% `n.line` & `rule` &  & `l.width` (Width from hlist) \\
-% `n.kern` & `kern` & & `-l.width` \\
-% `n.color_text` & `whatsit` & `pdf_colorstack` & Text color \\
-%  & `glyphs` & & Text to show \\
-% `n.tail` & `glyph` &  & Last glyph in hlist \\
-% `n.color_reset` & `whatsit` & `pdf_colorstack` & Reset color \\
+% |n.strut| & |kern| &  & width = 0  \\
+% |n.line| & |rule| &  & |l.width| (Width from hlist) \\
+% |n.kern| & |kern| & & |-l.width| \\
+% |n.color_text| & |whatsit| & |pdf_colorstack| & Text color \\
+%  & |glyphs| & & Text to show \\
+% |n.tail| & |glyph| &  & Last glyph in hlist \\
+% |n.color_reset| & |whatsit| & |pdf_colorstack| & Reset color \\
 % \end{tabular}
 %
 % \paragraph*{Hide text:}
@@ -1865,8 +1865,8 @@ end
 % \textbf{Parameter} \\
 % \hline
 %
-% `n.strut` & `kern` &  & width = 0  \\
-% `n.line` & `rule` &  & `l.width` (Width from hlist) \\
+% |n.strut| & |kern| &  & width = 0  \\
+% |n.line| & |rule| &  & |l.width| (Width from hlist) \\
 % \end{tabular}
 %
 % \luafunction{par}
