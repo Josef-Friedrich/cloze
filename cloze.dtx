@@ -858,13 +858,19 @@ or manually:
 % handling of the options.
 %
 % \item \href{https://www.ctan.org/pkg/xcolor}{xcolor} is required to
-% colorize the text and the line of cloze text.
+% colorize the text and the line of a gap.
 % \end{itemize}
 %
 %    \begin{macrocode}
 \RequirePackage{fontspec,luatexbase-mcb,kvoptions,xcolor}
+%    \end{macrocode}
+%
+% Load the cloze lua module and put all return values in the variable
+% |cloze|.
+%
+%    \begin{macrocode}
 \directlua{
-  cloze = require("cloze")
+  cloze = require('cloze')
 }
 %    \end{macrocode}
 %
