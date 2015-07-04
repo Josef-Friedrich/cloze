@@ -939,7 +939,7 @@ or manually:
 % \emph{cloze} offers key-value pairs to use as options. For processing
 % the key-value pairs we use the package
 % \href{https://www.ctan.org/pkg/kvoptions}{kvoptions}.
-% To make all key-value pairs accessibly for Lua code we use the
+% To make all key-value pairs accessibly to Lua code, we use the
 % declaration
 % \cmd{\define@key}\marg{CLZ}\marg{option}\oarg[]\marg{\dots}. This
 % declaration comes from the package
@@ -985,8 +985,10 @@ or manually:
 %
 % \paragraph{\tt{hide}}
 %
-% \noindent Please read the section \secref{sec:option-hide} how to use
-% the option `hide`.
+% \noindent If the option `hide` appears in the commands, `hide` will be
+% set to \emph{true} and `show` to \emph{false} on the Lua side. Please
+% read the section \secref{sec:option-hide} how to use the option
+% `hide`.
 %
 %    \begin{macrocode}
 \DeclareVoidOption{hide}{%
@@ -1019,8 +1021,10 @@ or manually:
 %
 % \paragraph{\tt{show}}
 %
-% \noindent Please read the section \secref{sec:option-show} how to use
-% the option `show`.
+% \noindent If the option `show` appears in the commands, `show` will be
+% set to \emph{true} and `true` to \emph{false} on the Lua side. Please
+% read the section \secref{sec:option-show} how to use the option
+% `show`.
 %
 %    \begin{macrocode}
 \DeclareVoidOption{show}{%
@@ -1068,8 +1072,11 @@ or manually:
 %
 % \subsubsection{Public macros}
 %
+% All public macros are prefixed with `\cloze`.
+%
 % \begin{macro}{\clozeset}
-% \secref{sec:command-clozeset}
+% The usage of the command \cmd{\clozeset} is described in detail in
+% section \secref{sec:command-clozeset}.
 %    \begin{macrocode}
 \newcommand{\clozeset}[1]{%
   \cloze@set@to@global%
@@ -1079,7 +1086,8 @@ or manually:
 % \end{macro}
 %
 % \begin{macro}{\clozereset}
-% \secref{sec:command-clozereset}
+% The usage of the command \cmd{\clozereset} is described in detail in
+% section \secref{sec:command-clozereset}.
 %    \begin{macrocode}
 \newcommand{\clozereset}{%
   \directlua{cloze.reset()}
@@ -1088,8 +1096,8 @@ or manually:
 % \end{macro}
 %
 % \begin{macro}{\clozeshow}
-% The usage of the command \cmd{\clozeshow} is described in
-% detail in section \secref{sec:command-clozeshow}.
+% The usage of the command \cmd{\clozeshow} is described in detail in
+% section \secref{sec:command-clozeshow}.
 %    \begin{macrocode}
 \newcommand{\clozeshow}{%
   \clozeset{show}
@@ -1098,8 +1106,8 @@ or manually:
 % \end{macro}
 %
 % \begin{macro}{\clozehide}
-% The usage of the command \cmd{\clozehide} is described in
-% detail in section \secref{sec:command-clozehide}.
+% The usage of the command \cmd{\clozehide} is described in detail in
+% section \secref{sec:command-clozehide}.
 %    \begin{macrocode}
 \newcommand{\clozehide}{%
   \clozeset{hide}
