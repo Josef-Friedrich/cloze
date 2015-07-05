@@ -1432,8 +1432,8 @@ end
 %    \end{macrocode}
 %
 % \luafunction{write\_line}
-% Encloze a rule node with color nodes as it makes the function
-% |nodex.insert_line|. In contrast to |nodex.insert_line| the three
+% This function enclozes a rule node with color nodes as it the function
+% |nodex.insert_line| does. In contrast to |nodex.insert_line| the three
 % nodes are appended to \TeX’s ‘current list’. They are not inserted in
 % a node list, which is accessed by a Lua callback.
 %
@@ -1611,6 +1611,10 @@ end
 %    \end{macrocode}
 %
 % \luafunction{set\_storage}
+% |registry.set_storage()| stores the local options in the Lua table
+% |registry.storage|. It returns a numeric index number. This index
+% number is the key, where the local options in the Lua table are
+% stored.
 %    \begin{macrocode}
 function registry.set_storage(mode, position)
   local index = registry.get_index()
@@ -1625,6 +1629,7 @@ end
 %    \end{macrocode}
 %
 % \luafunction{get\_storage}
+%
 %    \begin{macrocode}
 function registry.get_storage(index)
   return registry.storage[index]
@@ -1648,6 +1653,9 @@ end
 %    \end{macrocode}
 %
 % \luafunction{set\_is\_global}
+% |registry.set_is_global()| sets the variable |registry.is_global| to
+% the value |value|. It is intended, that the variable takes boolean
+% values.
 %    \begin{macrocode}
 function registry.set_is_global(value)
   registry.is_global = value
@@ -1655,6 +1663,7 @@ end
 %    \end{macrocode}
 %
 % \luafunction{unset\_local\_options}
+% This function unsets the local options.
 %    \begin{macrocode}
 function registry.unset_local_options()
   registry.local_options = {}
@@ -1662,6 +1671,7 @@ end
 %    \end{macrocode}
 %
 % \luafunction{unset\_global\_options}
+% |registry.unset_global_options| empties the global options storage.
 %    \begin{macrocode}
 function registry.unset_global_options()
   registry.global_options = {}
@@ -1669,6 +1679,9 @@ end
 %    \end{macrocode}
 %
 % \luafunction{get\_value}
+% Retrieve a value from a given key. First search for the value in the
+% local options, then in the global options. If both option storages are
+% empty, the default value will be returned.
 %    \begin{macrocode}
 function registry.get_value(key)
   if registry.has_value(registry.local_options[key]) then
@@ -1682,6 +1695,7 @@ end
 %    \end{macrocode}
 %
 % \luafunction{has\_value}
+% This function tests if the value |value| is not empty and has a value.
 %    \begin{macrocode}
 function registry.has_value(value)
   if value == nil or value == '' or value == '\\color@ ' then
@@ -1895,7 +1909,6 @@ end
 % |n.strut| & |kern| &  & width = 0 \\
 % |n.line| & |rule| &  & |l.width| (Width from hlist) \\
 % \end{nodelist}
-%
 %
 %    \begin{macrocode}
 function cloze.par(head)
