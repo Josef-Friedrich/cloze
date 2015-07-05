@@ -13,3 +13,5 @@
 *.sty
 *.synctex.gz
 *.toc
+*.tar.gz
+cloze/
