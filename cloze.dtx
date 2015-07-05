@@ -102,8 +102,16 @@
 \def\secref#1{(\rightarrow\ \ref{#1})}
 
 \newcommand{\option}[2]{\tt{[#1=}\meta{#2}\tt{]}}
-
-\newcommand{\luafunction}[1]{\marginpar{\raggedleft\MacroFont\tt{#1}}}
+\newcommand{\luafunction}[1]{
+  \marginpar{%
+    \raggedleft%
+    \MacroFont%
+    \tt{%
+      #1%
+    }%
+  }%
+  \noindent
+}
 
 \newcommand{\nodelistheader}{
   \hline
@@ -1215,8 +1223,7 @@ or manually:
 %
 % \begin{macro}{\clozefix}
 % The usage of the command \cmd{\clozefix} is described in detail in
-% section \secref{sec:command-clozefix}. Creates a cloze on one line
-% with a fixed length.
+% section \secref{sec:command-clozefix}.
 %    \begin{macrocode}
 \newcommand{\clozefix}[2][]{%
   \cloze@set@local@options{#1}%
@@ -1277,7 +1284,7 @@ or manually:
 \newcommand{\clozelinefil}[1][]{%
   \cloze@set@local@options{#1}%
   \strut%
-  \directlua{cloze.hfill()}%
+  \directlua{cloze.linefil()}%
   \strut%
 }
 %    \end{macrocode}
@@ -1346,6 +1353,8 @@ base.is_registered = {}
 % \paragraph{Color handling (color)}
 %
 % \luafunction{create\_colorstack}
+% Create a whatsit node of the subtype |pdf_colorstack|. |data| is PDF
+% colorstack string like |0 0 0 rg 0 0 0 RG|.
 %    \begin{macrocode}
 function nodex.create_colorstack(data)
   if not data then
@@ -1357,7 +1366,12 @@ function nodex.create_colorstack(data)
   return whatsit
 end
 %    \end{macrocode}
+%
 % \luafunction{create\_color}
+% |nodex.create_color()| is a wrapper for the function
+% |nodex.create_colorstack()|. It queries the current values of the
+% options |linecolor| and |textcolor|. The argument |option| accepts the
+% three strings |line|, |text| and |reset|.
 %    \begin{macrocode}
 function nodex.create_color(option)
   local data
@@ -1377,6 +1391,10 @@ end
 % \paragraph{Line handling (line)}
 %
 % \luafunction{create\_line}
+% Create a rule node, which is used as a line for the cloze texts. The
+% |depth| and the |height| of the rule are calculated form the options
+% |thickness| and |distance|. The argument |width| must have the length
+% unit \emph{scaled points}.
 %    \begin{macrocode}
 function nodex.create_line(width)
   local rule = node.new(node.id('rule'))
@@ -1389,9 +1407,11 @@ function nodex.create_line(width)
 end
 %    \end{macrocode}
 %
-% Append rule and kern to the node list.
+% \luafunction{insert\_line}
+% Enclose a rule node (cloze line) with two PDF colorstack whatsits. The
+% first colorstack node dyes the line, the seccond resets the color.
 %
-% \paragraph*{Node list}
+% \paragraph*{Node list:}
 %
 % \begin{nodelist}
 % |n.color_line| & |whatsit| & |pdf_colorstack| & Line color \\
@@ -1399,7 +1419,6 @@ end
 % |n.color_reset| & |whatsit| & |pdf_colorstack| & Reset color \\
 % \end{nodelist}
 %
-% \luafunction{insert\_line}
 %    \begin{macrocode}
 function nodex.insert_line(head, current, width)
   local n = {} -- node
@@ -1411,7 +1430,21 @@ function nodex.insert_line(head, current, width)
   return node.insert_after(head, n.line, n.color_reset)
 end
 %    \end{macrocode}
+%
 % \luafunction{write\_line}
+% Encloze a rule node with color nodes as it makes the function
+% |nodex.insert_line|. In contrast to |nodex.insert_line| the three
+% nodes are appended to \TeX’s ‘current list’. They are not inserted in
+% a node list, which is accessed by a Lua callback.
+%
+% \paragraph*{Node list:}
+%
+% \begin{nodelist}
+% - & |whatsit| & |pdf_colorstack| & Line color \\
+% - & |rule| &  & |width| \\
+% - & |whatsit| & |pdf_colorstack| & Reset color \\
+% \end{nodelist}
+%
 %    \begin{macrocode}
 function nodex.write_line()
   node.write(nodex.create_color('line'))
@@ -1458,6 +1491,7 @@ function nodex.create_kern(width)
 end
 %    \end{macrocode}
 %
+% \luafunction{strut\_to\_hlist}
 % To make life easier: We add at the beginning of each line a strut. Now
 % we can add rule, color etc. nodes AFTER the first node of a line not
 % BEFORE. AFTER is much more easier.
@@ -1496,11 +1530,10 @@ end
 % additional data like the local options.
 % \end{enumerate}
 %
+% \luafunction{create\_marker}
 % We create a user defined whatsit node that can store a numerical value
 % (type = 100). That is our marker. As |user_id| we select a large
 % number.
-%
-% \luafunction{create\_marker}
 %    \begin{macrocode}
 function registry.create_marker(index)
   local marker = node.new('whatsit','user_defined')
@@ -1564,10 +1597,9 @@ end
 %
 % \paragraph{Storage functions (storage)}
 %
+% \luafunction{get\_index}
 % |registry.index| is a counter. Increase the counter by one and then
 % return it.
-%
-% \luafunction{get\_index}
 %    \begin{macrocode}
 function registry.get_index()
   if not registry.index then
@@ -1684,8 +1716,6 @@ end
 %
 % \subsubsection{Assembly to cloze texts (cloze)}
 %
-%
-%
 % \luafunction{basic\_make}
 %    \begin{macrocode}
 function cloze.basic_make(head, hlist, start, stop)
@@ -1759,7 +1789,7 @@ function cloze.basic(head)
   return head
 end
 %    \end{macrocode}
-%
+% \luafunction{fix\_make}
 % Make cloze for macro clozefix
 %
 % \paragraph*{Node lists}
@@ -1785,7 +1815,6 @@ end
 % |n.stop| & |whatsit| & |user_definded| & |index| \\
 % \end{nodelist}
 %
-% \luafunction{fix\_make}
 %    \begin{macrocode}
 function cloze.fix_make(head, start, stop)
   local l = {} -- length
@@ -1842,6 +1871,8 @@ function cloze.fix(head)
   return head
 end
 %    \end{macrocode}
+%
+% \luafunction{par}
 % Call for environment clozpar
 %
 % \paragraph*{Node lists}
@@ -1865,7 +1896,7 @@ end
 % |n.line| & |rule| &  & |l.width| (Width from hlist) \\
 % \end{nodelist}
 %
-% \luafunction{par}
+%
 %    \begin{macrocode}
 function cloze.par(head)
   local l = {} -- length
@@ -1964,7 +1995,7 @@ end
 %    \end{macrocode}
 % Publish some functions to sty file.
 %    \begin{macrocode}
-base.hfill = nodex.write_linefil
+base.linefil = nodex.write_linefil
 base.line = nodex.write_line
 base.margin = nodex.write_margin
 base.set_option = registry.set_option
