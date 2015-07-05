@@ -892,11 +892,11 @@ or manually:
 }
 %    \end{macrocode}
 %
-%
 % \subsubsection{Internal macros}
 %
-%
 % \begin{macro}{\cloze@set@to@global}
+% Set the Lua variable |registry.is_global| to |true|. All options
+% are then stored in the variable |registry.global_options|.
 %    \begin{macrocode}
 \def\cloze@set@to@global{%
  \directlua{cloze.set_is_global(true)}%
@@ -904,8 +904,10 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-%
 % \begin{macro}{\cloze@set@to@local}
+% First unset the variable |registry.local_options|. Now set the Lua
+% variable |registry.is_global| to |false|. All options are then stored
+% in the variable |registry.local_options|.
 %    \begin{macrocode}
 \def\cloze@set@to@local{%
   \directlua{
@@ -916,8 +918,10 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-%
 % \begin{macro}{\cloze@set@option}
+% \cmd{\cloze@set@option} is a wrapper for the Lua function
+% |registry.set_option|. \cmd{\cloze@set@option}\oarg{key}\marg{value}
+% sets a key \meta{key} to the value \meta{value}.
 %    \begin{macrocode}
 \def\cloze@set@option[#1]#2{%
   \directlua{cloze.set_option('#1', '#2')}%
@@ -925,8 +929,13 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-%
 % \begin{macro}{\cloze@color}
+% Convert a color definiton name to a PDF colorstack string, for example
+% convert the color name |blue| to the colorstack string
+% |0 0 1 rg 0 0 1 RG|. The macro definition |\cloze@color{blue}|
+% builds itself the macro |\color@blue|, which expands to the PDF
+% colorstack string. The colorstack string is necessary to generate a
+% PDF colorstack whatsit.
 %    \begin{macrocode}
 \def\cloze@color#1{\csname\string\color@#1\endcsname}
 %    \end{macrocode}
