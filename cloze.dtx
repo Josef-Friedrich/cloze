@@ -1470,6 +1470,8 @@ end
 % \paragraph{Handling of extendable lines (linefil)}
 %
 % \luafunction{create\_linefil}
+% This function creates a line which stretchs indefinitely in the
+% horizontal direction.
 %    \begin{macrocode}
 function nodex.create_linefil()
   local glue = node.new('glue')
@@ -1486,6 +1488,8 @@ end
 %    \end{macrocode}
 %
 % \luafunction{write\_linefil}
+% The function |nodex.write_linefil| surrounds a indefinitely strechable
+% line with color whatsits and puts it to \TeX’s ‘current (node) list’.
 %    \begin{macrocode}
 function nodex.write_linefil()
   node.write(nodex.create_color('line'))
@@ -1497,6 +1501,8 @@ end
 % \paragraph{Kern handling (kern)}
 %
 % \luafunction{create\_kern}
+% This function creates a kern node with a given width. The argument
+% |width| had to be specified in scaled points.
 %    \begin{macrocode}
 function nodex.create_kern(width)
   local kern = node.new(node.id('kern'))
@@ -1506,10 +1512,9 @@ end
 %    \end{macrocode}
 %
 % \luafunction{strut\_to\_hlist}
-% To make life easier: We add at the beginning of each line a strut. Now
-% we can add rule, color etc. nodes AFTER the first node of a line not
-% BEFORE. AFTER is much more easier.
-%
+% To make life easier: We add at the beginning of each hlist a strut.
+% Now we can add line, color etc. nodes AFTER the first node of a hlist
+% not BEFORE. AFTER is much more easier.
 %    \begin{macrocode}
 function nodex.strut_to_hlist(hlist)
   local n = {} -- node
@@ -1522,6 +1527,7 @@ end
 %    \end{macrocode}
 %
 % \luafunction{write\_margin}
+% Write kern nodes to the current node list.
 %    \begin{macrocode}
 function nodex.write_margin()
   local kern = nodex.create_kern(tex.sp(registry.get_value('margin')))
@@ -1559,6 +1565,7 @@ end
 %    \end{macrocode}
 %
 % \luafunction{check\_marker}
+%
 %    \begin{macrocode}
 function registry.check_marker(item, mode, position)
   local data = registry.get_marker_data(item)
