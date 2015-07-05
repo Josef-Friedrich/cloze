@@ -954,11 +954,10 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-%
+% \begin{macro}{\cloze@start@marker}
 % At the begining |\cloze@start@marker| registers the required Lua
 % callbacks. Then it inserts a whatsit marker which marks the begin of a
 % gap.
-% \begin{macro}{\cloze@start@marker}
 %    \begin{macrocode}
 \def\cloze@start@marker#1{%
   \strut\directlua{
@@ -982,7 +981,7 @@ or manually:
 % \end{macro}
 %
 % \begin{macro}{\cloze@margin}
-% \cmd{\cloze@margin}
+% \cmd{\cloze@margin} surrounds a text in a gap with two |kerns|.
 %    \begin{macrocode}
 \def\cloze@margin#1{%
   \directlua{cloze.margin()}%
