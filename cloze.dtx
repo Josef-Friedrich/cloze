@@ -2005,19 +2005,22 @@ end
 %
 % \subsubsection{Basic module functions (base)}
 %
-% Base functions which are accessible in the sty file.
+% The |base| table contains functions which are published to the
+% |cloze.sty| file.
 %
 % \luafunction{register}
-% The argument |mode| accepts the string values |basic|, |fix| and
-% |par|.
+% This function registers the functions |cloze.par|, |cloze.basic| and
+% |cloze.fix| the Lua callbacks. |cloze.par| and |cloze.basic| are
+% registered to the callback |post_linebreak_filter| and |cloze.fix| to
+% the callback |pre_linebreak_filter|. The argument |mode| accepts the
+% string values |basic|, |fix| and |par|.
 %    \begin{macrocode}
 function base.register(mode)
   if mode == 'par' then
     luatexbase.add_to_callback(
       'post_linebreak_filter',
       cloze.par,
-      mode,
-      1
+      mode
     )
     return true
   end
@@ -2026,15 +2029,13 @@ function base.register(mode)
       luatexbase.add_to_callback(
         'post_linebreak_filter',
         cloze.basic,
-        mode,
-        1
+        mode
       )
     elseif mode == 'fix' then
       luatexbase.add_to_callback(
         'pre_linebreak_filter',
         cloze.fix,
-        mode,
-        1
+        mode
       )
     else
       return false
