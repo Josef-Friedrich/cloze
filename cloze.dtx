@@ -115,22 +115,27 @@
   \noindent
 }
 
+\newcommand{\nodelisthfont}{\bfseries\sffamily}
+
 \newcommand{\nodelistheader}{
   \hline
-  \textbf{Variable name} &
-  \textbf{Node type} &
-  \textbf{Node subtype} &
-  \textbf{Parameter} \\
+  \nodelisthfont Variable name &
+  \nodelisthfont Node type &
+  \nodelisthfont Node subtype &
+  \nodelisthfont Parameter \\
   \hline
 }
 
 \newenvironment{nodelist}{
   \noindent
+  \begingroup
+  \tiny
   \begin{tabular}{llll}
   \nodelistheader
 }{
   \hline
   \end{tabular}
+  \endgroup
 }
 
 \EnableCrossrefs
