@@ -38,6 +38,11 @@
 \titleformat{\paragraph}[hang]{%
   \normalfont\normalsize\bfseries%
   }{\theparagraph}{1em}{}
+\titleformat{\subparagraph}[hang]{%
+  \normalfont\small\bfseries%
+  }{\thesubparagraph}{1em}{}
+  \titlespacing*{\subparagraph}{0pt}{*1}{0pt}
+
 
 \usepackage[
   colorlinks=true,
@@ -129,7 +134,7 @@
 \newenvironment{nodelist}{
   \noindent
   \begingroup
-  \tiny
+  \footnotesize
   \begin{tabular}{llll}
   \nodelistheader
 }{
@@ -1438,7 +1443,7 @@ end
 % Enclose a rule node (cloze line) with two PDF colorstack whatsits. The
 % first colorstack node dyes the line, the seccond resets the color.
 %
-% \paragraph*{Node list:}
+% \subparagraph*{Node list:}
 %
 % \begin{nodelist}
 % |n.color_line| & |whatsit| & |pdf_colorstack| & Line color \\
@@ -1464,7 +1469,7 @@ end
 % nodes are appended to \TeX’s ‘current list’. They are not inserted in
 % a node list, which is accessed by a Lua callback.
 %
-% \paragraph*{Node list:}
+% \subparagraph*{Node list:}
 %
 % \begin{nodelist}
 % - & |whatsit| & |pdf_colorstack| & Line color \\
@@ -1868,9 +1873,9 @@ end
 % \luafunction{fix\_make}
 % Make cloze for macro clozefix
 %
-% \paragraph*{Node lists}
+% \subparagraph*{Node lists}
 %
-% \paragraph*{Show text:}
+% \subparagraph*{Show text:}
 %
 % \begin{nodelist}
 % |n.start| & |whatsit| & |user_definded| & |index| \\
@@ -1883,7 +1888,7 @@ end
 % |n.stop| & |whatsit| & |user_definded| & |index| \\
 % \end{nodelist}
 %
-% \paragraph*{Hide text:}
+% \subparagraph*{Hide text:}
 %
 % \begin{nodelist}
 % |n.start| & |whatsit| & |user_definded| & |index| \\
