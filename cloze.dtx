@@ -238,8 +238,9 @@ elit, sed do eiusmod tempor incididunt ut labore et dolore
 ullamco laboris nisi} ut aliquip ex ea commodo consequat.
 \end{clozeexample}
 
-It is possible to convert a complete paragraph into a "gap". But don't
-forget: There is a special environment for this: \tt{clozepar}.
+\noindent It is possible to convert a complete paragraph into a `gap'.
+But don't forget: There is a special environment for this: \tt{clozepar}
+\secref{sec:command-clozepar}.
 
 \begin{clozeexample}
 \cloze{Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
@@ -248,8 +249,8 @@ minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
 ex ea commodo consequat.}
 \end{clozeexample}
 
-Hypenation should work with \cmd{\cloze} also. Let's try some long
-German words:
+\noindent The command \cmd{\cloze} doesn't change the behavior of the
+hyphenation. Let's try some long German words:
 
 \begin{clozeexample}
 es
@@ -492,7 +493,7 @@ options for each paragraph.
 \clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
 \end{clozeexample}
 
-\cmd{\clozeset} does not change the options within a paragraph. As you
+\noindent \cmd{\clozeset} does not change the options within a paragraph. As you
 can see in the example below the last \cmd{\clozeset} applies the color
 green for both gaps.
 
@@ -704,7 +705,7 @@ package. To define your own color use the following command:
 \optioncolor{textcolor}{green}
 \end{clozeexample}
 
-You can use the same color names to colorize the cloze lines.
+\noindent You can use the same color names to colorize the cloze lines.
 
 \begin{clozeexample}
 \optioncolor{linecolor}{myclozecolor}
@@ -742,9 +743,9 @@ and \cmd{\clozefil}. The default value of the option is
 % Folgt ein Satzzeichen direkt auf eine Lücke, so findet der
 % Zeilenumbruch erst nach dem Satzzeichen statt. Auch ein noch so großer
 % Wert für |margin| beeinflusst dieses Verhalten nicht.
-Is a punctation mark placed directly after a gap, then the line breaks
-after this punctation mark. Even the most large value of |margin| does
-not affect this behavior.
+\noindent Is a punctation mark placed directly after a gap, then the
+line breaks after this punctation mark. Even the most large value of
+|margin| does not affect this behavior.
 
 \begin{clozeexample}
 \clozeset{margin=3mm}
@@ -1954,9 +1955,9 @@ end
 % \luafunction{par}
 % Call for environment clozpar
 %
-% \paragraph*{Node lists}
+% \subparagraph*{Node lists}
 %
-% \paragraph*{Show text:}
+% \subparagraph*{Show text:}
 %
 % \begin{nodelist}
 % |n.strut| & |kern| &  & width = 0  \\
@@ -1968,7 +1969,7 @@ end
 % |n.color_reset| & |whatsit| & |pdf_colorstack| & Reset color \\
 % \end{nodelist}
 %
-% \paragraph*{Hide text:}
+% \subparagraph*{Hide text:}
 %
 % \begin{nodelist}
 % |n.strut| & |kern| &  & width = 0 \\
