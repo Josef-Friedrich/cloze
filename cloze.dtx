@@ -1325,6 +1325,8 @@ or manually:
 %
 % \subsection{The file \tt{cloze.lua}}
 %
+% \setlength{\parindent}{0pt}
+%
 % \paragraph{Initialisation of the function tables}
 %
 %    \begin{macrocode}
@@ -1571,6 +1573,15 @@ function registry.create_marker(index)
   marker.user_id = registry.user_id
   marker.value = index
   return marker
+end
+%    \end{macrocode}
+%
+% \luafunction{write\_marker}
+%    \begin{macrocode}
+function registry.write_marker(mode, position)
+  local index = registry.set_storage(mode, position)
+  local marker = registry.create_marker(index)
+  node.write(marker)
 end
 %    \end{macrocode}
 %
@@ -2025,23 +2036,7 @@ function base.unregister(mode)
 end
 %    \end{macrocode}
 %
-% \luafunction{set\_global\_options}
-%    \begin{macrocode}
-function base.set_global_options(options)
-  options.show_text = base.show_text
-  registry.global_options = options
-end
-%    \end{macrocode}
-%
-% \luafunction{marker}
-%    \begin{macrocode}
-function base.marker(mode, position)
-  local index = registry.set_storage(mode, position)
-  local marker = registry.create_marker(index)
-  node.write(marker)
-end
-%    \end{macrocode}
-% Publish some functions to sty file.
+% Publish some functions to the |cloze.sty| file.
 %    \begin{macrocode}
 base.linefil = nodex.write_linefil
 base.line = nodex.write_line
@@ -2051,6 +2046,7 @@ base.set_is_global = registry.set_is_global
 base.unset_local_options = registry.unset_local_options
 base.reset = registry.unset_global_options
 base.get_defaults = registry.get_defaults
+base.marker = registry.write_marker
 %    \end{macrocode}
 %
 %    \begin{macrocode}
