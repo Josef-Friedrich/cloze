@@ -498,9 +498,9 @@ options for each paragraph.
 \clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
 \end{clozeexample}
 
-\noindent \cmd{\clozeset} does not change the options within a paragraph. As you
-can see in the example below the last \cmd{\clozeset} applies the color
-green for both gaps.
+\noindent \cmd{\clozeset} does not change the options within a
+paragraph. As you can see in the example below the last \cmd{\clozeset}
+applies the color green for both gaps.
 
 \begin{code}
 \begin{verbatim}
@@ -1344,11 +1344,13 @@ if not modules then modules = { } end modules ['cloze'] = {
   license   = 'The LaTeX Project Public License Version 1.3c 2008-05-04'
 }
 %    \end{macrocode}
-%
+% |nodex| is the abbreviation for \emph{node eXtended}.
 %    \begin{macrocode}
 local nodex = {}
 %    \end{macrocode}
 %
+% In the |registry| table are stored all values and functions, which are
+% related to the option management.
 %    \begin{macrocode}
 local registry = {}
 registry.user_id = 3121978
@@ -1370,8 +1372,12 @@ registry.global_options = {}
 registry.local_options = {}
 %    \end{macrocode}
 %
+%
 %    \begin{macrocode}
 local cloze = {}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 local base = {}
 base.is_registered = {}
 %    \end{macrocode}
@@ -1688,7 +1694,8 @@ end
 %    \end{macrocode}
 %
 % \luafunction{get\_storage}
-% The argument |index| is a numeric value.
+% The function |registry.get_storage()| retrieves values which belong to
+% a whatsit marker. The argument |index| is a numeric value.
 %    \begin{macrocode}
 function registry.get_storage(index)
   return registry.storage[index]
@@ -1698,6 +1705,11 @@ end
 % \paragraph{Option processing (option)}
 %
 % \luafunction{set\_option}
+% This function stores a value |value| and his associated key |key|
+% either to the global (|registry.global_options|) or to the local
+% (|registry.local_options|) option table. The global boolean variable
+% |registry.local_options| controls in which table the values are
+% stored.
 %    \begin{macrocode}
 function registry.set_option(key, value)
   if value == '' or value == '\\color@ ' then
@@ -1753,6 +1765,25 @@ function registry.get_value(key)
 end
 %    \end{macrocode}
 %
+% \luafunction{get\_value\_show}
+% The function |registry.get_value_show()| returns the boolean value
+% |true| if the option |show| is true. In contrast to the function
+% |registry.get_value()| it converts the string value `true' to a
+% boolean value.
+%    \begin{macrocode}
+function registry.get_value_show()
+  if
+    registry.get_value('show') == true
+  or
+    registry.get_value('show') == 'true'
+  then
+    return true
+  else
+    return false
+  end
+end
+%    \end{macrocode}
+%
 % \luafunction{has\_value}
 % This function tests if the value |value| is not empty and has a value.
 %    \begin{macrocode}
@@ -1766,24 +1797,11 @@ end
 %    \end{macrocode}
 %
 % \luafunction{get\_defaults}
+% |registry.get_defaults(option)| returns a the default value of the
+% given option.
 %    \begin{macrocode}
-function registry.get_defaults(key)
-  return registry.defaults[key]
-end
-%    \end{macrocode}
-%
-% \luafunction{get\_value\_show}
-%    \begin{macrocode}
-function registry.get_value_show()
-  if
-    registry.get_value('show') == true
-  or
-    registry.get_value('show') == 'true'
-  then
-    return true
-  else
-    return false
-  end
+function registry.get_defaults(option)
+  return registry.defaults[option]
 end
 %    \end{macrocode}
 %
