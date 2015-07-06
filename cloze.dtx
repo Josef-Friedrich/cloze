@@ -1397,7 +1397,7 @@ end
 % |nodex.create_color()| is a wrapper for the function
 % |nodex.create_colorstack()|. It queries the current values of the
 % options |linecolor| and |textcolor|. The argument |option| accepts the
-% three strings |line|, |text| and |reset|.
+% strings |line|, |text| and |reset|.
 %    \begin{macrocode}
 function nodex.create_color(option)
   local data
@@ -1565,7 +1565,7 @@ end
 % \luafunction{create\_marker}
 % We create a user defined whatsit node that can store a numerical value
 % (type = 100). That is our marker. As |user_id| we select a large
-% number.
+% number. The argument |index| is a numeric value.
 %    \begin{macrocode}
 function registry.create_marker(index)
   local marker = node.new('whatsit','user_defined')
@@ -1577,6 +1577,9 @@ end
 %    \end{macrocode}
 %
 % \luafunction{write\_marker}
+% The argument |mode| accepts the string values |basic|, |fix| and
+% |par|. The argument |position|. The argument |position| is either set
+% to |start| or to |stop|.
 %    \begin{macrocode}
 function registry.write_marker(mode, position)
   local index = registry.set_storage(mode, position)
@@ -1586,7 +1589,9 @@ end
 %    \end{macrocode}
 %
 % \luafunction{check\_marker}
-%
+% The argument |item| is a node. The argument |mode| accepts the string
+% values |basic|, |fix| and |par|. The argument |position| is either set
+% to |start| or to |stop|.
 %    \begin{macrocode}
 function registry.check_marker(item, mode, position)
   local data = registry.get_marker_data(item)
@@ -1599,6 +1604,9 @@ end
 %    \end{macrocode}
 %
 % \luafunction{get\_marker}
+% The argument |item| is a node. The argument |mode| accepts the string
+% values |basic|, |fix| and |par|. The argument |position| is either set
+% to |start| or to |stop|.
 %    \begin{macrocode}
 function registry.get_marker(item, mode, position)
   local out
@@ -1616,6 +1624,7 @@ end
 %    \end{macrocode}
 %
 % \luafunction{get\_marker\_data}
+% The argument |item| is a node.
 %    \begin{macrocode}
 function registry.get_marker_data(item)
   if item.id == node.id('whatsit')
@@ -1629,6 +1638,7 @@ end
 %    \end{macrocode}
 %
 % \luafunction{get\_marker\_values}
+% The argument |item| is a node.
 %    \begin{macrocode}
 function registry.get_marker_values(item)
   local data = registry.get_marker_data(item)
@@ -1656,7 +1666,8 @@ end
 % |registry.set_storage()| stores the local options in the Lua table
 % |registry.storage|. It returns a numeric index number. This index
 % number is the key, where the local options in the Lua table are
-% stored.
+% stored. The argument |mode| accepts the string values |basic|, |fix|
+% and |par|.
 %    \begin{macrocode}
 function registry.set_storage(mode, position)
   local index = registry.get_index()
@@ -1671,7 +1682,7 @@ end
 %    \end{macrocode}
 %
 % \luafunction{get\_storage}
-%
+% The argument |index| is a numeric value.
 %    \begin{macrocode}
 function registry.get_storage(index)
   return registry.storage[index]
@@ -1773,6 +1784,9 @@ end
 % \subsubsection{Assembly to cloze texts (cloze)}
 %
 % \luafunction{basic\_make}
+% The argument |head| is the head node of a node list. The argument
+% |start| is the node, where the gap begins. The argument |stop| is the
+% node, where the gap ends.
 %    \begin{macrocode}
 function cloze.basic_make(head, hlist, start, stop)
   local n = {}
@@ -1810,6 +1824,7 @@ end
 %    \end{macrocode}
 %
 % \luafunction{basic}
+% The argument |head| is the head node of a node list.
 %    \begin{macrocode}
 function cloze.basic(head)
   local n = {} -- node
@@ -1875,6 +1890,9 @@ end
 % |n.stop| & |whatsit| & |user_definded| & |index| \\
 % \end{nodelist}
 %
+% The argument |head| is the head node of a node list. The argument
+% |start| is the node, where the gap begins. The argument |stop| is the
+% node, where the gap ends.
 %    \begin{macrocode}
 function cloze.fix_make(head, start, stop)
   local l = {} -- length
@@ -1912,6 +1930,7 @@ end
 %    \end{macrocode}
 %
 % \luafunction{fix}
+% The argument |head| is the head node of a node list.
 %    \begin{macrocode}
 function cloze.fix(head)
   local n = {} -- node
@@ -1956,6 +1975,7 @@ end
 % |n.line| & |rule| &  & |l.width| (Width from hlist) \\
 % \end{nodelist}
 %
+% The argument |head| is the head node of a node list.
 %    \begin{macrocode}
 function cloze.par(head)
   local l = {} -- length
@@ -1988,6 +2008,8 @@ end
 % Base functions which are accessible in the sty file.
 %
 % \luafunction{register}
+% The argument |mode| accepts the string values |basic|, |fix| and
+% |par|.
 %    \begin{macrocode}
 function base.register(mode)
   if mode == 'par' then
@@ -2021,9 +2043,12 @@ function base.register(mode)
   end
 end
 %    \end{macrocode}
-% Register the callbacks.
+%
 %
 % \luafunction{unregister}
+% |base.unregister(mode)| deletes the registered functions from the Lua
+% callbacks. The argument |mode| accepts the string values |basic|,
+% |fix| and |par|.
 %    \begin{macrocode}
 function base.unregister(mode)
   if mode == 'basic' then
