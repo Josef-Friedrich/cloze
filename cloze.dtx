@@ -1335,6 +1335,8 @@ or manually:
 %
 % \paragraph{Initialisation of the function tables}
 %
+% It is good form to provide some background informations about this Lua
+% module.
 %    \begin{macrocode}
 if not modules then modules = { } end modules ['cloze'] = {
   version   = '0.1',
@@ -1349,10 +1351,16 @@ if not modules then modules = { } end modules ['cloze'] = {
 local nodex = {}
 %    \end{macrocode}
 %
-% In the |registry| table are stored all values and functions, which are
-% related to the option management.
+% All values and functions, which are related to the option management,
+% are stored in a table called |registry|.
+%
 %    \begin{macrocode}
 local registry = {}
+%    \end{macrocode}
+%
+% I didn't know what value I should take as |user_id|. Therefore I took
+% my birthday and transformed it to a large number.
+%    \begin{macrocode}
 registry.user_id = 3121978
 registry.storage = {}
 registry.defaults = {
@@ -1372,11 +1380,13 @@ registry.global_options = {}
 registry.local_options = {}
 %    \end{macrocode}
 %
-%
+% All those functions are stored in the table |cloze| that are
+% registered as callbacks to the pre and post linebreak filters.
 %    \begin{macrocode}
 local cloze = {}
 %    \end{macrocode}
-%
+% The |base| table contains some basic functions. |base| is the only
+% table of this Lua module that will be exported.
 %    \begin{macrocode}
 local base = {}
 base.is_registered = {}
@@ -1386,12 +1396,12 @@ base.is_registered = {}
 %
 % All functions in this section are stored in a table called |nodex|.
 % |nodex| is a abbreviation for \emph{node eXtended}. The |nodex| table
-% bundles all functions, which extend the buildin |node| library.
+% bundles all functions, which extend the built-in |node| library.
 %
 % \paragraph{Color handling (color)}
 %
 % \luafunction{create\_colorstack}
-% Create a whatsit node of the subtype |pdf_colorstack|. |data| is PDF
+% Create a whatsit node of the subtype |pdf_colorstack|. |data| is a PDF
 % colorstack string like |0 0 0 rg 0 0 0 RG|.
 %    \begin{macrocode}
 function nodex.create_colorstack(data)
@@ -1575,9 +1585,11 @@ end
 % \end{enumerate}
 %
 % \luafunction{create\_marker}
-% We create a user defined whatsit node that can store a numerical value
-% (type = 100). That is our marker. As |user_id| we select a large
-% number. The argument |index| is a numeric value.
+% We create a user defined whatsit node that can store a number (type =
+% 100). In order to distinguish this node from other user defined
+% whatsit nodes we set the |user_id| to a large number. We call this
+% whatsit node a marker. The argument |index| is a number, which is
+% associated to values in the |registry.storage| table.
 %    \begin{macrocode}
 function registry.create_marker(index)
   local marker = node.new('whatsit','user_defined')
@@ -1623,7 +1635,6 @@ end
 function registry.get_marker(item, mode, position)
   local out
   if registry.check_marker(item, mode, position) then
-    registry.marker = item
     out = item
   else
     out = false
@@ -1636,7 +1647,8 @@ end
 %    \end{macrocode}
 %
 % \luafunction{get\_marker\_data}
-% The argument |item| is a node.
+% |registry.get_marker_data| tests whether the node |item| is a marker.
+% The argument |item| is a node of unspecified type.
 %    \begin{macrocode}
 function registry.get_marker_data(item)
   if item.id == node.id('whatsit')
@@ -1650,17 +1662,19 @@ end
 %    \end{macrocode}
 %
 % \luafunction{get\_marker\_values}
-% The argument |item| is a node.
+% First this function saves the associatied values of a marker to the
+% local options table. Second it returns this values. The argument
+% |marker| is a whatsit node.
 %    \begin{macrocode}
-function registry.get_marker_values(item)
-  local data = registry.get_marker_data(item)
+function registry.get_marker_values(marker)
+  local data = registry.get_marker_data(marker)
   registry.local_options = data.values
   return data.values
 end
 %    \end{macrocode}
 %
 % \paragraph{Storage functions (storage)}
-%
+%h
 % \luafunction{get\_index}
 % |registry.index| is a counter. Increase the counter by one and then
 % return it.
@@ -1888,8 +1902,9 @@ function cloze.basic(head)
   return head
 end
 %    \end{macrocode}
+%
 % \luafunction{fix\_make}
-% Make cloze for macro clozefix
+% The function |cloze.fix_make| generates a gap of fixed width.
 %
 % \subparagraph*{Node lists}
 %
@@ -2068,7 +2083,6 @@ function base.register(mode)
   end
 end
 %    \end{macrocode}
-%
 %
 % \luafunction{unregister}
 % |base.unregister(mode)| deletes the registered functions from the Lua
