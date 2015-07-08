@@ -28,7 +28,7 @@
 %<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
 %<package>\ProvidesPackage{cloze}
 %<*package>
-    [2015/06/16 v0.1 Package to typeset cloze worksheets or cloze tests]
+    [2015/07/08 v1.0 Package to typeset cloze worksheets or cloze tests]
 %</package>
 %<*driver>
 \documentclass{ltxdoc}
@@ -149,7 +149,10 @@
 \providecommand*{\url}{\texttt}
 \GetFileInfo{cloze.dtx}
 \title{The \cloze{cloze} package%
-  \thanks{Robert-Michael Huber, Paul Isambert}%
+  \thanks{Many thanks to Robert-Michael Huber for his advice
+and to Paul Isambert for his article \emph{"Three things you can do with
+Lua\TeX{} that would be extremely painful otherwise"} in TUGboat, Volume
+31 (2010), No. 3. This article helped a lot to write this package.}%
 }
 \author{%
   Josef Friedrich\\%
@@ -882,7 +885,7 @@ or manually:
 %
 %
 % \changes{v0.1}{2015/06/16}{Converted to DTX file}
-% \changes{v1.0}{2015/07/05}{Inital release}
+% \changes{v1.0}{2015/07/08}{Inital release}
 %
 % \DoNotIndex{\newcommand,\newenvironment,\def,\directlua}
 %
