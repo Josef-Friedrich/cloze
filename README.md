@@ -1,10 +1,10 @@
 # Description
 
-EN: `cloze` is a LaTeX package to generate cloze. It uses the
+EN: `cloze` is a LuaLaTeX/LaTeX package to generate cloze. It uses the
 capabilities of the modern TeX engine LuaTex.
 
-DE: `cloze` ist a LaTeX-Paket zum Erstellen von Lückentexten. Es nutzt
-die Möglichkeiten der modernen TeX-Engine LuaTeX.
+DE: `cloze` ist a LuaLaTeX/LaTeX-Paket zum Erstellen von Lückentexten.
+Es nutzt die Möglichkeiten der modernen TeX-Engine LuaTeX.
 
 # License
 
@@ -19,6 +19,14 @@ license is in:
 
 and version 1.3 or later is part of all distributions of LaTeX
 version 2005/12/01 or later.
+
+# CTAN
+
+Since July 2015 the cloze package is included in the Comprehensive TeX
+Archive Network (CTAN).
+
+* TeX archive: https://www.ctan.org/tex-archive/macros/luatex/latex/cloze
+* Package page: https://www.ctan.org/pkg/cloze
 
 # Repository
 
