@@ -109,7 +109,7 @@
 \def\secref#1{(\rightarrow\ \ref{#1})}
 
 \newcommand{\option}[2]{\tt{[#1=}\meta{#2}\tt{]}}
-\newcommand{\luafunction}[1]{
+\newcommand{\clozeluafunction}[1]{
   \marginpar{%
     \raggedleft%
     \MacroFont%
@@ -1396,7 +1396,7 @@ base.is_registered = {}
 %
 % \paragraph{Color handling (color)}
 %
-% \luafunction{create\_colorstack}
+% \clozeluafunction{create\_colorstack}
 % Create a whatsit node of the subtype |pdf_colorstack|. |data| is a PDF
 % colorstack string like |0 0 0 rg 0 0 0 RG|.
 %    \begin{macrocode}
@@ -1411,7 +1411,7 @@ function nodex.create_colorstack(data)
 end
 %    \end{macrocode}
 %
-% \luafunction{create\_color}
+% \clozeluafunction{create\_color}
 % |nodex.create_color()| is a wrapper for the function
 % |nodex.create_colorstack()|. It queries the current values of the
 % options |linecolor| and |textcolor|. The argument |option| accepts the
@@ -1434,7 +1434,7 @@ end
 %
 % \paragraph{Line handling (line)}
 %
-% \luafunction{create\_line}
+% \clozeluafunction{create\_line}
 % Create a rule node, which is used as a line for the cloze texts. The
 % |depth| and the |height| of the rule are calculated form the options
 % |thickness| and |distance|. The argument |width| must have the length
@@ -1451,7 +1451,7 @@ function nodex.create_line(width)
 end
 %    \end{macrocode}
 %
-% \luafunction{insert\_line}
+% \clozeluafunction{insert\_line}
 % Enclose a rule node (cloze line) with two PDF colorstack whatsits. The
 % first colorstack node dyes the line, the seccond resets the color.
 %
@@ -1475,7 +1475,7 @@ function nodex.insert_line(head, current, width)
 end
 %    \end{macrocode}
 %
-% \luafunction{write\_line}
+% \clozeluafunction{write\_line}
 % This function enclozes a rule node with color nodes as it the function
 % |nodex.insert_line| does. In contrast to |nodex.insert_line| the three
 % nodes are appended to \TeX’s ‘current list’. They are not inserted in
@@ -1499,7 +1499,7 @@ end
 %
 % \paragraph{Handling of extendable lines (linefil)}
 %
-% \luafunction{create\_linefil}
+% \clozeluafunction{create\_linefil}
 % This function creates a line which stretchs indefinitely in the
 % horizontal direction.
 %    \begin{macrocode}
@@ -1517,7 +1517,7 @@ function nodex.create_linefil()
 end
 %    \end{macrocode}
 %
-% \luafunction{write\_linefil}
+% \clozeluafunction{write\_linefil}
 % The function |nodex.write_linefil| surrounds a indefinitely strechable
 % line with color whatsits and puts it to \TeX’s ‘current (node) list’.
 %    \begin{macrocode}
@@ -1530,7 +1530,7 @@ end
 %
 % \paragraph{Kern handling (kern)}
 %
-% \luafunction{create\_kern}
+% \clozeluafunction{create\_kern}
 % This function creates a kern node with a given width. The argument
 % |width| had to be specified in scaled points.
 %    \begin{macrocode}
@@ -1541,7 +1541,7 @@ function nodex.create_kern(width)
 end
 %    \end{macrocode}
 %
-% \luafunction{strut\_to\_hlist}
+% \clozeluafunction{strut\_to\_hlist}
 % To make life easier: We add at the beginning of each hlist a strut.
 % Now we can add line, color etc. nodes after the first node of a hlist
 % not before - after is much more easier.
@@ -1556,7 +1556,7 @@ function nodex.strut_to_hlist(hlist)
 end
 %    \end{macrocode}
 %
-% \luafunction{write\_margin}
+% \clozeluafunction{write\_margin}
 % Write kern nodes to the current node list. This kern nodes can be used
 % to build a margin.
 %    \begin{macrocode}
@@ -1581,7 +1581,7 @@ end
 % some additional data like the local options.
 % \end{enumerate}
 %
-% \luafunction{create\_marker}
+% \clozeluafunction{create\_marker}
 % We create a user defined whatsit node that can store a number (type =
 % 100). In order to distinguish this node from other user defined
 % whatsit nodes we set the |user_id| to a large number. We call this
@@ -1597,7 +1597,7 @@ function registry.create_marker(index)
 end
 %    \end{macrocode}
 %
-% \luafunction{write\_marker}
+% \clozeluafunction{write\_marker}
 % Write a marker node to \TeX's current node list. The argument |mode|
 % accepts the string values |basic|, |fix| and |par|. The argument
 % |position|. The argument |position| is either set to |start| or to
@@ -1610,7 +1610,7 @@ function registry.write_marker(mode, position)
 end
 %    \end{macrocode}
 %
-% \luafunction{check\_marker}
+% \clozeluafunction{check\_marker}
 % This functions tests, whether the given node |item| is a marker. The
 % argument |item| is a node. The argument |mode| accepts the string
 % values |basic|, |fix| and |par|. The argument |position| is either set
@@ -1626,7 +1626,7 @@ function registry.check_marker(item, mode, position)
 end
 %    \end{macrocode}
 %
-% \luafunction{get\_marker}
+% \clozeluafunction{get\_marker}
 % |registry.get_marker| returns the given marker. The argument |item| is
 % a node. The argument |mode| accepts the string values |basic|, |fix|
 % and |par|. The argument |position| is either set to |start| or to
@@ -1646,7 +1646,7 @@ function registry.get_marker(item, mode, position)
 end
 %    \end{macrocode}
 %
-% \luafunction{get\_marker\_data}
+% \clozeluafunction{get\_marker\_data}
 % |registry.get_marker_data| tests whether the node |item| is a marker.
 % The argument |item| is a node of unspecified type.
 %    \begin{macrocode}
@@ -1661,7 +1661,7 @@ function registry.get_marker_data(item)
 end
 %    \end{macrocode}
 %
-% \luafunction{get\_marker\_values}
+% \clozeluafunction{get\_marker\_values}
 % First this function saves the associatied values of a marker to the
 % local options table. Second it returns this values. The argument
 % |marker| is a whatsit node.
@@ -1675,7 +1675,7 @@ end
 %
 % \paragraph{Storage functions (storage)}
 %
-% \luafunction{get\_index}
+% \clozeluafunction{get\_index}
 % |registry.index| is a counter. The functions |registry.get_index()|
 % increases the counter by one and then returns it.
 %    \begin{macrocode}
@@ -1688,7 +1688,7 @@ function registry.get_index()
 end
 %    \end{macrocode}
 %
-% \luafunction{set\_storage}
+% \clozeluafunction{set\_storage}
 % |registry.set_storage()| stores the local options in the Lua table
 % |registry.storage|. It returns a numeric index number. This index
 % number is the key, where the local options in the Lua table are
@@ -1707,7 +1707,7 @@ function registry.set_storage(mode, position)
 end
 %    \end{macrocode}
 %
-% \luafunction{get\_storage}
+% \clozeluafunction{get\_storage}
 % The function |registry.get_storage()| retrieves values which belong to
 % a whatsit marker. The argument |index| is a numeric value.
 %    \begin{macrocode}
@@ -1718,7 +1718,7 @@ end
 %
 % \paragraph{Option processing (option)}
 %
-% \luafunction{set\_option}
+% \clozeluafunction{set\_option}
 % This function stores a value |value| and his associated key |key|
 % either to the global (|registry.global_options|) or to the local
 % (|registry.local_options|) option table. The global boolean variable
@@ -1737,7 +1737,7 @@ function registry.set_option(key, value)
 end
 %    \end{macrocode}
 %
-% \luafunction{set\_is\_global}
+% \clozeluafunction{set\_is\_global}
 % |registry.set_is_global()| sets the variable |registry.is_global| to
 % the value |value|. It is intended, that the variable takes boolean
 % values.
@@ -1747,7 +1747,7 @@ function registry.set_is_global(value)
 end
 %    \end{macrocode}
 %
-% \luafunction{unset\_local\_options}
+% \clozeluafunction{unset\_local\_options}
 % This function unsets the local options.
 %    \begin{macrocode}
 function registry.unset_local_options()
@@ -1755,7 +1755,7 @@ function registry.unset_local_options()
 end
 %    \end{macrocode}
 %
-% \luafunction{unset\_global\_options}
+% \clozeluafunction{unset\_global\_options}
 % |registry.unset_global_options| empties the global options storage.
 %    \begin{macrocode}
 function registry.unset_global_options()
@@ -1763,7 +1763,7 @@ function registry.unset_global_options()
 end
 %    \end{macrocode}
 %
-% \luafunction{get\_value}
+% \clozeluafunction{get\_value}
 % Retrieve a value from a given key. First search for the value in the
 % local options, then in the global options. If both option storages are
 % empty, the default value will be returned.
@@ -1779,7 +1779,7 @@ function registry.get_value(key)
 end
 %    \end{macrocode}
 %
-% \luafunction{get\_value\_show}
+% \clozeluafunction{get\_value\_show}
 % The function |registry.get_value_show()| returns the boolean value
 % |true| if the option |show| is true. In contrast to the function
 % |registry.get_value()| it converts the string value `true' to a
@@ -1798,7 +1798,7 @@ function registry.get_value_show()
 end
 %    \end{macrocode}
 %
-% \luafunction{has\_value}
+% \clozeluafunction{has\_value}
 % This function tests whether the value |value| is not empty and has a
 % value.
 %    \begin{macrocode}
@@ -1811,7 +1811,7 @@ function registry.has_value(value)
 end
 %    \end{macrocode}
 %
-% \luafunction{get\_defaults}
+% \clozeluafunction{get\_defaults}
 % |registry.get_defaults(option)| returns a the default value of the
 % given option.
 %    \begin{macrocode}
@@ -1822,7 +1822,7 @@ end
 %
 % \subsubsection{Assembly to cloze texts (cloze)}
 %
-% \luafunction{basic\_make}
+% \clozeluafunction{basic\_make}
 % The function |cloze.basic_make()| makes one gap. The argument |head|
 % is the head node of a node list. The argument |start| is the node,
 % where the gap begins. The argument |stop| is the node, where the gap
@@ -1863,7 +1863,7 @@ function cloze.basic_make(head, hlist, start, stop)
 end
 %    \end{macrocode}
 %
-% \luafunction{basic}
+% \clozeluafunction{basic}
 % The corresponding \LaTeX{} command to this lua function is \cmd{\cloze}
 % \secref{sec:command-cloze}. The argument |head| is the head node of a
 % node list.
@@ -1907,7 +1907,7 @@ function cloze.basic(head)
 end
 %    \end{macrocode}
 %
-% \luafunction{fix\_make}
+% \clozeluafunction{fix\_make}
 % The function |cloze.fix_make| generates a gap of fixed width.
 %
 % \subparagraph*{Node lists}
@@ -1972,7 +1972,7 @@ function cloze.fix_make(head, start, stop)
 end
 %    \end{macrocode}
 %
-% \luafunction{fix}
+% \clozeluafunction{fix}
 % The corresponding \LaTeX{} command to this Lua function is
 % \cmd{\clozefix} \secref{sec:command-clozefix}. The argument |head| is
 % the head node of a node list.
@@ -1996,7 +1996,7 @@ function cloze.fix(head)
 end
 %    \end{macrocode}
 %
-% \luafunction{par}
+% \clozeluafunction{par}
 % The corresponding \LaTeX{} environment to this lua function is
 % |clozepar| \secref{sec:command-clozepar}.
 %
@@ -2054,7 +2054,7 @@ end
 % The |base| table contains functions which are published to the
 % |cloze.sty| file.
 %
-% \luafunction{register}
+% \clozeluafunction{register}
 % This function registers the functions |cloze.par|, |cloze.basic| and
 % |cloze.fix| the Lua callbacks. |cloze.par| and |cloze.basic| are
 % registered to the callback |post_linebreak_filter| and |cloze.fix| to
@@ -2091,7 +2091,7 @@ function base.register(mode)
 end
 %    \end{macrocode}
 %
-% \luafunction{unregister}
+% \clozeluafunction{unregister}
 % |base.unregister(mode)| deletes the registered functions from the Lua
 % callbacks. The argument |mode| accepts the string values |basic|,
 % |fix| and |par|.
