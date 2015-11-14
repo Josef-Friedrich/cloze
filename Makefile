@@ -1,9 +1,23 @@
-all:
-	luatex cloze.ins
-	lualatex cloze.dtx
-	makeindex -s gglo.ist -o cloze.gls cloze.glo
-	makeindex -s gind.ist -o cloze.ind cloze.idx
-	lualatex cloze.dtx
+jobname = cloze
+texmf = $(HOME)/texmf
+texmftex = $(texmf)/tex/lualatex
+installdir = $(texmftex)/$(jobname)
+
+all: install doc
+
+install:
+	luatex $(jobname).ins
+	mkdir -p $(installdir)
+	cp -f $(jobname).sty $(installdir)
+	cp -f $(jobname).lua $(installdir)
+
+doc:
+	lualatex $(jobname).dtx
+	makeindex -s gglo.ist -o $(jobname).gls $(jobname).glo
+	makeindex -s gind.ist -o $(jobname).ind $(jobname).idx
+	lualatex $(jobname).dtx
+	mkdir -p $(texmf)/doc
+	cp $(jobname).pdf $(texmf)/doc
 
 clean:
 	./.githook_pre-commit
@@ -18,4 +32,4 @@ ctan:
 	tar cvfz cloze.tar.gz cloze
 	rm -rf cloze
 
-.PHONY: all clean ctan
+.PHONY: all install doc clean ctan
