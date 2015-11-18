@@ -794,6 +794,53 @@ option is \tt{\getdefaults{width}}.
 \optionwidth{5cm}
 \optionwidth{7cm}
 \end{clozeexample}
+
+%-----------------------------------------------------------------------
+% Special application areas
+%-----------------------------------------------------------------------
+
+\subsection{Special application areas}
+
+%%
+% picture
+%%
+
+\subsubsection{The \tt{picture} environment}
+
+\begin{code}
+\begin{verbatim}
+\begin{picture}(320,100)
+\put(80,25){\cloze{Lorem}}
+\put(160,50){\cloze{ipsum}}
+\put(240,75){\cloze{dolor}}
+\end{picture}
+\end{verbatim}
+\end{code}
+
+\begin{clozeexample}
+\begin{picture}(320,100)
+\put(80,25){\cloze{Lorem}}
+\put(160,50){\cloze{ipsum}}
+\put(240,75){\cloze{dolor}}
+\end{picture}
+\end{clozeexample}
+
+%%
+% tabular
+%%
+
+\subsubsection{The \tt{tabular} environment}
+
+% No |c| inside because of short verbatim.
+
+\begin{clozeexample}
+\begin{tabular}{l c c r}
+\cloze{Lorem} & \cloze{ipsum} & \cloze{dolor} & \cloze{sit} \\
+\cloze{amet} & \cloze{consectetur} & \cloze{adipisicing} & \cloze{elit} \\
+\cloze{sed} & \cloze{do} & \cloze{eiusmod} & \cloze{tempor} \\
+\end{tabular}
+\end{clozeexample}
+
   \DocInput{cloze.dtx}
   \pagebreak
   \PrintChanges
