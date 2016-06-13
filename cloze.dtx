@@ -1699,7 +1699,7 @@ end
 %    \begin{macrocode}
 function registry.get_marker_data(item)
   if item.id == node.id('whatsit')
-    and item.subtype == 44
+    and item.subtype == node.subtype('user_defined')
     and item.user_id == registry.user_id then
     return registry.get_storage(item.value)
   else
