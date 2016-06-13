@@ -19,6 +19,9 @@ doc:
 	mkdir -p $(texmf)/doc
 	cp $(jobname).pdf $(texmf)/doc
 
+test:
+	find tests -name "*.tex" -exec lualatex {} \;
+
 clean:
 	./.githook_pre-commit
 
