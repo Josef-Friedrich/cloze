@@ -1553,10 +1553,8 @@ end
 function nodex.create_linefil()
   local glue = node.new('glue')
   glue.subtype = 100
-  local glue_spec = node.new('glue_spec')
-  glue_spec.stretch = 65536
-  glue_spec.stretch_order = 3
-  glue.spec = glue_spec
+  glue.stretch = 65536
+  glue.stretch_order = 3
   local rule = nodex.create_line(0)
   rule.dir = 'TLT'
   glue.leader = rule
