@@ -1500,9 +1500,13 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function nodex.insert_list_after(head, current, list)
+function nodex.insert_list(position, head, current, list)
   for i, insert in ipairs(list) do
-    head, current = node.insert_after(head, current, insert)
+    if position == 'after' then
+      head, current = node.insert_after(head, current, insert)
+    elseif position == 'before' then
+      head, current = node.insert_before(head, current, insert)
+    end
   end
   return current
 end
@@ -1522,7 +1526,8 @@ end
 %
 %    \begin{macrocode}
 function nodex.insert_line(head, current, width)
-  return nodex.insert_list_after(
+  return nodex.insert_list(
+    'after',
     head,
     current,
     {
