@@ -2037,14 +2037,24 @@ function cloze.fix_make(head, start, stop)
   end
   n.line = nodex.insert_line(head, n.start, l.width)
   if registry.get_value_show() then
-    n.kern_start = nodex.create_kern(l.kern_start)
-    head, n.kern_start = node.insert_after(head, n.line, n.kern_start)
-    n.color_text = nodex.create_color('text')
-    node.insert_after(head, n.kern_start, n.color_text)
-    n.color_reset = nodex.create_color('reset')
-    node.insert_before(head, n.stop, n.color_reset)
-    n.kern_stop = nodex.create_kern(l.kern_stop)
-    node.insert_before(head, n.stop, n.kern_stop)
+    nodex.insert_list(
+      'after',
+      head,
+      n.line,
+      {
+        nodex.create_kern(l.kern_start),
+        nodex.create_color('text')
+      }
+    )
+    nodex.insert_list(
+      'before',
+      head,
+      n.stop,
+      {
+        nodex.create_color('reset'),
+        nodex.create_kern(l.kern_stop)
+      }
+    )
   else
     n.line.next = n.stop.next
   end
