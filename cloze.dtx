@@ -1541,6 +1541,11 @@ function nodex.create_line(width)
 end
 %    \end{macrocode}
 %
+% \clozeluafunction{insert\_list}
+% Insert a |list| of nodes after or before the |current|. The |head|
+% argument is optional. In some edge cases it is unfortately necessary.
+% if |head| is omitted the |current| node is used. The argument
+% |position| can take the values |'after'| or |'before'|.
 %    \begin{macrocode}
 function nodex.insert_list(position, current, list, head)
   if not head then
@@ -2056,9 +2061,8 @@ end
 % |n.stop| & |whatsit| & |user_definded| & |index| \\
 % \end{nodelist}
 %
-% The argument |head| is the head node of a node list. The argument
-% |start| is the node, where the gap begins. The argument |stop| is the
-% node, where the gap ends.
+% The argument |start| is the node, where the gap begins. The argument
+% |stop| is the node, where the gap ends.
 %    \begin{macrocode}
 function cloze.fix_make(start, stop)
   local l = {} -- length
@@ -2104,9 +2108,8 @@ function cloze.fix_make(start, stop)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{fix}
-% The corresponding \LaTeX{} command to this Lua function is
-% \cmd{\clozefix} \secref{sec:command-clozefix}. The argument |head| is
+% \clozeluafunction{fix\_search}
+% Function to recurse the node list and search after marker. |head| is
 % the head node of a node list.
 %    \begin{macrocode}
 function cloze.fix_search(head)
@@ -2130,7 +2133,13 @@ function cloze.fix_search(head)
     head = head.next
   end
 end
-
+%    \end{macrocode}
+%
+% \clozeluafunction{fix}
+% The corresponding \LaTeX{} command to this Lua function is
+% \cmd{\clozefix} \secref{sec:command-clozefix}. The argument |head| is
+% the head node of a node list.
+%    \begin{macrocode}
 function cloze.fix(head)
   cloze.fix_search(head)
   return head
