@@ -1511,7 +1511,10 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function nodex.insert_list(position, head, current, list)
+function nodex.insert_list(position, current, list, head)
+  if not head then
+    head = current
+  end
   for i, insert in ipairs(list) do
     if position == 'after' then
       head, current = node.insert_after(head, current, insert)
@@ -1536,10 +1539,9 @@ end
 % \end{nodelist}
 %
 %    \begin{macrocode}
-function nodex.insert_line(head, current, width)
+function nodex.insert_line(current, width)
   return nodex.insert_list(
     'after',
-    head,
     current,
     {
       nodex.create_color('line'),
@@ -1917,7 +1919,7 @@ function cloze.basic_make(head, hlist, start, stop)
     n.start,
     n.stop
   )
-  n.line = nodex.insert_line(head, n.start, l.width)
+  n.line = nodex.insert_line(n.start, l.width)
   n.color_text = nodex.create_color('text')
   head, n.color_text = node.insert_after(
     hlist.head,
@@ -2027,7 +2029,7 @@ end
 % |start| is the node, where the gap begins. The argument |stop| is the
 % node, where the gap ends.
 %    \begin{macrocode}
-function cloze.fix_make(head, start, stop)
+function cloze.fix_make(start, stop)
   local l = {} -- length
   l.width = tex.sp(registry.get_value('width'))
   local n = {} -- node
@@ -2046,11 +2048,10 @@ function cloze.fix_make(head, start, stop)
     l.kern_start = -l.width
     l.kern_stop = l.width - l.text_width
   end
-  n.line = nodex.insert_line(head, n.start, l.width)
+  n.line = nodex.insert_line(n.start, l.width)
   if registry.get_value_show() then
     nodex.insert_list(
       'after',
-      head,
       n.line,
       {
         nodex.create_kern(l.kern_start),
@@ -2059,12 +2060,12 @@ function cloze.fix_make(head, start, stop)
     )
     nodex.insert_list(
       'before',
-      head,
       n.stop,
       {
         nodex.create_color('reset'),
         nodex.create_kern(l.kern_stop)
-      }
+      },
+      n.start
     )
   else
     n.line.next = n.stop.next
@@ -2091,7 +2092,7 @@ function cloze.fix_search(head)
         n.stop = registry.get_marker(head, 'fix', 'stop')
       end
       if n.start and n.stop then
-        cloze.fix_make(n.start, n.start, n.stop)
+        cloze.fix_make(n.start, n.stop)
         n.start, n.stop = false
       end
     end
@@ -2141,11 +2142,10 @@ function cloze.par(head)
     end
     l.width = hlist.width
     hlist, n.strut, n.head = nodex.strut_to_hlist(hlist)
-    n.line = nodex.insert_line(head, n.strut, l.width)
+    n.line = nodex.insert_line(n.strut, l.width)
     if registry.get_value_show() then
       nodex.insert_list(
         'after',
-        head,
         n.line,
         {
           nodex.create_kern(-l.width),
@@ -2154,7 +2154,6 @@ function cloze.par(head)
       )
       nodex.insert_list(
         'after',
-        head,
         node.tail(head),
         {nodex.create_color('reset')}
       )
