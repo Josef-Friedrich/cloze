@@ -2123,13 +2123,21 @@ function cloze.par(head)
     hlist, n.strut, n.head = nodex.strut_to_hlist(hlist)
     n.line = nodex.insert_line(head, n.strut, l.width)
     if registry.get_value_show() then
-      n.kern = nodex.create_kern(-l.width)
-      head, n.kern = node.insert_after(head, n.line, n.kern)
-      n.color_text = nodex.create_color('text')
-      node.insert_after(head, n.kern, n.color_text)
-      n.tail = node.tail(n.head)
-      n.color_reset = nodex.create_color('reset')
-      node.insert_after(n.head, n.tail, n.color_reset)
+      nodex.insert_list(
+        'after',
+        head,
+        n.line,
+        {
+          nodex.create_kern(-l.width),
+          nodex.create_color('text')
+        }
+      )
+      nodex.insert_list(
+        'after',
+        head,
+        node.tail(head),
+        {nodex.create_color('reset')}
+      )
     else
       n.line.next = nil
     end
