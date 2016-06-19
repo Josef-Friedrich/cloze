@@ -2119,16 +2119,16 @@ function cloze.fix_make(start, stop)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{fix\_search}
+% \clozeluafunction{fix\_recursion}
 % Function to recurse the node list and search after marker. |head| is
 % the head node of a node list.
 %    \begin{macrocode}
-function cloze.fix_search(head)
+function cloze.fix_recursion(head)
   local n = {} -- node
   n.start, n.stop = false
   while head do
     if head.head then
-      cloze.fix_search(head.head)
+      cloze.fix_recursion(head.head)
     else
       if not n.start then
         n.start = registry.get_marker(head, 'fix', 'start')
@@ -2152,7 +2152,7 @@ end
 % the head node of a node list.
 %    \begin{macrocode}
 function cloze.fix(head)
-  cloze.fix_search(head)
+  cloze.fix_recursion(head)
   return head
 end
 %    \end{macrocode}
