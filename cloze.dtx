@@ -811,8 +811,8 @@ option is \tt{\getdefaults{width}}.
 \begin{verbatim}
 \begin{picture}(320,100)
 \put(80,25){\cloze{Lorem}}
-\put(160,50){\cloze{ipsum}}
-\put(240,75){\cloze{dolor}}
+\put(160,50){\clozefix{ipsum}}
+\put(240,75){\clozefil{dolor}}
 \end{picture}
 \end{verbatim}
 \end{code}
@@ -820,8 +820,8 @@ option is \tt{\getdefaults{width}}.
 \begin{clozeexample}
 \begin{picture}(320,100)
 \put(80,25){\cloze{Lorem}}
-\put(160,50){\cloze{ipsum}}
-\put(240,75){\cloze{dolor}}
+\put(160,50){\clozefix{ipsum}}
+\put(240,75){\clozefil{dolor}}
 \end{picture}
 \end{clozeexample}
 
@@ -831,13 +831,24 @@ option is \tt{\getdefaults{width}}.
 
 \subsubsection{The \tt{tabular} environment}
 
+\begin{code}
+\begin{verbatim}
+\begin{tabular}{l c}
+\cloze{Lorem} & \cloze{ipsum} \\
+\clozefix{amet} & \clozefix{consectetur} \\
+\cloze{sed} & \cloze{do} \\
+\end{tabular}
+\end{verbatim}
+\end{code}
+
 % No |c| inside because of short verbatim.
 
 \begin{clozeexample}
-\begin{tabular}{l c c r}
-\cloze{Lorem} & \cloze{ipsum} & \cloze{dolor} & \cloze{sit} \\
-\cloze{amet} & \cloze{consectetur} & \cloze{adipisicing} & \cloze{elit} \\
-\cloze{sed} & \cloze{do} & \cloze{eiusmod} & \cloze{tempor} \\
+\clozeset{width=1cm}
+\begin{tabular}{l c}
+\cloze{Lorem} & \cloze{ipsum} \\
+\clozefix{amet} & \clozefix{consectetur} \\
+\cloze{sed} & \cloze{do} \\
 \end{tabular}
 \end{clozeexample}
 
@@ -2066,21 +2077,30 @@ end
 % \cmd{\clozefix} \secref{sec:command-clozefix}. The argument |head| is
 % the head node of a node list.
 %    \begin{macrocode}
-function cloze.fix(head)
+function cloze.fix_search(head)
   local n = {} -- node
   n.start, n.stop = false
-  for current in node.traverse_id(node.id('whatsit'), head) do
-    if not n.start then
-      n.start = registry.get_marker(current, 'fix', 'start')
+  while head do
+    if head.head then
+      cloze.fix_search(head.head)
+    else
+      if not n.start then
+        n.start = registry.get_marker(head, 'fix', 'start')
+      end
+      if not n.stop then
+        n.stop = registry.get_marker(head, 'fix', 'stop')
+      end
+      if n.start and n.stop then
+        cloze.fix_make(n.start, n.start, n.stop)
+        n.start, n.stop = false
+      end
     end
-    if not n.stop then
-      n.stop = registry.get_marker(current, 'fix', 'stop')
-    end
-    if n.start and n.stop then
-      cloze.fix_make(head, n.start, n.stop)
-      n.start, n.stop = false
-    end
+    head = head.next
   end
+end
+
+function cloze.fix(head)
+  cloze.fix_search(head)
   return head
 end
 %    \end{macrocode}
