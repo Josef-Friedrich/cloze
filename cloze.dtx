@@ -350,6 +350,15 @@ clozes are default concering the width \tt{\getdefaults{width}}.
 sed do eiusmod.
 \end{clozeexample}
 
+Gaps with a fixed width are much harder to solve.
+
+\begin{clozeexample}
+Lorem ipsum dolor \clozefix[align=center,width=3cm]{sit} amet,
+\clozefix[align=center,width=3cm]{consectetur} adipisicing elit, sed do
+eiusmod tempor incididunt \clozefix[align=center,width=3cm]{ut} labore
+et dolore magna aliqua.
+\end{clozeexample}
+
 %%
 % \clozefil
 %%
@@ -800,6 +809,28 @@ option is \tt{\getdefaults{width}}.
 %-----------------------------------------------------------------------
 
 \subsection{Special application areas}
+
+%%
+% tabbing
+%%
+
+\subsubsection{The \tt{tabbing} environment}
+
+\begin{code}
+\begin{verbatim}
+\begin{tabbing}
+col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
+\cloze{col1} \> \> \clozefix{col3} \\
+\end{tabbing}
+\end{verbatim}
+\end{code}
+
+\begin{clozeexample}
+\begin{tabbing}
+col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
+\cloze{col1} \> \> \clozefix{col3} \\
+\end{tabbing}
+\end{clozeexample}
 
 %%
 % picture
