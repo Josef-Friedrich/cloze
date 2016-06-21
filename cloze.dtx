@@ -2086,7 +2086,13 @@ function cloze.basic_experimental_make(start, stop)
     n.line.next = n.stop.next
     n.stop.prev = n.line.prev
   end
-
+%    \end{macrocode}
+% I some edge cases the lua callbacks get fired up twice. After the
+% cloze has been created, the start and stop whatsit markers can be
+% deleted
+%    \begin{macrocode}
+  if n.start and n.start.id == node.id('whatsit') then node.remove(n.start, n.start) end
+  if n.stop and n.start.id == node.id('whatsit') then node.remove(n.stop, n.stop) end
 end
 %    \end{macrocode}
 %
