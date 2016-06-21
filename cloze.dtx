@@ -1261,6 +1261,14 @@ or manually:
 \define@key{CLZ}{width}[]{\cloze@set@option[width]{#1}}
 %    \end{macrocode}
 %
+% \paragraph{\tt{experimental}}
+%
+% \noindent To enable experimental features.
+%    \begin{macrocode}
+\DeclareStringOption{experimental}
+\define@key{CLZ}{experimental}[]{\cloze@set@option[experimental]{true}}
+%    \end{macrocode}
+%
 %    \begin{macrocode}
 \ProcessKeyvalOptions{CLZ}
 %    \end{macrocode}
@@ -1945,6 +1953,20 @@ end
 %
 % \subsubsection{Assembly to cloze texts (cloze)}
 %
+% Some graphics for better understanding of the node tree:
+%
+% \paragraph{Paragraph}
+%
+% \noindent\includegraphics[width=\linewidth]{graphics/par}
+%
+% \paragraph{Tabular environment}
+%
+% \noindent\includegraphics[width=\linewidth]{graphics/tabular}
+%
+% \paragraph{Picture environment}
+%
+% \noindent\includegraphics[width=\linewidth]{graphics/picture}
+%
 % \clozeluafunction{basic\_make}
 % The function |cloze.basic_make()| makes one gap. The argument |head|
 % is the head node of a node list. The argument |start| is the node,
@@ -1986,22 +2008,6 @@ function cloze.basic_make(head, hlist, start, stop)
 end
 %    \end{macrocode}
 %
-% \subsubsection{Node trees}
-%
-% Some graphics for better understanding of the node tree:
-%
-% \paragraph{Paragraph}
-%
-% \noindent\includegraphics[width=\linewidth]{graphics/par}
-%
-% \paragraph{Tabular environment}
-%
-% \noindent\includegraphics[width=\linewidth]{graphics/tabular}
-%
-% \paragraph{Picture environment}
-%
-% \noindent\includegraphics[width=\linewidth]{graphics/picture}
-%
 % \clozeluafunction{basic}
 % The corresponding \LaTeX{} command to this lua function is \cmd{\cloze}
 % \secref{sec:command-cloze}. The argument |head| is the head node of a
@@ -2042,6 +2048,114 @@ function cloze.basic(head)
       end
     end
   end
+  return head
+end
+%    \end{macrocode}
+%
+% \clozeluafunction{basic\_experimental\_make}
+%    \begin{macrocode}
+function cloze.basic_experimental_make(start, stop)
+  local n = {}
+  local l = {}
+  n.head = start
+  if not start or not stop then
+    return
+  end
+  n.start = start
+  n.stop = stop
+  l.width = node.dimensions(
+    HLIST.glue_set,
+    HLIST.glue_sign,
+    HLIST.glue_order,
+    n.start,
+    n.stop
+  )
+  n.line = nodex.insert_line(n.start, l.width)
+  n.color_text = nodex.create_color('text')
+  head, n.color_text = node.insert_after(
+    n.head,
+    n.line,
+    n.color_text
+  )
+  if registry.get_value_show() then
+    n.kern = nodex.create_kern(-l.width)
+    node.insert_after(n.head, n.color_text, n.kern)
+    n.color_reset = nodex.create_color('reset')
+    node.insert_before(n.head, n.stop, n.color_reset)
+  else
+    n.line.next = n.stop.next
+    n.stop.prev = n.line.prev
+  end
+
+end
+%    \end{macrocode}
+%
+% \clozeluafunction{basic\_experimental\_search\_stop}
+%    \begin{macrocode}
+function cloze.basic_experimental_search_stop(head)
+  local stop
+  while head do
+    CONTINUE_CLOZE = true
+    stop = head
+    if registry.check_marker(stop, 'basic', 'stop') then
+      CONTINUE_CLOZE = false
+      break
+    end
+    head = head.next
+  end
+  return stop
+end
+%    \end{macrocode}
+%
+% \clozeluafunction{basic\_experimental\_search\_start}
+%    \begin{macrocode}
+function cloze.basic_experimental_search_start(head)
+  local start
+  local stop
+  local n = {}
+  if CONTINUE_CLOZE then
+    while head do
+      if head.id == node.id('hlist') and head.subtype == 1 then
+        head = nodex.strut_to_hlist(head)
+        HLIST = head
+        start = head.head
+        break
+      end
+      head = head.next
+    end
+  elseif registry.check_marker(head, 'basic', 'start') then
+    start = head
+  end
+  if start then
+    stop = cloze.basic_experimental_search_stop(start)
+    cloze.basic_experimental_make(start, stop)
+    return stop
+  end
+  return head
+end
+%    \end{macrocode}
+%
+% \clozeluafunction{basic\_experimental\_recursion}
+%    \begin{macrocode}
+function cloze.basic_experimental_recursion(head)
+  while head do
+    if head.head then
+      HLIST = head
+      cloze.basic_experimental_recursion(head.head)
+    else
+      cloze.basic_experimental_search_start(head)
+    end
+      head = head.next
+  end
+end
+%    \end{macrocode}
+%
+% \clozeluafunction{basic\_experimental}
+%    \begin{macrocode}
+function cloze.basic_experimental(head)
+  CONTINUE_CLOZE = false
+  HEAD = head
+  cloze.basic_experimental_recursion(head)
   return head
 end
 %    \end{macrocode}
@@ -2229,6 +2343,7 @@ end
 % string values |basic|, |fix| and |par|.
 %    \begin{macrocode}
 function base.register(mode)
+  local basic
   if mode == 'par' then
     luatexbase.add_to_callback(
       'post_linebreak_filter',
@@ -2239,9 +2354,14 @@ function base.register(mode)
   end
   if not base.is_registered[mode] then
     if mode == 'basic' then
+      if registry.get_value('experimental') then
+        basic = cloze.basic_experimental
+      else
+        basic = cloze.basic
+      end
       luatexbase.add_to_callback(
         'post_linebreak_filter',
-        cloze.basic,
+        basic,
         mode
       )
     elseif mode == 'fix' then
