@@ -1741,6 +1741,20 @@ function registry.write_marker(mode, position)
 end
 %    \end{macrocode}
 %
+% \clozeluafunction{is\_marker}
+% This functions checks if the given node |item| is a marker.
+%    \begin{macrocode}
+function registry.is_marker(item)
+  if item.id == node.id('whatsit')
+    and item.subtype == node.subtype('user_defined')
+    and item.user_id == registry.user_id then
+    return true
+  else
+    return false
+  end
+end
+%    \end{macrocode}
+%
 % \clozeluafunction{check\_marker}
 % This functions tests, whether the given node |item| is a marker. The
 % argument |item| is a node. The argument |mode| accepts the string
@@ -2089,10 +2103,10 @@ function cloze.basic_experimental_make(start, stop)
 %    \end{macrocode}
 % I some edge cases the lua callbacks get fired up twice. After the
 % cloze has been created, the start and stop whatsit markers can be
-% deleted
+% deleted.
 %    \begin{macrocode}
-  if n.start and n.start.id == node.id('whatsit') then node.remove(n.start, n.start) end
-  if n.stop and n.start.id == node.id('whatsit') then node.remove(n.stop, n.stop) end
+  if registry.is_marker(n.start) then node.remove(n.start, n.start) end
+  if registry.is_marker(n.stop) then node.remove(n.stop, n.stop) end
 end
 %    \end{macrocode}
 %
@@ -2367,7 +2381,7 @@ function base.register(mode)
       end
       luatexbase.add_to_callback(
         'post_linebreak_filter',
-        basic,
+        cloze.basic_experimental,
         mode
       )
     elseif mode == 'fix' then
