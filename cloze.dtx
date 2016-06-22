@@ -1695,6 +1695,8 @@ end
 %    \end{macrocode}
 %
 % \clozeluafunction{search\_hlist}
+% Search for a |hlist| (subtype |line|). Return false, if no |hlist| can
+% be found.
 %    \begin{macrocode}
 function nodex.search_hlist(head)
   while head do
@@ -1703,6 +1705,7 @@ function nodex.search_hlist(head)
     end
     head = head.next
   end
+  return false
 end
 %    \end{macrocode}
 %
@@ -2040,6 +2043,7 @@ end
 %    \end{macrocode}
 %
 % \clozeluafunction{basic\_search\_stop}
+% Search for a stop marker.
 %    \begin{macrocode}
 function cloze.basic_search_stop(head)
   local stop
@@ -2057,6 +2061,9 @@ end
 %    \end{macrocode}
 %
 % \clozeluafunction{basic\_search\_start}
+% Search for a start marker. Also begin a new cloze, if the boolean
+% value |cloze.status.continue| is true. The knowledge of the last
+% hlist node is a requirement to begin a cloze.
 %    \begin{macrocode}
 function cloze.basic_search_start(head)
   local start
@@ -2074,13 +2081,13 @@ function cloze.basic_search_start(head)
   if start then
     stop = cloze.basic_search_stop(start)
     cloze.basic_make(start, stop)
-    return stop
   end
-  return head
 end
 %    \end{macrocode}
 %
 % \clozeluafunction{basic\_recursion}
+% Parse recursivley the node tree. Start and stop markers can be nested
+% deeply into the node tree.
 %    \begin{macrocode}
 function cloze.basic_recursion(head)
   while head do
