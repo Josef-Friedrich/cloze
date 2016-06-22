@@ -2080,6 +2080,9 @@ end
 %    \end{macrocode}
 %
 % \clozeluafunction{basic\_experimental\_make}
+% The function |cloze.basic_make()| makes one gap. The argument |start|
+% is the node, where the gap begins. The argument |stop| is the node,
+% where the gap ends.
 %    \begin{macrocode}
 function cloze.basic_experimental_make(start, stop)
   local n = {}
@@ -2177,6 +2180,9 @@ end
 %    \end{macrocode}
 %
 % \clozeluafunction{basic\_experimental}
+% The corresponding \LaTeX{} command to this lua function is \cmd{\cloze}
+% \secref{sec:command-cloze}. The argument |head| is the head node of a
+% node list.
 %    \begin{macrocode}
 function cloze.basic_experimental(head)
   cloze.status.continue = false
