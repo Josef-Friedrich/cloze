@@ -1,0 +1,17 @@
+%!TEX program = lualatex
+\documentclass{article}
+\usepackage{cloze}
+\usepackage{forest}
+
+\begin{document}
+\begin{forest}
+[VP
+[DP[\cloze{John}]]
+[V’
+[V[\cloze{sent}]]
+[DP[\cloze{Mary}]]
+[DP[D[\cloze{a}]][NP[\cloze{letter}]]]
+]
+]
+\end{forest}
+\end{document}
