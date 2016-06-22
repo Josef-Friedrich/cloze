@@ -1694,6 +1694,18 @@ function nodex.write_margin()
 end
 %    \end{macrocode}
 %
+% \clozeluafunction{search\_hlist}
+%    \begin{macrocode}
+function nodex.search_hlist(head)
+  while head do
+    if head.id == node.id('hlist') and head.subtype == 1 then
+      return nodex.strut_to_hlist(head)
+    end
+    head = head.next
+  end
+end
+%    \end{macrocode}
+%
 % \subsubsection{Option handling (registry)}
 %
 % The table |registry| bundels functions that deal with option handling.
@@ -2051,14 +2063,10 @@ function cloze.basic_search_start(head)
   local stop
   local n = {}
   if cloze.status.continue then
-    while head do
-      if head.id == node.id('hlist') and head.subtype == 1 then
-        head = nodex.strut_to_hlist(head)
-        cloze.status.hlist = head
-        start = head.head
-        break
-      end
-      head = head.next
+    n.hlist = nodex.search_hlist(head)
+    if n.hlist then
+      cloze.status.hlist = n.hlist
+      start = cloze.status.hlist.head
     end
   elseif registry.check_marker(head, 'basic', 'start') then
     start = head
