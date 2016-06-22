@@ -10,6 +10,7 @@ install:
 	mkdir -p $(installdir)
 	cp -f $(jobname).sty $(installdir)
 	cp -f $(jobname).lua $(installdir)
+	./clean.sh install
 
 doc:
 	lualatex $(jobname).dtx
@@ -23,7 +24,7 @@ test:
 	find tests -name "*.tex" -exec lualatex {} \;
 
 clean:
-	./.githook_pre-commit
+	./clean.sh
 
 ctan:
 	rm -rf cloze
