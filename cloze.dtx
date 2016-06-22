@@ -1488,6 +1488,7 @@ registry.local_options = {}
 % registered as callbacks to the pre and post linebreak filters.
 %    \begin{macrocode}
 local cloze = {}
+cloze.status = {}
 %    \end{macrocode}
 %
 % The |base| table contains some basic functions. |base| is the only
@@ -2086,9 +2087,9 @@ function cloze.basic_experimental_make(start, stop)
   n.start = start
   n.stop = stop
   l.width = node.dimensions(
-    HLIST.glue_set,
-    HLIST.glue_sign,
-    HLIST.glue_order,
+    cloze.status.hlist.glue_set,
+    cloze.status.hlist.glue_sign,
+    cloze.status.hlist.glue_order,
     n.start,
     n.stop
   )
@@ -2123,10 +2124,10 @@ end
 function cloze.basic_experimental_search_stop(head)
   local stop
   while head do
-    CONTINUE_CLOZE = true
+    cloze.status.continue = true
     stop = head
     if registry.check_marker(stop, 'basic', 'stop') then
-      CONTINUE_CLOZE = false
+      cloze.status.continue = false
       break
     end
     head = head.next
@@ -2141,11 +2142,11 @@ function cloze.basic_experimental_search_start(head)
   local start
   local stop
   local n = {}
-  if CONTINUE_CLOZE then
+  if cloze.status.continue then
     while head do
       if head.id == node.id('hlist') and head.subtype == 1 then
         head = nodex.strut_to_hlist(head)
-        HLIST = head
+        cloze.status.hlist = head
         start = head.head
         break
       end
@@ -2168,7 +2169,7 @@ end
 function cloze.basic_experimental_recursion(head)
   while head do
     if head.head then
-      HLIST = head
+      cloze.status.hlist = head
       cloze.basic_experimental_recursion(head.head)
     else
       cloze.basic_experimental_search_start(head)
@@ -2181,8 +2182,7 @@ end
 % \clozeluafunction{basic\_experimental}
 %    \begin{macrocode}
 function cloze.basic_experimental(head)
-  CONTINUE_CLOZE = false
-  HEAD = head
+  cloze.status.continue = false
   cloze.basic_experimental_recursion(head)
   return head
 end
