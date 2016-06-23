@@ -2114,6 +2114,30 @@ function cloze.basic(head)
 end
 %    \end{macrocode}
 %
+% \clozeluafunction{fix\_length}
+% Calculate the length of the whitespace before (|l.kern_start|) and
+% after (|l.kern_stopt|) the text.
+%    \begin{macrocode}
+function cloze.fix_length(start, stop)
+  local l = {}
+  l.width = tex.sp(registry.get_value('width'))
+  l.text_width = node.dimensions(start, stop)
+  l.align = registry.get_value('align')
+  if l.align == 'right' then
+    l.kern_start = - l.text_width
+    l.kern_stop = 0
+  elseif l.align == 'center' then
+    l.half = (l.width - l.text_width) / 2
+    l.kern_start = - l.half - l.text_width
+    l.kern_stop = l.half
+  else
+    l.kern_start = - l.width
+    l.kern_stop = l.width - l.text_width
+  end
+  return l.width, l.kern_start, l.kern_stop
+end
+%    \end{macrocode}
+%
 % \clozeluafunction{fix\_make}
 % The function |cloze.fix_make| generates a gap of fixed width.
 %
@@ -2145,24 +2169,9 @@ end
 %    \begin{macrocode}
 function cloze.fix_make(start, stop)
   local l = {} -- length
-  l.width = tex.sp(registry.get_value('width'))
   local n = {} -- node
-  n.start = start
-  n.stop = stop
-  l.text_width = node.dimensions(n.start, n.stop)
-  local align = registry.get_value('align')
-  if align == 'right' then
-    l.kern_start = -l.text_width
-    l.kern_stop = 0
-  elseif align == 'center' then
-    l.half = (l.width - l.text_width) / 2
-    l.kern_start = -l.half - l.text_width
-    l.kern_stop = l.half
-  else
-    l.kern_start = -l.width
-    l.kern_stop = l.width - l.text_width
-  end
-  n.line = nodex.insert_line(n.start, l.width)
+  l.width, l.kern_start, l.kern_stop = cloze.fix_length(start, stop)
+  n.line = nodex.insert_line(start, l.width)
   if registry.get_value_show() then
     nodex.insert_list(
       'after',
@@ -2174,18 +2183,18 @@ function cloze.fix_make(start, stop)
     )
     nodex.insert_list(
       'before',
-      n.stop,
+      stop,
       {
         nodex.create_color('reset'),
         nodex.create_kern(l.kern_stop)
       },
-      n.start
+      start
     )
   else
-    n.line.next = n.stop.next
+    n.line.next = stop.next
   end
-  registry.remove_marker(n.start)
-  registry.remove_marker(n.stop)
+  registry.remove_marker(start)
+  registry.remove_marker(stop)
 end
 %    \end{macrocode}
 %
