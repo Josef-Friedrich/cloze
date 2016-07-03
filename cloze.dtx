@@ -114,7 +114,7 @@
     \raggedleft%
     \MacroFont%
     \tt{%
-      #1%
+      \scantokens{\catcode`\_=12\relax#1}%
     }%
   }%
 }
@@ -1504,7 +1504,7 @@ base.is_registered = {}
 %
 % \paragraph{Color handling (color)}
 %
-% \clozeluafunction{create\_colorstack}
+% \clozeluafunction{create_colorstack}
 % Create a whatsit node of the subtype |pdf_colorstack|. |data| is a PDF
 % colorstack string like |0 0 0 rg 0 0 0 RG|.
 %    \begin{macrocode}
@@ -1519,7 +1519,7 @@ function nodex.create_colorstack(data)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{create\_color}
+% \clozeluafunction{create_color}
 % |nodex.create_color()| is a wrapper for the function
 % |nodex.create_colorstack()|. It queries the current values of the
 % options |linecolor| and |textcolor|. The argument |option| accepts the
@@ -1542,7 +1542,7 @@ end
 %
 % \paragraph{Line handling (line)}
 %
-% \clozeluafunction{create\_line}
+% \clozeluafunction{create_line}
 % Create a rule node, which is used as a line for the cloze texts. The
 % |depth| and the |height| of the rule are calculated form the options
 % |thickness| and |distance|. The argument |width| must have the length
@@ -1559,7 +1559,7 @@ function nodex.create_line(width)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{insert\_list}
+% \clozeluafunction{insert_list}
 % Insert a |list| of nodes after or before the |current|. The |head|
 % argument is optional. In some edge cases it is unfortately necessary.
 % if |head| is omitted the |current| node is used. The argument
@@ -1580,7 +1580,7 @@ function nodex.insert_list(position, current, list, head)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{insert\_line}
+% \clozeluafunction{insert_line}
 % Enclose a rule node (cloze line) with two PDF colorstack whatsits. The
 % first colorstack node dyes the line, the seccond resets the color.
 %
@@ -1606,7 +1606,7 @@ function nodex.insert_line(current, width)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{write\_line}
+% \clozeluafunction{write_line}
 % This function enclozes a rule node with color nodes as it the function
 % |nodex.insert_line| does. In contrast to |nodex.insert_line| the three
 % nodes are appended to \TeX’s ‘current list’. They are not inserted in
@@ -1630,7 +1630,7 @@ end
 %
 % \paragraph{Handling of extendable lines (linefil)}
 %
-% \clozeluafunction{create\_linefil}
+% \clozeluafunction{create_linefil}
 % This function creates a line which stretchs indefinitely in the
 % horizontal direction.
 %    \begin{macrocode}
@@ -1646,7 +1646,7 @@ function nodex.create_linefil()
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{write\_linefil}
+% \clozeluafunction{write_linefil}
 % The function |nodex.write_linefil| surrounds a indefinitely strechable
 % line with color whatsits and puts it to \TeX’s ‘current (node) list’.
 %    \begin{macrocode}
@@ -1659,7 +1659,7 @@ end
 %
 % \paragraph{Kern handling (kern)}
 %
-% \clozeluafunction{create\_kern}
+% \clozeluafunction{create_kern}
 % This function creates a kern node with a given width. The argument
 % |width| had to be specified in scaled points.
 %    \begin{macrocode}
@@ -1670,7 +1670,7 @@ function nodex.create_kern(width)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{strut\_to\_hlist}
+% \clozeluafunction{strut_to_hlist}
 % To make life easier: We add at the beginning of each hlist a strut.
 % Now we can add line, color etc. nodes after the first node of a hlist
 % not before - after is much more easier.
@@ -1685,7 +1685,7 @@ function nodex.strut_to_hlist(hlist)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{write\_margin}
+% \clozeluafunction{write_margin}
 % Write kern nodes to the current node list. This kern nodes can be used
 % to build a margin.
 %    \begin{macrocode}
@@ -1695,7 +1695,7 @@ function nodex.write_margin()
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{search\_hlist}
+% \clozeluafunction{search_hlist}
 % Search for a |hlist| (subtype |line|). Return false, if no |hlist| can
 % be found.
 %    \begin{macrocode}
@@ -1725,7 +1725,7 @@ end
 % some additional data like the local options.
 % \end{enumerate}
 %
-% \clozeluafunction{create\_marker}
+% \clozeluafunction{create_marker}
 % We create a user defined whatsit node that can store a number (type =
 % 100). In order to distinguish this node from other user defined
 % whatsit nodes we set the |user_id| to a large number. We call this
@@ -1741,7 +1741,7 @@ function registry.create_marker(index)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{write\_marker}
+% \clozeluafunction{write_marker}
 % Write a marker node to \TeX's current node list. The argument |mode|
 % accepts the string values |basic|, |fix| and |par|. The argument
 % |position|. The argument |position| is either set to |start| or to
@@ -1754,7 +1754,7 @@ function registry.write_marker(mode, position)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{is\_marker}
+% \clozeluafunction{is_marker}
 % This functions checks if the given node |item| is a marker.
 %    \begin{macrocode}
 function registry.is_marker(item)
@@ -1768,7 +1768,7 @@ function registry.is_marker(item)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{check\_marker}
+% \clozeluafunction{check_marker}
 % This functions tests, whether the given node |item| is a marker. The
 % argument |item| is a node. The argument |mode| accepts the string
 % values |basic|, |fix| and |par|. The argument |position| is either set
@@ -1784,7 +1784,7 @@ function registry.check_marker(item, mode, position)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{get\_marker}
+% \clozeluafunction{get_marker}
 % |registry.get_marker| returns the given marker. The argument |item| is
 % a node. The argument |mode| accepts the string values |basic|, |fix|
 % and |par|. The argument |position| is either set to |start| or to
@@ -1804,7 +1804,7 @@ function registry.get_marker(item, mode, position)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{get\_marker\_data}
+% \clozeluafunction{get_marker_data}
 % |registry.get_marker_data| tests whether the node |item| is a marker.
 % The argument |item| is a node of unspecified type.
 %    \begin{macrocode}
@@ -1819,7 +1819,7 @@ function registry.get_marker_data(item)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{get\_marker\_values}
+% \clozeluafunction{get_marker_values}
 % First this function saves the associatied values of a marker to the
 % local options table. Second it returns this values. The argument
 % |marker| is a whatsit node.
@@ -1831,7 +1831,7 @@ function registry.get_marker_values(marker)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{remove\_marker}
+% \clozeluafunction{remove_marker}
 % This function removes a given whatsit marker. It only deletes a node,
 % if a marker is given.
 %    \begin{macrocode}
@@ -1842,7 +1842,7 @@ end
 %
 % \paragraph{Storage functions (storage)}
 %
-% \clozeluafunction{get\_index}
+% \clozeluafunction{get_index}
 % |registry.index| is a counter. The functions |registry.get_index()|
 % increases the counter by one and then returns it.
 %    \begin{macrocode}
@@ -1855,7 +1855,7 @@ function registry.get_index()
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{set\_storage}
+% \clozeluafunction{set_storage}
 % |registry.set_storage()| stores the local options in the Lua table
 % |registry.storage|. It returns a numeric index number. This index
 % number is the key, where the local options in the Lua table are
@@ -1874,7 +1874,7 @@ function registry.set_storage(mode, position)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{get\_storage}
+% \clozeluafunction{get_storage}
 % The function |registry.get_storage()| retrieves values which belong to
 % a whatsit marker. The argument |index| is a numeric value.
 %    \begin{macrocode}
@@ -1885,7 +1885,7 @@ end
 %
 % \paragraph{Option processing (option)}
 %
-% \clozeluafunction{set\_option}
+% \clozeluafunction{set_option}
 % This function stores a value |value| and his associated key |key|
 % either to the global (|registry.global_options|) or to the local
 % (|registry.local_options|) option table. The global boolean variable
@@ -1904,7 +1904,7 @@ function registry.set_option(key, value)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{set\_is\_global}
+% \clozeluafunction{set_is_global}
 % |registry.set_is_global()| sets the variable |registry.is_global| to
 % the value |value|. It is intended, that the variable takes boolean
 % values.
@@ -1914,7 +1914,7 @@ function registry.set_is_global(value)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{unset\_local\_options}
+% \clozeluafunction{unset_local_options}
 % This function unsets the local options.
 %    \begin{macrocode}
 function registry.unset_local_options()
@@ -1922,7 +1922,7 @@ function registry.unset_local_options()
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{unset\_global\_options}
+% \clozeluafunction{unset_global_options}
 % |registry.unset_global_options| empties the global options storage.
 %    \begin{macrocode}
 function registry.unset_global_options()
@@ -1930,7 +1930,7 @@ function registry.unset_global_options()
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{get\_value}
+% \clozeluafunction{get_value}
 % Retrieve a value from a given key. First search for the value in the
 % local options, then in the global options. If both option storages are
 % empty, the default value will be returned.
@@ -1946,7 +1946,7 @@ function registry.get_value(key)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{get\_value\_show}
+% \clozeluafunction{get_value_show}
 % The function |registry.get_value_show()| returns the boolean value
 % |true| if the option |show| is true. In contrast to the function
 % |registry.get_value()| it converts the string value `true' to a
@@ -1965,7 +1965,7 @@ function registry.get_value_show()
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{has\_value}
+% \clozeluafunction{has_value}
 % This function tests whether the value |value| is not empty and has a
 % value.
 %    \begin{macrocode}
@@ -1978,7 +1978,7 @@ function registry.has_value(value)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{get\_defaults}
+% \clozeluafunction{get_defaults}
 % |registry.get_defaults(option)| returns a the default value of the
 % given option.
 %    \begin{macrocode}
@@ -2003,7 +2003,7 @@ end
 %
 % \noindent\includegraphics[width=\linewidth]{graphics/picture}
 %
-% \clozeluafunction{basic\_make}
+% \clozeluafunction{basic_make}
 % The function |cloze.basic_make()| makes one gap. The argument |start|
 % is the node, where the gap begins. The argument |stop| is the node,
 % where the gap ends.
@@ -2043,7 +2043,7 @@ function cloze.basic_make(start, stop)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{basic\_search\_stop}
+% \clozeluafunction{basic_search_stop}
 % Search for a stop marker.
 %    \begin{macrocode}
 function cloze.basic_search_stop(head)
@@ -2061,7 +2061,7 @@ function cloze.basic_search_stop(head)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{basic\_search\_start}
+% \clozeluafunction{basic_search_start}
 % Search for a start marker. Also begin a new cloze, if the boolean
 % value |cloze.status.continue| is true. The knowledge of the last
 % hlist node is a requirement to begin a cloze.
@@ -2086,7 +2086,7 @@ function cloze.basic_search_start(head)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{basic\_recursion}
+% \clozeluafunction{basic_recursion}
 % Parse recursivley the node tree. Start and stop markers can be nested
 % deeply into the node tree.
 %    \begin{macrocode}
@@ -2115,7 +2115,7 @@ function cloze.basic(head)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{fix\_length}
+% \clozeluafunction{fix_length}
 % Calculate the length of the whitespace before (|l.kern_start|) and
 % after (|l.kern_stopt|) the text.
 %    \begin{macrocode}
@@ -2139,7 +2139,7 @@ function cloze.fix_length(start, stop)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{fix\_make}
+% \clozeluafunction{fix_make}
 % The function |cloze.fix_make| generates a gap of fixed width.
 %
 % \subparagraph*{Node lists}
@@ -2199,7 +2199,7 @@ function cloze.fix_make(start, stop)
 end
 %    \end{macrocode}
 %
-% \clozeluafunction{fix\_recursion}
+% \clozeluafunction{fix_recursion}
 % Function to recurse the node list and search after marker. |head| is
 % the head node of a node list.
 %    \begin{macrocode}
