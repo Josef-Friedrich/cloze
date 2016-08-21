@@ -4,3 +4,5 @@ install:
 
 script:
         - make
+os: linux
+dist: xenial
