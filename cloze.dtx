@@ -35,6 +35,7 @@
 \usepackage[show]{cloze}
 \usepackage{paralist}
 \usepackage{titlesec}
+\usepackage{fancyvrb}
 \titleformat{\paragraph}[hang]{%
   \normalfont\normalsize\bfseries%
   }{\theparagraph}{1em}{}
@@ -49,6 +50,13 @@
   filecolor=red,
   urlcolor=red,
 ]{hyperref}
+
+\DefineVerbatimEnvironment{code}{Verbatim}
+{
+  frame=single,
+  fontsize=\footnotesize,
+}
+
 
 \MakeShortVerb{\|}
 
@@ -70,23 +78,6 @@
   \end{lrbox}%
   \begin{center}%
     \fbox{\usebox{\examplebox}}%
-  \end{center}%
-}
-
-% Colors for the codebox
-\definecolor{grayline}{gray}{0.9}
-\definecolor{graybackground}{gray}{0.97}
-
-\newsavebox{\codebox}
-\newenvironment{code}{%
-  \noindent%
-  \begin{lrbox}{\codebox}%
-  \begin{minipage}{0.9\textwidth}%
-}{%
-  \end{minipage}%
-  \end{lrbox}%
-  \begin{center}%
-    \fcolorbox{grayline}{graybackground}{\usebox{\codebox}}%
   \end{center}%
 }
 
@@ -182,9 +173,7 @@ the capabilities of the modern \TeX{} engine \emph{Lua\TeX}. Therefore,
 you must use Lua\LaTeX{} to create documents containing gaps.
 
 \begin{code}
-\begin{verbatim}
 lualatex cloze-text.tex
-\end{verbatim}
 \end{code}
 
 The main feature of the package is that the formatting doesn't change
@@ -429,11 +418,9 @@ To create a cloze line of a certain width, use the command
 you can create for example an irregular alignment of the cloze text.
 
 \begin{code}
-\begin{verbatim}
 Ut enim ad
 \clozeline[width=1cm]\cloze{minim}\clozeline[width=3cm]
 minim veniam
-\end{verbatim}
 \end{code}
 
 \tighten
@@ -491,10 +478,8 @@ declaration, the cloze package offers a special command to set
 options for each paragraph.
 
 \begin{code}
-\begin{verbatim}
 \clozeset{textcolor=red} Lorem \cloze{ipsum} dolor \par
 \clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
-\end{verbatim}
 \end{code}
 
 \tighten
@@ -509,10 +494,8 @@ paragraph. As you can see in the example below the last \cmd{\clozeset}
 applies the color green for both gaps.
 
 \begin{code}
-\begin{verbatim}
 \clozeset{textcolor=red} Lorem \cloze{ipsum} dolor
 \clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
-\end{verbatim}
 \end{code}
 
 \tighten
@@ -536,14 +519,12 @@ applies the color green for both gaps.
 default values. It has no effect on the \emph{local} options.
 
 \begin{code}
-\begin{verbatim}
 \clozeset{
   thickness=3mm,
   linecolor=yellow,
   textcolor=magenta,
   margin=-2pt
 }
-\end{verbatim}
 \end{code}
 
 \tighten
@@ -694,10 +675,8 @@ Values for both color options are color names used by the xcolor
 package. To define your own color use the following command:
 
 \begin{code}
-\begin{verbatim}
 \definecolor{myclozecolor}{rgb}{0.1,0.4,0.6}
 \cloze[textcolor=myclozecolor]{Lorem ipsum}
-\end{verbatim}
 \end{code}
 \definecolor{myclozecolor}{rgb}{0.1,0.4,0.6}
 
@@ -828,12 +807,10 @@ option is \tt{\getdefaults{width}}.
 \subsubsection{The \tt{tabbing} environment}
 
 \begin{code}
-\begin{verbatim}
 \begin{tabbing}
 col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 \cloze{col1} \> \> \clozefix{col3} \\
 \end{tabbing}
-\end{verbatim}
 \end{code}
 
 \begin{clozeexample}
@@ -850,13 +827,11 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 \subsubsection{The \tt{picture} environment}
 
 \begin{code}
-\begin{verbatim}
 \begin{picture}(320,100)
 \put(80,25){\cloze{Lorem}}
 \put(160,50){\clozefix{ipsum}}
 \put(240,75){\clozefil{dolor}}
 \end{picture}
-\end{verbatim}
 \end{code}
 
 \begin{clozeexample}
@@ -874,13 +849,11 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 \subsubsection{The \tt{tabular} environment}
 
 \begin{code}
-\begin{verbatim}
 \begin{tabular}{l c}
 \cloze{Lorem} & \cloze{ipsum} \\
 \clozefix{amet} & \clozefix{consectetur} \\
 \cloze{sed} & \cloze{do} \\
 \end{tabular}
-\end{verbatim}
 \end{code}
 
 % No |c| inside because of short verbatim.
