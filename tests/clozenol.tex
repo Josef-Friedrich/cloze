@@ -1,0 +1,27 @@
+%!TEX program = lualatex
+\documentclass{article}
+\usepackage{cloze}
+
+\begin{document}
+\section{default}
+
+Lorem \clozenol{ipsum} dolor.
+
+\section{hide}
+
+\clozehide
+
+Lorem \clozenol{ipsum} dolor.
+
+\section{show}
+
+\clozeshow
+
+Lorem \clozenol{ipsum} dolor.
+
+\section{textcolor = green}
+
+\clozeset{textcolor=green}
+
+Lorem \clozenol{ipsum} dolor.
+\end{document}

@@ -1,0 +1,66 @@
+%!TEX program = lualatex
+\documentclass{article}
+\usepackage{cloze}
+
+\begin{document}
+
+\section{default}
+
+\begin{clozebox}
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et.
+\end{clozebox}
+
+\section{hide}
+
+\clozehide
+
+\begin{clozebox}
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et.
+\end{clozebox}
+
+\section{show}
+
+\clozeshow
+
+\begin{clozebox}
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et.
+\end{clozebox}
+
+\section{textcolor = green}
+
+\clozeset{textcolor=green}
+
+\begin{clozebox}
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et.
+\end{clozebox}
+
+\section{width}
+
+\clozereset
+
+\begin{clozebox}[5cm]
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et.
+\end{clozebox}
+
+\section{depth}
+
+\clozereset
+
+\begin{clozebox}[5cm][5cm]
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et.
+\end{clozebox}
+
+\section{starred}
+
+\begin{clozebox}*
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et.
+\end{clozebox}
+
+\end{document}
