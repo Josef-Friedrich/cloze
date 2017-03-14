@@ -350,6 +350,14 @@ Using the option |align| you can make nice tabulars like this:
 
 TODO: Add documentation clozenol = cloze no line
 
+\begin{verbatim}
+Lorem \clozenol{ipsum dolor} sit amet.
+\end{verbatim}
+
+% \begin{example}
+% Lorem \clozenol{ipsum dolor} sit amet.
+% \end{example}
+
 %%
 % \clozefil
 %%
@@ -377,6 +385,26 @@ Ut enim \clozefil{ad minim veniam} exercitation.
 \label{sec:command-clozeextend}
 
 TODO: Add documentation
+
+\begin{verbatim}
+\begin{itemize}
+\item \clozefil{Lorem ipsum dolor sit amet, consectetur adipisicing
+elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+aliqua.}
+\item \clozefil{Ut enim ad minim veniam \clozeextend[20]}
+\item \clozefil{quis nostrud \clozeextend[20]}
+\end{itemize}
+\end{verbatim}
+
+\begin{example}
+\begin{itemize}
+\item \clozefil{Lorem ipsum dolor sit amet, consectetur adipisicing
+elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+aliqua.}
+\item \clozefil{Ut enim ad minim veniam \clozeextend[20]}
+\item \clozefil{quis nostrud \clozeextend[20]}
+\end{itemize}
+\end{example}
 
 %%
 % clozepar
@@ -410,7 +438,57 @@ Excepteur sint occaecat cupidatat non proident.
 \subsubsection{\tt{clozebox}}
 \label{sec:command-clozebox}
 
-TODO: Add documentation
+\begin{verbatim}
+\begin{clozebox}
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua.
+\end{clozebox}
+\end{verbatim}
+
+% \begin{example}
+% \begin{clozebox}
+% Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+% tempor incididunt ut labore et dolore magna aliqua.
+% \end{clozebox}
+% \end{example}
+
+% width
+\begin{verbatim}
+\begin{clozebox}[5cm]
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua.
+\end{clozebox}
+\end{verbatim}
+
+% \begin{example}
+% \begin{clozebox}[5cm]
+% Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+% tempor incididunt ut labore et dolore magna aliqua.
+% \end{clozebox}
+% \end{example}
+
+% depth
+\begin{verbatim}
+\begin{clozebox}[5cm][5cm]
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua.
+\end{clozebox}
+\end{verbatim}
+
+% \begin{example}
+% \begin{clozebox}[5cm][5cm]
+% Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+% tempor incididunt ut labore et dolore magna aliqua.
+% \end{clozebox}
+% \end{example}
+
+% starred
+\begin{verbatim}
+\begin{clozebox}*
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua.
+\end{clozebox}
+\end{verbatim}
 
 %%
 % clozespace
@@ -420,6 +498,29 @@ TODO: Add documentation
 \label{sec:command-clozespace}
 
 TODO: Add documentation
+
+\begin{verbatim}
+\begin{clozespace}[spacing=2]
+\clozesetfont{\ttfamily\Huge}
+Lorem \cloze{ipsum} dolor sit \cloze{amet}, consectetur adipisicing
+elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+aliqua. Ut enim ad minim veniam, quis \cloze{nostrud}
+exercitation ullamco \cloze{laboris} nisi ut aliquip ex ea commodo
+consequat.
+\end{clozespace}
+\end{verbatim}
+
+\begin{example}
+\begin{clozespace}[spacing=2]
+\clozesetfont{\ttfamily\Huge}
+Lorem \cloze{ipsum} dolor sit \cloze{amet}, consectetur adipisicing
+elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+aliqua. Ut enim ad minim veniam, quis \cloze{nostrud}
+exercitation ullamco \cloze{laboris} nisi ut aliquip ex ea commodo
+consequat.
+\vspace{-0.8cm}
+\end{clozespace}
+\end{example}
 
 %%
 % \clozeline
