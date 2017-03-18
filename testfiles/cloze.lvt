@@ -1,0 +1,9 @@
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage{cloze}
+\begin{document}
+\START
+\setbox0=\hbox{Lorem \cloze{ipsum} sit}
+\showbox0
+\END
+\end{document}
