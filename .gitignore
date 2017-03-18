@@ -16,3 +16,6 @@
 *.tar.gz
 cloze/
 *.fls
+*.tlg
+build/*
+!build.lua
