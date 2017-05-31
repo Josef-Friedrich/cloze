@@ -51,3 +51,12 @@ or manually:
     makeindex -s gind.ist -o cloze.ind cloze.idx
     lualatex cloze.dtx
 
+# Requirements
+
+## Tests
+
+* forest
+* pgfopts
+* environ
+* trimspaces
+* inlinedef
