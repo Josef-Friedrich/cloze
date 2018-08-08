@@ -9,6 +9,8 @@ install:
 - cd $TRAVIS_BUILD_DIR
 - export PATH="$PATH:/usr/local/texlive/bin/x86_64-linux"
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install latex
+- sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install latex-bin
+- sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install latex-bin.x86_64-linux
 
 script:
 - make
