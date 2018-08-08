@@ -7,6 +7,7 @@ install:
 - tar --strip-components=1 -xvf install-tl-unx.tar.gz
 - sudo ./install-tl --profile=texlive.profile
 - cd $TRAVIS_BUILD_DIR
+- export PATH="$PATH:/usr/local/texlive/bin/x86_64-linux"
 
 script:
 - make
