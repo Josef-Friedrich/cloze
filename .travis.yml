@@ -25,6 +25,7 @@ install:
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install needspace
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install hyperref
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install url
+- sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install titlesec
 
 script:
 - make
