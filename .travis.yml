@@ -16,7 +16,7 @@ install:
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install fontspec
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install luatexbase
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install ctablestack
-- sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install kvoptions
+- sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install oberdiek
 
 script:
 - make
