@@ -27,6 +27,8 @@ install:
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install url
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install titlesec
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install etoolbox
+- sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install epstopdf
+- sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install epstopdf.x86_64-linux
 
 script:
 - make
