@@ -1,5 +1,3 @@
-os: linux
-
 install:
 - mkdir /tmp/install-tl-unx
 - cd /tmp/install-tl-unx
@@ -8,7 +6,6 @@ install:
 - tar --strip-components=1 -xvf install-tl-unx.tar.gz && \
 - ./install-tl --profile=texlive.profile
 - cd
-
 
 script:
 - make
