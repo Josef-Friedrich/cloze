@@ -6,7 +6,7 @@ install:
 - wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
 - tar --strip-components=1 -xvf install-tl-unx.tar.gz
 - sudo ./install-tl --profile=texlive.profile
-- cd /home/travis/Josef-Friedrich/cloze
+- cd $TRAVIS_BUILD_DIR
 
 script:
 - make
