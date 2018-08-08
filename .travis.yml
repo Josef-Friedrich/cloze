@@ -8,7 +8,7 @@ install:
 - sudo ./install-tl --profile=texlive.profile
 - cd $TRAVIS_BUILD_DIR
 - export PATH="$PATH:/usr/local/texlive/bin/x86_64-linux"
-- sudo tlmgr install docstrip
+- sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install docstrip
 
 script:
 - make
