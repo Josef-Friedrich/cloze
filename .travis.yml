@@ -19,6 +19,7 @@ install:
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install oberdiek
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install graphics
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install setspace
+- sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install xcolor
 
 script:
 - make
