@@ -11,6 +11,7 @@ install:
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install latex
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install latex-bin
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install latex-bin.x86_64-linux
+- sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install luaotfload
 
 script:
 - make
