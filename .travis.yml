@@ -5,7 +5,7 @@ install:
 - cd /tmp/install-tl-unx
 - wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
 - tar --strip-components=1 -xvf install-tl-unx.tar.gz
-- ./install-tl --profile=texlive.profile
+- sudo ./install-tl --profile=texlive.profile
 - cd
 
 script:
