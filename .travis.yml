@@ -1,3 +1,4 @@
+sudo: yes
 install:
 - mkdir /tmp/install-tl-unx
 - cp texlive.profile /tmp/install-tl-unx
