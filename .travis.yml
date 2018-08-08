@@ -26,6 +26,7 @@ install:
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install hyperref
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install url
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install titlesec
+- sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install etoolbox
 
 script:
 - make
