@@ -18,6 +18,7 @@ install:
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install ctablestack
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install oberdiek
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install graphics
+- sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install setspace
 
 script:
 - make
