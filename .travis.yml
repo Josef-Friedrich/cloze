@@ -20,6 +20,11 @@ install:
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install graphics
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install setspace
 - sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install xcolor
+- sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install paralist
+- sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install mdframed
+- sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install needspace
+- sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install hyperref
+- sudo /usr/local/texlive/bin/x86_64-linux/tlmgr install url
 
 script:
 - make
