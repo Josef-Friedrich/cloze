@@ -1,6 +1,7 @@
 sudo: yes
 install:
-- sudo apt install -qq ghostscript
+- sudo apt-get update -qq
+- sudo apt-get install -qq ghostscript
 - mkdir /tmp/install-tl-unx
 - cp texlive.profile /tmp/install-tl-unx
 - cd /tmp/install-tl-unx
