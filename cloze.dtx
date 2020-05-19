@@ -583,24 +583,37 @@ Lorem \clozestrike{ipsum}{dolor} sit amet.
 \end{example}
 
 \begin{verbatim}
-Lorem \clozestrike[textcolor=red,linecolor=green]{ipsum}{dolor} sit amet.
+Lorem \clozestrike[textcolor=red]{ipsum}{dolor} sit amet.
 \end{verbatim}
 
 \begin{example}
-Lorem \clozestrike[textcolor=red,linecolor=green]{ipsum}{dolor} sit amet.
+Lorem \clozestrike[textcolor=red]{ipsum}{dolor} sit amet.
 \end{example}
 
 \begin{example}
 \begin{clozespace}
-invidunt ut \clozestrike{labore}{et dolore magna aliquyam erat}, sed diam
-voluptua. At \clozestrike{vero eos}{et accusam et justo} duo dolores et ea \clozestrike{rebum. Stet}{
-clita kasd gubergren}, no sea takimata sanctus est Lorem ipsum dolor sit
-amet. Lorem ipsum \clozestrike{dolor sit amet, consetetur }{sadipscing elitr,
-sed diam} nonumy eirmod tempor invidunt ut labore et dolore magna
-aliquyam erat, \clozestrike{sed diam voluptua}{. At vero} eos et accusam et justo duo
-dolores et ea rebum. Stet clita kasd gubergren, \clozestrike{no sea}{takimata} sanctus
-est Lorem ipsum dolor sit amet.
+invidunt ut \clozestrike{labore}{et dolore magna aliquyam erat}, sed
+diam voluptua. At \clozestrike{vero eos}{et accusam et justo} duo
+dolores et ea \clozestrike{rebum. Stet}{clita kasd gubergren}, no sea
+takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+\clozestrike{dolor sit amet, consetetur }{sadipscing elitr, sed diam}
+nonumy eirmod tempor invidunt ut labore et dolore magna
+aliquyam erat, \clozestrike{sed diam voluptua}{At vero}.
 \end{clozespace}
+\end{example}
+
+\begin{example}
+\clozehide
+\begin{clozespace}
+invidunt ut \clozestrike{labore}{et dolore magna aliquyam erat}, sed
+diam voluptua. At \clozestrike{vero eos}{et accusam et justo} duo
+dolores et ea \clozestrike{rebum. Stet}{clita kasd gubergren}, no sea
+takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+\clozestrike{dolor sit amet, consetetur }{sadipscing elitr, sed diam}
+nonumy eirmod tempor invidunt ut labore et dolore magna
+aliquyam erat, \clozestrike{sed diam voluptua}{At vero}.
+\end{clozespace}
+\clozeshow
 \end{example}
 
 %-----------------------------------------------------------------------
@@ -1154,7 +1167,7 @@ or manually:
 % \end{itemize}
 %
 %    \begin{macrocode}
-\RequirePackage{fontspec,luatexbase-mcb,kvoptions,setspace,xcolor,xparse,stackengine,ulem}
+\RequirePackage{fontspec,luatexbase-mcb,kvoptions,setspace,xcolor,xparse,stackengine,ulem,transparent}
 %    \end{macrocode}
 %
 % Load the cloze lua module and put all return values in the variable
@@ -1651,22 +1664,12 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\cloze@line@color}
-%    \begin{macrocode}
-\newcommand{\cloze@line@color}[1]{%
-  \textcolor%
-    {\directlua{tex.print(cloze.get_value('linecolor_name'))}}%
-    {#1}%
-}
-%    \end{macrocode}
-% \end{macro}
-%
 % \begin{macro}{\cloze@strike@line}
 %    \begin{macrocode}
 \newcommand\cloze@strike@line{%
   \bgroup%
   \markoverwith{%
-    \cloze@line@color{%
+    \cloze@text@color{%
       \rule[0.5ex]{2pt}{1pt}%
     }%
   }%
@@ -1679,14 +1682,27 @@ or manually:
 %    \begin{macrocode}
 \newcommand{\clozestrike}[3][]{%
   \cloze@set@local@options{#1}%
-  \stackengine%
-    {\stackgap}%
-    {\cloze@strike@line{#2}}%
-    {\tiny\cloze@text@color{#3}}{O}%
-    {\stackalignment}%
-    {\quietstack}%
-    {T}%
-    {\stacktype}%
+  \ifclozeshow%
+    \stackengine%
+      {\Sstackgap}% \Sstackgap or \Lstackgap or \stackgap or stacklength
+      {\cloze@strike@line{#2}}% anchor
+      {\cloze@text@color{\clozefont{}#3}}% item
+      {O}% O or U
+      {c}% \stackalignment or l or c or r
+      {\quietstack}% \quietstack or T or F
+      {T}% \useanchorwidth or T or F
+      {\stacktype}% \stacktype or S or L
+  \else%
+    \stackengine%
+      {\Sstackgap}% \Sstackgap or \Lstackgap or \stackgap or stacklength
+      {#2}% anchor
+      {\texttransparent{0}{\clozefont{}#3}}% item
+      {O}% O or U
+      {c}% \stackalignment or l or c or r
+      {\quietstack}% \quietstack or T or F
+      {T}% \useanchorwidth or T or F
+      {\stacktype}% \stacktype or S or L
+  \fi%
 }
 %    \end{macrocode}
 % \end{macro}
