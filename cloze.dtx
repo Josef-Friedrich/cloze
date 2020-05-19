@@ -347,16 +347,25 @@ Using the option |align| you can make nice tabulars like this:
 
 \subsubsection{\cmd{\clozenol}}
 \label{sec:command-clozenol}
-
-TODO: Add documentation clozenol = cloze no line
+\DescribeMacro{\clozenol} \cmd{\clozenol}\oarg{options}\marg{some text}:
+The macro name |clozenol| stands for \emph{“cloze no line”}. As the
+the name suggests this macro typesets cloze texts without a line.
 
 \begin{verbatim}
 Lorem \clozenol{ipsum dolor} sit amet.
 \end{verbatim}
 
-% \begin{example}
-% Lorem \clozenol{ipsum dolor} sit amet.
-% \end{example}
+\begin{example}
+Lorem \clozenol{ipsum dolor} sit amet.
+\end{example}
+
+\begin{verbatim}
+Lorem \clozenol[textcolor=green]{ipsum dolor} sit amet.
+\end{verbatim}
+
+\begin{example}
+Lorem \clozenol[textcolor=green]{ipsum dolor} sit amet.
+\end{example}
 
 %%
 % \clozefil
@@ -384,7 +393,9 @@ Ut enim \clozefil{ad minim veniam} exercitation.
 \subsubsection{\cmd{\clozeextend}}
 \label{sec:command-clozeextend}
 
-TODO: Add documentation
+\DescribeMacro{\clozeextend} \cmd{\clozeextend}\oarg{spaces}:
+The command |\clozeextend| adds some invisible placeholders to extend
+some cloze texts with blank space.
 
 \begin{verbatim}
 \begin{itemize}
@@ -438,6 +449,13 @@ Excepteur sint occaecat cupidatat non proident.
 \subsubsection{\tt{clozebox}}
 \label{sec:command-clozebox}
 
+\DescribeEnv{clozebox} |\begin{clozebox}|*\oarg{options} \dots
+\textit{some text} \dots |\end{clozebox}|: The environment \tt{clozebox}
+surrounds a text with a box. The starred version omits the line
+around the box. Use the options |boxwidth| and |boxheight| to specify
+the dimensions of the box. By default the width of the box is
+|\linewidth|.
+
 \begin{verbatim}
 \begin{clozebox}
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
@@ -445,50 +463,80 @@ tempor incididunt ut labore et dolore magna aliqua.
 \end{clozebox}
 \end{verbatim}
 
-% \begin{example}
-% \begin{clozebox}
-% Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-% tempor incididunt ut labore et dolore magna aliqua.
-% \end{clozebox}
-% \end{example}
+\bigskip
+\noindent
+|\clozehide|
+\clozehide
+\bigskip
 
-% width
+\begin{center}
+\begin{clozebox}[boxwidth=8cm]
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua.
+\end{clozebox}
+\end{center}
+
+\bigskip
+\noindent
+|\clozeshow|
+\clozeshow
+\bigskip
+
+\begin{center}
+\begin{clozebox}[boxwidth=8cm]
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua.
+\end{clozebox}
+\end{center}
+
+\paragraph{Option boxwidth}
+
 \begin{verbatim}
-\begin{clozebox}[5cm]
+\begin{clozebox}[boxwidth=5cm]
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua.
 \end{clozebox}
 \end{verbatim}
 
-% \begin{example}
-% \begin{clozebox}[5cm]
-% Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-% tempor incididunt ut labore et dolore magna aliqua.
-% \end{clozebox}
-% \end{example}
+\begin{center}
+\begin{clozebox}[boxwidth=5cm]
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua.
+\end{clozebox}
+\end{center}
 
-% depth
+\paragraph{Option boxheight}
+
 \begin{verbatim}
-\begin{clozebox}[5cm][5cm]
+\begin{clozebox}[boxwidth=5cm,boxheight=5cm]
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua.
 \end{clozebox}
 \end{verbatim}
 
-% \begin{example}
-% \begin{clozebox}[5cm][5cm]
-% Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-% tempor incididunt ut labore et dolore magna aliqua.
-% \end{clozebox}
-% \end{example}
+\begin{center}
+\begin{clozebox}[boxwidth=5cm,boxheight=5cm]
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua.
+\end{clozebox}
+\end{center}
+
+\paragraph{starred}
 
 % starred
 \begin{verbatim}
-\begin{clozebox}*
+\begin{clozebox}*[boxwidth=5cm,boxheight=5cm]
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua.
 \end{clozebox}
 \end{verbatim}
+
+\begin{center}
+\begin{clozebox}*[boxwidth=5cm,boxheight=5cm]
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua.
+\end{clozebox}
+\end{center}
 
 %%
 % clozespace
@@ -497,7 +545,8 @@ tempor incididunt ut labore et dolore magna aliqua.
 \subsubsection{\tt{clozespace}}
 \label{sec:command-clozespace}
 
-TODO: Add documentation
+\DescribeEnv{clozespace} |\begin{clozespace}|\oarg{options} \dots
+\textit{some text} \dots |\end{clozespace}|
 
 \begin{verbatim}
 \begin{clozespace}[spacing=2]
@@ -1139,35 +1188,56 @@ or manually:
 %
 % \subsection{The file \tt{cloze.sty}}
 %
-% This four packages are used to build \emph{cloze}:
+% This packages are used to build \emph{cloze}:
 %
-% \begin{itemize}
-% \item \href{https://www.ctan.org/pkg/fontspec}{fontspec} is not
+% \subsubsection{Dependencies}
+%
+% The package \href{https://www.ctan.org/pkg/fontspec}{fontspec} is not
 % necessarily required. When using Lua\LaTeX{} it is good form to load
 % it. Apart from this the package supplies helpful messages, when you
 % compile a Lua\LaTeX{} document with pdf\LaTeX{}.
-%
-% \item \href{https://www.ctan.org/pkg/luatexbase}{luatexbase} allows to
-% register multiple Lua callbacks.
-%
-% \item \href{https://www.ctan.org/pkg/kvoptions}{kvoptions} takes the
-% handling of the options.
-%
-% \item |setspace| is used in the |clozespace| environment. (TODO:
-% remove dependency)
-%
-% \item \href{https://www.ctan.org/pkg/xcolor}{xcolor} is required to
-% colorize the text and the line of a gap.
-%
-% \item |xparse| is used in the |clozebox| environment. (TODO: remove
-% dependency)
-%
-% \item |stackengine| and |ulem| is needed for the command
-% |\clozestrike{}{}|.
-% \end{itemize}
+%    \begin{macrocode}
+\RequirePackage{fontspec}
+%    \end{macrocode}
+% The package \href{https://www.ctan.org/pkg/luatexbase}{luatexbase}
+% allows to register multiple Lua callbacks.
+%    \begin{macrocode}
+\RequirePackage{luatexbase-mcb}
+%    \end{macrocode}
+% The package \href{https://www.ctan.org/pkg/kvoptions}{kvoptions}
+% takes the handling of the options.
+%    \begin{macrocode}
+\RequirePackage{kvoptions}
+%    \end{macrocode}
+% The package \href{https://www.ctan.org/pkg/setspace}{setspace} is used
+% by the environment |clozespace|.
+%    \begin{macrocode}
+\RequirePackage{setspace}
+%    \end{macrocode}
+% The package \href{https://www.ctan.org/pkg/xcolor}{xcolor} is required
+% to colorize the text and the line of a gap.
+%    \begin{macrocode}
+\RequirePackage{xcolor}
+%    \end{macrocode}
+% The package \href{https://www.ctan.org/pkg/xcolor}{xparse} is used by
+% the environment |clozebox|.
+%    \begin{macrocode}
+\RequirePackage{xparse}
+%    \end{macrocode}
+% The package \href{https://www.ctan.org/pkg/stackengine}{stackengine}
+% is required by the command |\clozestrike{}{}|.
+%    \begin{macrocode}
+\RequirePackage{stackengine}
+%    \end{macrocode}
+% The package \href{https://www.ctan.org/pkg/ulem}{ulem} is required by
+% the command |\clozestrike{}{}|.
+%    \begin{macrocode}
+\RequirePackage{ulem}
+\normalem
+%    \end{macrocode}
 %
 %    \begin{macrocode}
-\RequirePackage{fontspec,luatexbase-mcb,kvoptions,setspace,xcolor,xparse,stackengine,ulem,transparent}
+\RequirePackage{transparent}
 %    \end{macrocode}
 %
 % Load the cloze lua module and put all return values in the variable
@@ -1319,6 +1389,30 @@ or manually:
 %    \begin{macrocode}
 \DeclareStringOption{align}
 \define@key{CLZ}{align}[]{\cloze@set@option[align]{#1}}
+%    \end{macrocode}
+%
+% \paragraph{\tt{boxheight}}
+%
+% \noindent Please read the section \secref{sec:sec:command-clozebox}
+% how to use the option |boxheight|. |boxheight| affects only the
+% environment \cmd{clozebox}.
+% \secref{sec:command-clozefix}.
+%
+%    \begin{macrocode}
+\DeclareStringOption{boxheight}
+\define@key{CLZ}{boxheight}[]{\cloze@set@option[boxheight]{#1}}
+%    \end{macrocode}
+%
+% \paragraph{\tt{boxwidth}}
+%
+% \noindent Please read the section \secref{sec:sec:command-clozebox}
+% how to use the option |boxwidth|. |boxwidth| affects only the
+% environment \cmd{clozebox}.
+% \secref{sec:command-clozefix}.
+%
+%    \begin{macrocode}
+\DeclareStringOption{boxwidth}
+\define@key{CLZ}{boxwidth}[]{\cloze@set@option[boxwidth]{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{distance}}
@@ -1535,15 +1629,16 @@ or manually:
 % TODO: Realize this macro with lua code, without ugly |\color{white}|.
 % command.
 %    \begin{macrocode}
-\newcommand{\clozenol}[1]{%
+\newcommand{\clozenol}[2][]{%
   {%
-    \clozefont%
+    \cloze@set@local@options{#1}%
+    \clozefont\relax%
     \ifclozeshow%
       \color{\directlua{tex.print(cloze.get_value('textcolor_name'))}}%
     \else%
       \color{white}%
     \fi%
-    #1%
+    #2%
   }%
 }
 %    \end{macrocode}
@@ -1568,6 +1663,16 @@ or manually:
 %    \end{macrocode}
 % \end{environment}
 %
+% \begin{macro}{\cloze@get@value}
+%    \begin{macrocode}
+\newcommand{\cloze@get@value}[1]{%
+  \directlua{
+    tex.print(cloze.get_value('#1'))
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{environment}{clozebox}
 % The usage of the environment |clozebox| is described in detail in
 % section \secref{sec:command-clozebox}.
@@ -1575,21 +1680,31 @@ or manually:
 % command.
 %    \begin{macrocode}
 \newsavebox{\cloze@box}
-\NewDocumentEnvironment{clozebox}{ s O{\linewidth} O{} }{%
+\NewDocumentEnvironment{clozebox}{ s O{} +b}{%
+  \cloze@set@local@options{#2}%
   \noindent%
   \begin{lrbox}{\cloze@box}%
-  \begin{minipage}[t][#3][t]{#2}%
-  \clozefont%
-  \ifclozeshow%
-    \color{\directlua{tex.print(cloze.get_value('textcolor_name'))}}%
-  \else%
-    \color{white}%
-  \fi%
-}{%
+  \directlua{
+    local boxheight = cloze.get_value('boxheight')
+    local boxwidth = cloze.get_value('boxwidth')
+    if boxheight then
+      tex.print('\\begin{minipage}[t][' .. boxheight .. '][t]{' .. boxwidth .. '}')
+    else
+      tex.print('\\begin{minipage}[t]{' .. boxwidth .. '}')
+    end
+  }
+    \clozefont\relax%
+    \ifclozeshow%
+      \color{\directlua{tex.print(cloze.get_value('textcolor_name'))}}#3%
+    \else%
+      \color{white}#3%
+    \fi%
   \end{minipage}%
   \end{lrbox}%
-  \IfBooleanTF{#1}{\usebox{\cloze@box}}{\fbox{\usebox{\cloze@box}}}%
-}
+  \IfBooleanTF{#1}%
+    {\usebox{\cloze@box}}%
+    {\fbox{\usebox{\cloze@box}}}%
+}{}
 %    \end{macrocode}
 % \end{environment}
 %
@@ -1753,6 +1868,8 @@ registry.user_id = 3121978
 registry.storage = {}
 registry.defaults = {
   ['align'] = 'l',
+  ['boxheight'] = false,
+  ['boxwidth'] = '\\linewidth',
   ['distance'] = '1.5pt',
   ['hide'] = false,
   ['linecolor'] = '0 0 0 rg 0 0 0 RG', -- black
