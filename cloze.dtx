@@ -564,6 +564,45 @@ complete available horizontal space with a line. Moreover,
 Lorem\clozelinefil
 \end{example}
 
+%%
+% \clozestrike
+%%
+
+\subsubsection{\cmd{\clozestrike}}
+\label{sec:command-clozelinefil}
+
+\DescribeMacro{\clozestrike}
+\cmd{\clozestrike}\oarg{options}\marg{wrong text}\marg{correct text}
+
+\begin{verbatim}
+Lorem \clozestrike{ipsum}{dolor} sit amet.
+\end{verbatim}
+
+\begin{example}
+Lorem \clozestrike{ipsum}{dolor} sit amet.
+\end{example}
+
+\begin{verbatim}
+Lorem \clozestrike[textcolor=red,linecolor=green]{ipsum}{dolor} sit amet.
+\end{verbatim}
+
+\begin{example}
+Lorem \clozestrike[textcolor=red,linecolor=green]{ipsum}{dolor} sit amet.
+\end{example}
+
+\begin{example}
+\begin{clozespace}
+invidunt ut \clozestrike{labore}{et dolore magna aliquyam erat}, sed diam
+voluptua. At \clozestrike{vero eos}{et accusam et justo} duo dolores et ea \clozestrike{rebum. Stet}{
+clita kasd gubergren}, no sea takimata sanctus est Lorem ipsum dolor sit
+amet. Lorem ipsum \clozestrike{dolor sit amet, consetetur }{sadipscing elitr,
+sed diam} nonumy eirmod tempor invidunt ut labore et dolore magna
+aliquyam erat, \clozestrike{sed diam voluptua}{. At vero} eos et accusam et justo duo
+dolores et ea rebum. Stet clita kasd gubergren, \clozestrike{no sea}{takimata} sanctus
+est Lorem ipsum dolor sit amet.
+\end{clozespace}
+\end{example}
+
 %-----------------------------------------------------------------------
 % Options
 %-----------------------------------------------------------------------
@@ -1109,10 +1148,13 @@ or manually:
 %
 % \item |xparse| is used in the |clozebox| environment. (TODO: remove
 % dependency)
+%
+% \item |stackengine| and |ulem| is needed for the command
+% |\clozestrike{}{}|.
 % \end{itemize}
 %
 %    \begin{macrocode}
-\RequirePackage{fontspec,luatexbase-mcb,kvoptions,setspace,xcolor,xparse}
+\RequirePackage{fontspec,luatexbase-mcb,kvoptions,setspace,xcolor,xparse,stackengine,ulem}
 %    \end{macrocode}
 %
 % Load the cloze lua module and put all return values in the variable
@@ -1595,6 +1637,56 @@ or manually:
   \strut%
   \directlua{cloze.linefil()}%
   \strut%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\cloze@text@color}
+%    \begin{macrocode}
+\newcommand{\cloze@text@color}[1]{%
+  \textcolor%
+    {\directlua{tex.print(cloze.get_value('textcolor_name'))}}%
+    {#1}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\cloze@line@color}
+%    \begin{macrocode}
+\newcommand{\cloze@line@color}[1]{%
+  \textcolor%
+    {\directlua{tex.print(cloze.get_value('linecolor_name'))}}%
+    {#1}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\cloze@strike@line}
+%    \begin{macrocode}
+\newcommand\cloze@strike@line{%
+  \bgroup%
+  \markoverwith{%
+    \cloze@line@color{%
+      \rule[0.5ex]{2pt}{1pt}%
+    }%
+  }%
+  \ULon%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozestrike}
+%    \begin{macrocode}
+\newcommand{\clozestrike}[3][]{%
+  \cloze@set@local@options{#1}%
+  \stackengine%
+    {\stackgap}%
+    {\cloze@strike@line{#2}}%
+    {\tiny\cloze@text@color{#3}}{O}%
+    {\stackalignment}%
+    {\quietstack}%
+    {T}%
+    {\stacktype}%
 }
 %    \end{macrocode}
 % \end{macro}
