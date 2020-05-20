@@ -490,6 +490,8 @@ tempor incididunt ut labore et dolore magna aliqua.
 \end{center}
 
 \paragraph{Option boxwidth}
+\label{sec:command-clozebox-boxwidth}
+See the documentation about the option \secref{sec:option-boxwidth}.
 
 \begin{verbatim}
 \begin{clozebox}[boxwidth=5cm]
@@ -506,6 +508,8 @@ tempor incididunt ut labore et dolore magna aliqua.
 \end{center}
 
 \paragraph{Option boxheight}
+\label{sec:command-clozebox-boxheight}
+See the documentation about the option \secref{sec:option-boxheight}.
 
 \begin{verbatim}
 \begin{clozebox}[boxwidth=5cm,boxheight=5cm]
@@ -814,6 +818,30 @@ of the line is larger than the width of the text.
 \end{example}
 
 %%
+% boxheight
+%%
+
+\subsubsection{\tt{boxheight}}
+\label{sec:option-boxheight}
+
+|boxheight| specifies the height of a cloze box. This option has only
+an effect on the environment |clozebox| \secref{sec:command-clozebox}.
+An example can be found in the section about the environment
+\secref{sec:command-clozebox-boxheight}.
+
+%%
+% boxwidth
+%%
+
+\subsubsection{\tt{boxwidth}}
+\label{sec:option-boxwidth}
+
+|boxwidth| specifies the width of a cloze box. This option has only
+an effect on the environment |clozebox| \secref{sec:command-clozebox}.
+An example can be found in the section about the environment
+\secref{sec:command-clozebox-boxwidth}.
+
+%%
 % distance
 %%
 
@@ -957,7 +985,11 @@ line breaks after this punctation mark. Even the most large value of
 \subsubsection{\tt{spacing}}
 \label{sec:option-spacing}
 
-TOTO: add documentation
+\option{spacing}{number}: This option provides support for setting the
+spacing  between lines. A larger font used for the cloze texts needs
+more line space to avoid unsteady line distances.
+This option only affects the environment |clozespace|
+\secref{sec:command-clozespace}.
 
 %%
 % thickness
@@ -1165,10 +1197,13 @@ or manually:
 %
 % \changes{v0.1}{2015/06/16}{Converted to DTX file}
 % \changes{v1.0}{2015/07/08}{Inital release}
-% \changes{v1.1}{2016/06/13}{Make cloze compatible to LuaTeX version 0.95}
+% \changes{v1.1}{2016/06/13}{Make cloze compatible to LuaTeX version
+% 0.95}
 % \changes{v1.2}{2016/06/23}{The cloze makros are now working in
 % tabular, tabbing and picture environments}
 % \changes{v1.3}{2017/03/13}{Add new macros and environments}
+% \changes{v1.4}{2020/05/20}{Add new macro \cmd{\clozestrike} and
+% improve the documentation}
 %
 % \DoNotIndex{\newcommand,\newenvironment,\def,\directlua}
 %
