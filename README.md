@@ -8,7 +8,7 @@ Es nutzt die Möglichkeiten der modernen TeX-Engine LuaTeX.
 
 # License
 
-Copyright (C) 2015 by Josef Friedrich <josef@friedrich.rocks>
+Copyright (C) 2015-2020 by Josef Friedrich <josef@friedrich.rocks>
 ------------------------------------------------------------------------
 This work may be distributed and/or modified under the conditions of
 the LaTeX Project Public License, either version 1.3 of this license
@@ -51,3 +51,50 @@ or manually:
     makeindex -s gind.ist -o cloze.ind cloze.idx
     lualatex cloze.dtx
 
+# Development
+
+First delete the stable version installed by TeX Live. Because the
+package `cloze` belongs to the collection `collection-latexextra`, the
+option  `--force` must be used to delete the package.
+
+    tlmgr remove --force cloze
+
+## Deploying a new version
+
+Update the version number on this locations in the file `cloze.dtx`
+
+### `cloze.sty` (approximately at the line number 30)
+
+    %<*package>
+      [2020/05/20 v1.4 Package to typeset cloze worksheets or cloze tests]
+    %<*package>
+
+### documentation  (approximately at the line number 1250)
+
+Add a changes entry:
+
+```latex
+\changes{v1.4}{2020/05/20}{...}
+```
+
+### `cloze.lua` (approximately at the line number 1900)
+
+```lua
+if not modules then modules = { } end modules ['cloze'] = {
+  version   = '1.4'
+}
+```
+
+### Update the copyright year:
+
+```
+find ./ -type f -exec sed -i 's/(C) 2015-2020/(C) 2015-2020/g' {} \;
+```
+
+### Command line tasks:
+
+```
+git tag v1.4
+make
+make ctan
+```
