@@ -1216,7 +1216,8 @@ if not modules then modules = { } end modules ['cloze'] = {
 ### Update the copyright year:
 
 ```
-find ./ -type f -exec sed -i 's/(C) 2015-2020/(C) 2015-2020/g' {} \;
+sed -i 's/(C) 2015-2020/(C) 2015-2021/g' cloze.ins
+sed -i 's/(C) 2015-2020/(C) 2015-2021/g' cloze.dtx
 ```
 
 ### Command line tasks:
