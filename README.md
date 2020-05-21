@@ -46,10 +46,10 @@ Compile:
 or manually:
 
     luatex cloze.ins
-    lualatex cloze.dtx
+    lualatex --shell-escape cloze.dtx
     makeindex -s gglo.ist -o cloze.gls cloze.glo
     makeindex -s gind.ist -o cloze.ind cloze.idx
-    lualatex cloze.dtx
+    lualatex --shell-escape cloze.dtx
 
 # Development
 
@@ -61,15 +61,15 @@ option  `--force` must be used to delete the package.
 
 ## Deploying a new version
 
-Update the version number on this locations in the file `cloze.dtx`
+Update the version number in the file `cloze.dtx` on this locations:
 
-### `cloze.sty` (approximately at the line number 30)
+### In the markup for the file `cloze.sty` (approximately at the line number 30)
 
     %<*package>
       [2020/05/20 v1.4 Package to typeset cloze worksheets or cloze tests]
     %<*package>
 
-### documentation  (approximately at the line number 1250)
+### In the markup for the package documentation (approximately at the line number 1250)
 
 Add a changes entry:
 
@@ -77,7 +77,7 @@ Add a changes entry:
 \changes{v1.4}{2020/05/20}{...}
 ```
 
-### `cloze.lua` (approximately at the line number 1900)
+### In the markup for the file `cloze.lua` (approximately at the line number 1900)
 
 ```lua
 if not modules then modules = { } end modules ['cloze'] = {
