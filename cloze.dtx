@@ -52,6 +52,16 @@
   urlcolor=red,
 ]{hyperref}
 
+\usepackage{minted}
+\usemintedstyle{colorful}
+\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=yellow!5]}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+\setminted{
+  breaklines=true,
+  fontsize=\footnotesize,
+}
+
+
 \MakeShortVerb{\|}
 
 \setlength{\fboxrule}{0.2pt}
@@ -1050,6 +1060,60 @@ option is \tt{\getdefaults{width}}.
 %-----------------------------------------------------------------------
 
 \subsection{Special application areas}
+
+This section lists examples that didn’t work in older versions of
+the cloze package and required special treatment to work as expected.
+
+\subsubsection{The math mode}
+
+By default the package uses |\itshape| to format the cloze text. In
+math mode you have to reset the cloze text format by calling
+|\clozesetfont{}|. A known bug ist: You can’t show and hide
+single display math formulas. Only the last |\clozeshow| or |\clozehide|
+takes effect on the whole document. Side note: The usage of the \TeX
+primitive syntax |$$| is not recommended.
+
+\clozesetfont{}
+
+\begin{minted}{latex}
+\clozesetfont{}
+$$1 + 1 = \cloze{2}$$
+\clozesetfont{\itshape}
+\end{minted}
+
+$$1 + 1 = \cloze{2}$$
+
+\noindent
+|\[\]| should be used instead.
+
+\begin{minted}{latex}
+\[123 + 456 = \cloze{579}\]
+\end{minted}
+
+\[123 + 456 = \cloze{579}\]
+
+\begin{minted}{latex}
+\begin{displaymath}
+2^{\cloze{2}} = 4
+\end{displaymath}
+\end{minted}
+
+\begin{displaymath}
+2^{\cloze{2}} = 4
+\end{displaymath}
+
+\noindent
+The inline math mode works too:
+
+\begin{minted}{latex}
+${\sqrt[3]{\cloze{8}}} = 2$ and ${\sqrt[\cloze{3}]{\cloze{8}}} = 2$
+\end{minted}
+
+\begin{center}
+${\sqrt[3]{\cloze{8}}} = 2$ and ${\sqrt[\cloze{3}]{\cloze{8}}} = 2$
+\end{center}
+
+\clozesetfont{\itshape}
 
 %%
 % tabbing
@@ -2808,7 +2872,11 @@ end
 % |cloze.fix| the Lua callbacks. |cloze.par| and |cloze.basic| are
 % registered to the callback |post_linebreak_filter| and |cloze.fix| to
 % the callback |pre_linebreak_filter|. The argument |mode| accepts the
-% string values |basic|, |fix| and |par|.
+% string values |basic|, |fix| and |par|. A special treatment is needed
+% for clozes in display math mode. The |post_linebreak_filter| is
+% not called a display math formulas. I’m not sure if the
+% |pre_output_filter| is the right choice to capture the display math
+% formulas.
 %    \begin{macrocode}
 function base.register(mode)
   local basic
@@ -2824,6 +2892,11 @@ function base.register(mode)
     if mode == 'basic' then
       luatexbase.add_to_callback(
         'post_linebreak_filter',
+        cloze.basic,
+        mode
+      )
+      luatexbase.add_to_callback(
+        'pre_output_filter',
         cloze.basic,
         mode
       )
@@ -2849,6 +2922,7 @@ end
 function base.unregister(mode)
   if mode == 'basic' then
     luatexbase.remove_from_callback('post_linebreak_filter', mode)
+    luatexbase.remove_from_callback('pre_output_filter', mode)
   elseif mode == 'fix' then
     luatexbase.remove_from_callback('pre_linebreak_filter', mode)
   else
