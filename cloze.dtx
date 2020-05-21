@@ -54,7 +54,7 @@
 
 \usepackage{minted}
 \usemintedstyle{colorful}
-\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=yellow!5]}
+\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=gray!3]}
 \AfterEndEnvironment{minted}{\end{mdframed}}
 \setminted{
   breaklines=true,
@@ -367,17 +367,17 @@ Using the option |align| you can make nice tabulars like this:
 The macro name |clozenol| stands for \emph{“cloze no line”}. As the
 the name suggests this macro typesets cloze texts without a line.
 
-\begin{verbatim}
+\begin{minted}{latex}
 Lorem \clozenol{ipsum dolor} sit amet.
-\end{verbatim}
+\end{minted}
 
 \begin{example}
 Lorem \clozenol{ipsum dolor} sit amet.
 \end{example}
 
-\begin{verbatim}
+\begin{minted}{latex}
 Lorem \clozenol[textcolor=green]{ipsum dolor} sit amet.
-\end{verbatim}
+\end{minted}
 
 \begin{example}
 Lorem \clozenol[textcolor=green]{ipsum dolor} sit amet.
@@ -413,7 +413,7 @@ Ut enim \clozefil{ad minim veniam} exercitation.
 The command |\clozeextend| adds some invisible placeholders to extend
 some cloze texts with blank space.
 
-\begin{verbatim}
+\begin{minted}{latex}
 \begin{itemize}
 \item \clozefil{Lorem ipsum dolor sit amet, consectetur adipisicing
 elit, sed do eiusmod tempor incididunt ut labore et dolore magna
@@ -421,7 +421,7 @@ aliqua.}
 \item \clozefil{Ut enim ad minim veniam \clozeextend[20]}
 \item \clozefil{quis nostrud \clozeextend[20]}
 \end{itemize}
-\end{verbatim}
+\end{minted}
 
 \begin{example}
 \begin{itemize}
@@ -472,12 +472,12 @@ around the box. Use the options |boxwidth| and |boxheight| to specify
 the dimensions of the box. By default the width of the box is
 |\linewidth|.
 
-\begin{verbatim}
+\begin{minted}{latex}
 \begin{clozebox}
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua.
 \end{clozebox}
-\end{verbatim}
+\end{minted}
 
 \bigskip
 \noindent
@@ -509,12 +509,12 @@ tempor incididunt ut labore et dolore magna aliqua.
 \label{sec:command-clozebox-boxwidth}
 See the documentation about the option \secref{sec:option-boxwidth}.
 
-\begin{verbatim}
+\begin{minted}{latex}
 \begin{clozebox}[boxwidth=5cm]
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua.
 \end{clozebox}
-\end{verbatim}
+\end{minted}
 
 \begin{center}
 \begin{clozebox}[boxwidth=5cm]
@@ -527,12 +527,12 @@ tempor incididunt ut labore et dolore magna aliqua.
 \label{sec:command-clozebox-boxheight}
 See the documentation about the option \secref{sec:option-boxheight}.
 
-\begin{verbatim}
+\begin{minted}{latex}
 \begin{clozebox}[boxwidth=5cm,boxheight=5cm]
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua.
 \end{clozebox}
-\end{verbatim}
+\end{minted}
 
 \begin{center}
 \begin{clozebox}[boxwidth=5cm,boxheight=5cm]
@@ -544,12 +544,12 @@ tempor incididunt ut labore et dolore magna aliqua.
 \paragraph{starred}
 
 % starred
-\begin{verbatim}
+\begin{minted}{latex}
 \begin{clozebox}*[boxwidth=5cm,boxheight=5cm]
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua.
 \end{clozebox}
-\end{verbatim}
+\end{minted}
 
 \begin{center}
 \begin{clozebox}*[boxwidth=5cm,boxheight=5cm]
@@ -568,7 +568,7 @@ tempor incididunt ut labore et dolore magna aliqua.
 \DescribeEnv{clozespace} |\begin{clozespace}|\oarg{options} \dots
 \textit{some text} \dots |\end{clozespace}|
 
-\begin{verbatim}
+\begin{minted}{latex}
 \begin{clozespace}[spacing=2]
 \clozesetfont{\ttfamily\Huge}
 Lorem \cloze{ipsum} dolor sit \cloze{amet}, consectetur adipisicing
@@ -577,7 +577,7 @@ aliqua. Ut enim ad minim veniam, quis \cloze{nostrud}
 exercitation ullamco \cloze{laboris} nisi ut aliquip ex ea commodo
 consequat.
 \end{clozespace}
-\end{verbatim}
+\end{minted}
 
 \begin{example}
 \begin{clozespace}[spacing=2]
@@ -605,11 +605,11 @@ To create a cloze line of a certain width, use the command
 \tt{\getdefaults{width}}. In combination with the other cloze commands
 you can create for example an irregular alignment of the cloze text.
 
-\begin{verbatim}
+\begin{minted}{latex}
 Ut enim ad
 \clozeline[width=1cm]\cloze{minim}\clozeline[width=3cm]
 minim veniam
-\end{verbatim}
+\end{minted}
 
 \begin{example}
 Ut enim ad \clozeline[width=1cm]\cloze{minim}\clozeline[width=3cm] minim
@@ -643,17 +643,17 @@ Lorem\clozelinefil
 \DescribeMacro{\clozestrike}
 \cmd{\clozestrike}\oarg{options}\marg{wrong text}\marg{correct text}
 
-\begin{verbatim}
+\begin{minted}{latex}
 Lorem \clozestrike{ipsum}{dolor} sit amet.
-\end{verbatim}
+\end{minted}
 
 \begin{example}
 Lorem \clozestrike{ipsum}{dolor} sit amet.
 \end{example}
 
-\begin{verbatim}
+\begin{minted}{latex}
 Lorem \clozestrike[textcolor=red]{ipsum}{dolor} sit amet.
-\end{verbatim}
+\end{minted}
 
 \begin{example}
 Lorem \clozestrike[textcolor=red]{ipsum}{dolor} sit amet.
@@ -715,10 +715,10 @@ declaration, the cloze package offers a special command to set
 \cmd{\clozeset}\marg{global options}: The command can set \emph{global}
 options for each paragraph.
 
-\begin{verbatim}
+\begin{minted}{latex}
 \clozeset{textcolor=red} Lorem \cloze{ipsum} dolor \par
 \clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
-\end{verbatim}
+\end{minted}
 
 \begin{example}
 \clozeset{textcolor=red} Lorem \cloze{ipsum} dolor \par
@@ -729,10 +729,10 @@ options for each paragraph.
 paragraph. As you can see in the example below the last \cmd{\clozeset}
 applies the color green for both gaps.
 
-\begin{verbatim}
+\begin{minted}{latex}
 \clozeset{textcolor=red} Lorem \cloze{ipsum} dolor
 \clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
-\end{verbatim}
+\end{minted}
 
 \begin{example}
 \clozeset{textcolor=red} Lorem \cloze{ipsum} dolor
@@ -752,14 +752,14 @@ applies the color green for both gaps.
 \cmd{\clozereset}: The command resets all \emph{global} options to the
 default values. It has no effect on the \emph{local} options.
 
-\begin{verbatim}
+\begin{minted}{latex}
 \clozeset{
   thickness=3mm,
   linecolor=yellow,
   textcolor=magenta,
   margin=-2pt
 }
-\end{verbatim}
+\end{minted}
 
 \clozeset{thickness=3mm,linecolor=yellow,textcolor=magenta,margin=-2pt}
 
@@ -767,9 +767,9 @@ default values. It has no effect on the \emph{local} options.
 Very \cloze{silly} global \cloze{options}.
 \end{example}
 
-\begin{verbatim}
+\begin{minted}{latex}
 \clozereset
-\end{verbatim}
+\end{minted}
 \clozereset
 
 \begin{example}
@@ -788,9 +788,9 @@ Very \cloze{silly} global \cloze{options}.
 \cmd{\clozeshow} and \cmd{\clozehide}: This commands are shortcuts for
 \cmd{\clozeset}\marg{show} and \cmd{\clozeset}\marg{hide}.
 
-\begin{verbatim}
+\begin{minted}{latex}
 \clozehide
-\end{verbatim}
+\end{minted}
 \clozehide
 
 \begin{example}
@@ -798,9 +798,9 @@ Lorem \cloze{ipsum dolor sit} amet, consectetur \cloze{adipisicing}
 elit.
 \end{example}
 
-\begin{verbatim}
+\begin{minted}{latex}
 \clozeshow
-\end{verbatim}
+\end{minted}
 \clozeshow
 
 \begin{example}
@@ -924,10 +924,10 @@ options -- |hide| and |show| -- the last option "wins".
 Values for both color options are color names used by the xcolor
 package. To define your own color use the following command:
 
-\begin{verbatim}
+\begin{minted}{latex}
 \definecolor{myclozecolor}{rgb}{0.1,0.4,0.6}
 \cloze[textcolor=myclozecolor]{Lorem ipsum}
-\end{verbatim}
+\end{minted}
 \definecolor{myclozecolor}{rgb}{0.1,0.4,0.6}
 
 \newcommand{\optioncolor}[2]{%
@@ -1121,12 +1121,12 @@ ${\sqrt[3]{\cloze{8}}} = 2$ and ${\sqrt[\cloze{3}]{\cloze{8}}} = 2$
 
 \subsubsection{The \tt{tabbing} environment}
 
-\begin{verbatim}
+\begin{minted}{latex}
 \begin{tabbing}
 col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 \cloze{col1} \> \> \clozefix{col3} \\
 \end{tabbing}
-\end{verbatim}
+\end{minted}
 
 \begin{example}
 \begin{tabbing}
@@ -1141,13 +1141,13 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 
 \subsubsection{The \tt{picture} environment}
 
-\begin{verbatim}
+\begin{minted}{latex}
 \begin{picture}(320,100)
 \put(80,25){\cloze{Lorem}}
 \put(160,50){\clozefix{ipsum}}
 \put(240,75){\clozefil{dolor}}
 \end{picture}
-\end{verbatim}
+\end{minted}
 
 \begin{example}
 \begin{picture}(320,100)
@@ -1163,13 +1163,13 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 
 \subsubsection{The \tt{tabular} environment}
 
-\begin{verbatim}
+\begin{minted}{latex}
 \begin{tabular}{l c}
 \cloze{Lorem} & \cloze{ipsum} \\
 \clozefix{amet} & \clozefix{consectetur} \\
 \cloze{sed} & \cloze{do} \\
 \end{tabular}
-\end{verbatim}
+\end{minted}
 
 % No |c| inside because of short verbatim.
 
@@ -2874,7 +2874,7 @@ end
 % the callback |pre_linebreak_filter|. The argument |mode| accepts the
 % string values |basic|, |fix| and |par|. A special treatment is needed
 % for clozes in display math mode. The |post_linebreak_filter| is
-% not called a display math formulas. I’m not sure if the
+% not called on display math formulas. I’m not sure if the
 % |pre_output_filter| is the right choice to capture the display math
 % formulas.
 %    \begin{macrocode}
