@@ -1,0 +1,41 @@
+%!TEX program = lualatex
+% https://github.com/Josef-Friedrich/cloze/issues/3
+\documentclass{article}
+
+\usepackage{cloze}
+\clozeset{show}
+\clozesetfont{}
+
+\begin{document}
+
+\section{Normal mode}
+
+One and one is \cloze{two}.
+
+\section{In-line math mode}
+
+$1+1=\cloze{2}$
+
+\section{Environment math}
+
+\begin{math}
+1+1=\cloze{2}
+\end{math}
+
+\section{Environment displaymath}
+
+\begin{displaymath}
+1+1=\cloze{2}
+\end{displaymath}
+
+\section{Environment equation}
+
+\begin{equation}
+1+1=\cloze{2}
+\end{equation}
+
+\section{Equations with no label}
+
+\[1+1=\cloze{2}\]
+
+\end{document}
