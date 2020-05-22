@@ -27,13 +27,15 @@ clean:
 	./clean.sh
 
 ctan:
-	rm -rf cloze
-	mkdir cloze
-	cp -f README.md cloze/README
-	cp -f cloze.ins cloze/
-	cp -f cloze.dtx cloze/
-	cp -f cloze.pdf cloze/
-	tar cvfz cloze.tar.gz cloze
-	rm -rf cloze
+	rm -rf $(jobname)
+	mkdir $(jobname)
+	cp -f README.md $(jobname)/
+	rm -f $(jobname)/README.md.bak
+	cp -f $(jobname).ins $(jobname)/
+	cp -f $(jobname).dtx $(jobname)/
+	cp -f $(jobname).pdf $(jobname)/
+	tar cvfz $(jobname).tar.gz $(jobname)
+	rm -rf $(jobname)
+
 
 .PHONY: all install doc clean ctan
