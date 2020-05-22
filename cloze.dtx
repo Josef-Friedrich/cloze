@@ -951,6 +951,17 @@ package. To define your own color use the following command:
 \optioncolor{linecolor}{green}
 \end{example}
 
+\noindent
+And now hide the clozes:
+
+\clozehide
+\begin{example}
+\optioncolor{linecolor}{myclozecolor}
+\optioncolor{linecolor}{red}
+\optioncolor{linecolor}{green}
+\end{example}
+\clozeshow
+
 %%
 % margin
 %%
@@ -2597,7 +2608,7 @@ function cloze.basic_make(start, stop)
     nodex.insert_list('before', n.stop, {nodex.create_color('reset')}, n.head)
   else
     n.line.next = n.stop.next
-    n.stop.prev = n.line.prev
+    n.stop.prev = n.line -- not line.prev -> line color leaks out
   end
 %    \end{macrocode}
 % I some edge cases the lua callbacks get fired up twice. After the
