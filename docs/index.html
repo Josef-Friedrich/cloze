@@ -230,8 +230,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#fix_make">fix_make (start, stop)</a></td>
-	<td class="summary">\clozeluafunction{fix_make}
- The function <a href="index.html#fix_make">cloze.fix_make</a> generates a gap of fixed width.</td>
+	<td class="summary">The function <a href="index.html#fix_make">cloze.fix_make</a> generates a gap of fixed width.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#fix_recursion">fix_recursion (head)</a></td>
@@ -318,7 +317,7 @@
     Create a rule node, which is used as a line for the cloze texts.  The
  <code>depth</code> and the <code>height</code> of the rule are calculated form the options
  <code>thickness</code> and <code>distance</code>. The argument <code>width</code> must have the length
- unit \emph{scaled points}.
+ unit <strong>scaled points</strong>.
 
 
     <h3>Parameters:</h3>
@@ -376,11 +375,30 @@
 
 <p> <strong>Node list</strong></p>
 
-<p> \begin{nodelist} <code>n.color_line</code> &amp; <code>whatsit</code> &amp; <code>pdf_colorstack</code> &amp; Line
- color \
- <code>n.line</code> &amp; <code>rule</code> &amp;  &amp; <code>width</code> \
- <code>n.color_reset</code> &amp; <code>whatsit</code> &amp; <code>pdf_colorstack</code> &amp; Reset color \
- \end{nodelist}
+<p> <table>
+ <thead>
+   <tr>
+     <th><code>n.color_line</code></th>
+     <th><code>whatsit</code></th>
+     <th><code>pdf_colorstack</code></th>
+     <th>Line color</th>
+   </tr>
+ </thead>
+ <tbody>
+   <tr>
+     <td><code>n.line</code></td>
+     <td><code>rule</code></td>
+     <td></td>
+     <td><code>width</code></td>
+   </tr>
+   <tr>
+     <td><code>n.color_reset</code></td>
+     <td><code>whatsit</code></td>
+     <td><code>pdf_colorstack</code></td>
+     <td>Reset color</td>
+   </tr>
+ </tbody>
+ </table>
 
 
     <h3>Parameters:</h3>
@@ -1139,31 +1157,91 @@ some additional data like the local options.</li>
     <strong>fix_make (start, stop)</strong>
     </dt>
     <dd>
-    \clozeluafunction{fix_make}
- The function <a href="index.html#fix_make">cloze.fix_make</a> generates a gap of fixed width.</p>
+    The function <a href="index.html#fix_make">cloze.fix_make</a> generates a gap of fixed width.</p>
 
-<p> \subparagraph*{Node lists}</p>
+<p> <strong>Node lists</strong></p>
 
-<p> \subparagraph*{Show text:}</p>
+<p> <strong>Show text:</strong></p>
 
-<p> \begin{nodelist}
- <code>n.start</code> &amp; <code>whatsit</code> &amp; <code>user_definded</code> &amp; <code>index</code> \
- <code>n.line</code> &amp; <code>rule</code> &amp;  &amp; <code>l.width</code> \
- <code>n.kern_start</code> &amp; <code>kern</code> &amp; &amp; Depends on <code>align</code> \
- <code>n.color_text</code> &amp; <code>whatsit</code> &amp; <code>pdf_colorstack</code> &amp; Text color \
-  &amp; <code>glyphs</code> &amp; &amp; Text to show \
- <code>n.color_reset</code> &amp; <code>whatsit</code> &amp; <code>pdf_colorstack</code> &amp; Reset color \
- <code>n.kern_stop</code> &amp; <code>kern</code> &amp; &amp; Depends on <code>align</code> \
- <code>n.stop</code> &amp; <code>whatsit</code> &amp; <code>user_definded</code> &amp; <code>index</code> \
- \end{nodelist}</p>
+<p> <table>
+ <tbody>
+   <tr>
+     <td><code>n.start</code></td>
+     <td><code>whatsit</code></td>
+     <td><code>user_definded</code></td>
+     <td><code>index</code></td>
+   </tr>
+   <tr>
+     <td><code>n.line</code></td>
+     <td><code>rule</code></td>
+     <td></td>
+     <td><code>l.width</code></td>
+   </tr>
+   <tr>
+     <td><code>n.kern_start</code></td>
+     <td><code>kern</code></td>
+     <td>&amp; Depends on <code>align</code></td>
+     <td></td>
+   </tr>
+   <tr>
+     <td><code>n.color_text</code></td>
+     <td><code>whatsit</code></td>
+     <td><code>pdf_colorstack</code></td>
+     <td>Text color</td>
+   </tr>
+   <tr>
+     <td></td>
+     <td><code>glyphs</code></td>
+     <td>&amp; Text to show</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td><code>n.color_reset</code></td>
+     <td><code>whatsit</code></td>
+     <td><code>pdf_colorstack</code></td>
+     <td>Reset color</td>
+   </tr>
+   <tr>
+     <td><code>n.kern_stop</code></td>
+     <td><code>kern</code></td>
+     <td>&amp; Depends on <code>align</code></td>
+     <td></td>
+   </tr>
+   <tr>
+     <td><code>n.stop</code></td>
+     <td><code>whatsit</code></td>
+     <td><code>user_definded</code></td>
+     <td><code>index</code></td>
+   </tr>
+ </tbody>
+ </table></p>
 
-<p> \subparagraph*{Hide text:}</p>
+<p> <strong>Hide text:</strong></p>
 
-<p> \begin{nodelist}
- <code>n.start</code> &amp; <code>whatsit</code> &amp; <code>user_definded</code> &amp; <code>index</code> \
- <code>n.line</code> &amp; <code>rule</code> &amp;  &amp; <code>l.width</code> \
- <code>n.stop</code> &amp; <code>whatsit</code> &amp; <code>user_definded</code> &amp; <code>index</code> \
- \end{nodelist}</p>
+<p> <table>
+ <thead>
+   <tr>
+     <th><code>n.start</code></th>
+     <th><code>whatsit</code></th>
+     <th><code>user_definded</code></th>
+     <th><code>index</code></th>
+   </tr>
+ </thead>
+ <tbody>
+   <tr>
+     <td><code>n.line</code></td>
+     <td><code>rule</code></td>
+     <td></td>
+     <td><code>l.width</code></td>
+   </tr>
+   <tr>
+     <td><code>n.stop</code></td>
+     <td><code>whatsit</code></td>
+     <td><code>user_definded</code></td>
+     <td><code>index</code></td>
+   </tr>
+ </tbody>
+ </table></p>
 
 <p> Make fixed size cloze.
 
@@ -1235,26 +1313,79 @@ some additional data like the local options.</li>
     The corresponding LaTeX environment to this lua function is
  <code>clozepar</code>.</p>
 
-<p> \subparagraph*{Node lists}</p>
+<p> <strong>Node lists</strong></p>
 
-<p> \subparagraph*{Show text:}</p>
+<p> <strong>Show text:</strong></p>
 
-<p> \begin{nodelist}
- <code>n.strut</code> &amp; <code>kern</code> &amp;  &amp; width = 0  \
- <code>n.line</code> &amp; <code>rule</code> &amp;  &amp; <code>l.width</code> (Width from hlist) \
- <code>n.kern</code> &amp; <code>kern</code> &amp; &amp; <code>-l.width</code> \
- <code>n.color_text</code> &amp; <code>whatsit</code> &amp; <code>pdf_colorstack</code> &amp; Text color \
-  &amp; <code>glyphs</code> &amp; &amp; Text to show \
- <code>n.tail</code> &amp; <code>glyph</code> &amp;  &amp; Last glyph in hlist \
- <code>n.color_reset</code> &amp; <code>whatsit</code> &amp; <code>pdf_colorstack</code> &amp; Reset color \
- \end{nodelist}</p>
+<p> <table>
+ <thead>
+   <tr>
+     <th><code>n.strut</code></th>
+     <th><code>kern</code></th>
+     <th></th>
+     <th>width = 0</th>
+   </tr>
+ </thead>
+ <tbody>
+   <tr>
+     <td><code>n.line</code></td>
+     <td><code>rule</code></td>
+     <td></td>
+     <td><code>l.width</code> (Width from hlist)</td>
+   </tr>
+   <tr>
+     <td><code>n.kern</code></td>
+     <td><code>kern</code></td>
+     <td></td>
+     <td><code>-l.width</code></td>
+   </tr>
+   <tr>
+     <td><code>n.color_text</code></td>
+     <td><code>whatsit</code></td>
+     <td><code>pdf_colorstack</code></td>
+     <td>Text color</td>
+   </tr>
+   <tr>
+     <td></td>
+     <td><code>glyphs</code></td>
+     <td></td>
+     <td>Text to show</td>
+   </tr>
+   <tr>
+     <td><code>n.tail</code></td>
+     <td><code>glyph</code></td>
+     <td></td>
+     <td>Last glyph in hlist</td>
+   </tr>
+   <tr>
+     <td><code>n.color_reset</code></td>
+     <td><code>whatsit</code></td>
+     <td><code>pdf_colorstack</code></td>
+     <td>Reset color</td>
+   </tr>
+ </tbody>
+ </table></p>
 
-<p> \subparagraph*{Hide text:}</p>
+<p> <strong>Hide text:</strong></p>
 
-<p> \begin{nodelist}
- <code>n.strut</code> &amp; <code>kern</code> &amp;  &amp; width = 0 \
- <code>n.line</code> &amp; <code>rule</code> &amp;  &amp; <code>l.width</code> (Width from hlist) \
- \end{nodelist}</p>
+<p> <table>
+ <thead>
+   <tr>
+     <th><code>n.strut</code></th>
+     <th><code>kern</code></th>
+     <th></th>
+     <th>width = 0</th>
+   </tr>
+ </thead>
+ <tbody>
+   <tr>
+     <td><code>n.line</code></td>
+     <td><code>rule</code></td>
+     <td></td>
+     <td><code>l.width</code> (Width from hlist)</td>
+   </tr>
+ </tbody>
+ </table></p>
 
 <p> The argument <code>head</code> is the head node of a node list.
 
@@ -1339,7 +1470,7 @@ some additional data like the local options.</li>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-05-23 15:03:57 </i>
+<i style="float:right;">Last updated 2020-05-23 18:53:51 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

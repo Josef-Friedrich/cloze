@@ -6,9 +6,9 @@
 
 
 
--- \subsection{The file \tt{cloze.lua}}
+-- __cloze.lua}__
 
--- \paragraph{Initialisation of the function tables}
+-- __Initialisation of the function tables__
 
 -- It is good form to provide some background informations about this Lua
 -- module.
@@ -20,7 +20,7 @@ if not modules then modules = { } end modules ['cloze'] = {
   license   = 'The LaTeX Project Public License Version 1.3c 2008-05-04'
 }
 
---- `nodex` is a abbreviation for \emph{node eXtended}.
+--- `nodex` is a abbreviation for __node eXtended__.
 local nodex = {}
 
 --- All values and functions, which are related to the option management,
@@ -69,12 +69,12 @@ base.is_registered = {}
 -- @section nodex
 
 -- All functions in this section are stored in a table called `nodex`.
--- `nodex` is a abbreviation for \emph{node eXtended}. The `nodex` table
+-- `nodex` is a abbreviation for __node eXtended__. The `nodex` table
 -- bundles all functions, which extend the built-in `node` library.
 
--- \paragraph{Color handling (color)}
+-- __Color handling (color)__
 
--- \clozeluafunction{create_colorstack}
+-- __create_colorstack__
 -- Create a whatsit node of the subtype `pdf_colorstack`. `data` is a PDF
 -- colorstack string like `0 0 0 rg 0 0 0 RG`.
 function nodex.create_colorstack(data)
@@ -106,12 +106,12 @@ function nodex.create_color(option)
   return nodex.create_colorstack(data)
 end
 
--- \paragraph{Line handling (line)}
+-- __Line handling (line)__
 
 --- Create a rule node, which is used as a line for the cloze texts. The
 -- `depth` and the `height` of the rule are calculated form the options
 -- `thickness` and `distance`. The argument `width` must have the length
--- unit \emph{scaled points}.
+-- unit __scaled points__.
 function nodex.create_line(width)
   local rule = node.new(node.id('rule'))
   local thickness = tex.sp(registry.get_value('thickness'))
@@ -146,11 +146,30 @@ end
 --
 -- __Node list__
 --
--- \begin{nodelist} `n.color_line` & `whatsit` & `pdf_colorstack` & Line
--- color \\
--- `n.line` & `rule` &  & `width` \\
--- `n.color_reset` & `whatsit` & `pdf_colorstack` & Reset color \\
--- \end{nodelist}
+-- <table>
+-- <thead>
+--   <tr>
+--     <th>`n.color_line`</th>
+--     <th>`whatsit`</th>
+--     <th>`pdf_colorstack`</th>
+--     <th>Line color</th>
+--   </tr>
+-- </thead>
+-- <tbody>
+--   <tr>
+--     <td>`n.line`</td>
+--     <td>`rule`</td>
+--     <td></td>
+--     <td>`width`</td>
+--   </tr>
+--   <tr>
+--     <td>`n.color_reset`</td>
+--     <td>`whatsit`</td>
+--     <td>`pdf_colorstack`</td>
+--     <td>Reset color</td>
+--   </tr>
+-- </tbody>
+-- </table>
 function nodex.insert_line(current, width)
   return nodex.insert_list(
     'after',
@@ -200,7 +219,7 @@ function nodex.write_line()
   node.write(nodex.create_color('reset'))
 end
 
--- \paragraph{Handling of extendable lines (linefil)}
+-- __Handling of extendable lines (linefil)__
 
 --- This function creates a line which stretchs indefinitely in the
 -- horizontal direction.
@@ -223,7 +242,7 @@ function nodex.write_linefil()
   node.write(nodex.create_color('reset'))
 end
 
--- \paragraph{Kern handling (kern)}
+-- __Kern handling (kern)__
 
 --- This function creates a kern node with a given width. The argument
 -- `width` had to be specified in scaled points.
@@ -377,7 +396,7 @@ function registry.remove_marker(marker)
   if registry.is_marker(marker) then node.remove(marker, marker) end
 end
 
--- \paragraph{Storage functions (storage)}
+-- __Storage functions (storage)__
 
 --- `registry.index` is a counter. The functions `registry.get_index()`
 -- increases the counter by one and then returns it.
@@ -414,7 +433,7 @@ function registry.get_storage(index)
   return registry.storage[index]
 end
 
--- \paragraph{Option processing (option)}
+-- __Option processing (option)__
 
 --- This function stores a value `value` and his associated key `key`
 --  either to the global (`registry.global_options`) or to the local
@@ -612,31 +631,91 @@ function cloze.fix_length(start, stop)
   return l.width, l.kern_start, l.kern_stop
 end
 
---- \clozeluafunction{fix_make}
--- The function `cloze.fix_make` generates a gap of fixed width.
+--- The function `cloze.fix_make` generates a gap of fixed width.
 --
--- \subparagraph*{Node lists}
+-- __Node lists__
 --
--- \subparagraph*{Show text:}
+-- __Show text:__
 --
--- \begin{nodelist}
--- `n.start` & `whatsit` & `user_definded` & `index` \\
--- `n.line` & `rule` &  & `l.width` \\
--- `n.kern_start` & `kern` & & Depends on `align` \\
--- `n.color_text` & `whatsit` & `pdf_colorstack` & Text color \\
---  & `glyphs` & & Text to show \\
--- `n.color_reset` & `whatsit` & `pdf_colorstack` & Reset color \\
--- `n.kern_stop` & `kern` & & Depends on `align` \\
--- `n.stop` & `whatsit` & `user_definded` & `index` \\
--- \end{nodelist}
+-- <table>
+-- <tbody>
+--   <tr>
+--     <td>`n.start`</td>
+--     <td>`whatsit`</td>
+--     <td>`user_definded`</td>
+--     <td>`index`</td>
+--   </tr>
+--   <tr>
+--     <td>`n.line`</td>
+--     <td>`rule`</td>
+--     <td></td>
+--     <td>`l.width`</td>
+--   </tr>
+--   <tr>
+--     <td>`n.kern_start`</td>
+--     <td>`kern`</td>
+--     <td>&amp; Depends on `align`</td>
+--     <td></td>
+--   </tr>
+--   <tr>
+--     <td>`n.color_text`</td>
+--     <td>`whatsit`</td>
+--     <td>`pdf_colorstack`</td>
+--     <td>Text color</td>
+--   </tr>
+--   <tr>
+--     <td></td>
+--     <td>`glyphs`</td>
+--     <td>&amp; Text to show</td>
+--     <td></td>
+--   </tr>
+--   <tr>
+--     <td>`n.color_reset`</td>
+--     <td>`whatsit`</td>
+--     <td>`pdf_colorstack`</td>
+--     <td>Reset color</td>
+--   </tr>
+--   <tr>
+--     <td>`n.kern_stop`</td>
+--     <td>`kern`</td>
+--     <td>&amp; Depends on `align`</td>
+--     <td></td>
+--   </tr>
+--   <tr>
+--     <td>`n.stop`</td>
+--     <td>`whatsit`</td>
+--     <td>`user_definded`</td>
+--     <td>`index`</td>
+--   </tr>
+-- </tbody>
+-- </table>
 --
--- \subparagraph*{Hide text:}
+-- __Hide text:__
 --
--- \begin{nodelist}
--- `n.start` & `whatsit` & `user_definded` & `index` \\
--- `n.line` & `rule` &  & `l.width` \\
--- `n.stop` & `whatsit` & `user_definded` & `index` \\
--- \end{nodelist}
+-- <table>
+-- <thead>
+--   <tr>
+--     <th>`n.start`</th>
+--     <th>`whatsit`</th>
+--     <th>`user_definded`</th>
+--     <th>`index`</th>
+--   </tr>
+-- </thead>
+-- <tbody>
+--   <tr>
+--     <td>`n.line`</td>
+--     <td>`rule`</td>
+--     <td></td>
+--     <td>`l.width`</td>
+--   </tr>
+--   <tr>
+--     <td>`n.stop`</td>
+--     <td>`whatsit`</td>
+--     <td>`user_definded`</td>
+--     <td>`index`</td>
+--   </tr>
+-- </tbody>
+-- </table>
 --
 -- Make fixed size cloze.
 --
@@ -708,26 +787,79 @@ end
 --- The corresponding LaTeX environment to this lua function is
 -- `clozepar`.
 --
--- \subparagraph*{Node lists}
+-- __Node lists__
 --
--- \subparagraph*{Show text:}
+-- __Show text:__
 --
--- \begin{nodelist}
--- `n.strut` & `kern` &  & width = 0  \\
--- `n.line` & `rule` &  & `l.width` (Width from hlist) \\
--- `n.kern` & `kern` & & `-l.width` \\
--- `n.color_text` & `whatsit` & `pdf_colorstack` & Text color \\
---  & `glyphs` & & Text to show \\
--- `n.tail` & `glyph` &  & Last glyph in hlist \\
--- `n.color_reset` & `whatsit` & `pdf_colorstack` & Reset color \\
--- \end{nodelist}
+-- <table>
+-- <thead>
+--   <tr>
+--     <th>`n.strut`</th>
+--     <th>`kern`</th>
+--     <th></th>
+--     <th>width = 0</th>
+--   </tr>
+-- </thead>
+-- <tbody>
+--   <tr>
+--     <td>`n.line`</td>
+--     <td>`rule`</td>
+--     <td></td>
+--     <td>`l.width` (Width from hlist)</td>
+--   </tr>
+--   <tr>
+--     <td>`n.kern`</td>
+--     <td>`kern`</td>
+--     <td></td>
+--     <td>`-l.width`</td>
+--   </tr>
+--   <tr>
+--     <td>`n.color_text`</td>
+--     <td>`whatsit`</td>
+--     <td>`pdf_colorstack`</td>
+--     <td>Text color</td>
+--   </tr>
+--   <tr>
+--     <td></td>
+--     <td>`glyphs`</td>
+--     <td></td>
+--     <td>Text to show</td>
+--   </tr>
+--   <tr>
+--     <td>`n.tail`</td>
+--     <td>`glyph`</td>
+--     <td></td>
+--     <td>Last glyph in hlist</td>
+--   </tr>
+--   <tr>
+--     <td>`n.color_reset`</td>
+--     <td>`whatsit`</td>
+--     <td>`pdf_colorstack`</td>
+--     <td>Reset color</td>
+--   </tr>
+-- </tbody>
+-- </table>
 --
--- \subparagraph*{Hide text:}
+-- __Hide text:__
 --
--- \begin{nodelist}
--- `n.strut` & `kern` &  & width = 0 \\
--- `n.line` & `rule` &  & `l.width` (Width from hlist) \\
--- \end{nodelist}
+-- <table>
+-- <thead>
+--   <tr>
+--     <th>`n.strut`</th>
+--     <th>`kern`</th>
+--     <th></th>
+--     <th>width = 0</th>
+--   </tr>
+-- </thead>
+-- <tbody>
+--   <tr>
+--     <td>`n.line`</td>
+--     <td>`rule`</td>
+--     <td></td>
+--     <td>`l.width` (Width from hlist)</td>
+--   </tr>
+-- </tbody>
+-- </table>
 --
 -- The argument `head` is the head node of a node list.
 function cloze.par(head)
