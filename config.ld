@@ -5,3 +5,4 @@ format='discount'
 backtick_references=true
 file='cloze.lua'
 dir='docs'
+all=true

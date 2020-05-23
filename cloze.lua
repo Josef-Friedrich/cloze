@@ -251,41 +251,50 @@ end
 
 --- This function creates a kern node with a given width. The argument
 -- `width` had to be specified in scaled points.
-function nodex.create_kern(width)
-  local kern = node.new(node.id('kern'))
-  kern.kern = width
-  return kern
+local function create_kern_node(width)
+  local kern_node = node.new(node.id('kern'))
+  kern_node.kern = width
+  return kern_node
 end
 
---- To make life easier: We add at the beginning of each hlist a strut.
+--- Add at the beginning of each `hlist` node list a strut (a invisible
+--  character).
+--
 -- Now we can add line, color etc. nodes after the first node of a hlist
 -- not before - after is much more easier.
-function nodex.strut_to_hlist(hlist)
-  local n = {} -- node
-  n.head = hlist.head
-  n.kern = nodex.create_kern(0)
-  n.strut = node.insert_before(n.head, n.head, n.kern)
-  hlist.head = n.head.prev
-  return hlist, n.strut, n.head
+--
+-- @tparam node hlist_node
+--
+-- @treturn node hlist_node
+-- @treturn node strut_node
+-- @treturn node head_node
+local function insert_strut_into_hlist(hlist_node)
+  local head_node = hlist_node.head
+  local kern_node = create_kern_node(0)
+  local strut_node = node.insert_before(hlist_node.head, head_node, kern_node)
+  hlist_node.head = head_node.prev
+  return hlist_node, strut_node, head_node
 end
 
 --- Write kern nodes to the current node list. This kern nodes can be used
 -- to build a margin.
 function nodex.write_margin()
-  local kern = nodex.create_kern(tex.sp(registry.get_value('margin')))
+  local kern = create_kern_node(tex.sp(registry.get_value('margin')))
   node.write(kern)
 end
 
 --- Search for a `hlist` (subtype `line`).
 --
+-- Insert a strut node into the list if a hlist is found.
+--
 -- @tparam node head_node The head of a node list.
 --
 -- @treturn node|false Return false, if no `hlist` can
 -- be found.
-function nodex.search_hlist(head_node)
+local function search_hlist(head_node)
   while head_node do
     if head_node.id == node.id('hlist') and head_node.subtype == 1 then
-      return nodex.strut_to_hlist(head_node)
+      return insert_strut_into_hlist(head_node)
     end
     head_node = head_node.next
   end
@@ -530,77 +539,80 @@ end
 --- The function `cloze.basic_make()` makes one gap. The argument `start`
 -- is the node, where the gap begins. The argument `stop` is the node,
 -- where the gap ends.
-function cloze.basic_make(first_node, last_node)
-  local node_head = first_node
-  if not first_node or not last_node then
+function cloze.basic_make(start_node, end_node)
+  local node_head = start_node
+  if not start_node or not end_node then
     return
   end
   local line_width = node.dimensions(
     cloze.status.hlist.glue_set,
     cloze.status.hlist.glue_sign,
     cloze.status.hlist.glue_order,
-    first_node,
-    last_node
+    start_node,
+    end_node
   )
-  local node_line = nodex.insert_line(first_node, line_width)
-  local node_color_text = nodex.insert_list('after', node_line, {nodex.create_color('text')})
+  local line_node = nodex.insert_line(start_node, line_width)
+  local color_text_node = nodex.insert_list('after', line_node, {nodex.create_color('text')})
   if registry.get_value_show() then
-    nodex.insert_list('after', node_color_text, {nodex.create_kern(-line_width)})
-    nodex.insert_list('before', last_node, {nodex.create_color('reset')}, node_head)
+    nodex.insert_list('after', color_text_node, {create_kern_node(-line_width)})
+    nodex.insert_list('before', end_node, {nodex.create_color('reset')}, node_head)
   else
-    node_line.next = last_node.next
-    last_node.prev = node_line -- not node_line.prev -> line color leaks out
+    line_node.next = end_node.next
+    end_node.prev = line_node -- not line_node.prev -> line color leaks out
   end
   -- In some edge cases the lua callbacks get fired up twice. After the
   -- cloze has been created, the start and stop whatsit markers can be
   -- deleted.
-  registry.remove_marker(first_node)
-  registry.remove_marker(last_node)
+  registry.remove_marker(start_node)
+  registry.remove_marker(end_node)
 end
 
 --- Search for a stop marker.
 --
 -- @tparam node head_node The head of a node list.
+--
+-- @treturn node The end node.
 function cloze.basic_search_stop(head_node)
-  local stop
+  local end_node
   while head_node do
     cloze.status.continue = true
-    stop = head_node
-    if registry.check_marker(stop, 'basic', 'stop') then
+    end_node = head_node
+    if registry.check_marker(end_node, 'basic', 'stop') then
       cloze.status.continue = false
       break
     end
     head_node = head_node.next
   end
-  return stop
+  return end_node
 end
 
---- Search for a start marker. Also begin a new cloze, if the boolean
--- value `cloze.status.continue` is true. The knowledge of the last
--- hlist node is a requirement to begin a cloze.
+--- Search for a start marker or begin a new cloze if the value
+--  `cloze.status.continue` is true.
+--
+-- We have to find a hlist node and use its on the field `head`
+-- attached node list to search for a start marker.
 --
 -- @tparam node head_node The head of a node list.
 function cloze.basic_search_start(head_node)
-  local start
-  local stop
-  local n = {}
+  local start_node, end_node, hlist_node
   if cloze.status.continue then
-    n.hlist = nodex.search_hlist(head_node)
-    if n.hlist then
-      cloze.status.hlist = n.hlist
-      start = cloze.status.hlist.head
+    hlist_node = search_hlist(head_node)
+    if hlist_node then
+      cloze.status.hlist = hlist_node
+      start_node = hlist_node.head
     end
   elseif registry.check_marker(head_node, 'basic', 'start') then
-    start = head_node
+    start_node = head_node
   end
-  if start then
-    stop = cloze.basic_search_stop(start)
-    cloze.basic_make(start, stop)
+  if start_node then
+    end_node = cloze.basic_search_stop(start_node)
+    cloze.basic_make(start_node, end_node)
   end
 end
 
---- Parse recursivley the node tree. Start and stop markers can be nested
--- deeply into the node tree.
+--- Parse the node tree recursivley.
+--
+-- Start and end markers could be nested deeply in the node tree.
 --
 -- @tparam node head_node The head of a node list.
 function cloze.basic_recursion(head_node)
@@ -618,6 +630,8 @@ end
 --- The corresponding LaTeX command to this lua function is `\cloze`.
 --
 -- @tparam node head_node The head of a node list.
+--
+-- @treturn node The head of the node list.
 function cloze.basic(head_node)
   cloze.status.continue = false
   cloze.basic_recursion(head_node)
@@ -745,7 +759,7 @@ function cloze.fix_make(start, stop)
       'after',
       n.line,
       {
-        nodex.create_kern(l.kern_start),
+        create_kern_node(l.kern_start),
         nodex.create_color('text')
       }
     )
@@ -754,7 +768,7 @@ function cloze.fix_make(start, stop)
       stop,
       {
         nodex.create_color('reset'),
-        nodex.create_kern(l.kern_stop)
+        create_kern_node(l.kern_stop)
       },
       start
     )
@@ -884,14 +898,14 @@ function cloze.par(head_node)
       registry.get_marker(whatsit, 'par', 'start')
     end
     l.width = hlist.width
-    hlist, n.strut, n.head = nodex.strut_to_hlist(hlist)
+    hlist, n.strut, n.head = insert_strut_into_hlist(hlist)
     n.line = nodex.insert_line(n.strut, l.width)
     if registry.get_value_show() then
       nodex.insert_list(
         'after',
         n.line,
         {
-          nodex.create_kern(-l.width),
+          create_kern_node(-l.width),
           nodex.create_color('text')
         }
       )

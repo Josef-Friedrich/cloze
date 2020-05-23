@@ -29,6 +29,7 @@
 
 <h2>Contents</h2>
 <ul>
+<li><a href="#Tables">Tables</a></li>
 <li><a href="#Fields">Fields</a></li>
 <li><a href="#Node_precessing__nodex_">Node precessing (nodex) </a></li>
 <li><a href="#Option_handling">Option handling </a></li>
@@ -63,6 +64,18 @@
 </p>
 
 
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#nodex">nodex</a></td>
+	<td class="summary"><a href="index.html#nodex">nodex</a> is a abbreviation for <strong>node eXtended</strong>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#registry">registry</a></td>
+	<td class="summary">All values and functions, which are related to the option management,
+ are stored in a table called <a href="index.html#registry">registry</a>.</td>
+	</tr>
+</table>
 <h2><a href="#Fields">Fields</a></h2>
 <table class="function_list">
 	<tr>
@@ -105,19 +118,20 @@
  line with color whatsits and puts it to \TeX’s ‘current (node) list’.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#nodex.create_kern">nodex.create_kern (width)</a></td>
+	<td class="name" nowrap><a href="#create_kern_node">create_kern_node (width)</a></td>
 	<td class="summary">This function creates a kern node with a given width.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#nodex.strut_to_hlist">nodex.strut_to_hlist (hlist)</a></td>
-	<td class="summary">To make life easier: We add at the beginning of each hlist a strut.</td>
+	<td class="name" nowrap><a href="#insert_strut_into_hlist">insert_strut_into_hlist (hlist_node)</a></td>
+	<td class="summary">Add at the beginning of each <code>hlist</code> node list a strut (a invisible
+  character).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#nodex.write_margin">nodex.write_margin ()</a></td>
 	<td class="summary">Write kern nodes to the current node list.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#nodex.search_hlist">nodex.search_hlist (head_node)</a></td>
+	<td class="name" nowrap><a href="#search_hlist">search_hlist (head_node)</a></td>
 	<td class="summary">Search for a <code>hlist</code> (subtype <code>line</code>).</td>
 	</tr>
 </table>
@@ -214,7 +228,7 @@
 <h2><a href="#Assembly_to_cloze_texts">Assembly to cloze texts </a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#basic_make">basic_make (first_node, last_node)</a></td>
+	<td class="name" nowrap><a href="#basic_make">basic_make (start_node, end_node)</a></td>
 	<td class="summary">The function <code>cloze.basic_make()</code> makes one gap.</td>
 	</tr>
 	<tr>
@@ -223,11 +237,12 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#basic_search_start">basic_search_start (head_node)</a></td>
-	<td class="summary">Search for a start marker.</td>
+	<td class="summary">Search for a start marker or begin a new cloze if the value
+  <code>cloze.status.continue</code> is true.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#basic_recursion">basic_recursion (head_node)</a></td>
-	<td class="summary">Parse recursivley the node tree.</td>
+	<td class="summary">Parse the node tree recursivley.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#basic">basic (head_node)</a></td>
@@ -274,6 +289,39 @@
 <br/>
 
 
+    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "nodex"></a>
+    <strong>nodex</strong>
+    </dt>
+    <dd>
+    <a href="index.html#nodex">nodex</a> is a abbreviation for <strong>node eXtended</strong>.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "registry"></a>
+    <strong>registry</strong>
+    </dt>
+    <dd>
+    All values and functions, which are related to the option management,
+ are stored in a table called <a href="index.html#registry">registry</a>.
+
+
+
+
+
+
+
+</dd>
+</dl>
     <h2 class="section-header "><a name="Fields"></a>Fields</h2>
 
     <dl class="function">
@@ -501,8 +549,8 @@
 
 </dd>
     <dt>
-    <a name = "nodex.create_kern"></a>
-    <strong>nodex.create_kern (width)</strong>
+    <a name = "create_kern_node"></a>
+    <strong>create_kern_node (width)</strong>
     </dt>
     <dd>
     This function creates a kern node with a given width.  The argument
@@ -522,22 +570,37 @@
 
 </dd>
     <dt>
-    <a name = "nodex.strut_to_hlist"></a>
-    <strong>nodex.strut_to_hlist (hlist)</strong>
+    <a name = "insert_strut_into_hlist"></a>
+    <strong>insert_strut_into_hlist (hlist_node)</strong>
     </dt>
     <dd>
-    To make life easier: We add at the beginning of each hlist a strut.
- Now we can add line, color etc. nodes after the first node of a hlist
+    Add at the beginning of each <code>hlist</code> node list a strut (a invisible
+  character).</p>
+
+<p> Now we can add line, color etc. nodes after the first node of a hlist
  not before - after is much more easier.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">hlist</span>
+        <li><span class="parameter">hlist_node</span>
+            <span class="types"><span class="type">node</span></span>
 
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><span class="type">node</span></span>
+        hlist_node</li>
+        <li>
+           <span class="types"><span class="type">node</span></span>
+        strut_node</li>
+        <li>
+           <span class="types"><span class="type">node</span></span>
+        head_node</li>
+    </ol>
 
 
 
@@ -559,11 +622,13 @@
 
 </dd>
     <dt>
-    <a name = "nodex.search_hlist"></a>
-    <strong>nodex.search_hlist (head_node)</strong>
+    <a name = "search_hlist"></a>
+    <strong>search_hlist (head_node)</strong>
     </dt>
     <dd>
-    Search for a <code>hlist</code> (subtype <code>line</code>).
+    Search for a <code>hlist</code> (subtype <code>line</code>).</p>
+
+<p> Insert a strut node into the list if a hlist is found.
 
 
     <h3>Parameters:</h3>
@@ -590,7 +655,7 @@
     <h2 class="section-header has-description"><a name="Option_handling"></a>Option handling </h2>
 
           <div class="section-description">
-          <p> The table <code>registry</code> bundels functions that deal with option handling.</p>
+          <p> The table <a href="index.html#registry">registry</a> bundels functions that deal with option handling.</p>
 
 <p> <h2>Marker processing (marker)</h2></p>
 
@@ -1036,7 +1101,7 @@ some additional data like the local options.</li>
     <dl class="function">
     <dt>
     <a name = "basic_make"></a>
-    <strong>basic_make (first_node, last_node)</strong>
+    <strong>basic_make (start_node, end_node)</strong>
     </dt>
     <dd>
     The function <code>cloze.basic_make()</code> makes one gap.  The argument <code>start</code>
@@ -1046,10 +1111,10 @@ some additional data like the local options.</li>
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">first_node</span>
+        <li><span class="parameter">start_node</span>
 
         </li>
-        <li><span class="parameter">last_node</span>
+        <li><span class="parameter">end_node</span>
 
         </li>
     </ul>
@@ -1075,6 +1140,12 @@ some additional data like the local options.</li>
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">node</span></span>
+        The end node.
+    </ol>
 
 
 
@@ -1085,9 +1156,11 @@ some additional data like the local options.</li>
     <strong>basic_search_start (head_node)</strong>
     </dt>
     <dd>
-    Search for a start marker.  Also begin a new cloze, if the boolean
- value <code>cloze.status.continue</code> is true. The knowledge of the last
- hlist node is a requirement to begin a cloze.
+    Search for a start marker or begin a new cloze if the value
+  <code>cloze.status.continue</code> is true.</p>
+
+<p> We have to find a hlist node and use its on the field <code>head</code>
+ attached node list to search for a start marker.
 
 
     <h3>Parameters:</h3>
@@ -1108,8 +1181,9 @@ some additional data like the local options.</li>
     <strong>basic_recursion (head_node)</strong>
     </dt>
     <dd>
-    Parse recursivley the node tree.  Start and stop markers can be nested
- deeply into the node tree.
+    Parse the node tree recursivley.</p>
+
+<p> Start and end markers could be nested deeply in the node tree.
 
 
     <h3>Parameters:</h3>
@@ -1141,6 +1215,12 @@ some additional data like the local options.</li>
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">node</span></span>
+        The head of the node list.
+    </ol>
 
 
 
@@ -1484,7 +1564,7 @@ some additional data like the local options.</li>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-05-23 19:22:29 </i>
+<i style="float:right;">Last updated 2020-05-23 20:51:45 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
