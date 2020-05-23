@@ -530,32 +530,32 @@ end
 --- The function `cloze.basic_make()` makes one gap. The argument `start`
 -- is the node, where the gap begins. The argument `stop` is the node,
 -- where the gap ends.
-function cloze.basic_make(node_first, node_last)
-  local node_head = node_first
-  if not node_first or not node_last then
+function cloze.basic_make(first_node, last_node)
+  local node_head = first_node
+  if not first_node or not last_node then
     return
   end
   local line_width = node.dimensions(
     cloze.status.hlist.glue_set,
     cloze.status.hlist.glue_sign,
     cloze.status.hlist.glue_order,
-    node_first,
-    node_last
+    first_node,
+    last_node
   )
-  local node_line = nodex.insert_line(node_first, line_width)
+  local node_line = nodex.insert_line(first_node, line_width)
   local node_color_text = nodex.insert_list('after', node_line, {nodex.create_color('text')})
   if registry.get_value_show() then
     nodex.insert_list('after', node_color_text, {nodex.create_kern(-line_width)})
-    nodex.insert_list('before', node_last, {nodex.create_color('reset')}, node_head)
+    nodex.insert_list('before', last_node, {nodex.create_color('reset')}, node_head)
   else
-    node_line.next = node_last.next
-    node_last.prev = node_line -- not node_line.prev -> line color leaks out
+    node_line.next = last_node.next
+    last_node.prev = node_line -- not node_line.prev -> line color leaks out
   end
   -- In some edge cases the lua callbacks get fired up twice. After the
   -- cloze has been created, the start and stop whatsit markers can be
   -- deleted.
-  registry.remove_marker(node_first)
-  registry.remove_marker(node_last)
+  registry.remove_marker(first_node)
+  registry.remove_marker(last_node)
 end
 
 --- Search for a stop marker.
