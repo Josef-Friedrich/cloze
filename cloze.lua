@@ -1,8 +1,13 @@
+-- Cloze uses LDoc for the source code documentation
+-- https://github.com/stevedonovan/ldoc
+
+-- The supported tags are described on this page:
+-- https://github.com/stevedonovan/LDoc/wiki
+
 -- \subsection{The file \tt{cloze.lua}}
 
--- \setlength{\parindent}{0pt}
-
 -- \paragraph{Initialisation of the function tables}
+
 
 -- It is good form to provide some background informations about this Lua
 -- module.
@@ -649,8 +654,10 @@ end
 -- |n.stop| & |whatsit| & |user_definded| & |index| \\
 -- \end{nodelist}
 
+--- Make fixed size cloze.
 -- The argument |start| is the node, where the gap begins. The argument
--- |stop| is the node, where the gap ends.
+-- |stop| is the .
+-- @param start The node, where the gap ends
 function cloze.fix_make(start, stop)
   local l = {} -- length
   local n = {} -- node
