@@ -20,6 +20,9 @@ doc:
 	mkdir -p $(texmf)/doc
 	cp $(jobname).pdf $(texmf)/doc
 
+doclua:
+	ldoc .
+
 test:
 	find tests -name "*.tex" -exec lualatex {} \;
 

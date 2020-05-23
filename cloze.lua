@@ -8,7 +8,6 @@
 
 -- \paragraph{Initialisation of the function tables}
 
-
 -- It is good form to provide some background informations about this Lua
 -- module.
 if not modules then modules = { } end modules ['cloze'] = {
@@ -19,16 +18,15 @@ if not modules then modules = { } end modules ['cloze'] = {
   license   = 'The LaTeX Project Public License Version 1.3c 2008-05-04'
 }
 
--- |nodex| is a abbreviation for \emph{node eXtended}.
+--- `nodex` is a abbreviation for \emph{node eXtended}.
 local nodex = {}
 
--- All values and functions, which are related to the option management,
--- are stored in a table called |registry|.
-
+--- All values and functions, which are related to the option management,
+-- are stored in a table called `registry`.
 local registry = {}
 
--- I didn't know what value I should take as |user_id|. Therefore I took
--- my birthday and transformed it to a large number.
+--- I didn't know what value I should take as `user_id`. Therefore I
+-- took my birthday and transformed it to a large number.
 registry.user_id = 3121978
 registry.storage = {}
 registry.defaults = {
@@ -53,29 +51,30 @@ registry.defaults = {
 registry.global_options = {}
 registry.local_options = {}
 
--- All those functions are stored in the table |cloze| that are
+-- All those functions are stored in the table `cloze` that are
 -- registered as callbacks to the pre and post linebreak filters.
 local cloze = {}
 -- In the status table are stored state information, which are necessary
 -- for the recursive cloze generation.
 cloze.status = {}
 
--- The |base| table contains some basic functions. |base| is the only
+-- The `base` table contains some basic functions. `base` is the only
 -- table of this Lua module that will be exported.
 local base = {}
 base.is_registered = {}
 
--- \subsubsection{Node precessing (nodex)}
+--- Node precessing (nodex)
+-- @section nodex
 
--- All functions in this section are stored in a table called |nodex|.
--- |nodex| is a abbreviation for \emph{node eXtended}. The |nodex| table
--- bundles all functions, which extend the built-in |node| library.
+-- All functions in this section are stored in a table called `nodex`.
+-- `nodex` is a abbreviation for \emph{node eXtended}. The `nodex` table
+-- bundles all functions, which extend the built-in `node` library.
 
 -- \paragraph{Color handling (color)}
 
 -- \clozeluafunction{create_colorstack}
--- Create a whatsit node of the subtype |pdf_colorstack|. |data| is a PDF
--- colorstack string like |0 0 0 rg 0 0 0 RG|.
+-- Create a whatsit node of the subtype `pdf_colorstack`. `data` is a PDF
+-- colorstack string like `0 0 0 rg 0 0 0 RG`.
 function nodex.create_colorstack(data)
   if not data then
     data = '0 0 0 rg 0 0 0 RG' -- black
@@ -86,11 +85,11 @@ function nodex.create_colorstack(data)
   return whatsit
 end
 
--- \clozeluafunction{create_color}
--- |nodex.create_color()| is a wrapper for the function
--- |nodex.create_colorstack()|. It queries the current values of the
--- options |linecolor| and |textcolor|. The argument |option| accepts the
--- strings |line|, |text| and |reset|.
+---
+-- `nodex.create_color()` is a wrapper for the function
+-- `nodex.create_colorstack()`. It queries the current values of the
+-- options `linecolor` and `textcolor`. The argument `option` accepts the
+-- strings `line`, `text` and `reset`.
 function nodex.create_color(option)
   local data
   if option == 'line' then
@@ -107,10 +106,9 @@ end
 
 -- \paragraph{Line handling (line)}
 
--- \clozeluafunction{create_line}
--- Create a rule node, which is used as a line for the cloze texts. The
--- |depth| and the |height| of the rule are calculated form the options
--- |thickness| and |distance|. The argument |width| must have the length
+--- Create a rule node, which is used as a line for the cloze texts. The
+-- `depth` and the `height` of the rule are calculated form the options
+-- `thickness` and `distance`. The argument `width` must have the length
 -- unit \emph{scaled points}.
 function nodex.create_line(width)
   local rule = node.new(node.id('rule'))
@@ -122,11 +120,10 @@ function nodex.create_line(width)
   return rule
 end
 
--- \clozeluafunction{insert_list}
--- Insert a |list| of nodes after or before the |current|. The |head|
+--- Insert a `list` of nodes after or before the `current`. The `head`
 -- argument is optional. In some edge cases it is unfortately necessary.
--- if |head| is omitted the |current| node is used. The argument
--- |position| can take the values |'after'| or |'before'|.
+-- if `head` is omitted the `current` node is used. The argument
+-- `position` can take the values `'after'` or `'before'`.
 function nodex.insert_list(position, current, list, head)
   if not head then
     head = current
@@ -148,9 +145,9 @@ end
 -- \subparagraph*{Node list:}
 
 -- \begin{nodelist}
--- |n.color_line| & |whatsit| & |pdf_colorstack| & Line color \\
--- |n.line| & |rule| &  & |width| \\
--- |n.color_reset| & |whatsit| & |pdf_colorstack| & Reset color \\
+-- `n.color_line` & `whatsit` & `pdf_colorstack` & Line color \\
+-- `n.line` & `rule` &  & `width` \\
+-- `n.color_reset` & `whatsit` & `pdf_colorstack` & Reset color \\
 -- \end{nodelist}
 
 function nodex.insert_line(current, width)
@@ -165,20 +162,18 @@ function nodex.insert_line(current, width)
   )
 end
 
--- \clozeluafunction{write_line}
--- This function enclozes a rule node with color nodes as it the function
--- |nodex.insert_line| does. In contrast to |nodex.insert_line| the three
+--- This function enclozes a rule node with color nodes as it the function
+-- `nodex.insert_line` does. In contrast to `nodex.insert_line` the three
 -- nodes are appended to \TeX’s ‘current list’. They are not inserted in
 -- a node list, which is accessed by a Lua callback.
-
+--
 -- \subparagraph*{Node list:}
-
+--
 -- \begin{nodelist}
--- - & |whatsit| & |pdf_colorstack| & Line color \\
--- - & |rule| &  & |width| \\
--- - & |whatsit| & |pdf_colorstack| & Reset color \\
+-- - & `whatsit` & `pdf_colorstack` & Line color \\
+-- - & `rule` &  & `width` \\
+-- - & `whatsit` & `pdf_colorstack` & Reset color \\
 -- \end{nodelist}
-
 function nodex.write_line()
   node.write(nodex.create_color('line'))
   node.write(nodex.create_line(tex.sp(registry.get_value('width'))))
@@ -202,7 +197,7 @@ function nodex.create_linefil()
 end
 
 -- \clozeluafunction{write_linefil}
--- The function |nodex.write_linefil| surrounds a indefinitely strechable
+-- The function `nodex.write_linefil` surrounds a indefinitely strechable
 -- line with color whatsits and puts it to \TeX’s ‘current (node) list’.
 function nodex.write_linefil()
   node.write(nodex.create_color('line'))
@@ -214,7 +209,7 @@ end
 
 -- \clozeluafunction{create_kern}
 -- This function creates a kern node with a given width. The argument
--- |width| had to be specified in scaled points.
+-- `width` had to be specified in scaled points.
 function nodex.create_kern(width)
   local kern = node.new(node.id('kern'))
   kern.kern = width
@@ -243,7 +238,7 @@ function nodex.write_margin()
 end
 
 -- \clozeluafunction{search_hlist}
--- Search for a |hlist| (subtype |line|). Return false, if no |hlist| can
+-- Search for a `hlist` (subtype `line`). Return false, if no `hlist` can
 -- be found.
 function nodex.search_hlist(head)
   while head do
@@ -255,13 +250,14 @@ function nodex.search_hlist(head)
   return false
 end
 
--- \subsubsection{Option handling (registry)}
+--- Option handling
+-- @section registry
 
--- The table |registry| bundels functions that deal with option handling.
+-- The table `registry` bundels functions that deal with option handling.
 
 -- \paragraph{Marker processing (marker)}
 
--- A marker is a whatsit node of the subtype |user_defined|. A marker has
+-- A marker is a whatsit node of the subtype `user_defined`. A marker has
 -- two purposes:
 
 -- \begin{enumerate}
@@ -273,9 +269,9 @@ end
 -- \clozeluafunction{create_marker}
 -- We create a user defined whatsit node that can store a number (type =
 -- 100). In order to distinguish this node from other user defined
--- whatsit nodes we set the |user_id| to a large number. We call this
--- whatsit node a marker. The argument |index| is a number, which is
--- associated to values in the |registry.storage| table.
+-- whatsit nodes we set the `user_id` to a large number. We call this
+-- whatsit node a marker. The argument `index` is a number, which is
+-- associated to values in the `registry.storage` table.
 function registry.create_marker(index)
   local marker = node.new('whatsit','user_defined')
   marker.type = 100 -- number
@@ -285,18 +281,17 @@ function registry.create_marker(index)
 end
 
 -- \clozeluafunction{write_marker}
--- Write a marker node to \TeX's current node list. The argument |mode|
--- accepts the string values |basic|, |fix| and |par|. The argument
--- |position|. The argument |position| is either set to |start| or to
--- |stop|.
+-- Write a marker node to \TeX's current node list. The argument `mode`
+-- accepts the string values `basic`, `fix` and `par`. The argument
+-- `position`. The argument `position` is either set to `start` or to
+-- `stop`.
 function registry.write_marker(mode, position)
   local index = registry.set_storage(mode, position)
   local marker = registry.create_marker(index)
   node.write(marker)
 end
 
--- \clozeluafunction{is_marker}
--- This functions checks if the given node |item| is a marker.
+--- This functions checks if the given node `item` is a marker.
 function registry.is_marker(item)
   if item.id == node.id('whatsit')
     and item.subtype == node.subtype('user_defined')
@@ -307,11 +302,11 @@ function registry.is_marker(item)
   end
 end
 
--- \clozeluafunction{check_marker}
--- This functions tests, whether the given node |item| is a marker. The
--- argument |item| is a node. The argument |mode| accepts the string
--- values |basic|, |fix| and |par|. The argument |position| is either set
--- to |start| or to |stop|.
+--- This functions tests, whether the given node `item` is a marker.
+--
+-- The argument `item` is a node. The argument `mode` accepts the string
+-- values `basic`, `fix` and `par`. The argument `position` is either
+-- set to `start` or to `stop`.
 function registry.check_marker(item, mode, position)
   local data = registry.get_marker_data(item)
   if data and data.mode == mode and data.position == position then
@@ -321,11 +316,11 @@ function registry.check_marker(item, mode, position)
   end
 end
 
--- \clozeluafunction{get_marker}
--- |registry.get_marker| returns the given marker. The argument |item| is
--- a node. The argument |mode| accepts the string values |basic|, |fix|
--- and |par|. The argument |position| is either set to |start| or to
--- |stop|.
+--- `registry.get_marker` returns the given marker.
+--
+-- The argument `item` is a node. The argument `mode` accepts the string
+-- values `basic`, `fix` and `par`. The argument `position` is either
+-- set to `start` or to `stop`.
 function registry.get_marker(item, mode, position)
   local out
   if registry.check_marker(item, mode, position) then
@@ -340,8 +335,8 @@ function registry.get_marker(item, mode, position)
 end
 
 -- \clozeluafunction{get_marker_data}
--- |registry.get_marker_data| tests whether the node |item| is a marker.
--- The argument |item| is a node of unspecified type.
+-- `registry.get_marker_data` tests whether the node `item` is a marker.
+-- The argument `item` is a node of unspecified type.
 function registry.get_marker_data(item)
   if item.id == node.id('whatsit')
     and item.subtype == node.subtype('user_defined')
@@ -355,7 +350,7 @@ end
 -- \clozeluafunction{get_marker_values}
 -- First this function saves the associatied values of a marker to the
 -- local options table. Second it returns this values. The argument
--- |marker| is a whatsit node.
+-- `marker` is a whatsit node.
 function registry.get_marker_values(marker)
   local data = registry.get_marker_data(marker)
   registry.local_options = data.values
@@ -372,7 +367,7 @@ end
 -- \paragraph{Storage functions (storage)}
 
 -- \clozeluafunction{get_index}
--- |registry.index| is a counter. The functions |registry.get_index()|
+-- `registry.index` is a counter. The functions `registry.get_index()`
 -- increases the counter by one and then returns it.
 function registry.get_index()
   if not registry.index then
@@ -383,11 +378,11 @@ function registry.get_index()
 end
 
 -- \clozeluafunction{set_storage}
--- |registry.set_storage()| stores the local options in the Lua table
--- |registry.storage|. It returns a numeric index number. This index
+-- `registry.set_storage()` stores the local options in the Lua table
+-- `registry.storage`. It returns a numeric index number. This index
 -- number is the key, where the local options in the Lua table are
--- stored. The argument |mode| accepts the string values |basic|, |fix|
--- and |par|.
+-- stored. The argument `mode` accepts the string values `basic`, `fix`
+-- and `par`.
 function registry.set_storage(mode, position)
   local index = registry.get_index()
   local data = {
@@ -400,8 +395,8 @@ function registry.set_storage(mode, position)
 end
 
 -- \clozeluafunction{get_storage}
--- The function |registry.get_storage()| retrieves values which belong to
--- a whatsit marker. The argument |index| is a numeric value.
+-- The function `registry.get_storage()` retrieves values which belong to
+-- a whatsit marker. The argument `index` is a numeric value.
 function registry.get_storage(index)
   return registry.storage[index]
 end
@@ -409,10 +404,10 @@ end
 -- \paragraph{Option processing (option)}
 
 -- \clozeluafunction{set_option}
--- This function stores a value |value| and his associated key |key|
--- either to the global (|registry.global_options|) or to the local
--- (|registry.local_options|) option table. The global boolean variable
--- |registry.local_options| controls in which table the values are
+-- This function stores a value `value` and his associated key `key`
+-- either to the global (`registry.global_options`) or to the local
+-- (`registry.local_options`) option table. The global boolean variable
+-- `registry.local_options` controls in which table the values are
 -- stored.
 function registry.set_option(key, value)
   if value == '' or value == '\\color@ ' then
@@ -425,27 +420,26 @@ function registry.set_option(key, value)
   end
 end
 
--- \clozeluafunction{set_is_global}
--- |registry.set_is_global()| sets the variable |registry.is_global| to
--- the value |value|. It is intended, that the variable takes boolean
+--- `registry.set_is_global()` sets the variable `registry.is_global` to
+-- the value `value`. It is intended, that the variable takes boolean
 -- values.
 function registry.set_is_global(value)
   registry.is_global = value
 end
 
--- \clozeluafunction{unset_local_options}
+--- \clozeluafunction{unset_local_options}
 -- This function unsets the local options.
 function registry.unset_local_options()
   registry.local_options = {}
 end
 
--- \clozeluafunction{unset_global_options}
--- |registry.unset_global_options| empties the global options storage.
+--- \clozeluafunction{unset_global_options}
+-- `registry.unset_global_options` empties the global options storage.
 function registry.unset_global_options()
   registry.global_options = {}
 end
 
--- \clozeluafunction{get_value}
+--- \clozeluafunction{get_value}
 -- Retrieve a value from a given key. First search for the value in the
 -- local options, then in the global options. If both option storages are
 -- empty, the default value will be returned.
@@ -459,10 +453,10 @@ function registry.get_value(key)
   return registry.defaults[key]
 end
 
--- \clozeluafunction{get_value_show}
--- The function |registry.get_value_show()| returns the boolean value
--- |true| if the option |show| is true. In contrast to the function
--- |registry.get_value()| it converts the string value `true' to a
+--- \clozeluafunction{get_value_show}
+-- The function `registry.get_value_show()` returns the boolean value
+-- `true` if the option `show` is true. In contrast to the function
+-- `registry.get_value()` it converts the string value `true' to a
 -- boolean value.
 function registry.get_value_show()
   if
@@ -476,8 +470,8 @@ function registry.get_value_show()
   end
 end
 
--- \clozeluafunction{has_value}
--- This function tests whether the value |value| is not empty and has a
+--- \clozeluafunction{has_value}
+-- This function tests whether the value `value` is not empty and has a
 -- value.
 function registry.has_value(value)
   if value == nil or value == '' or value == '\\color@ ' then
@@ -487,32 +481,33 @@ function registry.has_value(value)
   end
 end
 
--- \clozeluafunction{get_defaults}
--- |registry.get_defaults(option)| returns a the default value of the
+--- \clozeluafunction{get_defaults}
+-- `registry.get_defaults(option)` returns a the default value of the
 -- given option.
 function registry.get_defaults(option)
   return registry.defaults[option]
 end
 
--- \subsubsection{Assembly to cloze texts (cloze)}
+--- Assembly to cloze texts.
+-- @section cloze_functions
 
 -- Some graphics for better understanding of the node tree:
-
+--
 -- \paragraph{Paragraph}
-
+--
 -- \noindent\includegraphics[width=\linewidth]{graphics/par}
-
+--
 -- \paragraph{Tabular environment}
-
+--
 -- \noindent\includegraphics[width=\linewidth]{graphics/tabular}
-
+--
 -- \paragraph{Picture environment}
-
+--
 -- \noindent\includegraphics[width=\linewidth]{graphics/picture}
-
+--
 -- \clozeluafunction{basic_make}
--- The function |cloze.basic_make()| makes one gap. The argument |start|
--- is the node, where the gap begins. The argument |stop| is the node,
+-- The function `cloze.basic_make()` makes one gap. The argument `start`
+-- is the node, where the gap begins. The argument `stop` is the node,
 -- where the gap ends.
 function cloze.basic_make(node_first, node_last)
   local node_head = node_first
@@ -535,14 +530,14 @@ function cloze.basic_make(node_first, node_last)
     node_line.next = node_last.next
     node_last.prev = node_line -- not node_line.prev -> line color leaks out
   end
--- In some edge cases the lua callbacks get fired up twice. After the
--- cloze has been created, the start and stop whatsit markers can be
--- deleted.
+  -- In some edge cases the lua callbacks get fired up twice. After the
+  -- cloze has been created, the start and stop whatsit markers can be
+  -- deleted.
   registry.remove_marker(node_first)
   registry.remove_marker(node_last)
 end
 
--- \clozeluafunction{basic_search_stop}
+--- \clozeluafunction{basic_search_stop}
 -- Search for a stop marker.
 function cloze.basic_search_stop(head)
   local stop
@@ -558,9 +553,9 @@ function cloze.basic_search_stop(head)
   return stop
 end
 
--- \clozeluafunction{basic_search_start}
+--- \clozeluafunction{basic_search_start}
 -- Search for a start marker. Also begin a new cloze, if the boolean
--- value |cloze.status.continue| is true. The knowledge of the last
+-- value `cloze.status.continue` is true. The knowledge of the last
 -- hlist node is a requirement to begin a cloze.
 function cloze.basic_search_start(head)
   local start
@@ -581,7 +576,7 @@ function cloze.basic_search_start(head)
   end
 end
 
--- \clozeluafunction{basic_recursion}
+--- \clozeluafunction{basic_recursion}
 -- Parse recursivley the node tree. Start and stop markers can be nested
 -- deeply into the node tree.
 function cloze.basic_recursion(head)
@@ -596,9 +591,9 @@ function cloze.basic_recursion(head)
   end
 end
 
--- \clozeluafunction{basic}
+--- \clozeluafunction{basic}
 -- The corresponding \LaTeX{} command to this lua function is \cmd{\cloze}
--- \secref{sec:command-cloze}. The argument |head| is the head node of a
+-- \secref{sec:command-cloze}. The argument `head` is the head node of a
 -- node list.
 function cloze.basic(head)
   cloze.status.continue = false
@@ -606,9 +601,9 @@ function cloze.basic(head)
   return head
 end
 
--- \clozeluafunction{fix_length}
--- Calculate the length of the whitespace before (|l.kern_start|) and
--- after (|l.kern_stopt|) the text.
+--- \clozeluafunction{fix_length}
+-- Calculate the length of the whitespace before (`l.kern_start`) and
+-- after (`l.kern_stopt`) the text.
 function cloze.fix_length(start, stop)
   local l = {}
   l.width = tex.sp(registry.get_value('width'))
@@ -628,35 +623,35 @@ function cloze.fix_length(start, stop)
   return l.width, l.kern_start, l.kern_stop
 end
 
--- \clozeluafunction{fix_make}
--- The function |cloze.fix_make| generates a gap of fixed width.
-
+--- \clozeluafunction{fix_make}
+-- The function `cloze.fix_make` generates a gap of fixed width.
+--
 -- \subparagraph*{Node lists}
-
+--
 -- \subparagraph*{Show text:}
-
+--
 -- \begin{nodelist}
--- |n.start| & |whatsit| & |user_definded| & |index| \\
--- |n.line| & |rule| &  & |l.width| \\
--- |n.kern_start| & |kern| & & Depends on |align| \\
--- |n.color_text| & |whatsit| & |pdf_colorstack| & Text color \\
---  & |glyphs| & & Text to show \\
--- |n.color_reset| & |whatsit| & |pdf_colorstack| & Reset color \\
--- |n.kern_stop| & |kern| & & Depends on |align| \\
--- |n.stop| & |whatsit| & |user_definded| & |index| \\
+-- `n.start` & `whatsit` & `user_definded` & `index` \\
+-- `n.line` & `rule` &  & `l.width` \\
+-- `n.kern_start` & `kern` & & Depends on `align` \\
+-- `n.color_text` & `whatsit` & `pdf_colorstack` & Text color \\
+--  & `glyphs` & & Text to show \\
+-- `n.color_reset` & `whatsit` & `pdf_colorstack` & Reset color \\
+-- `n.kern_stop` & `kern` & & Depends on `align` \\
+-- `n.stop` & `whatsit` & `user_definded` & `index` \\
 -- \end{nodelist}
-
+--
 -- \subparagraph*{Hide text:}
-
+--
 -- \begin{nodelist}
--- |n.start| & |whatsit| & |user_definded| & |index| \\
--- |n.line| & |rule| &  & |l.width| \\
--- |n.stop| & |whatsit| & |user_definded| & |index| \\
+-- `n.start` & `whatsit` & `user_definded` & `index` \\
+-- `n.line` & `rule` &  & `l.width` \\
+-- `n.stop` & `whatsit` & `user_definded` & `index` \\
 -- \end{nodelist}
-
---- Make fixed size cloze.
--- The argument |start| is the node, where the gap begins. The argument
--- |stop| is the .
+--
+-- Make fixed size cloze.
+-- The argument `start` is the node, where the gap begins. The argument
+-- `stop` is the .
 -- @param start The node, where the gap ends
 function cloze.fix_make(start, stop)
   local l = {} -- length
@@ -688,8 +683,8 @@ function cloze.fix_make(start, stop)
   registry.remove_marker(stop)
 end
 
--- \clozeluafunction{fix_recursion}
--- Function to recurse the node list and search after marker. |head| is
+--- \clozeluafunction{fix_recursion}
+-- Function to recurse the node list and search after marker. `head` is
 -- the head node of a node list.
 function cloze.fix_recursion(head)
   local n = {} -- node
@@ -713,41 +708,41 @@ function cloze.fix_recursion(head)
   end
 end
 
--- \clozeluafunction{fix}
+--- \clozeluafunction{fix}
 -- The corresponding \LaTeX{} command to this Lua function is
--- \cmd{\clozefix} \secref{sec:command-clozefix}. The argument |head| is
+-- \cmd{\clozefix} \secref{sec:command-clozefix}. The argument `head` is
 -- the head node of a node list.
 function cloze.fix(head)
   cloze.fix_recursion(head)
   return head
 end
 
--- \clozeluafunction{par}
+--- \clozeluafunction{par}
 -- The corresponding \LaTeX{} environment to this lua function is
--- |clozepar| \secref{sec:command-clozepar}.
-
+-- `clozepar` \secref{sec:command-clozepar}.
+--
 -- \subparagraph*{Node lists}
-
+--
 -- \subparagraph*{Show text:}
-
+--
 -- \begin{nodelist}
--- |n.strut| & |kern| &  & width = 0  \\
--- |n.line| & |rule| &  & |l.width| (Width from hlist) \\
--- |n.kern| & |kern| & & |-l.width| \\
--- |n.color_text| & |whatsit| & |pdf_colorstack| & Text color \\
---  & |glyphs| & & Text to show \\
--- |n.tail| & |glyph| &  & Last glyph in hlist \\
--- |n.color_reset| & |whatsit| & |pdf_colorstack| & Reset color \\
+-- `n.strut` & `kern` &  & width = 0  \\
+-- `n.line` & `rule` &  & `l.width` (Width from hlist) \\
+-- `n.kern` & `kern` & & `-l.width` \\
+-- `n.color_text` & `whatsit` & `pdf_colorstack` & Text color \\
+--  & `glyphs` & & Text to show \\
+-- `n.tail` & `glyph` &  & Last glyph in hlist \\
+-- `n.color_reset` & `whatsit` & `pdf_colorstack` & Reset color \\
 -- \end{nodelist}
-
+--
 -- \subparagraph*{Hide text:}
-
+--
 -- \begin{nodelist}
--- |n.strut| & |kern| &  & width = 0 \\
--- |n.line| & |rule| &  & |l.width| (Width from hlist) \\
+-- `n.strut` & `kern` &  & width = 0 \\
+-- `n.line` & `rule` &  & `l.width` (Width from hlist) \\
 -- \end{nodelist}
-
--- The argument |head| is the head node of a node list.
+--
+-- The argument `head` is the head node of a node list.
 function cloze.par(head)
   local l = {} -- length
   local n = {} -- node
@@ -779,21 +774,21 @@ function cloze.par(head)
   return head
 end
 
--- \subsubsection{Basic module functions (base)}
+--- Basic module functions.
+-- The `base` table contains functions which are published to the
+-- `cloze.sty` file.
+-- @section base
 
--- The |base| table contains functions which are published to the
--- |cloze.sty| file.
-
--- \clozeluafunction{register}
--- This function registers the functions |cloze.par|, |cloze.basic| and
--- |cloze.fix| the Lua callbacks. |cloze.par| and |cloze.basic| are
--- registered to the callback |post_linebreak_filter| and |cloze.fix| to
--- the callback |pre_linebreak_filter|. The argument |mode| accepts the
--- string values |basic|, |fix| and |par|. A special treatment is needed
--- for clozes in display math mode. The |post_linebreak_filter| is
--- not called on display math formulas. I’m not sure if the
--- |pre_output_filter| is the right choice to capture the display math
--- formulas.
+--- This function registers the functions `cloze.par`, `cloze.basic` and
+--  `cloze.fix` the Lua callbacks.
+--
+-- `cloze.par` and `cloze.basic` are registered to the callback
+-- `post_linebreak_filter` and `cloze.fix` to the callback
+-- `pre_linebreak_filter`. The argument `mode` accepts the string values
+-- `basic`, `fix` and `par`. A special treatment is needed for clozes in
+-- display math mode. The `post_linebreak_filter` is not called on
+-- display math formulas. I’m not sure if the `pre_output_filter` is the
+-- right choice to capture the display math formulas.
 function base.register(mode)
   local basic
   if mode == 'par' then
@@ -829,10 +824,11 @@ function base.register(mode)
   end
 end
 
--- \clozeluafunction{unregister}
--- |base.unregister(mode)| deletes the registered functions from the Lua
--- callbacks. The argument |mode| accepts the string values |basic|,
--- |fix| and |par|.
+--- `base.unregister(mode)` deletes the registered functions from the
+-- Lua callbacks.
+--
+-- The argument `mode` accepts the string values
+-- `basic`, `fix` and `par`.
 function base.unregister(mode)
   if mode == 'basic' then
     luatexbase.remove_from_callback('post_linebreak_filter', mode)
@@ -844,7 +840,7 @@ function base.unregister(mode)
   end
 end
 
--- Publish some functions to the |cloze.sty| file.
+-- Publish some functions to the `cloze.sty` file.
 base.linefil = nodex.write_linefil
 base.line = nodex.write_line
 base.margin = nodex.write_margin

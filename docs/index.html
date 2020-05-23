@@ -1,0 +1,879 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>The cloze package</title>
+    <link rel="stylesheet" href="ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>cloze</h1>
+
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Fields">Fields</a></li>
+<li><a href="#Node_precessing__nodex_">Node precessing (nodex) </a></li>
+<li><a href="#Option_handling">Option handling </a></li>
+<li><a href="#Assembly_to_cloze_texts">Assembly to cloze texts </a></li>
+<li><a href="#Basic_module_functions">Basic module functions </a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><strong>cloze</strong></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>cloze</code></h1>
+<p><code>nodex</code> is a abbreviation for \emph{node eXtended}.</p>
+<p></p>
+
+
+<h2><a href="#Fields">Fields</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#registry.user_id">registry.user_id</a></td>
+	<td class="summary">I didn&rsquo;t know what value I should take as <a href="index.html#registry.user_id">user_id</a>.</td>
+	</tr>
+</table>
+<h2><a href="#Node_precessing__nodex_">Node precessing (nodex) </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#nodex.create_color">nodex.create_color (option)</a></td>
+	<td class="summary"><code>nodex.create_color()</code> is a wrapper for the function
+ <code>nodex.create_colorstack()</code>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#nodex.create_line">nodex.create_line (width)</a></td>
+	<td class="summary">Create a rule node, which is used as a line for the cloze texts.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#nodex.insert_list">nodex.insert_list (position, current, list, head)</a></td>
+	<td class="summary">Insert a <code>list</code> of nodes after or before the <code>current</code>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#nodex.write_line">nodex.write_line ()</a></td>
+	<td class="summary">This function enclozes a rule node with color nodes as it the function
+ <code>nodex.insert_line</code> does.</td>
+	</tr>
+</table>
+<h2><a href="#Option_handling">Option handling </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#registry.is_marker">registry.is_marker (item)</a></td>
+	<td class="summary">This functions checks if the given node <code>item</code> is a marker.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#registry.check_marker">registry.check_marker (item, mode, position)</a></td>
+	<td class="summary">This functions tests, whether the given node <code>item</code> is a marker.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#registry.get_marker">registry.get_marker (item, mode, position)</a></td>
+	<td class="summary"><a href="index.html#registry.get_marker">registry.get_marker</a> returns the given marker.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#registry.set_is_global">registry.set_is_global (value)</a></td>
+	<td class="summary"><code>registry.set_is_global()</code> sets the variable <code>registry.is_global</code> to
+ the value <code>value</code>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#registry.unset_local_options">registry.unset_local_options ()</a></td>
+	<td class="summary">\clozeluafunction{unset_local_options}
+ This function unsets the local options.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#registry.unset_global_options">registry.unset_global_options ()</a></td>
+	<td class="summary">\clozeluafunction{unset_global_options}
+ <a href="index.html#registry.unset_global_options">registry.unset_global_options</a> empties the global options storage.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#registry.get_value">registry.get_value (key)</a></td>
+	<td class="summary">\clozeluafunction{get_value}
+ Retrieve a value from a given key.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#registry.get_value_show">registry.get_value_show ()</a></td>
+	<td class="summary">\clozeluafunction{get_value_show}
+ The function <code>registry.get_value_show()</code> returns the boolean value
+ <code>true</code> if the option <code>show</code> is true.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#registry.has_value">registry.has_value (value)</a></td>
+	<td class="summary">\clozeluafunction{has_value}
+ This function tests whether the value <code>value</code> is not empty and has a
+ value.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#registry.get_defaults">registry.get_defaults (option)</a></td>
+	<td class="summary">\clozeluafunction{get_defaults}
+ <code>registry.get_defaults(option)</code> returns a the default value of the
+ given option.</td>
+	</tr>
+</table>
+<h2><a href="#Assembly_to_cloze_texts">Assembly to cloze texts </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#basic_search_stop">basic_search_stop (head)</a></td>
+	<td class="summary">\clozeluafunction{basic_search_stop}
+ Search for a stop marker.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#basic_search_start">basic_search_start (head)</a></td>
+	<td class="summary">\clozeluafunction{basic_search_start}
+ Search for a start marker.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#basic_recursion">basic_recursion (head)</a></td>
+	<td class="summary">\clozeluafunction{basic_recursion}
+ Parse recursivley the node tree.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#basic">basic (head)</a></td>
+	<td class="summary">\clozeluafunction{basic}
+ The corresponding \LaTeX{} command to this lua function is \cmd{\cloze}
+ \secref{sec:command-cloze}.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#fix_length">fix_length (start, stop)</a></td>
+	<td class="summary">\clozeluafunction{fix_length}
+ Calculate the length of the whitespace before (<code>l.kern_start</code>) and
+ after (<code>l.kern_stopt</code>) the text.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#fix_make">fix_make (start)</a></td>
+	<td class="summary">\clozeluafunction{fix_make}
+ The function <a href="index.html#fix_make">cloze.fix_make</a> generates a gap of fixed width.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#fix_recursion">fix_recursion (head)</a></td>
+	<td class="summary">\clozeluafunction{fix_recursion}
+ Function to recurse the node list and search after marker.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#fix">fix (head)</a></td>
+	<td class="summary">\clozeluafunction{fix}
+ The corresponding \LaTeX{} command to this Lua function is
+ \cmd{\clozefix} \secref{sec:command-clozefix}.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#par">par (head)</a></td>
+	<td class="summary">\clozeluafunction{par}
+ The corresponding \LaTeX{} environment to this lua function is
+ <code>clozepar</code> \secref{sec:command-clozepar}.</td>
+	</tr>
+</table>
+<h2><a href="#Basic_module_functions">Basic module functions </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#base.register">base.register (mode)</a></td>
+	<td class="summary">This function registers the functions <a href="index.html#par">cloze.par</a>, <a href="index.html#basic">cloze.basic</a> and
+  <a href="index.html#fix">cloze.fix</a> the Lua callbacks.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#base.unregister">base.unregister (mode)</a></td>
+	<td class="summary"><code>base.unregister(mode)</code> deletes the registered functions from the
+ Lua callbacks.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Fields"></a>Fields</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "registry.user_id"></a>
+    <strong>registry.user_id</strong>
+    </dt>
+    <dd>
+    I didn&rsquo;t know what value I should take as <a href="index.html#registry.user_id">user_id</a>.  Therefore I
+ took my birthday and transformed it to a large number.
+
+
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Node_precessing__nodex_"></a>Node precessing (nodex) </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "nodex.create_color"></a>
+    <strong>nodex.create_color (option)</strong>
+    </dt>
+    <dd>
+    <code>nodex.create_color()</code> is a wrapper for the function
+ <code>nodex.create_colorstack()</code>.  It queries the current values of the
+ options <code>linecolor</code> and <code>textcolor</code>. The argument <code>option</code> accepts the
+ strings <code>line</code>, <code>text</code> and <code>reset</code>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">option</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "nodex.create_line"></a>
+    <strong>nodex.create_line (width)</strong>
+    </dt>
+    <dd>
+    Create a rule node, which is used as a line for the cloze texts.  The
+ <code>depth</code> and the <code>height</code> of the rule are calculated form the options
+ <code>thickness</code> and <code>distance</code>. The argument <code>width</code> must have the length
+ unit \emph{scaled points}.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">width</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "nodex.insert_list"></a>
+    <strong>nodex.insert_list (position, current, list, head)</strong>
+    </dt>
+    <dd>
+    Insert a <code>list</code> of nodes after or before the <code>current</code>.  The <code>head</code>
+ argument is optional. In some edge cases it is unfortately necessary.
+ if <code>head</code> is omitted the <code>current</code> node is used. The argument
+ <code>position</code> can take the values <code>&apos;after&apos;</code> or <code>&apos;before&apos;</code>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">position</span>
+
+        </li>
+        <li><span class="parameter">current</span>
+
+        </li>
+        <li><span class="parameter">list</span>
+
+        </li>
+        <li><span class="parameter">head</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "nodex.write_line"></a>
+    <strong>nodex.write_line ()</strong>
+    </dt>
+    <dd>
+    This function enclozes a rule node with color nodes as it the function
+ <code>nodex.insert_line</code> does.  In contrast to <code>nodex.insert_line</code> the three
+ nodes are appended to \TeX’s ‘current list’. They are not inserted in
+ a node list, which is accessed by a Lua callback.</p>
+
+<p> \subparagraph*{Node list:}</p>
+
+<p> \begin{nodelist}
+ - &amp; <code>whatsit</code> &amp; <code>pdf_colorstack</code> &amp; Line color \
+ - &amp; <code>rule</code> &amp;  &amp; <code>width</code> \
+ - &amp; <code>whatsit</code> &amp; <code>pdf_colorstack</code> &amp; Reset color \
+ \end{nodelist}
+
+
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Option_handling"></a>Option handling </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "registry.is_marker"></a>
+    <strong>registry.is_marker (item)</strong>
+    </dt>
+    <dd>
+    This functions checks if the given node <code>item</code> is a marker.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">item</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "registry.check_marker"></a>
+    <strong>registry.check_marker (item, mode, position)</strong>
+    </dt>
+    <dd>
+    This functions tests, whether the given node <code>item</code> is a marker.</p>
+
+<p> The argument <code>item</code> is a node. The argument <code>mode</code> accepts the string
+ values <a href="index.html#basic">basic</a>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>. The argument <code>position</code> is either
+ set to <code>start</code> or to <code>stop</code>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">item</span>
+
+        </li>
+        <li><span class="parameter">mode</span>
+
+        </li>
+        <li><span class="parameter">position</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "registry.get_marker"></a>
+    <strong>registry.get_marker (item, mode, position)</strong>
+    </dt>
+    <dd>
+    <a href="index.html#registry.get_marker">registry.get_marker</a> returns the given marker.</p>
+
+<p> The argument <code>item</code> is a node. The argument <code>mode</code> accepts the string
+ values <a href="index.html#basic">basic</a>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>. The argument <code>position</code> is either
+ set to <code>start</code> or to <code>stop</code>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">item</span>
+
+        </li>
+        <li><span class="parameter">mode</span>
+
+        </li>
+        <li><span class="parameter">position</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "registry.set_is_global"></a>
+    <strong>registry.set_is_global (value)</strong>
+    </dt>
+    <dd>
+    <code>registry.set_is_global()</code> sets the variable <code>registry.is_global</code> to
+ the value <code>value</code>.  It is intended, that the variable takes boolean
+ values.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "registry.unset_local_options"></a>
+    <strong>registry.unset_local_options ()</strong>
+    </dt>
+    <dd>
+    \clozeluafunction{unset_local_options}
+ This function unsets the local options.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "registry.unset_global_options"></a>
+    <strong>registry.unset_global_options ()</strong>
+    </dt>
+    <dd>
+    \clozeluafunction{unset_global_options}
+ <a href="index.html#registry.unset_global_options">registry.unset_global_options</a> empties the global options storage.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "registry.get_value"></a>
+    <strong>registry.get_value (key)</strong>
+    </dt>
+    <dd>
+    \clozeluafunction{get_value}
+ Retrieve a value from a given key.  First search for the value in the
+ local options, then in the global options. If both option storages are
+ empty, the default value will be returned.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "registry.get_value_show"></a>
+    <strong>registry.get_value_show ()</strong>
+    </dt>
+    <dd>
+    \clozeluafunction{get_value_show}
+ The function <code>registry.get_value_show()</code> returns the boolean value
+ <code>true</code> if the option <code>show</code> is true.  In contrast to the function
+ <code>registry.get_value()</code> it converts the string value `true' to a
+ boolean value.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "registry.has_value"></a>
+    <strong>registry.has_value (value)</strong>
+    </dt>
+    <dd>
+    \clozeluafunction{has_value}
+ This function tests whether the value <code>value</code> is not empty and has a
+ value.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "registry.get_defaults"></a>
+    <strong>registry.get_defaults (option)</strong>
+    </dt>
+    <dd>
+    \clozeluafunction{get_defaults}
+ <code>registry.get_defaults(option)</code> returns a the default value of the
+ given option.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">option</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Assembly_to_cloze_texts"></a>Assembly to cloze texts </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "basic_search_stop"></a>
+    <strong>basic_search_stop (head)</strong>
+    </dt>
+    <dd>
+    \clozeluafunction{basic_search_stop}
+ Search for a stop marker.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">head</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "basic_search_start"></a>
+    <strong>basic_search_start (head)</strong>
+    </dt>
+    <dd>
+    \clozeluafunction{basic_search_start}
+ Search for a start marker.  Also begin a new cloze, if the boolean
+ value <code>cloze.status.continue</code> is true. The knowledge of the last
+ hlist node is a requirement to begin a cloze.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">head</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "basic_recursion"></a>
+    <strong>basic_recursion (head)</strong>
+    </dt>
+    <dd>
+    \clozeluafunction{basic_recursion}
+ Parse recursivley the node tree.  Start and stop markers can be nested
+ deeply into the node tree.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">head</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "basic"></a>
+    <strong>basic (head)</strong>
+    </dt>
+    <dd>
+    \clozeluafunction{basic}
+ The corresponding \LaTeX{} command to this lua function is \cmd{\cloze}
+ \secref{sec:command-cloze}.  The argument <code>head</code> is the head node of a
+ node list.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">head</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "fix_length"></a>
+    <strong>fix_length (start, stop)</strong>
+    </dt>
+    <dd>
+    \clozeluafunction{fix_length}
+ Calculate the length of the whitespace before (<code>l.kern_start</code>) and
+ after (<code>l.kern_stopt</code>) the text.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">start</span>
+
+        </li>
+        <li><span class="parameter">stop</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "fix_make"></a>
+    <strong>fix_make (start)</strong>
+    </dt>
+    <dd>
+    \clozeluafunction{fix_make}
+ The function <a href="index.html#fix_make">cloze.fix_make</a> generates a gap of fixed width.</p>
+
+<p> \subparagraph*{Node lists}</p>
+
+<p> \subparagraph*{Show text:}</p>
+
+<p> \begin{nodelist}
+ <code>n.start</code> &amp; <code>whatsit</code> &amp; <code>user_definded</code> &amp; <code>index</code> \
+ <code>n.line</code> &amp; <code>rule</code> &amp;  &amp; <code>l.width</code> \
+ <code>n.kern_start</code> &amp; <code>kern</code> &amp; &amp; Depends on <code>align</code> \
+ <code>n.color_text</code> &amp; <code>whatsit</code> &amp; <code>pdf_colorstack</code> &amp; Text color \
+  &amp; <code>glyphs</code> &amp; &amp; Text to show \
+ <code>n.color_reset</code> &amp; <code>whatsit</code> &amp; <code>pdf_colorstack</code> &amp; Reset color \
+ <code>n.kern_stop</code> &amp; <code>kern</code> &amp; &amp; Depends on <code>align</code> \
+ <code>n.stop</code> &amp; <code>whatsit</code> &amp; <code>user_definded</code> &amp; <code>index</code> \
+ \end{nodelist}</p>
+
+<p> \subparagraph*{Hide text:}</p>
+
+<p> \begin{nodelist}
+ <code>n.start</code> &amp; <code>whatsit</code> &amp; <code>user_definded</code> &amp; <code>index</code> \
+ <code>n.line</code> &amp; <code>rule</code> &amp;  &amp; <code>l.width</code> \
+ <code>n.stop</code> &amp; <code>whatsit</code> &amp; <code>user_definded</code> &amp; <code>index</code> \
+ \end{nodelist}</p>
+
+<p> Make fixed size cloze.
+ The argument <code>start</code> is the node, where the gap begins. The argument
+ <code>stop</code> is the .
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">start</span>
+         The node, where the gap ends
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "fix_recursion"></a>
+    <strong>fix_recursion (head)</strong>
+    </dt>
+    <dd>
+    \clozeluafunction{fix_recursion}
+ Function to recurse the node list and search after marker.  <code>head</code> is
+ the head node of a node list.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">head</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "fix"></a>
+    <strong>fix (head)</strong>
+    </dt>
+    <dd>
+    \clozeluafunction{fix}
+ The corresponding \LaTeX{} command to this Lua function is
+ \cmd{\clozefix} \secref{sec:command-clozefix}.  The argument <code>head</code> is
+ the head node of a node list.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">head</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "par"></a>
+    <strong>par (head)</strong>
+    </dt>
+    <dd>
+    \clozeluafunction{par}
+ The corresponding \LaTeX{} environment to this lua function is
+ <code>clozepar</code> \secref{sec:command-clozepar}.</p>
+
+<p> \subparagraph*{Node lists}</p>
+
+<p> \subparagraph*{Show text:}</p>
+
+<p> \begin{nodelist}
+ <code>n.strut</code> &amp; <code>kern</code> &amp;  &amp; width = 0  \
+ <code>n.line</code> &amp; <code>rule</code> &amp;  &amp; <code>l.width</code> (Width from hlist) \
+ <code>n.kern</code> &amp; <code>kern</code> &amp; &amp; <code>-l.width</code> \
+ <code>n.color_text</code> &amp; <code>whatsit</code> &amp; <code>pdf_colorstack</code> &amp; Text color \
+  &amp; <code>glyphs</code> &amp; &amp; Text to show \
+ <code>n.tail</code> &amp; <code>glyph</code> &amp;  &amp; Last glyph in hlist \
+ <code>n.color_reset</code> &amp; <code>whatsit</code> &amp; <code>pdf_colorstack</code> &amp; Reset color \
+ \end{nodelist}</p>
+
+<p> \subparagraph*{Hide text:}</p>
+
+<p> \begin{nodelist}
+ <code>n.strut</code> &amp; <code>kern</code> &amp;  &amp; width = 0 \
+ <code>n.line</code> &amp; <code>rule</code> &amp;  &amp; <code>l.width</code> (Width from hlist) \
+ \end{nodelist}</p>
+
+<p> The argument <code>head</code> is the head node of a node list.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">head</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header has-description"><a name="Basic_module_functions"></a>Basic module functions </h2>
+
+          <div class="section-description">
+           The <code>base</code> table contains functions which are published to the
+ <code>cloze.sty</code> file.
+          </div>
+    <dl class="function">
+    <dt>
+    <a name = "base.register"></a>
+    <strong>base.register (mode)</strong>
+    </dt>
+    <dd>
+    This function registers the functions <a href="index.html#par">cloze.par</a>, <a href="index.html#basic">cloze.basic</a> and
+  <a href="index.html#fix">cloze.fix</a> the Lua callbacks.</p>
+
+<p> <a href="index.html#par">cloze.par</a> and <a href="index.html#basic">cloze.basic</a> are registered to the callback
+ <code>post_linebreak_filter</code> and <a href="index.html#fix">cloze.fix</a> to the callback
+ <code>pre_linebreak_filter</code>. The argument <code>mode</code> accepts the string values
+ <a href="index.html#basic">basic</a>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>. A special treatment is needed for clozes in
+ display math mode. The <code>post_linebreak_filter</code> is not called on
+ display math formulas. I’m not sure if the <code>pre_output_filter</code> is the
+ right choice to capture the display math formulas.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">mode</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "base.unregister"></a>
+    <strong>base.unregister (mode)</strong>
+    </dt>
+    <dd>
+    <code>base.unregister(mode)</code> deletes the registered functions from the
+ Lua callbacks.</p>
+
+<p> The argument <code>mode</code> accepts the string values
+ <a href="index.html#basic">basic</a>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">mode</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-05-23 14:05:42 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
