@@ -2585,38 +2585,34 @@ end
 % is the node, where the gap begins. The argument |stop| is the node,
 % where the gap ends.
 %    \begin{macrocode}
-function cloze.basic_make(start, stop)
-  local n = {}
-  local l = {}
-  n.head = start
-  if not start or not stop then
+function cloze.basic_make(node_first, node_last)
+  local node_head = node_first
+  if not node_first or not node_last then
     return
   end
-  n.start = start
-  n.stop = stop
-  l.width = node.dimensions(
+  local line_width = node.dimensions(
     cloze.status.hlist.glue_set,
     cloze.status.hlist.glue_sign,
     cloze.status.hlist.glue_order,
-    n.start,
-    n.stop
+    node_first,
+    node_last
   )
-  n.line = nodex.insert_line(n.start, l.width)
-  n.color_text = nodex.insert_list('after', n.line, {nodex.create_color('text')})
+  local node_line = nodex.insert_line(node_first, line_width)
+  local node_color_text = nodex.insert_list('after', node_line, {nodex.create_color('text')})
   if registry.get_value_show() then
-    nodex.insert_list('after', n.color_text, {nodex.create_kern(-l.width)})
-    nodex.insert_list('before', n.stop, {nodex.create_color('reset')}, n.head)
+    nodex.insert_list('after', node_color_text, {nodex.create_kern(-line_width)})
+    nodex.insert_list('before', node_last, {nodex.create_color('reset')}, node_head)
   else
-    n.line.next = n.stop.next
-    n.stop.prev = n.line -- not line.prev -> line color leaks out
+    node_line.next = node_last.next
+    node_last.prev = node_line -- not node_line.prev -> line color leaks out
   end
 %    \end{macrocode}
-% I some edge cases the lua callbacks get fired up twice. After the
+% In some edge cases the lua callbacks get fired up twice. After the
 % cloze has been created, the start and stop whatsit markers can be
 % deleted.
 %    \begin{macrocode}
-  registry.remove_marker(n.start)
-  registry.remove_marker(n.stop)
+  registry.remove_marker(node_first)
+  registry.remove_marker(node_last)
 end
 %    \end{macrocode}
 %
