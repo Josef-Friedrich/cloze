@@ -3,7 +3,7 @@ texmf = $(HOME)/texmf
 texmftex = $(texmf)/tex/lualatex
 installdir = $(texmftex)/$(jobname)
 
-all: install doc
+all: install doc doclua
 
 install:
 	luatex $(jobname).ins
@@ -41,4 +41,4 @@ ctan:
 	rm -rf $(jobname)
 
 
-.PHONY: all install doc clean ctan
+.PHONY: all install doc doclua clean ctan
