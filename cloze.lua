@@ -2,9 +2,14 @@
 --  source code documentation. The supported tags are described on in
 --  the [wiki](https://github.com/stevedonovan/LDoc/wiki).
 --
+-- <h3>Naming conventions</h3>
+--
+-- * _Variable_ names for _nodes_ are suffixed with `_node`, for example
+--   `head_node`.
+-- * _Variable_ names for _lengths_ (dimensions) are suffixed with
+--   `_length`, for example `width_length`.
+--
 -- @module cloze
-
-
 
 -- __cloze.lua}__
 
@@ -126,15 +131,15 @@ end
 -- argument is optional. In some edge cases it is unfortately necessary.
 -- if `head` is omitted the `current` node is used. The argument
 -- `position` can take the values `'after'` or `'before'`.
-function nodex.insert_list(position, current, list, head)
-  if not head then
-    head = current
+function nodex.insert_list(position, current, list, head_node)
+  if not head_node then
+    head_node = current
   end
   for i, insert in ipairs(list) do
     if position == 'after' then
-      head, current = node.insert_after(head, current, insert)
+      head_node, current = node.insert_after(head_node, current, insert)
     elseif position == 'before' then
-      head, current = node.insert_before(head, current, insert)
+      head_node, current = node.insert_before(head_node, current, insert)
     end
   end
   return current
@@ -271,14 +276,18 @@ function nodex.write_margin()
   node.write(kern)
 end
 
---- Search for a `hlist` (subtype `line`). Return false, if no `hlist` can
+--- Search for a `hlist` (subtype `line`).
+--
+-- @tparam node head_node The head of a node list.
+--
+-- @treturn node|false Return false, if no `hlist` can
 -- be found.
-function nodex.search_hlist(head)
-  while head do
-    if head.id == node.id('hlist') and head.subtype == 1 then
-      return nodex.strut_to_hlist(head)
+function nodex.search_hlist(head_node)
+  while head_node do
+    if head_node.id == node.id('hlist') and head_node.subtype == 1 then
+      return nodex.strut_to_hlist(head_node)
     end
-    head = head.next
+    head_node = head_node.next
   end
   return false
 end
@@ -550,16 +559,18 @@ function cloze.basic_make(node_first, node_last)
 end
 
 --- Search for a stop marker.
-function cloze.basic_search_stop(head)
+--
+-- @tparam node head_node The head of a node list.
+function cloze.basic_search_stop(head_node)
   local stop
-  while head do
+  while head_node do
     cloze.status.continue = true
-    stop = head
+    stop = head_node
     if registry.check_marker(stop, 'basic', 'stop') then
       cloze.status.continue = false
       break
     end
-    head = head.next
+    head_node = head_node.next
   end
   return stop
 end
@@ -567,18 +578,20 @@ end
 --- Search for a start marker. Also begin a new cloze, if the boolean
 -- value `cloze.status.continue` is true. The knowledge of the last
 -- hlist node is a requirement to begin a cloze.
-function cloze.basic_search_start(head)
+--
+-- @tparam node head_node The head of a node list.
+function cloze.basic_search_start(head_node)
   local start
   local stop
   local n = {}
   if cloze.status.continue then
-    n.hlist = nodex.search_hlist(head)
+    n.hlist = nodex.search_hlist(head_node)
     if n.hlist then
       cloze.status.hlist = n.hlist
       start = cloze.status.hlist.head
     end
-  elseif registry.check_marker(head, 'basic', 'start') then
-    start = head
+  elseif registry.check_marker(head_node, 'basic', 'start') then
+    start = head_node
   end
   if start then
     stop = cloze.basic_search_stop(start)
@@ -588,30 +601,31 @@ end
 
 --- Parse recursivley the node tree. Start and stop markers can be nested
 -- deeply into the node tree.
-function cloze.basic_recursion(head)
-  while head do
-    if head.head then
-      cloze.status.hlist = head
-      cloze.basic_recursion(head.head)
+--
+-- @tparam node head_node The head of a node list.
+function cloze.basic_recursion(head_node)
+  while head_node do
+    if head_node.head then
+      cloze.status.hlist = head_node
+      cloze.basic_recursion(head_node.head)
     else
-      cloze.basic_search_start(head)
+      cloze.basic_search_start(head_node)
     end
-      head = head.next
+      head_node = head_node.next
   end
 end
 
 --- The corresponding LaTeX command to this lua function is `\cloze`.
 --
--- The argument `head` is the head node of a
--- node list.
-function cloze.basic(head)
+-- @tparam node head_node The head of a node list.
+function cloze.basic(head_node)
   cloze.status.continue = false
-  cloze.basic_recursion(head)
-  return head
+  cloze.basic_recursion(head_node)
+  return head_node
 end
 
 --- Calculate the length of the whitespace before (`l.kern_start`) and
--- after (`l.kern_stopt`) the text.
+-- after (`l.kern_stop`) the text.
 function cloze.fix_length(start, stop)
   local l = {}
   l.width = tex.sp(registry.get_value('width'))
@@ -753,35 +767,35 @@ end
 
 --- Function to recurse the node list and search after marker.
 --
--- `head` is the head node of a node list.
-function cloze.fix_recursion(head)
+-- @tparam node head_node The head of a node list.
+function cloze.fix_recursion(head_node)
   local n = {} -- node
   n.start, n.stop = false
-  while head do
-    if head.head then
-      cloze.fix_recursion(head.head)
+  while head_node do
+    if head_node.head then
+      cloze.fix_recursion(head_node.head)
     else
       if not n.start then
-        n.start = registry.get_marker(head, 'fix', 'start')
+        n.start = registry.get_marker(head_node, 'fix', 'start')
       end
       if not n.stop then
-        n.stop = registry.get_marker(head, 'fix', 'stop')
+        n.stop = registry.get_marker(head_node, 'fix', 'stop')
       end
       if n.start and n.stop then
         cloze.fix_make(n.start, n.stop)
         n.start, n.stop = false
       end
     end
-    head = head.next
+    head_node = head_node.next
   end
 end
 
 --- The corresponding LaTeX command to this Lua function is `\clozefix`.
 --
--- The argument `head` is the head node of a node list.
-function cloze.fix(head)
-  cloze.fix_recursion(head)
-  return head
+-- @tparam node head_node The head of a node list.
+function cloze.fix(head_node)
+  cloze.fix_recursion(head_node)
+  return head_node
 end
 
 --- The corresponding LaTeX environment to this lua function is
@@ -861,11 +875,11 @@ end
 -- </tbody>
 -- </table>
 --
--- The argument `head` is the head node of a node list.
-function cloze.par(head)
+-- @tparam node head_node The head of a node list.
+function cloze.par(head_node)
   local l = {} -- length
   local n = {} -- node
-  for hlist in node.traverse_id(node.id('hlist'), head) do
+  for hlist in node.traverse_id(node.id('hlist'), head_node) do
     for whatsit in node.traverse_id(node.id('whatsit'), hlist.head) do
       registry.get_marker(whatsit, 'par', 'start')
     end
@@ -883,14 +897,14 @@ function cloze.par(head)
       )
       nodex.insert_list(
         'after',
-        node.tail(head),
+        node.tail(head_node),
         {nodex.create_color('reset')}
       )
     else
       n.line.next = nil
     end
   end
-  return head
+  return head_node
 end
 
 --- Basic module functions.
@@ -946,7 +960,7 @@ end
 --- `base.unregister(mode)` deletes the registered functions from the
 -- Lua callbacks.
 --
--- The argument `mode` accepts the string values
+-- @tparam string mode The argument `mode` accepts the string values
 -- `basic`, `fix` and `par`.
 function base.unregister(mode)
   if mode == 'basic' then

@@ -49,8 +49,18 @@
 <h1>Module <code>cloze</code></h1>
 <p>Cloze uses <a href="https://github.com/stevedonovan/ldoc">LDoc</a> for the
   source code documentation.</p>
-<p> The supported tags are described on in
+<p><p> The supported tags are described on in
   the <a href="https://github.com/stevedonovan/LDoc/wiki">wiki</a>.</p>
+
+<p> <h3>Naming conventions</h3></p>
+
+<ul>
+<li><em>Variable</em> names for <em>nodes</em> are suffixed with <code>_node</code>, for example
+<code>head_node</code>.</li>
+<li><em>Variable</em> names for <em>lengths</em> (dimensions) are suffixed with
+<code>_length</code>, for example <code>width_length</code>.</li>
+</ul>
+</p>
 
 
 <h2><a href="#Fields">Fields</a></h2>
@@ -72,7 +82,7 @@
 	<td class="summary">Create a rule node, which is used as a line for the cloze texts.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#nodex.insert_list">nodex.insert_list (position, current, list, head)</a></td>
+	<td class="name" nowrap><a href="#nodex.insert_list">nodex.insert_list (position, current, list, head_node)</a></td>
 	<td class="summary">Insert a <code>list</code> of nodes after or before the <code>current</code>.</td>
 	</tr>
 	<tr>
@@ -107,7 +117,7 @@
 	<td class="summary">Write kern nodes to the current node list.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#nodex.search_hlist">nodex.search_hlist (head)</a></td>
+	<td class="name" nowrap><a href="#nodex.search_hlist">nodex.search_hlist (head_node)</a></td>
 	<td class="summary">Search for a <code>hlist</code> (subtype <code>line</code>).</td>
 	</tr>
 </table>
@@ -208,40 +218,40 @@
 	<td class="summary">The function <code>cloze.basic_make()</code> makes one gap.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#basic_search_stop">basic_search_stop (head)</a></td>
+	<td class="name" nowrap><a href="#basic_search_stop">basic_search_stop (head_node)</a></td>
 	<td class="summary">Search for a stop marker.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#basic_search_start">basic_search_start (head)</a></td>
+	<td class="name" nowrap><a href="#basic_search_start">basic_search_start (head_node)</a></td>
 	<td class="summary">Search for a start marker.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#basic_recursion">basic_recursion (head)</a></td>
+	<td class="name" nowrap><a href="#basic_recursion">basic_recursion (head_node)</a></td>
 	<td class="summary">Parse recursivley the node tree.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#basic">basic (head)</a></td>
+	<td class="name" nowrap><a href="#basic">basic (head_node)</a></td>
 	<td class="summary">The corresponding LaTeX command to this lua function is <code>\cloze</code>.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#fix_length">fix_length (start, stop)</a></td>
 	<td class="summary">Calculate the length of the whitespace before (<code>l.kern_start</code>) and
- after (<code>l.kern_stopt</code>) the text.</td>
+ after (<code>l.kern_stop</code>) the text.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#fix_make">fix_make (start, stop)</a></td>
 	<td class="summary">The function <a href="index.html#fix_make">cloze.fix_make</a> generates a gap of fixed width.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#fix_recursion">fix_recursion (head)</a></td>
+	<td class="name" nowrap><a href="#fix_recursion">fix_recursion (head_node)</a></td>
 	<td class="summary">Function to recurse the node list and search after marker.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#fix">fix (head)</a></td>
+	<td class="name" nowrap><a href="#fix">fix (head_node)</a></td>
 	<td class="summary">The corresponding LaTeX command to this Lua function is <code>\clozefix</code>.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#par">par (head)</a></td>
+	<td class="name" nowrap><a href="#par">par (head_node)</a></td>
 	<td class="summary">The corresponding LaTeX environment to this lua function is
  <code>clozepar</code>.</td>
 	</tr>
@@ -334,7 +344,7 @@
 </dd>
     <dt>
     <a name = "nodex.insert_list"></a>
-    <strong>nodex.insert_list (position, current, list, head)</strong>
+    <strong>nodex.insert_list (position, current, list, head_node)</strong>
     </dt>
     <dd>
     Insert a <code>list</code> of nodes after or before the <code>current</code>.  The <code>head</code>
@@ -354,7 +364,7 @@
         <li><span class="parameter">list</span>
 
         </li>
-        <li><span class="parameter">head</span>
+        <li><span class="parameter">head_node</span>
 
         </li>
     </ul>
@@ -550,20 +560,27 @@
 </dd>
     <dt>
     <a name = "nodex.search_hlist"></a>
-    <strong>nodex.search_hlist (head)</strong>
+    <strong>nodex.search_hlist (head_node)</strong>
     </dt>
     <dd>
-    Search for a <code>hlist</code> (subtype <code>line</code>).  Return false, if no <code>hlist</code> can
- be found.
+    Search for a <code>hlist</code> (subtype <code>line</code>).
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">head</span>
-
+        <li><span class="parameter">head_node</span>
+            <span class="types"><span class="type">node</span></span>
+         The head of a node list.
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">node</span> or <span class="type">false</span></span>
+        Return false, if no <code>hlist</code> can
+ be found.
+    </ol>
 
 
 
@@ -1044,7 +1061,7 @@ some additional data like the local options.</li>
 </dd>
     <dt>
     <a name = "basic_search_stop"></a>
-    <strong>basic_search_stop (head)</strong>
+    <strong>basic_search_stop (head_node)</strong>
     </dt>
     <dd>
     Search for a stop marker.
@@ -1052,8 +1069,9 @@ some additional data like the local options.</li>
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">head</span>
-
+        <li><span class="parameter">head_node</span>
+            <span class="types"><span class="type">node</span></span>
+         The head of a node list.
         </li>
     </ul>
 
@@ -1064,7 +1082,7 @@ some additional data like the local options.</li>
 </dd>
     <dt>
     <a name = "basic_search_start"></a>
-    <strong>basic_search_start (head)</strong>
+    <strong>basic_search_start (head_node)</strong>
     </dt>
     <dd>
     Search for a start marker.  Also begin a new cloze, if the boolean
@@ -1074,8 +1092,9 @@ some additional data like the local options.</li>
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">head</span>
-
+        <li><span class="parameter">head_node</span>
+            <span class="types"><span class="type">node</span></span>
+         The head of a node list.
         </li>
     </ul>
 
@@ -1086,7 +1105,7 @@ some additional data like the local options.</li>
 </dd>
     <dt>
     <a name = "basic_recursion"></a>
-    <strong>basic_recursion (head)</strong>
+    <strong>basic_recursion (head_node)</strong>
     </dt>
     <dd>
     Parse recursivley the node tree.  Start and stop markers can be nested
@@ -1095,8 +1114,9 @@ some additional data like the local options.</li>
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">head</span>
-
+        <li><span class="parameter">head_node</span>
+            <span class="types"><span class="type">node</span></span>
+         The head of a node list.
         </li>
     </ul>
 
@@ -1107,19 +1127,17 @@ some additional data like the local options.</li>
 </dd>
     <dt>
     <a name = "basic"></a>
-    <strong>basic (head)</strong>
+    <strong>basic (head_node)</strong>
     </dt>
     <dd>
-    The corresponding LaTeX command to this lua function is <code>\cloze</code>.</p>
-
-<p> The argument <code>head</code> is the head node of a
- node list.
+    The corresponding LaTeX command to this lua function is <code>\cloze</code>.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">head</span>
-
+        <li><span class="parameter">head_node</span>
+            <span class="types"><span class="type">node</span></span>
+         The head of a node list.
         </li>
     </ul>
 
@@ -1134,7 +1152,7 @@ some additional data like the local options.</li>
     </dt>
     <dd>
     Calculate the length of the whitespace before (<code>l.kern_start</code>) and
- after (<code>l.kern_stopt</code>) the text.
+ after (<code>l.kern_stop</code>) the text.
 
 
     <h3>Parameters:</h3>
@@ -1263,18 +1281,17 @@ some additional data like the local options.</li>
 </dd>
     <dt>
     <a name = "fix_recursion"></a>
-    <strong>fix_recursion (head)</strong>
+    <strong>fix_recursion (head_node)</strong>
     </dt>
     <dd>
-    Function to recurse the node list and search after marker.</p>
-
-<p> <code>head</code> is the head node of a node list.
+    Function to recurse the node list and search after marker.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">head</span>
-
+        <li><span class="parameter">head_node</span>
+            <span class="types"><span class="type">node</span></span>
+         The head of a node list.
         </li>
     </ul>
 
@@ -1285,18 +1302,17 @@ some additional data like the local options.</li>
 </dd>
     <dt>
     <a name = "fix"></a>
-    <strong>fix (head)</strong>
+    <strong>fix (head_node)</strong>
     </dt>
     <dd>
-    The corresponding LaTeX command to this Lua function is <code>\clozefix</code>.</p>
-
-<p> The argument <code>head</code> is the head node of a node list.
+    The corresponding LaTeX command to this Lua function is <code>\clozefix</code>.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">head</span>
-
+        <li><span class="parameter">head_node</span>
+            <span class="types"><span class="type">node</span></span>
+         The head of a node list.
         </li>
     </ul>
 
@@ -1307,7 +1323,7 @@ some additional data like the local options.</li>
 </dd>
     <dt>
     <a name = "par"></a>
-    <strong>par (head)</strong>
+    <strong>par (head_node)</strong>
     </dt>
     <dd>
     The corresponding LaTeX environment to this lua function is
@@ -1385,15 +1401,14 @@ some additional data like the local options.</li>
      <td><code>l.width</code> (Width from hlist)</td>
    </tr>
  </tbody>
- </table></p>
-
-<p> The argument <code>head</code> is the head node of a node list.
+ </table>
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">head</span>
-
+        <li><span class="parameter">head_node</span>
+            <span class="types"><span class="type">node</span></span>
+         The head of a node list.
         </li>
     </ul>
 
@@ -1445,16 +1460,15 @@ some additional data like the local options.</li>
     </dt>
     <dd>
     <code>base.unregister(mode)</code> deletes the registered functions from the
- Lua callbacks.</p>
-
-<p> The argument <code>mode</code> accepts the string values
- <a href="index.html#basic">basic</a>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>.
+ Lua callbacks.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">mode</span>
-
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         The argument <code>mode</code> accepts the string values
+ <a href="index.html#basic">basic</a>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>.
         </li>
     </ul>
 
@@ -1470,7 +1484,7 @@ some additional data like the local options.</li>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-05-23 18:53:51 </i>
+<i style="float:right;">Last updated 2020-05-23 19:16:46 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
