@@ -7,7 +7,6 @@
 *.ilg
 *.ind
 *.log
-*.lua
 *.out
 *.pdf
 *.sty
