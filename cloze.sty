@@ -1,0 +1,273 @@
+%%
+%% This is file `cloze.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% cloze.dtx  (with options: `package')
+%% 
+%% This is a generated file.
+%% 
+%% Copyright (C) 2015-2020 by Josef Friedrich <josef@friedrich.rocks>
+%% ----------------------------------------------------------------------
+%% This work may be distributed and/or modified under the conditions of
+%% the LaTeX Project Public License, either version 1.3c of this license
+%% or (at your option) any later version. The latest version of this
+%% license is in:
+%% 
+%%   http://www.latex-project.org/lppl.txt
+%% 
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2008/05/05 or later.
+%% 
+\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\ProvidesPackage{cloze}
+    [2020/05/20 v1.4 Package to typeset cloze worksheets or cloze tests]
+\RequirePackage{fontspec}
+\RequirePackage{luatexbase-mcb}
+\RequirePackage{kvoptions}
+\RequirePackage{setspace}
+\RequirePackage{xcolor}
+\RequirePackage{xparse}
+\RequirePackage{stackengine}
+\RequirePackage{ulem}
+\normalem
+\RequirePackage{transparent}
+\directlua{
+  cloze = require('cloze')
+}
+\newif\ifclozeshow\clozeshowtrue
+\def\cloze@set@to@global{%
+ \directlua{cloze.set_is_global(true)}%
+}
+\def\cloze@set@to@local{%
+  \directlua{
+    cloze.unset_local_options()
+    cloze.set_is_global(false)
+  }%
+}
+\def\cloze@set@option[#1]#2{%
+  \directlua{cloze.set_option('#1', '#2')}%
+}
+\def\cloze@color#1{\csname\string\color@#1\endcsname}
+\def\cloze@set@local@options#1{%
+  \cloze@set@to@local%
+  \kvsetkeys{CLZ}{#1}%
+}
+\def\cloze@start@marker#1{%
+  \strut\directlua{
+    cloze.register('#1')
+    cloze.marker('#1', 'start')
+  }%
+}
+\def\cloze@stop@marker#1{%
+  \strut\directlua{
+    cloze.marker('#1', 'stop')
+  }%
+}
+\def\cloze@margin#1{%
+  \directlua{cloze.margin()}%
+  #1%
+  \directlua{cloze.margin()}%
+}
+\cloze@set@to@global
+\SetupKeyvalOptions{
+  family=CLZ,
+  prefix=CLZ@
+}
+\DeclareStringOption{align}
+\define@key{CLZ}{align}[]{\cloze@set@option[align]{#1}}
+\DeclareStringOption{boxheight}
+\define@key{CLZ}{boxheight}[]{\cloze@set@option[boxheight]{#1}}
+\DeclareStringOption{boxwidth}
+\define@key{CLZ}{boxwidth}[]{\cloze@set@option[boxwidth]{#1}}
+\DeclareStringOption{distance}
+\define@key{CLZ}{distance}[]{\cloze@set@option[distance]{#1}}
+\DeclareVoidOption{hide}{%
+  \clozeshowfalse%
+  \cloze@set@option[hide]{true}%
+  \cloze@set@option[show]{false}%
+}
+\DeclareStringOption{linecolor}
+\define@key{CLZ}{linecolor}[]{%
+  \cloze@set@option[linecolor]{\cloze@color{#1}}%
+  \cloze@set@option[linecolor_name]{#1}%
+}
+\DeclareStringOption{margin}
+\define@key{CLZ}{margin}[]{\cloze@set@option[margin]{#1}}
+\DeclareVoidOption{show}{%
+  \clozeshowtrue%
+  \cloze@set@option[show]{true}%
+  \cloze@set@option[hide]{false}%
+}
+\DeclareStringOption{spacing}
+\define@key{CLZ}{spacing}[]{\cloze@set@option[spacing]{#1}}
+\DeclareStringOption{textcolor}
+\define@key{CLZ}{textcolor}[]{%
+  \cloze@set@option[textcolor]{\cloze@color{#1}}%
+  \cloze@set@option[textcolor_name]{#1}%
+}
+\DeclareStringOption{thickness}
+\define@key{CLZ}{thickness}[]{\cloze@set@option[thickness]{#1}}
+\DeclareStringOption{width}
+\define@key{CLZ}{width}[]{\cloze@set@option[width]{#1}}
+\ProcessKeyvalOptions{CLZ}
+\newcommand{\clozeset}[1]{%
+  \cloze@set@to@global%
+  \kvsetkeys{CLZ}{#1}%
+}
+\newcommand{\clozereset}{%
+  \directlua{cloze.reset()}
+}
+\newcommand{\clozeshow}{%
+  \clozeset{show}
+}
+\newcommand{\clozehide}{%
+  \clozeset{hide}
+}
+\newcommand{\clozefont}{\itshape}
+\newcommand{\clozesetfont}[1]{%
+  \renewcommand{\clozefont}[1]{%
+    #1%
+  }%
+}
+\newcommand{\cloze}[2][]{%
+  \cloze@set@local@options{#1}%
+  \cloze@start@marker{basic}%
+  {%
+    \clozefont\relax%
+    \cloze@margin{#2}%
+  }%
+  \cloze@stop@marker{basic}%
+}
+\newcommand{\clozefix}[2][]{%
+  \cloze@set@local@options{#1}%
+  \cloze@start@marker{fix}%
+  {%
+    \clozefont\relax%
+    \cloze@margin{#2}%
+  }%
+  \cloze@stop@marker{fix}%
+}
+\newcommand{\clozenol}[2][]{%
+  {%
+    \cloze@set@local@options{#1}%
+    \clozefont\relax%
+    \ifclozeshow%
+      \color{\directlua{tex.print(cloze.get_value('textcolor_name'))}}%
+    \else%
+      \color{white}%
+    \fi%
+    #2%
+  }%
+}
+\newenvironment{clozepar}[1][]%
+{%
+  \par%
+  \cloze@set@local@options{#1}%
+  \cloze@start@marker{par}%
+  \clozefont\relax%
+}%
+{%
+  \cloze@stop@marker{par}%
+  \par%
+  \directlua{cloze.unregister('par')}%
+}
+\newcommand{\cloze@get@value}[1]{%
+  \directlua{
+    tex.print(cloze.get_value('#1'))
+  }%
+}
+\newsavebox{\cloze@box}
+\NewDocumentEnvironment{clozebox}{ s O{} +b}{%
+  \cloze@set@local@options{#2}%
+  \noindent%
+  \begin{lrbox}{\cloze@box}%
+  \directlua{
+    local boxheight = cloze.get_value('boxheight')
+    local boxwidth = cloze.get_value('boxwidth')
+    if boxheight then
+      tex.print('\\begin{minipage}[t][' .. boxheight .. '][t]{' .. boxwidth .. '}')
+    else
+      tex.print('\\begin{minipage}[t]{' .. boxwidth .. '}')
+    end
+  }
+    \clozefont\relax%
+    \ifclozeshow%
+      \color{\directlua{tex.print(cloze.get_value('textcolor_name'))}}#3%
+    \else%
+      \color{white}#3%
+    \fi%
+  \end{minipage}%
+  \end{lrbox}%
+  \IfBooleanTF{#1}%
+    {\usebox{\cloze@box}}%
+    {\fbox{\usebox{\cloze@box}}}%
+}{}
+\newenvironment{clozespace}[1][]%
+{%
+  \cloze@set@local@options{#1}%
+  \begin{spacing}{\directlua{tex.print(cloze.get_value('spacing'))}}%
+}{\end{spacing}}
+\newcommand{\clozefil}[2][]{%
+  \cloze[#1]{#2}\clozelinefil[#1]%
+}
+\newcommand{\clozeextend}[1][1]{%
+  \directlua{
+    local loop = #1
+    for variable = 1, loop do
+      tex.print(' \string\\hspace{1em} \string\\strut')
+    end
+  }
+}
+\newcommand{\clozeline}[1][]{%
+  \cloze@set@local@options{#1}%
+  \directlua{cloze.line()}%
+}
+\newcommand{\clozelinefil}[1][]{%
+  \cloze@set@local@options{#1}%
+  \strut%
+  \directlua{cloze.linefil()}%
+  \strut%
+}
+\newcommand{\cloze@text@color}[1]{%
+  \textcolor%
+    {\directlua{tex.print(cloze.get_value('textcolor_name'))}}%
+    {#1}%
+}
+\newcommand\cloze@strike@line{%
+  \bgroup%
+  \markoverwith{%
+    \cloze@text@color{%
+      \rule[0.5ex]{2pt}{1pt}%
+    }%
+  }%
+  \ULon%
+}
+\newcommand{\clozestrike}[3][]{%
+  \cloze@set@local@options{#1}%
+  \ifclozeshow%
+    \stackengine%
+      {\Sstackgap}% \Sstackgap or \Lstackgap or \stackgap or stacklength
+      {\cloze@strike@line{#2}}% anchor
+      {\cloze@text@color{\clozefont{}#3}}% item
+      {O}% O or U
+      {c}% \stackalignment or l or c or r
+      {\quietstack}% \quietstack or T or F
+      {T}% \useanchorwidth or T or F
+      {\stacktype}% \stacktype or S or L
+  \else%
+    \stackengine%
+      {\Sstackgap}% \Sstackgap or \Lstackgap or \stackgap or stacklength
+      {#2}% anchor
+      {\texttransparent{0}{\clozefont{}#3}}% item
+      {O}% O or U
+      {c}% \stackalignment or l or c or r
+      {\quietstack}% \quietstack or T or F
+      {T}% \useanchorwidth or T or F
+      {\stacktype}% \stacktype or S or L
+  \fi%
+}
+\endinput
+%%
+%% End of file `cloze.sty'.

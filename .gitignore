@@ -9,7 +9,6 @@
 *.log
 *.out
 *.pdf
-*.sty
 *.synctex.gz
 *.toc
 *.tar.gz
