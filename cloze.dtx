@@ -28,7 +28,7 @@
 %<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
 %<package>\ProvidesPackage{cloze}
 %<*package>
-    [2020/05/20 v1.4 Package to typeset cloze worksheets or cloze tests]
+    [2020/05/27 v1.5 Package to typeset cloze worksheets or cloze tests]
 %</package>
 %<*driver>
 \documentclass{ltxdoc}
@@ -1241,16 +1241,33 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %
 %
 % \changes{v0.1}{2015/06/16}{Converted to DTX file}
+%
 % \changes{v1.0}{2015/07/08}{Inital release}
+%
 % \changes{v1.1}{2016/06/13}{Make cloze compatible to LuaTeX version
 % 0.95}
+%
 % \changes{v1.2}{2016/06/23}{The cloze makros are now working in
 % tabular, tabbing and picture environments}
+%
 % \changes{v1.3}{2017/03/13}{Add the new macros \cmd{\clozenol} and
 % \cmd{\clozeextend} and the environments \texttt{clozebox} and
 % \texttt{clozespace} (This version was not published on CTAN.)}
+%
 % \changes{v1.4}{2020/05/20}{Add the new macro \cmd{\clozestrike} and
 % improve the documentation}
+%
+% \changes{v1.5}{2020/05/27}{
+% The Lua part of the package (cloze.lua) is now being developed in a
+% separate file.
+% The readme file is now a standalone mardown file and not embedded in
+% the dtx file any more.
+% \href{https://github.com/stevedonovan/LDoc}{LDoc} is being used
+% to generate
+% \href{https://josef-friedrich.github.io/cloze}{source code documentation}.
+% This version fixes two bugs (cloze in display math, line color and
+% hide).
+% }
 %
 % \DoNotIndex{\newcommand,\newenvironment,\def,\directlua}
 %
