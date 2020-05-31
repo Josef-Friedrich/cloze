@@ -4,7 +4,7 @@
 %%
 %% The original source files were:
 %%
-%% cloze.dtx  (with options: `package')
+%% cloze.dtx  (with options: `latex')
 %% 
 %% This is a generated file.
 %% 
@@ -23,6 +23,7 @@
 \NeedsTeXFormat{LaTeX2e}[1999/12/01]
 \ProvidesPackage{cloze}
     [2020/05/27 v1.5 Package to typeset cloze worksheets or cloze tests]
+\input{cloze.tex}
 \RequirePackage{fontspec}
 \RequirePackage{luatexbase-mcb}
 \RequirePackage{kvoptions}
@@ -33,87 +34,54 @@
 \RequirePackage{ulem}
 \normalem
 \RequirePackage{transparent}
-\directlua{
-  cloze = require('cloze')
-}
-\newif\ifclozeshow\clozeshowtrue
-\def\cloze@set@to@global{%
- \directlua{cloze.set_is_global(true)}%
-}
-\def\cloze@set@to@local{%
-  \directlua{
-    cloze.unset_local_options()
-    cloze.set_is_global(false)
-  }%
-}
-\def\cloze@set@option[#1]#2{%
-  \directlua{cloze.set_option('#1', '#2')}%
-}
-\def\cloze@color#1{\csname\string\color@#1\endcsname}
-\def\cloze@set@local@options#1{%
-  \cloze@set@to@local%
+\def\ClozeSetLocalOptions#1{%
+  \ClozeSetToLocal%
   \kvsetkeys{CLZ}{#1}%
 }
-\def\cloze@start@marker#1{%
-  \strut\directlua{
-    cloze.register('#1')
-    cloze.marker('#1', 'start')
-  }%
-}
-\def\cloze@stop@marker#1{%
-  \strut\directlua{
-    cloze.marker('#1', 'stop')
-  }%
-}
-\def\cloze@margin#1{%
-  \directlua{cloze.margin()}%
-  #1%
-  \directlua{cloze.margin()}%
-}
-\cloze@set@to@global
+\ClozeSetToGlobal
 \SetupKeyvalOptions{
   family=CLZ,
   prefix=CLZ@
 }
 \DeclareStringOption{align}
-\define@key{CLZ}{align}[]{\cloze@set@option[align]{#1}}
+\define@key{CLZ}{align}[]{\ClozeSetOption[align]{#1}}
 \DeclareStringOption{boxheight}
-\define@key{CLZ}{boxheight}[]{\cloze@set@option[boxheight]{#1}}
+\define@key{CLZ}{boxheight}[]{\ClozeSetOption[boxheight]{#1}}
 \DeclareStringOption{boxwidth}
-\define@key{CLZ}{boxwidth}[]{\cloze@set@option[boxwidth]{#1}}
+\define@key{CLZ}{boxwidth}[]{\ClozeSetOption[boxwidth]{#1}}
 \DeclareStringOption{distance}
-\define@key{CLZ}{distance}[]{\cloze@set@option[distance]{#1}}
+\define@key{CLZ}{distance}[]{\ClozeSetOption[distance]{#1}}
 \DeclareVoidOption{hide}{%
   \clozeshowfalse%
-  \cloze@set@option[hide]{true}%
-  \cloze@set@option[show]{false}%
+  \ClozeSetOption[hide]{true}%
+  \ClozeSetOption[show]{false}%
 }
 \DeclareStringOption{linecolor}
 \define@key{CLZ}{linecolor}[]{%
-  \cloze@set@option[linecolor]{\cloze@color{#1}}%
-  \cloze@set@option[linecolor_name]{#1}%
+  \ClozeSetOption[linecolor]{\cloze@color{#1}}%
+  \ClozeSetOption[linecolor_name]{#1}%
 }
 \DeclareStringOption{margin}
-\define@key{CLZ}{margin}[]{\cloze@set@option[margin]{#1}}
+\define@key{CLZ}{margin}[]{\ClozeSetOption[margin]{#1}}
 \DeclareVoidOption{show}{%
   \clozeshowtrue%
-  \cloze@set@option[show]{true}%
-  \cloze@set@option[hide]{false}%
+  \ClozeSetOption[show]{true}%
+  \ClozeSetOption[hide]{false}%
 }
 \DeclareStringOption{spacing}
-\define@key{CLZ}{spacing}[]{\cloze@set@option[spacing]{#1}}
+\define@key{CLZ}{spacing}[]{\ClozeSetOption[spacing]{#1}}
 \DeclareStringOption{textcolor}
 \define@key{CLZ}{textcolor}[]{%
-  \cloze@set@option[textcolor]{\cloze@color{#1}}%
-  \cloze@set@option[textcolor_name]{#1}%
+  \ClozeSetOption[textcolor]{\cloze@color{#1}}%
+  \ClozeSetOption[textcolor_name]{#1}%
 }
 \DeclareStringOption{thickness}
-\define@key{CLZ}{thickness}[]{\cloze@set@option[thickness]{#1}}
+\define@key{CLZ}{thickness}[]{\ClozeSetOption[thickness]{#1}}
 \DeclareStringOption{width}
-\define@key{CLZ}{width}[]{\cloze@set@option[width]{#1}}
+\define@key{CLZ}{width}[]{\ClozeSetOption[width]{#1}}
 \ProcessKeyvalOptions{CLZ}
 \newcommand{\clozeset}[1]{%
-  \cloze@set@to@global%
+  \ClozeSetToGlobal%
   \kvsetkeys{CLZ}{#1}%
 }
 \newcommand{\clozereset}{%
@@ -132,26 +100,26 @@
   }%
 }
 \newcommand{\cloze}[2][]{%
-  \cloze@set@local@options{#1}%
-  \cloze@start@marker{basic}%
+  \ClozeSetLocalOptions{#1}%
+  \ClozeStartMarker{basic}%
   {%
     \clozefont\relax%
-    \cloze@margin{#2}%
+    \ClozeMargin{#2}%
   }%
-  \cloze@stop@marker{basic}%
+  \ClozeStopMarker{basic}%
 }
 \newcommand{\clozefix}[2][]{%
-  \cloze@set@local@options{#1}%
-  \cloze@start@marker{fix}%
+  \ClozeSetLocalOptions{#1}%
+  \ClozeStartMarker{fix}%
   {%
     \clozefont\relax%
-    \cloze@margin{#2}%
+    \ClozeMargin{#2}%
   }%
-  \cloze@stop@marker{fix}%
+  \ClozeStopMarker{fix}%
 }
 \newcommand{\clozenol}[2][]{%
   {%
-    \cloze@set@local@options{#1}%
+    \ClozeSetLocalOptions{#1}%
     \clozefont\relax%
     \ifclozeshow%
       \color{\directlua{tex.print(cloze.get_value('textcolor_name'))}}%
@@ -164,12 +132,12 @@
 \newenvironment{clozepar}[1][]%
 {%
   \par%
-  \cloze@set@local@options{#1}%
-  \cloze@start@marker{par}%
+  \ClozeSetLocalOptions{#1}%
+  \ClozeStartMarker{par}%
   \clozefont\relax%
 }%
 {%
-  \cloze@stop@marker{par}%
+  \ClozeStopMarker{par}%
   \par%
   \directlua{cloze.unregister('par')}%
 }
@@ -180,7 +148,7 @@
 }
 \newsavebox{\cloze@box}
 \NewDocumentEnvironment{clozebox}{ s O{} +b}{%
-  \cloze@set@local@options{#2}%
+  \ClozeSetLocalOptions{#2}%
   \noindent%
   \begin{lrbox}{\cloze@box}%
   \directlua{
@@ -206,7 +174,7 @@
 }{}
 \newenvironment{clozespace}[1][]%
 {%
-  \cloze@set@local@options{#1}%
+  \ClozeSetLocalOptions{#1}%
   \begin{spacing}{\directlua{tex.print(cloze.get_value('spacing'))}}%
 }{\end{spacing}}
 \newcommand{\clozefil}[2][]{%
@@ -221,11 +189,11 @@
   }
 }
 \newcommand{\clozeline}[1][]{%
-  \cloze@set@local@options{#1}%
+  \ClozeSetLocalOptions{#1}%
   \directlua{cloze.line()}%
 }
 \newcommand{\clozelinefil}[1][]{%
-  \cloze@set@local@options{#1}%
+  \ClozeSetLocalOptions{#1}%
   \strut%
   \directlua{cloze.linefil()}%
   \strut%
@@ -245,7 +213,7 @@
   \ULon%
 }
 \newcommand{\clozestrike}[3][]{%
-  \cloze@set@local@options{#1}%
+  \ClozeSetLocalOptions{#1}%
   \ifclozeshow%
     \stackengine%
       {\Sstackgap}% \Sstackgap or \Lstackgap or \stackgap or stacklength

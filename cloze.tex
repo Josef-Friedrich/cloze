@@ -4,7 +4,7 @@
 %%
 %% The original source files were:
 %%
-%% cloze.dtx  (with options: `plaintext')
+%% cloze.dtx  (with options: `plaintex')
 %% 
 %% This is a generated file.
 %% 
@@ -20,6 +20,46 @@
 %% and version 1.3c or later is part of all distributions of LaTeX
 %% version 2008/05/05 or later.
 %% 
+\directlua{
+  cloze = require('cloze')
+}
+\newif\ifclozeshow\clozeshowtrue
+\def\ClozeSetToGlobal{%
+  \directlua{cloze.set_is_global(true)}%
+}
+\def\ClozeSetToLocal{%
+  \directlua{
+    cloze.unset_local_options()
+    cloze.set_is_global(false)
+  }%
+}
+\def\ClozeSetOption[#1]#2{%
+  \directlua{cloze.set_option('#1', '#2')}%
+}
+\def\cloze@color#1{\csname\string\color@#1\endcsname}
+\def\ClozeStartMarker#1{%
+  \strut\directlua{
+    cloze.register('#1')
+    cloze.marker('#1', 'start')
+  }%
+}
+\def\ClozeStopMarker#1{%
+  \strut\directlua{
+    cloze.marker('#1', 'stop')
+  }%
+}
+\def\ClozeMargin#1{%
+  \directlua{cloze.margin()}%
+  #1%
+  \directlua{cloze.margin()}%
+}
+\def\clozeplain#1{%
+  \ClozeStartMarker{basic}%
+  {%
+    \ClozeMargin{#1}%
+  }%
+  \ClozeStopMarker{basic}%
+}
 \endinput
 %%
 %% End of file `cloze.tex'.

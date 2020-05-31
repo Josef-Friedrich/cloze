@@ -11,7 +11,7 @@
 --
 -- @module cloze
 
--- __cloze.lua}__
+-- __cloze.lua__
 
 -- __Initialisation of the function tables__
 
@@ -921,6 +921,36 @@ function cloze.par(head_node)
   return head_node
 end
 
+---
+-- @tparam string callback_name The name of a callback
+-- @tparam function func A function to register for the callback
+-- @tparam string description Only used in LuaLatex
+local function register_callback(callback_name, func, description)
+  if luatexbase then
+    luatexbase.add_to_callback(
+      callback_name,
+      func,
+      description
+    )
+  else
+    callback.register(callback_name, func)
+  end
+end
+
+---
+-- @tparam string callback_name The name of a callback
+-- @tparam string description Only used in LuaLatex
+local function unregister_callback(callback_name, description)
+  if luatexbase then
+    luatexbase.remove_from_callback(
+      callback_name,
+      description
+    )
+  else
+    callback.register(callback_name, nil)
+  end
+end
+
 --- Basic module functions.
 -- The `base` table contains functions which are published to the
 -- `cloze.sty` file.
@@ -939,7 +969,7 @@ end
 function base.register(mode)
   local basic
   if mode == 'par' then
-    luatexbase.add_to_callback(
+    register_callback(
       'post_linebreak_filter',
       cloze.par,
       mode
@@ -948,18 +978,18 @@ function base.register(mode)
   end
   if not base.is_registered[mode] then
     if mode == 'basic' then
-      luatexbase.add_to_callback(
+      register_callback(
         'post_linebreak_filter',
         cloze.basic,
         mode
       )
-      luatexbase.add_to_callback(
+      register_callback(
         'pre_output_filter',
         cloze.basic,
         mode
       )
     elseif mode == 'fix' then
-      luatexbase.add_to_callback(
+      register_callback(
         'pre_linebreak_filter',
         cloze.fix,
         mode
@@ -978,12 +1008,12 @@ end
 -- `basic`, `fix` and `par`.
 function base.unregister(mode)
   if mode == 'basic' then
-    luatexbase.remove_from_callback('post_linebreak_filter', mode)
-    luatexbase.remove_from_callback('pre_output_filter', mode)
+    unregister_callback('post_linebreak_filter', mode)
+    unregister_callback('pre_output_filter', mode)
   elseif mode == 'fix' then
-    luatexbase.remove_from_callback('pre_linebreak_filter', mode)
+    unregister_callback('pre_linebreak_filter', mode)
   else
-    luatexbase.remove_from_callback('post_linebreak_filter', mode)
+    unregister_callback('post_linebreak_filter', mode)
   end
 end
 

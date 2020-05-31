@@ -25,11 +25,11 @@
 %<*driver>
 \ProvidesFile{cloze.dtx}
 %</driver>
-%<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
-%<package>\ProvidesPackage{cloze}
-%<*package>
+%<latex>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+%<latex>\ProvidesPackage{cloze}
+%<*latex>
     [2020/05/27 v1.5 Package to typeset cloze worksheets or cloze tests]
-%</package>
+%</latex>
 %<*driver>
 \documentclass{ltxdoc}
 \usepackage[show]{cloze}
@@ -1287,12 +1287,120 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %
 % \subsection{The file \tt{cloze.tex}}
 %
+%    \begin{macrocode}
+\directlua{
+  cloze = require('cloze')
+}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\newif\ifclozeshow\clozeshowtrue
+%    \end{macrocode}
+%
+% \subsubsection{Internal macros}
+%
+% \begin{macro}{\ClozeSetToGlobal}
+% Set the Lua variable |registry.is_global| to |true|. All options
+% are then stored in the variable |registry.global_options|.
+%    \begin{macrocode}
+\def\ClozeSetToGlobal{%
+  \directlua{cloze.set_is_global(true)}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ClozeSetToLocal}
+% First unset the variable |registry.local_options|. Now set the Lua
+% variable |registry.is_global| to |false|. All options are then stored
+% in the variable |registry.local_options|.
+%    \begin{macrocode}
+\def\ClozeSetToLocal{%
+  \directlua{
+    cloze.unset_local_options()
+    cloze.set_is_global(false)
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ClozeSetOption}
+% \cmd{\ClozeSetOption} is a wrapper for the Lua function
+% |registry.set_option|. \cmd{\ClozeSetOption}\oarg{key}\marg{value}
+% sets a key \meta{key} to the value \meta{value}.
+%    \begin{macrocode}
+\def\ClozeSetOption[#1]#2{%
+  \directlua{cloze.set_option('#1', '#2')}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\cloze@color}
+% Convert a color definiton name to a PDF colorstack string, for example
+% convert the color name |blue| to the colorstack string
+% |0 0 1 rg 0 0 1 RG|. The macro definition |\cloze@color{blue}|
+% builds itself the macro |\color@blue|, which expands to the PDF
+% colorstack string. The colorstack string is necessary to generate a
+% PDF colorstack whatsit.
+%    \begin{macrocode}
+\def\cloze@color#1{\csname\string\color@#1\endcsname}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ClozeStartMarker}
+% At the begining |\ClozeStartMarker| registers the required Lua
+% callbacks. Then it inserts a whatsit marker which marks the begin of a
+% gap.
+%    \begin{macrocode}
+\def\ClozeStartMarker#1{%
+  \strut\directlua{
+    cloze.register('#1')
+    cloze.marker('#1', 'start')
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ClozeStopMarker}
+% \cmd{\ClozeStopMarker} inserts a whatsit marker that marks the end
+% of gap.
+%    \begin{macrocode}
+\def\ClozeStopMarker#1{%
+  \strut\directlua{
+    cloze.marker('#1', 'stop')
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ClozeMargin}
+% \cmd{\ClozeMargin} surrounds a text in a gap with two |kerns|.
+%    \begin{macrocode}
+\def\ClozeMargin#1{%
+  \directlua{cloze.margin()}%
+  #1%
+  \directlua{cloze.margin()}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozeplain}
+%    \begin{macrocode}
+\def\clozeplain#1{%
+  \ClozeStartMarker{basic}%
+  {%
+    \ClozeMargin{#1}%
+  }%
+  \ClozeStopMarker{basic}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
 % \iffalse
 %</plaintex>
 % \fi
 %
 % \iffalse
-%<*package>
+%<*latex>
 % \fi
 % \MacroTopsep = 10pt plus 2pt minus 2pt
 % \MacrocodeTopsep = 10pt plus 1.2pt minus 1pt
@@ -1302,6 +1410,10 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 % \makeatother
 %
 % \subsection{The file \tt{cloze.sty}}
+%
+%    \begin{macrocode}
+\input{cloze.tex}
+%    \end{macrocode}
 %
 % This packages are used to build \emph{cloze}:
 %
@@ -1358,111 +1470,15 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 % Load the cloze lua module and put all return values in the variable
 % |cloze|.
 %
-%    \begin{macrocode}
-\directlua{
-  cloze = require('cloze')
-}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\newif\ifclozeshow\clozeshowtrue
-%    \end{macrocode}
-%
-% \subsubsection{Internal macros}
-%
-% \begin{macro}{\cloze@set@to@global}
-% Set the Lua variable |registry.is_global| to |true|. All options
-% are then stored in the variable |registry.global_options|.
-%    \begin{macrocode}
-\def\cloze@set@to@global{%
- \directlua{cloze.set_is_global(true)}%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\cloze@set@to@local}
-% First unset the variable |registry.local_options|. Now set the Lua
-% variable |registry.is_global| to |false|. All options are then stored
-% in the variable |registry.local_options|.
-%    \begin{macrocode}
-\def\cloze@set@to@local{%
-  \directlua{
-    cloze.unset_local_options()
-    cloze.set_is_global(false)
-  }%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\cloze@set@option}
-% \cmd{\cloze@set@option} is a wrapper for the Lua function
-% |registry.set_option|. \cmd{\cloze@set@option}\oarg{key}\marg{value}
-% sets a key \meta{key} to the value \meta{value}.
-%    \begin{macrocode}
-\def\cloze@set@option[#1]#2{%
-  \directlua{cloze.set_option('#1', '#2')}%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\cloze@color}
-% Convert a color definiton name to a PDF colorstack string, for example
-% convert the color name |blue| to the colorstack string
-% |0 0 1 rg 0 0 1 RG|. The macro definition |\cloze@color{blue}|
-% builds itself the macro |\color@blue|, which expands to the PDF
-% colorstack string. The colorstack string is necessary to generate a
-% PDF colorstack whatsit.
-%    \begin{macrocode}
-\def\cloze@color#1{\csname\string\color@#1\endcsname}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\cloze@set@local@options}
+% \begin{macro}{\ClozeSetLocalOptions}
 % This macro is used in all cloze commands to handle the optional
 % arguments. First it sets the option storage to local and then it
 % commits the options to the package \emph{kvoptions} via the macro
 % |\kvsetkeys{CLZ}{}|.
 %    \begin{macrocode}
-\def\cloze@set@local@options#1{%
-  \cloze@set@to@local%
+\def\ClozeSetLocalOptions#1{%
+  \ClozeSetToLocal%
   \kvsetkeys{CLZ}{#1}%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\cloze@start@marker}
-% At the begining |\cloze@start@marker| registers the required Lua
-% callbacks. Then it inserts a whatsit marker which marks the begin of a
-% gap.
-%    \begin{macrocode}
-\def\cloze@start@marker#1{%
-  \strut\directlua{
-    cloze.register('#1')
-    cloze.marker('#1', 'start')
-  }%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\cloze@stop@marker}
-% \cmd{\cloze@stop@marker} inserts a whatsit marker that marks the end
-% of gap.
-%    \begin{macrocode}
-\def\cloze@stop@marker#1{%
-  \strut\directlua{
-    cloze.marker('#1', 'stop')
-  }%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\cloze@margin}
-% \cmd{\cloze@margin} surrounds a text in a gap with two |kerns|.
-%    \begin{macrocode}
-\def\cloze@margin#1{%
-  \directlua{cloze.margin()}%
-  #1%
-  \directlua{cloze.margin()}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -1482,7 +1498,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 % all values are now stored in the |registry.global_options| table.
 %
 %    \begin{macrocode}
-\cloze@set@to@global
+\ClozeSetToGlobal
 %    \end{macrocode}
 %
 % We use the abbreviation |CLZ| for \emph{cloze} as family name and
@@ -1503,7 +1519,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %
 %    \begin{macrocode}
 \DeclareStringOption{align}
-\define@key{CLZ}{align}[]{\cloze@set@option[align]{#1}}
+\define@key{CLZ}{align}[]{\ClozeSetOption[align]{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{boxheight}}
@@ -1515,7 +1531,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %
 %    \begin{macrocode}
 \DeclareStringOption{boxheight}
-\define@key{CLZ}{boxheight}[]{\cloze@set@option[boxheight]{#1}}
+\define@key{CLZ}{boxheight}[]{\ClozeSetOption[boxheight]{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{boxwidth}}
@@ -1527,7 +1543,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %
 %    \begin{macrocode}
 \DeclareStringOption{boxwidth}
-\define@key{CLZ}{boxwidth}[]{\cloze@set@option[boxwidth]{#1}}
+\define@key{CLZ}{boxwidth}[]{\ClozeSetOption[boxwidth]{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{distance}}
@@ -1537,7 +1553,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %
 %    \begin{macrocode}
 \DeclareStringOption{distance}
-\define@key{CLZ}{distance}[]{\cloze@set@option[distance]{#1}}
+\define@key{CLZ}{distance}[]{\ClozeSetOption[distance]{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{hide}}
@@ -1550,8 +1566,8 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %    \begin{macrocode}
 \DeclareVoidOption{hide}{%
   \clozeshowfalse%
-  \cloze@set@option[hide]{true}%
-  \cloze@set@option[show]{false}%
+  \ClozeSetOption[hide]{true}%
+  \ClozeSetOption[show]{false}%
 }
 %    \end{macrocode}
 %
@@ -1563,8 +1579,8 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %    \begin{macrocode}
 \DeclareStringOption{linecolor}
 \define@key{CLZ}{linecolor}[]{%
-  \cloze@set@option[linecolor]{\cloze@color{#1}}%
-  \cloze@set@option[linecolor_name]{#1}%
+  \ClozeSetOption[linecolor]{\cloze@color{#1}}%
+  \ClozeSetOption[linecolor_name]{#1}%
 }
 %    \end{macrocode}
 %
@@ -1575,7 +1591,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %
 %    \begin{macrocode}
 \DeclareStringOption{margin}
-\define@key{CLZ}{margin}[]{\cloze@set@option[margin]{#1}}
+\define@key{CLZ}{margin}[]{\ClozeSetOption[margin]{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{show}}
@@ -1588,8 +1604,8 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %    \begin{macrocode}
 \DeclareVoidOption{show}{%
   \clozeshowtrue%
-  \cloze@set@option[show]{true}%
-  \cloze@set@option[hide]{false}%
+  \ClozeSetOption[show]{true}%
+  \ClozeSetOption[hide]{false}%
 }
 %    \end{macrocode}
 %
@@ -1600,7 +1616,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %
 %    \begin{macrocode}
 \DeclareStringOption{spacing}
-\define@key{CLZ}{spacing}[]{\cloze@set@option[spacing]{#1}}
+\define@key{CLZ}{spacing}[]{\ClozeSetOption[spacing]{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{textcolor}}
@@ -1611,8 +1627,8 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %    \begin{macrocode}
 \DeclareStringOption{textcolor}
 \define@key{CLZ}{textcolor}[]{%
-  \cloze@set@option[textcolor]{\cloze@color{#1}}%
-  \cloze@set@option[textcolor_name]{#1}%
+  \ClozeSetOption[textcolor]{\cloze@color{#1}}%
+  \ClozeSetOption[textcolor_name]{#1}%
 }
 %    \end{macrocode}
 %
@@ -1623,7 +1639,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %
 %    \begin{macrocode}
 \DeclareStringOption{thickness}
-\define@key{CLZ}{thickness}[]{\cloze@set@option[thickness]{#1}}
+\define@key{CLZ}{thickness}[]{\ClozeSetOption[thickness]{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{width}}
@@ -1634,7 +1650,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %
 %    \begin{macrocode}
 \DeclareStringOption{width}
-\define@key{CLZ}{width}[]{\cloze@set@option[width]{#1}}
+\define@key{CLZ}{width}[]{\ClozeSetOption[width]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -1650,7 +1666,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 % section \secref{sec:command-clozeset}.
 %    \begin{macrocode}
 \newcommand{\clozeset}[1]{%
-  \cloze@set@to@global%
+  \ClozeSetToGlobal%
   \kvsetkeys{CLZ}{#1}%
 }
 %    \end{macrocode}
@@ -1711,13 +1727,13 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 % section \secref{sec:command-cloze}.
 %    \begin{macrocode}
 \newcommand{\cloze}[2][]{%
-  \cloze@set@local@options{#1}%
-  \cloze@start@marker{basic}%
+  \ClozeSetLocalOptions{#1}%
+  \ClozeStartMarker{basic}%
   {%
     \clozefont\relax%
-    \cloze@margin{#2}%
+    \ClozeMargin{#2}%
   }%
-  \cloze@stop@marker{basic}%
+  \ClozeStopMarker{basic}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -1727,13 +1743,13 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 % section \secref{sec:command-clozefix}.
 %    \begin{macrocode}
 \newcommand{\clozefix}[2][]{%
-  \cloze@set@local@options{#1}%
-  \cloze@start@marker{fix}%
+  \ClozeSetLocalOptions{#1}%
+  \ClozeStartMarker{fix}%
   {%
     \clozefont\relax%
-    \cloze@margin{#2}%
+    \ClozeMargin{#2}%
   }%
-  \cloze@stop@marker{fix}%
+  \ClozeStopMarker{fix}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -1746,7 +1762,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %    \begin{macrocode}
 \newcommand{\clozenol}[2][]{%
   {%
-    \cloze@set@local@options{#1}%
+    \ClozeSetLocalOptions{#1}%
     \clozefont\relax%
     \ifclozeshow%
       \color{\directlua{tex.print(cloze.get_value('textcolor_name'))}}%
@@ -1766,12 +1782,12 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 \newenvironment{clozepar}[1][]%
 {%
   \par%
-  \cloze@set@local@options{#1}%
-  \cloze@start@marker{par}%
+  \ClozeSetLocalOptions{#1}%
+  \ClozeStartMarker{par}%
   \clozefont\relax%
 }%
 {%
-  \cloze@stop@marker{par}%
+  \ClozeStopMarker{par}%
   \par%
   \directlua{cloze.unregister('par')}%
 }
@@ -1796,7 +1812,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %    \begin{macrocode}
 \newsavebox{\cloze@box}
 \NewDocumentEnvironment{clozebox}{ s O{} +b}{%
-  \cloze@set@local@options{#2}%
+  \ClozeSetLocalOptions{#2}%
   \noindent%
   \begin{lrbox}{\cloze@box}%
   \directlua{
@@ -1830,7 +1846,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %    \begin{macrocode}
 \newenvironment{clozespace}[1][]%
 {%
-  \cloze@set@local@options{#1}%
+  \ClozeSetLocalOptions{#1}%
   \begin{spacing}{\directlua{tex.print(cloze.get_value('spacing'))}}%
 }{\end{spacing}}
 %    \end{macrocode}
@@ -1865,7 +1881,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 % section \secref{sec:command-clozeline}.
 %    \begin{macrocode}
 \newcommand{\clozeline}[1][]{%
-  \cloze@set@local@options{#1}%
+  \ClozeSetLocalOptions{#1}%
   \directlua{cloze.line()}%
 }
 %    \end{macrocode}
@@ -1876,7 +1892,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 % section \secref{sec:command-clozelinefil}.
 %    \begin{macrocode}
 \newcommand{\clozelinefil}[1][]{%
-  \cloze@set@local@options{#1}%
+  \ClozeSetLocalOptions{#1}%
   \strut%
   \directlua{cloze.linefil()}%
   \strut%
@@ -1911,7 +1927,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 % \begin{macro}{\clozestrike}
 %    \begin{macrocode}
 \newcommand{\clozestrike}[3][]{%
-  \cloze@set@local@options{#1}%
+  \ClozeSetLocalOptions{#1}%
   \ifclozeshow%
     \stackengine%
       {\Sstackgap}% \Sstackgap or \Lstackgap or \stackgap or stacklength
@@ -1938,7 +1954,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 % \end{macro}
 %
 % \iffalse
-%</package>
+%</latex>
 % \fi
 %
 % \Finale
