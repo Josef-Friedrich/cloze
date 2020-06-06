@@ -44,41 +44,41 @@
   prefix=CLZ@
 }
 \DeclareStringOption{align}
-\define@key{CLZ}{align}[]{\ClozeSetOption[align]{#1}}
+\define@key{CLZ}{align}[]{\clozesetoption[align]{#1}}
 \DeclareStringOption{boxheight}
-\define@key{CLZ}{boxheight}[]{\ClozeSetOption[boxheight]{#1}}
+\define@key{CLZ}{boxheight}[]{\clozesetoption[boxheight]{#1}}
 \DeclareStringOption{boxwidth}
-\define@key{CLZ}{boxwidth}[]{\ClozeSetOption[boxwidth]{#1}}
+\define@key{CLZ}{boxwidth}[]{\clozesetoption[boxwidth]{#1}}
 \DeclareStringOption{distance}
-\define@key{CLZ}{distance}[]{\ClozeSetOption[distance]{#1}}
+\define@key{CLZ}{distance}[]{\clozesetoption[distance]{#1}}
 \DeclareVoidOption{hide}{%
   \clozeshowfalse%
-  \ClozeSetOption[hide]{true}%
-  \ClozeSetOption[show]{false}%
+  \clozesetoption[hide]{true}%
+  \clozesetoption[show]{false}%
 }
 \DeclareStringOption{linecolor}
 \define@key{CLZ}{linecolor}[]{%
-  \ClozeSetOption[linecolor]{\ClozeColor{#1}}%
-  \ClozeSetOption[linecolor_name]{#1}%
+  \clozesetoption[linecolor]{\ClozeColor{#1}}%
+  \clozesetoption[linecolor_name]{#1}%
 }
 \DeclareStringOption{margin}
-\define@key{CLZ}{margin}[]{\ClozeSetOption[margin]{#1}}
+\define@key{CLZ}{margin}[]{\clozesetoption[margin]{#1}}
 \DeclareVoidOption{show}{%
   \clozeshowtrue%
-  \ClozeSetOption[show]{true}%
-  \ClozeSetOption[hide]{false}%
+  \clozesetoption[show]{true}%
+  \clozesetoption[hide]{false}%
 }
 \DeclareStringOption{spacing}
-\define@key{CLZ}{spacing}[]{\ClozeSetOption[spacing]{#1}}
+\define@key{CLZ}{spacing}[]{\clozesetoption[spacing]{#1}}
 \DeclareStringOption{textcolor}
 \define@key{CLZ}{textcolor}[]{%
-  \ClozeSetOption[textcolor]{\ClozeColor{#1}}%
-  \ClozeSetOption[textcolor_name]{#1}%
+  \clozesetoption[textcolor]{\ClozeColor{#1}}%
+  \clozesetoption[textcolor_name]{#1}%
 }
 \DeclareStringOption{thickness}
-\define@key{CLZ}{thickness}[]{\ClozeSetOption[thickness]{#1}}
+\define@key{CLZ}{thickness}[]{\clozesetoption[thickness]{#1}}
 \DeclareStringOption{width}
-\define@key{CLZ}{width}[]{\ClozeSetOption[width]{#1}}
+\define@key{CLZ}{width}[]{\clozesetoption[width]{#1}}
 \ProcessKeyvalOptions{CLZ}
 \newcommand{\clozeset}[1]{%
   \ClozeSetToGlobal%

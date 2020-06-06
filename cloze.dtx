@@ -1290,6 +1290,13 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %
 % \subsection{The file \tt{cloze.tex}}
 %
+% The cloze package uses following naming conventions: Internal / private
+% macros / commands / envirnoments are written in PascalCase, public
+% ones are written in lowercase. Earlier versions of this package used
+% @ characters for private macros. The lower level / private macros
+% are now defined in the plain Lua\TeX{} version of the package and
+% used to set cloze text in plain Lua\TeX{}.
+%
 %    \begin{macrocode}
 \directlua{
   cloze = require('cloze')
@@ -1326,16 +1333,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\ClozeSetOption}
-% \cmd{\ClozeSetOption} is a wrapper for the Lua function
-% |registry.set_option|. \cmd{\ClozeSetOption}\oarg{key}\marg{value}
-% sets a key \meta{key} to the value \meta{value}.
-%    \begin{macrocode}
-\def\ClozeSetOption[#1]#2{%
-  \directlua{cloze.set_option('#1', '#2')}%
-}
-%    \end{macrocode}
-% \end{macro}
+
 %
 % \begin{macro}{\ClozeColor}
 % Convert a color definiton name to a PDF colorstack string, for example
@@ -1382,6 +1380,19 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
   \directlua{cloze.margin()}%
   #1%
   \directlua{cloze.margin()}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsection{Public plain \TeX{} macros}
+%
+% \begin{macro}{\clozesetoption}
+% \cmd{\clozesetoption} is a wrapper for the Lua function
+% |registry.set_option|. \cmd{\clozesetoption}\oarg{key}\marg{value}
+% sets a key \meta{key} to the value \meta{value}.
+%    \begin{macrocode}
+\def\clozesetoption[#1]#2{%
+  \directlua{cloze.set_option('#1', '#2')}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -1522,7 +1533,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %
 %    \begin{macrocode}
 \DeclareStringOption{align}
-\define@key{CLZ}{align}[]{\ClozeSetOption[align]{#1}}
+\define@key{CLZ}{align}[]{\clozesetoption[align]{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{boxheight}}
@@ -1534,7 +1545,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %
 %    \begin{macrocode}
 \DeclareStringOption{boxheight}
-\define@key{CLZ}{boxheight}[]{\ClozeSetOption[boxheight]{#1}}
+\define@key{CLZ}{boxheight}[]{\clozesetoption[boxheight]{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{boxwidth}}
@@ -1546,7 +1557,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %
 %    \begin{macrocode}
 \DeclareStringOption{boxwidth}
-\define@key{CLZ}{boxwidth}[]{\ClozeSetOption[boxwidth]{#1}}
+\define@key{CLZ}{boxwidth}[]{\clozesetoption[boxwidth]{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{distance}}
@@ -1556,7 +1567,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %
 %    \begin{macrocode}
 \DeclareStringOption{distance}
-\define@key{CLZ}{distance}[]{\ClozeSetOption[distance]{#1}}
+\define@key{CLZ}{distance}[]{\clozesetoption[distance]{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{hide}}
@@ -1569,8 +1580,8 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %    \begin{macrocode}
 \DeclareVoidOption{hide}{%
   \clozeshowfalse%
-  \ClozeSetOption[hide]{true}%
-  \ClozeSetOption[show]{false}%
+  \clozesetoption[hide]{true}%
+  \clozesetoption[show]{false}%
 }
 %    \end{macrocode}
 %
@@ -1582,8 +1593,8 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %    \begin{macrocode}
 \DeclareStringOption{linecolor}
 \define@key{CLZ}{linecolor}[]{%
-  \ClozeSetOption[linecolor]{\ClozeColor{#1}}%
-  \ClozeSetOption[linecolor_name]{#1}%
+  \clozesetoption[linecolor]{\ClozeColor{#1}}%
+  \clozesetoption[linecolor_name]{#1}%
 }
 %    \end{macrocode}
 %
@@ -1594,7 +1605,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %
 %    \begin{macrocode}
 \DeclareStringOption{margin}
-\define@key{CLZ}{margin}[]{\ClozeSetOption[margin]{#1}}
+\define@key{CLZ}{margin}[]{\clozesetoption[margin]{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{show}}
@@ -1607,8 +1618,8 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %    \begin{macrocode}
 \DeclareVoidOption{show}{%
   \clozeshowtrue%
-  \ClozeSetOption[show]{true}%
-  \ClozeSetOption[hide]{false}%
+  \clozesetoption[show]{true}%
+  \clozesetoption[hide]{false}%
 }
 %    \end{macrocode}
 %
@@ -1619,7 +1630,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %
 %    \begin{macrocode}
 \DeclareStringOption{spacing}
-\define@key{CLZ}{spacing}[]{\ClozeSetOption[spacing]{#1}}
+\define@key{CLZ}{spacing}[]{\clozesetoption[spacing]{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{textcolor}}
@@ -1630,8 +1641,8 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %    \begin{macrocode}
 \DeclareStringOption{textcolor}
 \define@key{CLZ}{textcolor}[]{%
-  \ClozeSetOption[textcolor]{\ClozeColor{#1}}%
-  \ClozeSetOption[textcolor_name]{#1}%
+  \clozesetoption[textcolor]{\ClozeColor{#1}}%
+  \clozesetoption[textcolor_name]{#1}%
 }
 %    \end{macrocode}
 %
@@ -1642,7 +1653,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %
 %    \begin{macrocode}
 \DeclareStringOption{thickness}
-\define@key{CLZ}{thickness}[]{\ClozeSetOption[thickness]{#1}}
+\define@key{CLZ}{thickness}[]{\clozesetoption[thickness]{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{width}}
@@ -1653,7 +1664,7 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %
 %    \begin{macrocode}
 \DeclareStringOption{width}
-\define@key{CLZ}{width}[]{\ClozeSetOption[width]{#1}}
+\define@key{CLZ}{width}[]{\clozesetoption[width]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}

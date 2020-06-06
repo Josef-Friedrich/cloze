@@ -33,9 +33,7 @@
     cloze.set_is_global(false)
   }%
 }
-\def\ClozeSetOption[#1]#2{%
-  \directlua{cloze.set_option('#1', '#2')}%
-}
+
 \def\ClozeColor#1{\csname\string\color@#1\endcsname}
 \def\ClozeStartMarker#1{%
   \strut\directlua{
@@ -52,6 +50,9 @@
   \directlua{cloze.margin()}%
   #1%
   \directlua{cloze.margin()}%
+}
+\def\clozesetoption[#1]#2{%
+  \directlua{cloze.set_option('#1', '#2')}%
 }
 \def\clozeplain#1{%
   \ClozeStartMarker{basic}%
