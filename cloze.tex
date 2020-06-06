@@ -36,7 +36,7 @@
 \def\ClozeSetOption[#1]#2{%
   \directlua{cloze.set_option('#1', '#2')}%
 }
-\def\cloze@color#1{\csname\string\color@#1\endcsname}
+\def\ClozeColor#1{\csname\string\color@#1\endcsname}
 \def\ClozeStartMarker#1{%
   \strut\directlua{
     cloze.register('#1')

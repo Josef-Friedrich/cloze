@@ -58,7 +58,7 @@
 }
 \DeclareStringOption{linecolor}
 \define@key{CLZ}{linecolor}[]{%
-  \ClozeSetOption[linecolor]{\cloze@color{#1}}%
+  \ClozeSetOption[linecolor]{\ClozeColor{#1}}%
   \ClozeSetOption[linecolor_name]{#1}%
 }
 \DeclareStringOption{margin}
@@ -72,7 +72,7 @@
 \define@key{CLZ}{spacing}[]{\ClozeSetOption[spacing]{#1}}
 \DeclareStringOption{textcolor}
 \define@key{CLZ}{textcolor}[]{%
-  \ClozeSetOption[textcolor]{\cloze@color{#1}}%
+  \ClozeSetOption[textcolor]{\ClozeColor{#1}}%
   \ClozeSetOption[textcolor_name]{#1}%
 }
 \DeclareStringOption{thickness}
@@ -141,16 +141,11 @@
   \par%
   \directlua{cloze.unregister('par')}%
 }
-\newcommand{\cloze@get@value}[1]{%
-  \directlua{
-    tex.print(cloze.get_value('#1'))
-  }%
-}
-\newsavebox{\cloze@box}
+\newsavebox{\ClozeBox}
 \NewDocumentEnvironment{clozebox}{ s O{} +b}{%
   \ClozeSetLocalOptions{#2}%
   \noindent%
-  \begin{lrbox}{\cloze@box}%
+  \begin{lrbox}{\ClozeBox}%
   \directlua{
     local boxheight = cloze.get_value('boxheight')
     local boxwidth = cloze.get_value('boxwidth')
@@ -169,8 +164,8 @@
   \end{minipage}%
   \end{lrbox}%
   \IfBooleanTF{#1}%
-    {\usebox{\cloze@box}}%
-    {\fbox{\usebox{\cloze@box}}}%
+    {\usebox{\ClozeBox}}%
+    {\fbox{\usebox{\ClozeBox}}}%
 }{}
 \newenvironment{clozespace}[1][]%
 {%
@@ -198,15 +193,15 @@
   \directlua{cloze.linefil()}%
   \strut%
 }
-\newcommand{\cloze@text@color}[1]{%
+\newcommand{\ClozeTextColor}[1]{%
   \textcolor%
     {\directlua{tex.print(cloze.get_value('textcolor_name'))}}%
     {#1}%
 }
-\newcommand\cloze@strike@line{%
+\newcommand\ClozeStrikeLine{%
   \bgroup%
   \markoverwith{%
-    \cloze@text@color{%
+    \ClozeTextColor{%
       \rule[0.5ex]{2pt}{1pt}%
     }%
   }%
@@ -217,8 +212,8 @@
   \ifclozeshow%
     \stackengine%
       {\Sstackgap}% \Sstackgap or \Lstackgap or \stackgap or stacklength
-      {\cloze@strike@line{#2}}% anchor
-      {\cloze@text@color{\clozefont{}#3}}% item
+      {\ClozeStrikeLine{#2}}% anchor
+      {\ClozeTextColor{\clozefont{}#3}}% item
       {O}% O or U
       {c}% \stackalignment or l or c or r
       {\quietstack}% \quietstack or T or F
