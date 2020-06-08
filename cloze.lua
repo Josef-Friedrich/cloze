@@ -538,7 +538,7 @@ end
 -- @tparam node head_node The head of a node list.
 --
 -- @treturn node The head of the node list.
-function make_basic(head_node)
+local function make_basic(head_node)
   local continue = false
   local hlist = nil
 
@@ -638,177 +638,178 @@ function make_basic(head_node)
   return head_node
 end
 
---- Calculate the length of the whitespace before (`l.kern_start`) and
--- after (`l.kern_stop`) the text.
-function cloze.fix_length(start, stop)
-  local l = {}
-  l.width = tex.sp(registry.get_value('width'))
-  l.text_width = node.dimensions(start, stop)
-  l.align = registry.get_value('align')
-  if l.align == 'right' then
-    l.kern_start = - l.text_width
-    l.kern_stop = 0
-  elseif l.align == 'center' then
-    l.half = (l.width - l.text_width) / 2
-    l.kern_start = - l.half - l.text_width
-    l.kern_stop = l.half
-  else
-    l.kern_start = - l.width
-    l.kern_stop = l.width - l.text_width
-  end
-  return l.width, l.kern_start, l.kern_stop
-end
-
---- The function `cloze.fix_make` generates a gap of fixed width.
---
--- __Node lists__
---
--- __Show text:__
---
--- <table>
--- <tbody>
---   <tr>
---     <td>`n.start`</td>
---     <td>`whatsit`</td>
---     <td>`user_definded`</td>
---     <td>`index`</td>
---   </tr>
---   <tr>
---     <td>`n.line`</td>
---     <td>`rule`</td>
---     <td></td>
---     <td>`l.width`</td>
---   </tr>
---   <tr>
---     <td>`n.kern_start`</td>
---     <td>`kern`</td>
---     <td>&amp; Depends on `align`</td>
---     <td></td>
---   </tr>
---   <tr>
---     <td>`n.color_text`</td>
---     <td>`whatsit`</td>
---     <td>`pdf_colorstack`</td>
---     <td>Text color</td>
---   </tr>
---   <tr>
---     <td></td>
---     <td>`glyphs`</td>
---     <td>&amp; Text to show</td>
---     <td></td>
---   </tr>
---   <tr>
---     <td>`n.color_reset`</td>
---     <td>`whatsit`</td>
---     <td>`pdf_colorstack`</td>
---     <td>Reset color</td>
---   </tr>
---   <tr>
---     <td>`n.kern_stop`</td>
---     <td>`kern`</td>
---     <td>&amp; Depends on `align`</td>
---     <td></td>
---   </tr>
---   <tr>
---     <td>`n.stop`</td>
---     <td>`whatsit`</td>
---     <td>`user_definded`</td>
---     <td>`index`</td>
---   </tr>
--- </tbody>
--- </table>
---
--- __Hide text:__
---
--- <table>
--- <thead>
---   <tr>
---     <th>`n.start`</th>
---     <th>`whatsit`</th>
---     <th>`user_definded`</th>
---     <th>`index`</th>
---   </tr>
--- </thead>
--- <tbody>
---   <tr>
---     <td>`n.line`</td>
---     <td>`rule`</td>
---     <td></td>
---     <td>`l.width`</td>
---   </tr>
---   <tr>
---     <td>`n.stop`</td>
---     <td>`whatsit`</td>
---     <td>`user_definded`</td>
---     <td>`index`</td>
---   </tr>
--- </tbody>
--- </table>
---
--- Make fixed size cloze.
---
--- @param start The node, where the gap begins
--- @param stop The node, where the gap ends
-function cloze.fix_make(start, stop)
-  local l = {} -- length
-  local n = {} -- node
-  l.width, l.kern_start, l.kern_stop = cloze.fix_length(start, stop)
-  n.line = nodex.insert_line(start, l.width)
-  if registry.get_value_show() then
-    nodex.insert_list(
-      'after',
-      n.line,
-      {
-        create_kern_node(l.kern_start),
-        nodex.create_color('text')
-      }
-    )
-    nodex.insert_list(
-      'before',
-      stop,
-      {
-        nodex.create_color('reset'),
-        create_kern_node(l.kern_stop)
-      },
-      start
-    )
-  else
-    n.line.next = stop.next
-  end
-  registry.remove_marker(start)
-  registry.remove_marker(stop)
-end
-
---- Function to recurse the node list and search after marker.
---
--- @tparam node head_node The head of a node list.
-function cloze.fix_recursion(head_node)
-  local n = {} -- node
-  n.start, n.stop = false
-  while head_node do
-    if head_node.head then
-      cloze.fix_recursion(head_node.head)
-    else
-      if not n.start then
-        n.start = registry.get_marker(head_node, 'fix', 'start')
-      end
-      if not n.stop then
-        n.stop = registry.get_marker(head_node, 'fix', 'stop')
-      end
-      if n.start and n.stop then
-        cloze.fix_make(n.start, n.stop)
-        n.start, n.stop = false
-      end
-    end
-    head_node = head_node.next
-  end
-end
-
 --- The corresponding LaTeX command to this Lua function is `\clozefix`.
 --
 -- @tparam node head_node The head of a node list.
-function cloze.fix(head_node)
-  cloze.fix_recursion(head_node)
+local function make_fix(head_node)
+
+  --- Calculate the length of the whitespace before (`l.kern_start`) and
+  -- after (`l.kern_stop`) the text.
+  local function calculate_length(start, stop)
+    local l = {}
+    l.width = tex.sp(registry.get_value('width'))
+    l.text_width = node.dimensions(start, stop)
+    l.align = registry.get_value('align')
+    if l.align == 'right' then
+      l.kern_start = - l.text_width
+      l.kern_stop = 0
+    elseif l.align == 'center' then
+      l.half = (l.width - l.text_width) / 2
+      l.kern_start = - l.half - l.text_width
+      l.kern_stop = l.half
+    else
+      l.kern_start = - l.width
+      l.kern_stop = l.width - l.text_width
+    end
+    return l.width, l.kern_start, l.kern_stop
+  end
+
+  --- The function `make_single` generates a gap of fixed width.
+  --
+  -- __Node lists__
+  --
+  -- __Show text:__
+  --
+  -- <table>
+  -- <tbody>
+  --   <tr>
+  --     <td>`n.start`</td>
+  --     <td>`whatsit`</td>
+  --     <td>`user_definded`</td>
+  --     <td>`index`</td>
+  --   </tr>
+  --   <tr>
+  --     <td>`n.line`</td>
+  --     <td>`rule`</td>
+  --     <td></td>
+  --     <td>`l.width`</td>
+  --   </tr>
+  --   <tr>
+  --     <td>`n.kern_start`</td>
+  --     <td>`kern`</td>
+  --     <td>&amp; Depends on `align`</td>
+  --     <td></td>
+  --   </tr>
+  --   <tr>
+  --     <td>`n.color_text`</td>
+  --     <td>`whatsit`</td>
+  --     <td>`pdf_colorstack`</td>
+  --     <td>Text color</td>
+  --   </tr>
+  --   <tr>
+  --     <td></td>
+  --     <td>`glyphs`</td>
+  --     <td>&amp; Text to show</td>
+  --     <td></td>
+  --   </tr>
+  --   <tr>
+  --     <td>`n.color_reset`</td>
+  --     <td>`whatsit`</td>
+  --     <td>`pdf_colorstack`</td>
+  --     <td>Reset color</td>
+  --   </tr>
+  --   <tr>
+  --     <td>`n.kern_stop`</td>
+  --     <td>`kern`</td>
+  --     <td>&amp; Depends on `align`</td>
+  --     <td></td>
+  --   </tr>
+  --   <tr>
+  --     <td>`n.stop`</td>
+  --     <td>`whatsit`</td>
+  --     <td>`user_definded`</td>
+  --     <td>`index`</td>
+  --   </tr>
+  -- </tbody>
+  -- </table>
+  --
+  -- __Hide text:__
+  --
+  -- <table>
+  -- <thead>
+  --   <tr>
+  --     <th>`n.start`</th>
+  --     <th>`whatsit`</th>
+  --     <th>`user_definded`</th>
+  --     <th>`index`</th>
+  --   </tr>
+  -- </thead>
+  -- <tbody>
+  --   <tr>
+  --     <td>`n.line`</td>
+  --     <td>`rule`</td>
+  --     <td></td>
+  --     <td>`l.width`</td>
+  --   </tr>
+  --   <tr>
+  --     <td>`n.stop`</td>
+  --     <td>`whatsit`</td>
+  --     <td>`user_definded`</td>
+  --     <td>`index`</td>
+  --   </tr>
+  -- </tbody>
+  -- </table>
+  --
+  -- Make fixed size cloze.
+  --
+  -- @param start The node, where the gap begins
+  -- @param stop The node, where the gap ends
+  local function make_single(start, stop)
+    local l = {} -- length
+    local n = {} -- node
+    l.width, l.kern_start, l.kern_stop = calculate_length(start, stop)
+    n.line = nodex.insert_line(start, l.width)
+    if registry.get_value_show() then
+      nodex.insert_list(
+        'after',
+        n.line,
+        {
+          create_kern_node(l.kern_start),
+          nodex.create_color('text')
+        }
+      )
+      nodex.insert_list(
+        'before',
+        stop,
+        {
+          nodex.create_color('reset'),
+          create_kern_node(l.kern_stop)
+        },
+        start
+      )
+    else
+      n.line.next = stop.next
+    end
+    registry.remove_marker(start)
+    registry.remove_marker(stop)
+  end
+
+  --- Function to recurse the node list and search after marker.
+  --
+  -- @tparam node head_node The head of a node list.
+  local function make_fix_recursion(head_node)
+    local n = {} -- node
+    n.start, n.stop = false
+    while head_node do
+      if head_node.head then
+        make_fix_recursion(head_node.head)
+      else
+        if not n.start then
+          n.start = registry.get_marker(head_node, 'fix', 'start')
+        end
+        if not n.stop then
+          n.stop = registry.get_marker(head_node, 'fix', 'stop')
+        end
+        if n.start and n.stop then
+          make_single(n.start, n.stop)
+          n.start, n.stop = false
+        end
+      end
+      head_node = head_node.next
+    end
+  end
+
+  make_fix_recursion(head_node)
   return head_node
 end
 
@@ -957,10 +958,10 @@ end
 -- @section base
 
 --- This function registers the functions `cloze.par`, `make_basic` and
---  `cloze.fix` the Lua callbacks.
+--  `make_fix` the Lua callbacks.
 --
 -- `cloze.par` and `make_basic` are registered to the callback
--- `post_linebreak_filter` and `cloze.fix` to the callback
+-- `post_linebreak_filter` and `make_fix` to the callback
 -- `pre_linebreak_filter`. The argument `mode` accepts the string values
 -- `basic`, `fix` and `par`. A special treatment is needed for clozes in
 -- display math mode. The `post_linebreak_filter` is not called on
@@ -990,7 +991,7 @@ function base.register(mode)
     elseif mode == 'fix' then
       register_callback(
         'pre_linebreak_filter',
-        cloze.fix,
+        make_fix,
         mode
       )
     else

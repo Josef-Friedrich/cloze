@@ -249,21 +249,16 @@
 	<td class="summary">Parse the node tree recursivley.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#fix_length">fix_length (start, stop)</a></td>
-	<td class="summary">Calculate the length of the whitespace before (<code>l.kern_start</code>) and
- after (<code>l.kern_stop</code>) the text.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#fix_make">fix_make (start, stop)</a></td>
-	<td class="summary">The function <a href="index.html#fix_make">cloze.fix_make</a> generates a gap of fixed width.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#fix_recursion">fix_recursion (head_node)</a></td>
-	<td class="summary">Function to recurse the node list and search after marker.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#fix">fix (head_node)</a></td>
+	<td class="name" nowrap><a href="#make_fix">make_fix (head_node)</a></td>
 	<td class="summary">The corresponding LaTeX command to this Lua function is <code>\clozefix</code>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#make_single">make_single (start, stop)</a></td>
+	<td class="summary">The function <a href="index.html#make_single">make_single</a> generates a gap of fixed width.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#make_fix_recursion">make_fix_recursion (head_node)</a></td>
+	<td class="summary">Function to recurse the node list and search after marker.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#par">par (head_node)</a></td>
@@ -284,7 +279,7 @@
 	<tr>
 	<td class="name" nowrap><a href="#base.register">base.register (mode)</a></td>
 	<td class="summary">This function registers the functions <a href="index.html#par">cloze.par</a>, <a href="index.html#make_basic">make_basic</a> and
-  <a href="index.html#fix">cloze.fix</a> the Lua callbacks.</td>
+  <a href="index.html#make_fix">make_fix</a> the Lua callbacks.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#base.unregister">base.unregister (mode)</a></td>
@@ -711,7 +706,7 @@ some additional data like the local options.</li>
     <dd>
     Write a marker node to \TeX&rsquo;s current node list.</p>
 
-<p> The argument <code>mode</code> accepts the string values <code>basic</code>, <a href="index.html#fix">fix</a> and
+<p> The argument <code>mode</code> accepts the string values <code>basic</code>, <code>fix</code> and
  <a href="index.html#par">par</a>. The argument <code>position</code>. The argument <code>position</code> is either set
  to <code>start</code> or to <code>stop</code>.
 
@@ -759,7 +754,7 @@ some additional data like the local options.</li>
     This functions tests, whether the given node <code>item</code> is a marker.</p>
 
 <p> The argument <code>item</code> is a node. The argument <code>mode</code> accepts the string
- values <code>basic</code>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>. The argument <code>position</code> is either
+ values <code>basic</code>, <code>fix</code> and <a href="index.html#par">par</a>. The argument <code>position</code> is either
  set to <code>start</code> or to <code>stop</code>.
 
 
@@ -789,7 +784,7 @@ some additional data like the local options.</li>
     <a href="index.html#registry.get_marker">registry.get_marker</a> returns the given marker.</p>
 
 <p> The argument <code>item</code> is a node. The argument <code>mode</code> accepts the string
- values <code>basic</code>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>. The argument <code>position</code> is either
+ values <code>basic</code>, <code>fix</code> and <a href="index.html#par">par</a>. The argument <code>position</code> is either
  set to <code>start</code> or to <code>stop</code>.
 
 
@@ -903,7 +898,7 @@ some additional data like the local options.</li>
 
 <p> It returns a numeric index number. This index number is the key,
  where the local options in the Lua table are stored. The argument
- <code>mode</code> accepts the string values <code>basic</code>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>.
+ <code>mode</code> accepts the string values <code>basic</code>, <code>fix</code> and <a href="index.html#par">par</a>.
 
 
     <h3>Parameters:</h3>
@@ -1235,21 +1230,18 @@ some additional data like the local options.</li>
 
 </dd>
     <dt>
-    <a name = "fix_length"></a>
-    <strong>fix_length (start, stop)</strong>
+    <a name = "make_fix"></a>
+    <strong>make_fix (head_node)</strong>
     </dt>
     <dd>
-    Calculate the length of the whitespace before (<code>l.kern_start</code>) and
- after (<code>l.kern_stop</code>) the text.
+    The corresponding LaTeX command to this Lua function is <code>\clozefix</code>.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">start</span>
-
-        </li>
-        <li><span class="parameter">stop</span>
-
+        <li><span class="parameter">head_node</span>
+            <span class="types"><span class="type">node</span></span>
+         The head of a node list.
         </li>
     </ul>
 
@@ -1259,11 +1251,11 @@ some additional data like the local options.</li>
 
 </dd>
     <dt>
-    <a name = "fix_make"></a>
-    <strong>fix_make (start, stop)</strong>
+    <a name = "make_single"></a>
+    <strong>make_single (start, stop)</strong>
     </dt>
     <dd>
-    The function <a href="index.html#fix_make">cloze.fix_make</a> generates a gap of fixed width.</p>
+    The function <a href="index.html#make_single">make_single</a> generates a gap of fixed width.</p>
 
 <p> <strong>Node lists</strong></p>
 
@@ -1368,32 +1360,11 @@ some additional data like the local options.</li>
 
 </dd>
     <dt>
-    <a name = "fix_recursion"></a>
-    <strong>fix_recursion (head_node)</strong>
+    <a name = "make_fix_recursion"></a>
+    <strong>make_fix_recursion (head_node)</strong>
     </dt>
     <dd>
     Function to recurse the node list and search after marker.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">head_node</span>
-            <span class="types"><span class="type">node</span></span>
-         The head of a node list.
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "fix"></a>
-    <strong>fix (head_node)</strong>
-    </dt>
-    <dd>
-    The corresponding LaTeX command to this Lua function is <code>\clozefix</code>.
 
 
     <h3>Parameters:</h3>
@@ -1573,12 +1544,12 @@ some additional data like the local options.</li>
     </dt>
     <dd>
     This function registers the functions <a href="index.html#par">cloze.par</a>, <a href="index.html#make_basic">make_basic</a> and
-  <a href="index.html#fix">cloze.fix</a> the Lua callbacks.</p>
+  <a href="index.html#make_fix">make_fix</a> the Lua callbacks.</p>
 
 <p> <a href="index.html#par">cloze.par</a> and <a href="index.html#make_basic">make_basic</a> are registered to the callback
- <code>post_linebreak_filter</code> and <a href="index.html#fix">cloze.fix</a> to the callback
+ <code>post_linebreak_filter</code> and <a href="index.html#make_fix">make_fix</a> to the callback
  <code>pre_linebreak_filter</code>. The argument <code>mode</code> accepts the string values
- <code>basic</code>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>. A special treatment is needed for clozes in
+ <code>basic</code>, <code>fix</code> and <a href="index.html#par">par</a>. A special treatment is needed for clozes in
  display math mode. The <code>post_linebreak_filter</code> is not called on
  display math formulas. I’m not sure if the <code>pre_output_filter</code> is the
  right choice to capture the display math formulas.
@@ -1610,7 +1581,7 @@ some additional data like the local options.</li>
         <li><span class="parameter">mode</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          The argument <code>mode</code> accepts the string values
- <code>basic</code>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>.
+ <code>basic</code>, <code>fix</code> and <a href="index.html#par">par</a>.
         </li>
     </ul>
 
@@ -1626,7 +1597,7 @@ some additional data like the local options.</li>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-06-08 22:28:54 </i>
+<i style="float:right;">Last updated 2020-06-08 22:38:31 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
