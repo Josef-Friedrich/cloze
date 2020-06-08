@@ -61,9 +61,6 @@ registry.local_options = {}
 -- All those functions are stored in the table `cloze` that are
 -- registered as callbacks to the pre and post linebreak filters.
 local cloze = {}
--- In the status table are stored state information, which are necessary
--- for the recursive cloze generation.
-cloze.status = {}
 
 -- The `base` table contains some basic functions. `base` is the only
 -- table of this Lua module that will be exported.
@@ -536,105 +533,108 @@ end
 --- Assembly to cloze texts.
 -- @section cloze_functions
 
---- The function `cloze.basic_make()` makes one gap. The argument `start`
--- is the node, where the gap begins. The argument `stop` is the node,
--- where the gap ends.
-function cloze.basic_make(start_node, end_node)
-  local node_head = start_node
-  if not start_node or not end_node then
-    return
-  end
-  local line_width = node.dimensions(
-    cloze.status.hlist.glue_set,
-    cloze.status.hlist.glue_sign,
-    cloze.status.hlist.glue_order,
-    start_node,
-    end_node
-  )
-  local line_node = nodex.insert_line(start_node, line_width)
-  local color_text_node = nodex.insert_list('after', line_node, {nodex.create_color('text')})
-  if registry.get_value_show() then
-    nodex.insert_list('after', color_text_node, {create_kern_node(-line_width)})
-    nodex.insert_list('before', end_node, {nodex.create_color('reset')}, node_head)
-  else
-    line_node.next = end_node.next
-    end_node.prev = line_node -- not line_node.prev -> line color leaks out
-  end
-  -- In some edge cases the lua callbacks get fired up twice. After the
-  -- cloze has been created, the start and stop whatsit markers can be
-  -- deleted.
-  registry.remove_marker(start_node)
-  registry.remove_marker(end_node)
-end
-
---- Search for a stop marker.
---
--- @tparam node head_node The head of a node list.
---
--- @treturn node The end node.
-function cloze.basic_search_stop(head_node)
-  local end_node
-  while head_node do
-    cloze.status.continue = true
-    end_node = head_node
-    if registry.check_marker(end_node, 'basic', 'stop') then
-      cloze.status.continue = false
-      break
-    end
-    head_node = head_node.next
-  end
-  return end_node
-end
-
---- Search for a start marker or begin a new cloze if the value
---  `cloze.status.continue` is true.
---
--- We have to find a hlist node and use its on the field `head`
--- attached node list to search for a start marker.
---
--- @tparam node head_node The head of a node list.
-function cloze.basic_search_start(head_node)
-  local start_node, end_node, hlist_node
-  if cloze.status.continue then
-    hlist_node = search_hlist(head_node)
-    if hlist_node then
-      cloze.status.hlist = hlist_node
-      start_node = hlist_node.head
-    end
-  elseif registry.check_marker(head_node, 'basic', 'start') then
-    start_node = head_node
-  end
-  if start_node then
-    end_node = cloze.basic_search_stop(start_node)
-    cloze.basic_make(start_node, end_node)
-  end
-end
-
---- Parse the node tree recursivley.
---
--- Start and end markers could be nested deeply in the node tree.
---
--- @tparam node head_node The head of a node list.
-function cloze.basic_recursion(head_node)
-  while head_node do
-    if head_node.head then
-      cloze.status.hlist = head_node
-      cloze.basic_recursion(head_node.head)
-    else
-      cloze.basic_search_start(head_node)
-    end
-      head_node = head_node.next
-  end
-end
-
 --- The corresponding LaTeX command to this lua function is `\cloze`.
 --
 -- @tparam node head_node The head of a node list.
 --
 -- @treturn node The head of the node list.
-function cloze.basic(head_node)
-  cloze.status.continue = false
-  cloze.basic_recursion(head_node)
+function make_basic(head_node)
+  local continue = false
+  local hlist = nil
+
+  --- The function `make_single()` makes one gap. The argument `start`
+  -- is the node, where the gap begins. The argument `stop` is the node,
+  -- where the gap ends.
+  local function make_single(start_node, end_node)
+    local node_head = start_node
+    if not start_node or not end_node then
+      return
+    end
+    local line_width = node.dimensions(
+      hlist.glue_set,
+      hlist.glue_sign,
+      hlist.glue_order,
+      start_node,
+      end_node
+    )
+    local line_node = nodex.insert_line(start_node, line_width)
+    local color_text_node = nodex.insert_list('after', line_node, {nodex.create_color('text')})
+    if registry.get_value_show() then
+      nodex.insert_list('after', color_text_node, {create_kern_node(-line_width)})
+      nodex.insert_list('before', end_node, {nodex.create_color('reset')}, node_head)
+    else
+      line_node.next = end_node.next
+      end_node.prev = line_node -- not line_node.prev -> line color leaks out
+    end
+    -- In some edge cases the lua callbacks get fired up twice. After the
+    -- cloze has been created, the start and stop whatsit markers can be
+    -- deleted.
+    registry.remove_marker(start_node)
+    registry.remove_marker(end_node)
+  end
+
+  --- Search for a stop marker.
+  --
+  -- @tparam node head_node The head of a node list.
+  --
+  -- @treturn node The end node.
+  local function search_stop(head_node)
+    local end_node
+    while head_node do
+      continue = true
+      end_node = head_node
+      if registry.check_marker(end_node, 'basic', 'stop') then
+        continue = false
+        break
+      end
+      head_node = head_node.next
+    end
+    return end_node
+  end
+
+  --- Search for a start marker or begin a new cloze if the value
+  --  `continue` is true.
+  --
+  -- We have to find a hlist node and use its on the field `head`
+  -- attached node list to search for a start marker.
+  --
+  -- @tparam node head_node The head of a node list.
+  local function search_start(head_node)
+    local start_node, end_node, hlist_node
+    if continue then
+      hlist_node = search_hlist(head_node)
+      if hlist_node then
+        hlist = hlist_node
+        start_node = hlist_node.head
+      end
+    elseif registry.check_marker(head_node, 'basic', 'start') then
+      start_node = head_node
+    end
+    if start_node then
+      end_node = search_stop(start_node)
+      make_single(start_node, end_node)
+    end
+  end
+
+  --- Parse the node tree recursivley.
+  --
+  -- Start and end markers could be nested deeply in the node tree.
+  --
+  -- @tparam node head_node The head of a node list.
+  local function make_basic_recursive(head_node)
+    while head_node do
+      if head_node.head then
+        hlist = head_node
+        make_basic_recursive(head_node.head)
+      else
+        search_start(head_node)
+      end
+        head_node = head_node.next
+    end
+  end
+
+
+  make_basic_recursive(head_node)
   return head_node
 end
 
@@ -956,10 +956,10 @@ end
 -- `cloze.sty` file.
 -- @section base
 
---- This function registers the functions `cloze.par`, `cloze.basic` and
+--- This function registers the functions `cloze.par`, `make_basic` and
 --  `cloze.fix` the Lua callbacks.
 --
--- `cloze.par` and `cloze.basic` are registered to the callback
+-- `cloze.par` and `make_basic` are registered to the callback
 -- `post_linebreak_filter` and `cloze.fix` to the callback
 -- `pre_linebreak_filter`. The argument `mode` accepts the string values
 -- `basic`, `fix` and `par`. A special treatment is needed for clozes in
@@ -967,7 +967,6 @@ end
 -- display math formulas. I’m not sure if the `pre_output_filter` is the
 -- right choice to capture the display math formulas.
 function base.register(mode)
-  local basic
   if mode == 'par' then
     register_callback(
       'post_linebreak_filter',
@@ -980,12 +979,12 @@ function base.register(mode)
     if mode == 'basic' then
       register_callback(
         'post_linebreak_filter',
-        cloze.basic,
+        make_basic,
         mode
       )
       register_callback(
         'pre_output_filter',
-        cloze.basic,
+        make_basic,
         mode
       )
     elseif mode == 'fix' then

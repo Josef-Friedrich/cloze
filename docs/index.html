@@ -228,25 +228,25 @@
 <h2><a href="#Assembly_to_cloze_texts">Assembly to cloze texts </a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#basic_make">basic_make (start_node, end_node)</a></td>
-	<td class="summary">The function <code>cloze.basic_make()</code> makes one gap.</td>
+	<td class="name" nowrap><a href="#make_basic">make_basic (head_node)</a></td>
+	<td class="summary">The corresponding LaTeX command to this lua function is <code>\cloze</code>.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#basic_search_stop">basic_search_stop (head_node)</a></td>
+	<td class="name" nowrap><a href="#make_single">make_single (start_node, end_node)</a></td>
+	<td class="summary">The function <code>make_single()</code> makes one gap.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#search_stop">search_stop (head_node)</a></td>
 	<td class="summary">Search for a stop marker.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#basic_search_start">basic_search_start (head_node)</a></td>
+	<td class="name" nowrap><a href="#search_start">search_start (head_node)</a></td>
 	<td class="summary">Search for a start marker or begin a new cloze if the value
-  <code>cloze.status.continue</code> is true.</td>
+  <code>continue</code> is true.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#basic_recursion">basic_recursion (head_node)</a></td>
+	<td class="name" nowrap><a href="#make_basic_recursive">make_basic_recursive (head_node)</a></td>
 	<td class="summary">Parse the node tree recursivley.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#basic">basic (head_node)</a></td>
-	<td class="summary">The corresponding LaTeX command to this lua function is <code>\cloze</code>.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#fix_length">fix_length (start, stop)</a></td>
@@ -283,7 +283,7 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#base.register">base.register (mode)</a></td>
-	<td class="summary">This function registers the functions <a href="index.html#par">cloze.par</a>, <a href="index.html#basic">cloze.basic</a> and
+	<td class="summary">This function registers the functions <a href="index.html#par">cloze.par</a>, <a href="index.html#make_basic">make_basic</a> and
   <a href="index.html#fix">cloze.fix</a> the Lua callbacks.</td>
 	</tr>
 	<tr>
@@ -711,7 +711,7 @@ some additional data like the local options.</li>
     <dd>
     Write a marker node to \TeX&rsquo;s current node list.</p>
 
-<p> The argument <code>mode</code> accepts the string values <a href="index.html#basic">basic</a>, <a href="index.html#fix">fix</a> and
+<p> The argument <code>mode</code> accepts the string values <code>basic</code>, <a href="index.html#fix">fix</a> and
  <a href="index.html#par">par</a>. The argument <code>position</code>. The argument <code>position</code> is either set
  to <code>start</code> or to <code>stop</code>.
 
@@ -759,7 +759,7 @@ some additional data like the local options.</li>
     This functions tests, whether the given node <code>item</code> is a marker.</p>
 
 <p> The argument <code>item</code> is a node. The argument <code>mode</code> accepts the string
- values <a href="index.html#basic">basic</a>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>. The argument <code>position</code> is either
+ values <code>basic</code>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>. The argument <code>position</code> is either
  set to <code>start</code> or to <code>stop</code>.
 
 
@@ -789,7 +789,7 @@ some additional data like the local options.</li>
     <a href="index.html#registry.get_marker">registry.get_marker</a> returns the given marker.</p>
 
 <p> The argument <code>item</code> is a node. The argument <code>mode</code> accepts the string
- values <a href="index.html#basic">basic</a>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>. The argument <code>position</code> is either
+ values <code>basic</code>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>. The argument <code>position</code> is either
  set to <code>start</code> or to <code>stop</code>.
 
 
@@ -903,7 +903,7 @@ some additional data like the local options.</li>
 
 <p> It returns a numeric index number. This index number is the key,
  where the local options in the Lua table are stored. The argument
- <code>mode</code> accepts the string values <a href="index.html#basic">basic</a>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>.
+ <code>mode</code> accepts the string values <code>basic</code>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>.
 
 
     <h3>Parameters:</h3>
@@ -1108,11 +1108,38 @@ some additional data like the local options.</li>
 
     <dl class="function">
     <dt>
-    <a name = "basic_make"></a>
-    <strong>basic_make (start_node, end_node)</strong>
+    <a name = "make_basic"></a>
+    <strong>make_basic (head_node)</strong>
     </dt>
     <dd>
-    The function <code>cloze.basic_make()</code> makes one gap.  The argument <code>start</code>
+    The corresponding LaTeX command to this lua function is <code>\cloze</code>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">head_node</span>
+            <span class="types"><span class="type">node</span></span>
+         The head of a node list.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">node</span></span>
+        The head of the node list.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "make_single"></a>
+    <strong>make_single (start_node, end_node)</strong>
+    </dt>
+    <dd>
+    The function <code>make_single()</code> makes one gap.  The argument <code>start</code>
  is the node, where the gap begins. The argument <code>stop</code> is the node,
  where the gap ends.
 
@@ -1133,8 +1160,8 @@ some additional data like the local options.</li>
 
 </dd>
     <dt>
-    <a name = "basic_search_stop"></a>
-    <strong>basic_search_stop (head_node)</strong>
+    <a name = "search_stop"></a>
+    <strong>search_stop (head_node)</strong>
     </dt>
     <dd>
     Search for a stop marker.
@@ -1160,12 +1187,12 @@ some additional data like the local options.</li>
 
 </dd>
     <dt>
-    <a name = "basic_search_start"></a>
-    <strong>basic_search_start (head_node)</strong>
+    <a name = "search_start"></a>
+    <strong>search_start (head_node)</strong>
     </dt>
     <dd>
     Search for a start marker or begin a new cloze if the value
-  <code>cloze.status.continue</code> is true.</p>
+  <code>continue</code> is true.</p>
 
 <p> We have to find a hlist node and use its on the field <code>head</code>
  attached node list to search for a start marker.
@@ -1185,8 +1212,8 @@ some additional data like the local options.</li>
 
 </dd>
     <dt>
-    <a name = "basic_recursion"></a>
-    <strong>basic_recursion (head_node)</strong>
+    <a name = "make_basic_recursive"></a>
+    <strong>make_basic_recursive (head_node)</strong>
     </dt>
     <dd>
     Parse the node tree recursivley.</p>
@@ -1202,33 +1229,6 @@ some additional data like the local options.</li>
         </li>
     </ul>
 
-
-
-
-
-</dd>
-    <dt>
-    <a name = "basic"></a>
-    <strong>basic (head_node)</strong>
-    </dt>
-    <dd>
-    The corresponding LaTeX command to this lua function is <code>\cloze</code>.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">head_node</span>
-            <span class="types"><span class="type">node</span></span>
-         The head of a node list.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">node</span></span>
-        The head of the node list.
-    </ol>
 
 
 
@@ -1572,13 +1572,13 @@ some additional data like the local options.</li>
     <strong>base.register (mode)</strong>
     </dt>
     <dd>
-    This function registers the functions <a href="index.html#par">cloze.par</a>, <a href="index.html#basic">cloze.basic</a> and
+    This function registers the functions <a href="index.html#par">cloze.par</a>, <a href="index.html#make_basic">make_basic</a> and
   <a href="index.html#fix">cloze.fix</a> the Lua callbacks.</p>
 
-<p> <a href="index.html#par">cloze.par</a> and <a href="index.html#basic">cloze.basic</a> are registered to the callback
+<p> <a href="index.html#par">cloze.par</a> and <a href="index.html#make_basic">make_basic</a> are registered to the callback
  <code>post_linebreak_filter</code> and <a href="index.html#fix">cloze.fix</a> to the callback
  <code>pre_linebreak_filter</code>. The argument <code>mode</code> accepts the string values
- <a href="index.html#basic">basic</a>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>. A special treatment is needed for clozes in
+ <code>basic</code>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>. A special treatment is needed for clozes in
  display math mode. The <code>post_linebreak_filter</code> is not called on
  display math formulas. I’m not sure if the <code>pre_output_filter</code> is the
  right choice to capture the display math formulas.
@@ -1610,7 +1610,7 @@ some additional data like the local options.</li>
         <li><span class="parameter">mode</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          The argument <code>mode</code> accepts the string values
- <a href="index.html#basic">basic</a>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>.
+ <code>basic</code>, <a href="index.html#fix">fix</a> and <a href="index.html#par">par</a>.
         </li>
     </ul>
 
@@ -1626,7 +1626,7 @@ some additional data like the local options.</li>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-06-06 22:59:49 </i>
+<i style="float:right;">Last updated 2020-06-08 22:28:54 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
