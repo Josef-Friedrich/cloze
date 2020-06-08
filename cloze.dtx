@@ -582,20 +582,15 @@
 % \begin{macro}{\clozenol}
 % The usage of the command \cmd{\clozenol} is described in detail in
 % section \secref{sec:command-clozenol}.
-% TODO: Realize this macro with lua code, without ugly |\color{white}|.
-% command.
 %    \begin{macrocode}
 \newcommand{\clozenol}[2][]{%
+  \ClozeSetLocalOptions{#1,thickness=0pt}%
+  \ClozeStartMarker{basic}%
   {%
-    \ClozeSetLocalOptions{#1}%
     \clozefont\relax%
-    \ifclozeshow%
-      \color{\directlua{tex.print(cloze.get_value('textcolor_name'))}}%
-    \else%
-      \color{white}%
-    \fi%
-    #2%
+    \ClozeMargin{#2}%
   }%
+  \ClozeStopMarker{basic}%
 }
 %    \end{macrocode}
 % \end{macro}

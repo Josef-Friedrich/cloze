@@ -332,6 +332,8 @@ Using the option |align| you can make nice tabulars like this:
 \DescribeMacro{\clozenol} \cmd{\clozenol}\oarg{options}\marg{some text}:
 The macro name |clozenol| stands for \emph{“cloze no line”}. As the
 the name suggests this macro typesets cloze texts without a line.
+\cmd{\clozenol} is a convenient abbreviation for
+|\cloze[thickness=0pt]{text}|.
 
 \begin{minted}{latex}
 Lorem \clozenol{ipsum dolor} sit amet.
@@ -348,6 +350,32 @@ Lorem \clozenol[textcolor=green]{ipsum dolor} sit amet.
 \begin{example}
 Lorem \clozenol[textcolor=green]{ipsum dolor} sit amet.
 \end{example}
+
+\noindent
+The next examples are showing that \cmd{\clozenol} behaves exactly as
+\cmd{\clozenol} with the option |thickness=0pt|
+(|\cloze[thickness=0pt]|) set: The text layout doesn’t change if we are
+hiding the gaps and the hidden text is not really hidden. It is removed.
+It can not be copied.
+
+\begin{mdframed}[backgroundcolor=gray!40]
+Lorem ipsum \clozenol{dolor sit amet, consetetur sadipscing elitr, sed
+diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+erat, sed diam voluptua} sit amet.
+\end{mdframed}
+
+\noindent
+Now hide the text
+
+\clozehide
+
+\begin{mdframed}[backgroundcolor=gray!40]
+Lorem ipsum \clozenol{dolor sit amet, consetetur sadipscing elitr, sed
+diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+erat, sed diam voluptua} sit amet.
+\end{mdframed}
+
+\clozeshow
 
 %%
 % \clozefil

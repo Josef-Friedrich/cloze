@@ -118,16 +118,13 @@
   \ClozeStopMarker{fix}%
 }
 \newcommand{\clozenol}[2][]{%
+  \ClozeSetLocalOptions{#1,thickness=0pt}%
+  \ClozeStartMarker{basic}%
   {%
-    \ClozeSetLocalOptions{#1}%
     \clozefont\relax%
-    \ifclozeshow%
-      \color{\directlua{tex.print(cloze.get_value('textcolor_name'))}}%
-    \else%
-      \color{white}%
-    \fi%
-    #2%
+    \ClozeMargin{#2}%
   }%
+  \ClozeStopMarker{basic}%
 }
 \newenvironment{clozepar}[1][]%
 {%
