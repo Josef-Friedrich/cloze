@@ -4,5 +4,26 @@
     "node",
     "luatexbase",
     "tex"
-  ]
+  ],
+  "files.exclude": {
+    "**/*.DS_Store": true,
+    "**/*.aux": true,
+    "**/*.fdb_latexmk": true,
+    "**/*.glo": true,
+    "**/*.gls": true,
+    "**/*.idx": true,
+    "**/*.ilg": true,
+    "**/*.ind": true,
+    "**/*.log": true,
+    "**/*.out": true,
+    "**/*.pdf": true,
+    "**/*.synctex.gz": true,
+    "**/*.toc": true,
+    "**/*.tar.gz": true,
+    "**/cloze/": true,
+    "**/*.fls": true,
+    "build/*": true,
+    "**/build.lua": false,
+    "**/_minted*": true
+  }
 }
