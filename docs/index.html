@@ -261,7 +261,7 @@
 	<td class="summary">Function to recurse the node list and search after marker.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#par">par (head_node)</a></td>
+	<td class="name" nowrap><a href="#make_par">make_par (head_node)</a></td>
 	<td class="summary">The corresponding LaTeX environment to this lua function is
  <code>clozepar</code>.</td>
 	</tr>
@@ -278,7 +278,7 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#base.register">base.register (mode)</a></td>
-	<td class="summary">This function registers the functions <a href="index.html#par">cloze.par</a>, <a href="index.html#make_basic">make_basic</a> and
+	<td class="summary">This function registers the functions <a href="index.html#make_par">make_par</a>, <a href="index.html#make_basic">make_basic</a> and
   <a href="index.html#make_fix">make_fix</a> the Lua callbacks.</td>
 	</tr>
 	<tr>
@@ -707,7 +707,7 @@ some additional data like the local options.</li>
     Write a marker node to \TeX&rsquo;s current node list.</p>
 
 <p> The argument <code>mode</code> accepts the string values <code>basic</code>, <code>fix</code> and
- <a href="index.html#par">par</a>. The argument <code>position</code>. The argument <code>position</code> is either set
+ <code>par</code>. The argument <code>position</code>. The argument <code>position</code> is either set
  to <code>start</code> or to <code>stop</code>.
 
 
@@ -754,7 +754,7 @@ some additional data like the local options.</li>
     This functions tests, whether the given node <code>item</code> is a marker.</p>
 
 <p> The argument <code>item</code> is a node. The argument <code>mode</code> accepts the string
- values <code>basic</code>, <code>fix</code> and <a href="index.html#par">par</a>. The argument <code>position</code> is either
+ values <code>basic</code>, <code>fix</code> and <code>par</code>. The argument <code>position</code> is either
  set to <code>start</code> or to <code>stop</code>.
 
 
@@ -784,7 +784,7 @@ some additional data like the local options.</li>
     <a href="index.html#registry.get_marker">registry.get_marker</a> returns the given marker.</p>
 
 <p> The argument <code>item</code> is a node. The argument <code>mode</code> accepts the string
- values <code>basic</code>, <code>fix</code> and <a href="index.html#par">par</a>. The argument <code>position</code> is either
+ values <code>basic</code>, <code>fix</code> and <code>par</code>. The argument <code>position</code> is either
  set to <code>start</code> or to <code>stop</code>.
 
 
@@ -898,7 +898,7 @@ some additional data like the local options.</li>
 
 <p> It returns a numeric index number. This index number is the key,
  where the local options in the Lua table are stored. The argument
- <code>mode</code> accepts the string values <code>basic</code>, <code>fix</code> and <a href="index.html#par">par</a>.
+ <code>mode</code> accepts the string values <code>basic</code>, <code>fix</code> and <code>par</code>.
 
 
     <h3>Parameters:</h3>
@@ -1381,8 +1381,8 @@ some additional data like the local options.</li>
 
 </dd>
     <dt>
-    <a name = "par"></a>
-    <strong>par (head_node)</strong>
+    <a name = "make_par"></a>
+    <strong>make_par (head_node)</strong>
     </dt>
     <dd>
     The corresponding LaTeX environment to this lua function is
@@ -1543,13 +1543,13 @@ some additional data like the local options.</li>
     <strong>base.register (mode)</strong>
     </dt>
     <dd>
-    This function registers the functions <a href="index.html#par">cloze.par</a>, <a href="index.html#make_basic">make_basic</a> and
+    This function registers the functions <a href="index.html#make_par">make_par</a>, <a href="index.html#make_basic">make_basic</a> and
   <a href="index.html#make_fix">make_fix</a> the Lua callbacks.</p>
 
-<p> <a href="index.html#par">cloze.par</a> and <a href="index.html#make_basic">make_basic</a> are registered to the callback
+<p> <a href="index.html#make_par">make_par</a> and <a href="index.html#make_basic">make_basic</a> are registered to the callback
  <code>post_linebreak_filter</code> and <a href="index.html#make_fix">make_fix</a> to the callback
  <code>pre_linebreak_filter</code>. The argument <code>mode</code> accepts the string values
- <code>basic</code>, <code>fix</code> and <a href="index.html#par">par</a>. A special treatment is needed for clozes in
+ <code>basic</code>, <code>fix</code> and <code>par</code>. A special treatment is needed for clozes in
  display math mode. The <code>post_linebreak_filter</code> is not called on
  display math formulas. I’m not sure if the <code>pre_output_filter</code> is the
  right choice to capture the display math formulas.
@@ -1581,7 +1581,7 @@ some additional data like the local options.</li>
         <li><span class="parameter">mode</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          The argument <code>mode</code> accepts the string values
- <code>basic</code>, <code>fix</code> and <a href="index.html#par">par</a>.
+ <code>basic</code>, <code>fix</code> and <code>par</code>.
         </li>
     </ul>
 
@@ -1597,7 +1597,7 @@ some additional data like the local options.</li>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-06-08 22:38:31 </i>
+<i style="float:right;">Last updated 2020-06-08 22:42:38 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

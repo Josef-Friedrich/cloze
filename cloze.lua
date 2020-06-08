@@ -58,10 +58,6 @@ registry.defaults = {
 registry.global_options = {}
 registry.local_options = {}
 
--- All those functions are stored in the table `cloze` that are
--- registered as callbacks to the pre and post linebreak filters.
-local cloze = {}
-
 -- The `base` table contains some basic functions. `base` is the only
 -- table of this Lua module that will be exported.
 local base = {}
@@ -891,7 +887,7 @@ end
 -- </table>
 --
 -- @tparam node head_node The head of a node list.
-function cloze.par(head_node)
+local function make_par(head_node)
   local l = {} -- length
   local n = {} -- node
   for hlist in node.traverse_id(node.id('hlist'), head_node) do
@@ -957,10 +953,10 @@ end
 -- `cloze.sty` file.
 -- @section base
 
---- This function registers the functions `cloze.par`, `make_basic` and
+--- This function registers the functions `make_par`, `make_basic` and
 --  `make_fix` the Lua callbacks.
 --
--- `cloze.par` and `make_basic` are registered to the callback
+-- `make_par` and `make_basic` are registered to the callback
 -- `post_linebreak_filter` and `make_fix` to the callback
 -- `pre_linebreak_filter`. The argument `mode` accepts the string values
 -- `basic`, `fix` and `par`. A special treatment is needed for clozes in
@@ -971,7 +967,7 @@ function base.register(mode)
   if mode == 'par' then
     register_callback(
       'post_linebreak_filter',
-      cloze.par,
+      make_par,
       mode
     )
     return true
