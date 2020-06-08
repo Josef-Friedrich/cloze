@@ -11,6 +11,8 @@
 --
 -- @module cloze
 
+-- luacheck: globals node tex modules luatexbase callback
+
 -- __cloze.lua__
 
 -- __Initialisation of the function tables__
@@ -128,7 +130,7 @@ function nodex.insert_list(position, current, list, head_node)
   if not head_node then
     head_node = current
   end
-  for i, insert in ipairs(list) do
+  for _, insert in ipairs(list) do
     if position == 'after' then
       head_node, current = node.insert_after(head_node, current, insert)
     elseif position == 'before' then
@@ -531,10 +533,10 @@ end
 
 --- The corresponding LaTeX command to this lua function is `\cloze`.
 --
--- @tparam node head_node The head of a node list.
+-- @tparam node head_node_input The head of a node list.
 --
 -- @treturn node The head of the node list.
-local function make_basic(head_node)
+local function make_basic(head_node_input)
   local continue = false
   local hlist = nil
 
@@ -630,14 +632,14 @@ local function make_basic(head_node)
   end
 
 
-  make_basic_recursive(head_node)
-  return head_node
+  make_basic_recursive(head_node_input)
+  return head_node_input
 end
 
 --- The corresponding LaTeX command to this Lua function is `\clozefix`.
 --
--- @tparam node head_node The head of a node list.
-local function make_fix(head_node)
+-- @tparam node head_node_input The head of a node list.
+local function make_fix(head_node_input)
 
   --- Calculate the length of the whitespace before (`l.kern_start`) and
   -- after (`l.kern_stop`) the text.
@@ -785,7 +787,7 @@ local function make_fix(head_node)
   -- @tparam node head_node The head of a node list.
   local function make_fix_recursion(head_node)
     local n = {} -- node
-    n.start, n.stop = false
+    n.start, n.stop = false, false
     while head_node do
       if head_node.head then
         make_fix_recursion(head_node.head)
@@ -798,15 +800,15 @@ local function make_fix(head_node)
         end
         if n.start and n.stop then
           make_single(n.start, n.stop)
-          n.start, n.stop = false
+          n.start, n.stop = false, false
         end
       end
       head_node = head_node.next
     end
   end
 
-  make_fix_recursion(head_node)
-  return head_node
+  make_fix_recursion(head_node_input)
+  return head_node_input
 end
 
 --- The corresponding LaTeX environment to this lua function is
