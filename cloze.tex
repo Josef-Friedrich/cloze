@@ -54,9 +54,16 @@
 \def\clozesetoption[#1]#2{%
   \directlua{cloze.set_option('#1', '#2')}%
 }
+\def\clozefont{\it}
+\def\clozesetfont#1{%
+  \def\clozefont{%
+    #1%
+  }%
+}
 \def\clozeplain#1{%
   \ClozeStartMarker{basic}%
   {%
+    \clozefont\relax%
     \ClozeMargin{#1}%
   }%
   \ClozeStopMarker{basic}%

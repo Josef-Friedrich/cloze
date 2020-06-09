@@ -208,11 +208,32 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\clozefont}
+% The usage of the command \cmd{\clozefont} is described in detail in
+% section \secref{sec:command-clozefont}.
+%    \begin{macrocode}
+\def\clozefont{\it}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozesetfont}
+% The usage of the command \cmd{\clozesetfont} is described in detail in
+% section \secref{sec:command-clozesetfont}.
+%    \begin{macrocode}
+\def\clozesetfont#1{%
+  \def\clozefont{%
+    #1%
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}{\clozeplain}
 %    \begin{macrocode}
 \def\clozeplain#1{%
   \ClozeStartMarker{basic}%
   {%
+    \clozefont\relax%
     \ClozeMargin{#1}%
   }%
   \ClozeStopMarker{basic}%
@@ -523,26 +544,6 @@
 %    \begin{macrocode}
 \newcommand{\clozehide}{%
   \clozeset{hide}
-}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\clozefont}
-% The usage of the command \cmd{\clozefont} is described in detail in
-% section \secref{sec:command-clozefont}.
-%    \begin{macrocode}
-\newcommand{\clozefont}{\itshape}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\clozesetfont}
-% The usage of the command \cmd{\clozesetfont} is described in detail in
-% section \secref{sec:command-clozesetfont}.
-%    \begin{macrocode}
-\newcommand{\clozesetfont}[1]{%
-  \renewcommand{\clozefont}[1]{%
-    #1%
-  }%
 }
 %    \end{macrocode}
 % \end{macro}
