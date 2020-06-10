@@ -310,6 +310,41 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\clozeline}
+% This is the plain Lua\TeX-Version of the macro \cmd{\clozeline}. The
+% usage of the command \cmd{\clozeline} is described in detail in
+% section \secref{sec:command-clozeline}.
+%    \begin{macrocode}
+\def\clozeline{%
+  \directlua{cloze.line()}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozelinefil}
+% This is the plain Lua\TeX-Version of the macro \cmd{\clozelinefil}.
+% The usage of the command \cmd{\clozelinefil} is described in detail in
+% section \secref{sec:command-clozelinefil}.
+%    \begin{macrocode}
+\def\clozelinefil{%
+  \strut%
+  \directlua{cloze.linefil()}%
+  \strut%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozefil}
+% This is the plain Lua\TeX-Version of the macro \cmd{\clozefil}.
+% The usage of the command \cmd{\clozefil} is described in detail in
+% section \secref{sec:command-clozefil}.
+%    \begin{macrocode}
+\def\clozefil#1{%
+  \cloze{#1}\clozelinefil%
+}
+%    \end{macrocode}
+% \end{macro}
+%
 % \iffalse
 %</plaintex>
 % \fi
@@ -693,10 +728,37 @@
 %    \end{macrocode}
 % \end{environment}
 %
+% \begin{macro}{\clozeline}
+% The usage of the command \cmd{\clozeline} is described in detail in
+% section \secref{sec:command-clozeline}.
+%    \begin{macrocode}
+\let\clozelineplain=\clozeline
+\let\clozeline=\undefined
+\newcommand{\clozeline}[1][]{%
+  \ClozeSetLocalOptions{#1}%
+  \clozelineplain%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozelinefil}
+% The usage of the command \cmd{\clozelinefil} is described in detail in
+% section \secref{sec:command-clozelinefil}.
+%    \begin{macrocode}
+\let\clozelinefilplain=\clozelinefil
+\let\clozelinefil=\undefined
+\newcommand{\clozelinefil}[1][]{%
+  \ClozeSetLocalOptions{#1}%
+  \clozelinefilplain%
+}
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}{\clozefil}
 % The usage of the command \cmd{\clozefil} is described in detail in
 % section \secref{sec:command-clozefil}.
 %    \begin{macrocode}
+\let\clozefil=\undefined
 \newcommand{\clozefil}[2][]{%
   \cloze[#1]{#2}\clozelinefil[#1]%
 }
@@ -713,30 +775,6 @@
       tex.print(' \string\\hspace{1em} \string\\strut')
     end
   }
-}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\clozeline}
-% The usage of the command \cmd{\clozeline} is described in detail in
-% section \secref{sec:command-clozeline}.
-%    \begin{macrocode}
-\newcommand{\clozeline}[1][]{%
-  \ClozeSetLocalOptions{#1}%
-  \directlua{cloze.line()}%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\clozelinefil}
-% The usage of the command \cmd{\clozelinefil} is described in detail in
-% section \secref{sec:command-clozelinefil}.
-%    \begin{macrocode}
-\newcommand{\clozelinefil}[1][]{%
-  \ClozeSetLocalOptions{#1}%
-  \strut%
-  \directlua{cloze.linefil()}%
-  \strut%
 }
 %    \end{macrocode}
 % \end{macro}

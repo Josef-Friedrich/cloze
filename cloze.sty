@@ -145,6 +145,19 @@
   \ClozeSetLocalOptions{#1}%
   \begin{spacing}{\directlua{tex.print(cloze.get_value('spacing'))}}%
 }{\end{spacing}}
+\let\clozelineplain=\clozeline
+\let\clozeline=\undefined
+\newcommand{\clozeline}[1][]{%
+  \ClozeSetLocalOptions{#1}%
+  \clozelineplain%
+}
+\let\clozelinefilplain=\clozelinefil
+\let\clozelinefil=\undefined
+\newcommand{\clozelinefil}[1][]{%
+  \ClozeSetLocalOptions{#1}%
+  \clozelinefilplain%
+}
+\let\clozefil=\undefined
 \newcommand{\clozefil}[2][]{%
   \cloze[#1]{#2}\clozelinefil[#1]%
 }
@@ -155,16 +168,6 @@
       tex.print(' \string\\hspace{1em} \string\\strut')
     end
   }
-}
-\newcommand{\clozeline}[1][]{%
-  \ClozeSetLocalOptions{#1}%
-  \directlua{cloze.line()}%
-}
-\newcommand{\clozelinefil}[1][]{%
-  \ClozeSetLocalOptions{#1}%
-  \strut%
-  \directlua{cloze.linefil()}%
-  \strut%
 }
 \newcommand{\ClozeTextColor}[1]{%
   \textcolor%

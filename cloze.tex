@@ -98,6 +98,17 @@
   }%
   \ClozeStopMarker{basic}%
 }
+\def\clozeline{%
+  \directlua{cloze.line()}%
+}
+\def\clozelinefil{%
+  \strut%
+  \directlua{cloze.linefil()}%
+  \strut%
+}
+\def\clozefil#1{%
+  \cloze{#1}\clozelinefil%
+}
 \endinput
 %%
 %% End of file `cloze.tex'.
