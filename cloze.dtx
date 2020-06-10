@@ -208,6 +208,41 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\clozereset}
+% The usage of the command \cmd{\clozereset} is described in detail in
+% section \secref{sec:command-clozereset}.
+%    \begin{macrocode}
+\def\clozereset{%
+  \directlua{cloze.reset()}
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozeshow}
+% The usage of the command \cmd{\clozeshow} is described in detail in
+% section \secref{sec:command-clozeshow}.
+%    \begin{macrocode}
+\def\clozeshow{%
+  \clozeshowtrue%
+  \clozesetoption[show]{true}%
+  \clozesetoption[hide]{false}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozehide}
+% The usage of the command \cmd{\clozehide} is described in detail in
+% section \secref{sec:command-clozehide}.
+%    \begin{macrocode}
+\def\clozehide{%
+  \clozeshowfalse%
+  \clozesetoption[hide]{true}%
+  \clozesetoption[show]{false}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
 % \begin{macro}{\clozefont}
 % The usage of the command \cmd{\clozefont} is described in detail in
 % section \secref{sec:command-clozefont}.
@@ -514,36 +549,6 @@
 \newcommand{\clozeset}[1]{%
   \ClozeSetToGlobal%
   \kvsetkeys{CLZ}{#1}%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\clozereset}
-% The usage of the command \cmd{\clozereset} is described in detail in
-% section \secref{sec:command-clozereset}.
-%    \begin{macrocode}
-\newcommand{\clozereset}{%
-  \directlua{cloze.reset()}
-}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\clozeshow}
-% The usage of the command \cmd{\clozeshow} is described in detail in
-% section \secref{sec:command-clozeshow}.
-%    \begin{macrocode}
-\newcommand{\clozeshow}{%
-  \clozeset{show}
-}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\clozehide}
-% The usage of the command \cmd{\clozehide} is described in detail in
-% section \secref{sec:command-clozehide}.
-%    \begin{macrocode}
-\newcommand{\clozehide}{%
-  \clozeset{hide}
 }
 %    \end{macrocode}
 % \end{macro}

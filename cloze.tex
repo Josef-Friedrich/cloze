@@ -54,6 +54,19 @@
 \def\clozesetoption[#1]#2{%
   \directlua{cloze.set_option('#1', '#2')}%
 }
+\def\clozereset{%
+  \directlua{cloze.reset()}
+}
+\def\clozeshow{%
+  \clozeshowtrue%
+  \clozesetoption[show]{true}%
+  \clozesetoption[hide]{false}%
+}
+\def\clozehide{%
+  \clozeshowfalse%
+  \clozesetoption[hide]{true}%
+  \clozesetoption[show]{false}%
+}
 \def\clozefont{\it}
 \def\clozesetfont#1{%
   \def\clozefont{%

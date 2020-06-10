@@ -84,15 +84,6 @@
   \ClozeSetToGlobal%
   \kvsetkeys{CLZ}{#1}%
 }
-\newcommand{\clozereset}{%
-  \directlua{cloze.reset()}
-}
-\newcommand{\clozeshow}{%
-  \clozeset{show}
-}
-\newcommand{\clozehide}{%
-  \clozeset{hide}
-}
 \newcommand{\cloze}[2][]{%
   \ClozeSetLocalOptions{#1}%
   \ClozeStartMarker{basic}%
