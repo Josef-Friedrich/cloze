@@ -27,8 +27,13 @@ doc_pdf:
 doc_lua:
 	ldoc .
 
-test:
-	find tests -name "*.tex" -exec lualatex {} \;
+test: test_luatex test_lualatex
+
+test_luatex:
+	find tests/luatex -name "*.tex" -exec latexmk -latex=luatex -cd {} \;
+
+test_lualatex:
+	find tests/lualatex -name "*.tex" -exec latexmk -latex=lualatex -cd {} \;
 
 clean:
 	./clean.sh
@@ -45,4 +50,4 @@ ctan:
 	tar cvfz $(jobname).tar.gz $(jobname)
 	rm -rf $(jobname)
 
-.PHONY: all install doc doclua clean ctan
+.PHONY: all install doc doc_pdf doc_lua test test_luatex test_lualatex clean ctan
