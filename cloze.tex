@@ -73,7 +73,24 @@
     #1%
   }%
 }
-\def\clozeplain#1{%
+\def\cloze#1{%
+  \ClozeStartMarker{basic}%
+  {%
+    \clozefont\relax%
+    \ClozeMargin{#1}%
+  }%
+  \ClozeStopMarker{basic}%
+}
+\def\clozefix#1{%
+  \ClozeStartMarker{fix}%
+  {%
+    \clozefont\relax%
+    \ClozeMargin{#1}%
+  }%
+  \ClozeStopMarker{fix}%
+}
+\def\clozenol#1{%
+  \clozesetoption[thickness]{0pt}
   \ClozeStartMarker{basic}%
   {%
     \clozefont\relax%

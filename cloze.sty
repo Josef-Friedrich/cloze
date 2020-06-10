@@ -84,32 +84,23 @@
   \ClozeSetToGlobal%
   \kvsetkeys{CLZ}{#1}%
 }
+\let\clozeplain=\cloze
+\let\cloze=\undefined
 \newcommand{\cloze}[2][]{%
   \ClozeSetLocalOptions{#1}%
-  \ClozeStartMarker{basic}%
-  {%
-    \clozefont\relax%
-    \ClozeMargin{#2}%
-  }%
-  \ClozeStopMarker{basic}%
+  \clozeplain{#2}%
 }
+\let\clozefixplain=\clozefix
+\let\clozefix=\undefined
 \newcommand{\clozefix}[2][]{%
   \ClozeSetLocalOptions{#1}%
-  \ClozeStartMarker{fix}%
-  {%
-    \clozefont\relax%
-    \ClozeMargin{#2}%
-  }%
-  \ClozeStopMarker{fix}%
+  \clozefixplain{#2}%
 }
+\let\clozenolplain=\clozenol
+\let\clozenol=\undefined
 \newcommand{\clozenol}[2][]{%
-  \ClozeSetLocalOptions{#1,thickness=0pt}%
-  \ClozeStartMarker{basic}%
-  {%
-    \clozefont\relax%
-    \ClozeMargin{#2}%
-  }%
-  \ClozeStopMarker{basic}%
+  \ClozeSetLocalOptions{#1}%
+  \clozenolplain{#2}%
 }
 \newenvironment{clozepar}[1][]%
 {%

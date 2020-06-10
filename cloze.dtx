@@ -263,9 +263,43 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\clozeplain}
+% \begin{macro}{\cloze}
+% This is the plain Lua\TeX-Version of the macro \cmd{\cloze}.
 %    \begin{macrocode}
-\def\clozeplain#1{%
+\def\cloze#1{%
+  \ClozeStartMarker{basic}%
+  {%
+    \clozefont\relax%
+    \ClozeMargin{#1}%
+  }%
+  \ClozeStopMarker{basic}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozefix}
+% This is the plain Lua\TeX-Version of \cmd{\clozefix}. The usage of the
+% command \cmd{\clozefix} is described in detail in
+% section \secref{sec:command-clozefix}.
+%    \begin{macrocode}
+\def\clozefix#1{%
+  \ClozeStartMarker{fix}%
+  {%
+    \clozefont\relax%
+    \ClozeMargin{#1}%
+  }%
+  \ClozeStopMarker{fix}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozenol}
+% This is the plain Lua\TeX-Version of the macro \cmd{\clozenol}. The
+% usage of the command \cmd{\clozenol} is described in detail in
+% section \secref{sec:command-clozenol}.
+%    \begin{macrocode}
+\def\clozenol#1{%
+  \clozesetoption[thickness]{0pt}
   \ClozeStartMarker{basic}%
   {%
     \clozefont\relax%
@@ -557,14 +591,11 @@
 % The usage of the command \cmd{\cloze} is described in detail in
 % section \secref{sec:command-cloze}.
 %    \begin{macrocode}
+\let\clozeplain=\cloze
+\let\cloze=\undefined
 \newcommand{\cloze}[2][]{%
   \ClozeSetLocalOptions{#1}%
-  \ClozeStartMarker{basic}%
-  {%
-    \clozefont\relax%
-    \ClozeMargin{#2}%
-  }%
-  \ClozeStopMarker{basic}%
+  \clozeplain{#2}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -573,14 +604,11 @@
 % The usage of the command \cmd{\clozefix} is described in detail in
 % section \secref{sec:command-clozefix}.
 %    \begin{macrocode}
+\let\clozefixplain=\clozefix
+\let\clozefix=\undefined
 \newcommand{\clozefix}[2][]{%
   \ClozeSetLocalOptions{#1}%
-  \ClozeStartMarker{fix}%
-  {%
-    \clozefont\relax%
-    \ClozeMargin{#2}%
-  }%
-  \ClozeStopMarker{fix}%
+  \clozefixplain{#2}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -589,14 +617,11 @@
 % The usage of the command \cmd{\clozenol} is described in detail in
 % section \secref{sec:command-clozenol}.
 %    \begin{macrocode}
+\let\clozenolplain=\clozenol
+\let\clozenol=\undefined
 \newcommand{\clozenol}[2][]{%
-  \ClozeSetLocalOptions{#1,thickness=0pt}%
-  \ClozeStartMarker{basic}%
-  {%
-    \clozefont\relax%
-    \ClozeMargin{#2}%
-  }%
-  \ClozeStopMarker{basic}%
+  \ClozeSetLocalOptions{#1}%
+  \clozenolplain{#2}%
 }
 %    \end{macrocode}
 % \end{macro}
