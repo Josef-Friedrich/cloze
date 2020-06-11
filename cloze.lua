@@ -157,7 +157,7 @@ end
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td>`n.line`</td>
+--     <td>`line_node`</td>
 --     <td>`rule`</td>
 --     <td></td>
 --     <td>`width`</td>
@@ -677,7 +677,7 @@ local function make_fix(head_node_input)
   --     <td>`index`</td>
   --   </tr>
   --   <tr>
-  --     <td>`n.line`</td>
+  --     <td>`line_node`</td>
   --     <td>`rule`</td>
   --     <td></td>
   --     <td>`l.width`</td>
@@ -734,7 +734,7 @@ local function make_fix(head_node_input)
   -- </thead>
   -- <tbody>
   --   <tr>
-  --     <td>`n.line`</td>
+  --     <td>`line_node`</td>
   --     <td>`rule`</td>
   --     <td></td>
   --     <td>`l.width`</td>
@@ -821,7 +821,7 @@ end
 -- <table>
 -- <thead>
 --   <tr>
---     <th>`n.strut`</th>
+--     <th>`strut_node`</th>
 --     <th>`kern`</th>
 --     <th></th>
 --     <th>width = 0</th>
@@ -829,16 +829,16 @@ end
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td>`n.line`</td>
+--     <td>`line_node`</td>
 --     <td>`rule`</td>
 --     <td></td>
---     <td>`l.width` (Width from hlist)</td>
+--     <td>`width_length` (Width from hlist)</td>
 --   </tr>
 --   <tr>
 --     <td>`n.kern`</td>
 --     <td>`kern`</td>
 --     <td></td>
---     <td>`-l.width`</td>
+--     <td>`-width_length`</td>
 --   </tr>
 --   <tr>
 --     <td>`n.color_text`</td>
@@ -872,7 +872,7 @@ end
 -- <table>
 -- <thead>
 --   <tr>
---     <th>`n.strut`</th>
+--     <th>`strut_node`</th>
 --     <th>`kern`</th>
 --     <th></th>
 --     <th>width = 0</th>
@@ -880,31 +880,30 @@ end
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td>`n.line`</td>
+--     <td>`line_node`</td>
 --     <td>`rule`</td>
 --     <td></td>
---     <td>`l.width` (Width from hlist)</td>
+--     <td>`width_length` (Width from hlist)</td>
 --   </tr>
 -- </tbody>
 -- </table>
 --
 -- @tparam node head_node The head of a node list.
 local function make_par(head_node)
-  local l = {} -- length
-  local n = {} -- node
-  for hlist in node.traverse_id(node.id('hlist'), head_node) do
-    for whatsit in node.traverse_id(node.id('whatsit'), hlist.head) do
+  local strut_node, line_node, width_length
+  for hlist_node in node.traverse_id(node.id('hlist'), head_node) do
+    for whatsit in node.traverse_id(node.id('whatsit'), hlist_node.head) do
       registry.get_marker(whatsit, 'par', 'start')
     end
-    l.width = hlist.width
-    hlist, n.strut, n.head = insert_strut_into_hlist(hlist)
-    n.line = nodex.insert_line(n.strut, l.width)
+    width_length = hlist_node.width
+    hlist_node, strut_node, _ = insert_strut_into_hlist(hlist_node)
+    line_node = nodex.insert_line(strut_node, width_length)
     if registry.get_value_show() then
       nodex.insert_list(
         'after',
-        n.line,
+        line_node,
         {
-          create_kern_node(-l.width),
+          create_kern_node(-width_length),
           nodex.create_color('text')
         }
       )
@@ -914,7 +913,7 @@ local function make_par(head_node)
         {nodex.create_color('reset')}
       )
     else
-      n.line.next = nil
+      line_node.next = nil
     end
   end
   return head_node
