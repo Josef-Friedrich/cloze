@@ -144,8 +144,6 @@
 %    \end{macrocode}
 % \end{macro}
 %
-
-%
 % \begin{macro}{\ClozeColor}
 % Convert a color definiton name to a PDF colorstack string, for example
 % convert the color name |blue| to the colorstack string
@@ -203,6 +201,7 @@
 % sets a key \meta{key} to the value \meta{value}.
 %    \begin{macrocode}
 \def\clozesetoption[#1]#2{%
+  \ClozeSetToGlobal%
   \directlua{cloze.set_option('#1', '#2')}%
 }
 %    \end{macrocode}
@@ -213,7 +212,8 @@
 % section \secref{sec:command-clozereset}.
 %    \begin{macrocode}
 \def\clozereset{%
-  \directlua{cloze.reset()}
+  \ClozeSetToGlobal%
+  \directlua{cloze.reset()}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -224,6 +224,7 @@
 %    \begin{macrocode}
 \def\clozeshow{%
   \clozeshowtrue%
+  \ClozeSetToGlobal%
   \clozesetoption[show]{true}%
   \clozesetoption[hide]{false}%
 }
@@ -236,6 +237,7 @@
 %    \begin{macrocode}
 \def\clozehide{%
   \clozeshowfalse%
+  \ClozeSetToGlobal%
   \clozesetoption[hide]{true}%
   \clozesetoption[show]{false}%
 }
@@ -618,6 +620,28 @@
 \newcommand{\clozeset}[1]{%
   \ClozeSetToGlobal%
   \kvsetkeys{CLZ}{#1}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozeshow}
+% The usage of the command \cmd{\clozeshow} is described in detail in
+% section \secref{sec:command-clozeshow}.
+%    \begin{macrocode}
+\let\clozeshow=\undefined
+\newcommand{\clozeshow}{%
+  \clozeset{show}
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozehide}
+% The usage of the command \cmd{\clozehide} is described in detail in
+% section \secref{sec:command-clozehide}.
+%    \begin{macrocode}
+\let\clozehide=\undefined
+\newcommand{\clozehide}{%
+  \clozeset{hide}
 }
 %    \end{macrocode}
 % \end{macro}

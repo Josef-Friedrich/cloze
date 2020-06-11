@@ -84,6 +84,14 @@
   \ClozeSetToGlobal%
   \kvsetkeys{CLZ}{#1}%
 }
+\let\clozeshow=\undefined
+\newcommand{\clozeshow}{%
+  \clozeset{show}
+}
+\let\clozehide=\undefined
+\newcommand{\clozehide}{%
+  \clozeset{hide}
+}
 \let\clozeplain=\cloze
 \let\cloze=\undefined
 \newcommand{\cloze}[2][]{%

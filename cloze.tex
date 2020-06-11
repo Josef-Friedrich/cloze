@@ -33,7 +33,6 @@
     cloze.set_is_global(false)
   }%
 }
-
 \def\ClozeColor#1{\csname\string\color@#1\endcsname}
 \def\ClozeStartMarker#1{%
   \strut\directlua{
@@ -52,18 +51,22 @@
   \directlua{cloze.margin()}%
 }
 \def\clozesetoption[#1]#2{%
+  \ClozeSetToGlobal%
   \directlua{cloze.set_option('#1', '#2')}%
 }
 \def\clozereset{%
-  \directlua{cloze.reset()}
+  \ClozeSetToGlobal%
+  \directlua{cloze.reset()}%
 }
 \def\clozeshow{%
   \clozeshowtrue%
+  \ClozeSetToGlobal%
   \clozesetoption[show]{true}%
   \clozesetoption[hide]{false}%
 }
 \def\clozehide{%
   \clozeshowfalse%
+  \ClozeSetToGlobal%
   \clozesetoption[hide]{true}%
   \clozesetoption[show]{false}%
 }
