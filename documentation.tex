@@ -126,14 +126,26 @@ Lua\TeX{} that would be extremely painful otherwise"} in TUGboat, Volume
 \pagebreak
 \section{Introduction}
 
-\emph{cloze} is a \LaTeX{} package to generate cloze texts. It uses
-the capabilities of the modern \TeX{} engine \emph{Lua\TeX}. Therefore,
-you must use Lua\LaTeX{} to create documents containing gaps.
+\emph{cloze} is a plain \TeX{} or a \LaTeX{} package to generate cloze
+texts. It uses the capabilities of the modern \TeX{} engine
+\emph{Lua\TeX}. Therefore, you must use Lua\TeX{} or Lua\LaTeX{} to
+create documents containing gaps.
 
+\begin{center}
+\begin{minipage}{0.4\linewidth}
 \begin{verbatim}
 lualatex cloze-text.tex
 \end{verbatim}
+\end{minipage}
+or
+\begin{minipage}{0.4\linewidth}
+\begin{verbatim}
+luatex cloze-text.tex
+\end{verbatim}
+\end{minipage}
+\end{center}
 
+\noindent
 The main feature of the package is that the formatting doesn't change
 when using the |hide| and |show| \secref{sec:option-hide} options.
 
@@ -150,6 +162,7 @@ ullamco laboris nisi ut \cloze{aliquip} ex ea commodo consequat.%
 
 \clozeset{hide}
 
+\noindent
 The command |\clozeset{hide}| only shows gaps. When you put both texts
 on top of each other you will see that they perfectly match.
 
@@ -165,11 +178,53 @@ on top of each other you will see that they perfectly match.
 
 \section{Usage}
 
+%-----------------------------------------------------------------------
+%
+%-----------------------------------------------------------------------
+
+\subsection{Interfaces}
+
+The main difference between the plain \TeX{} and the \LaTeX{} interface
+is option handling. In \LaTeX{} options can be set using a key-value
+pairs. In plain \TeX{} the only possibility to set options in plain
+\TeX{} is using the \cmd{\clozesetoption} \secref{sec:cmd-clozesetoption}.
+
+%%
+%
+%%
+
+\subsubsection{The plain \TeX{} interface}
+
+\begin{minted}{tex}
+\input cloze.tex
+\clozesetoption{margin}{1cm}
+\clozeshow
+Lorem \cloze{ipsum} dolor.
+\bye
+\end{minted}
+
+%%
+%
+%%
+
+\subsubsection{The \LaTeX{} interface}
+
+\begin{minted}{latex}
+\documentclass{article}
+\usepackage[show,margin=1cm]{cloze}
+\begin{document}
+Lorem \cloze{ipsum} dolor.
+\end{document}
+\end{minted}
+
+\subsection{The commands and environments}
+
 There are the commands
 \cmd{\cloze},
 \cmd{\clozefix},
 \cmd{\clozefil},
 \cmd{\clozenol},
+\cmd{\clozeparcmd},
 \cmd{\clozestrike} and the environments
 |clozepar| and
 |clozebox|
@@ -178,8 +233,6 @@ to generate cloze texts.
 %%
 % \cloze
 %%
-
-\subsection{The commands and environments}
 
 \subsubsection{\cmd{\cloze}}
 \label{sec:command-cloze}
@@ -705,6 +758,18 @@ options in the \cmd{\usepackage}\oarg{global options}\marg{cloze}
 declaration, the cloze package offers a special command to set
 \emph{global} options:
 \cmd{\clozeset}\marg{global options}
+
+%%
+% \clozesetoption
+%%
+
+\subsubsection{\cmd{\clozesetoption}}
+\label{sec:command-clozesetoption}
+
+\DescribeMacro{\clozesetoption}
+\cmd{\clozesetoption}\marg{key}\marg{value}: Set a single option. In
+plain \TeX{} the command sets the options only in the global option
+space.
 
 %%
 % \clozeset

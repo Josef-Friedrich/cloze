@@ -197,10 +197,10 @@
 %
 % \begin{macro}{\clozesetoption}
 % \cmd{\clozesetoption} is a wrapper for the Lua function
-% |registry.set_option|. \cmd{\clozesetoption}\oarg{key}\marg{value}
+% |registry.set_option|. \cmd{\clozesetoption}\marg{key}\marg{value}
 % sets a key \meta{key} to the value \meta{value}.
 %    \begin{macrocode}
-\def\clozesetoption[#1]#2{%
+\def\clozesetoption#1#2{%
   \ClozeSetToGlobal%
   \directlua{cloze.set_option('#1', '#2')}%
 }
@@ -225,8 +225,8 @@
 \def\clozeshow{%
   \clozeshowtrue%
   \ClozeSetToGlobal%
-  \clozesetoption[show]{true}%
-  \clozesetoption[hide]{false}%
+  \clozesetoption{show}{true}%
+  \clozesetoption{hide}{false}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -238,8 +238,8 @@
 \def\clozehide{%
   \clozeshowfalse%
   \ClozeSetToGlobal%
-  \clozesetoption[hide]{true}%
-  \clozesetoption[show]{false}%
+  \clozesetoption{hide}{true}%
+  \clozesetoption{show}{false}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -301,7 +301,7 @@
 % section \secref{sec:command-clozenol}.
 %    \begin{macrocode}
 \def\clozenol#1{%
-  \clozesetoption[thickness]{0pt}
+  \clozesetoption{thickness}{0pt}
   \ClozeStartMarker{basic}%
   {%
     \clozefont\relax%
@@ -440,13 +440,13 @@
 %
 % \begin{macro}{\clozesetoption}
 % \cmd{\clozesetoption} is a wrapper for the Lua function
-% |registry.set_option|. \cmd{\clozesetoption}\oarg{key}\marg{value}
+% |registry.set_option|. \cmd{\clozesetoption}\marg{key}\marg{value}
 % sets a key \meta{key} to the value \meta{value}. The plain Lua\TeX{}
 % version always sets to the global options. The Lua\LaTeX-version
 % can set values both to the local and the global options store.
 %    \begin{macrocode}
 \let\clozesetoption=\undefined
-\newcommand{\clozesetoption}[2][]{%
+\newcommand{\clozesetoption}[2]{%
   \directlua{cloze.set_option('#1', '#2')}%
 }
 %    \end{macrocode}
@@ -501,7 +501,7 @@
 %
 %    \begin{macrocode}
 \DeclareStringOption{align}
-\define@key{CLZ}{align}[]{\clozesetoption[align]{#1}}
+\define@key{CLZ}{align}[]{\clozesetoption{align}{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{boxheight}}
@@ -513,7 +513,7 @@
 %
 %    \begin{macrocode}
 \DeclareStringOption{boxheight}
-\define@key{CLZ}{boxheight}[]{\clozesetoption[boxheight]{#1}}
+\define@key{CLZ}{boxheight}[]{\clozesetoption{boxheight}{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{boxwidth}}
@@ -525,7 +525,7 @@
 %
 %    \begin{macrocode}
 \DeclareStringOption{boxwidth}
-\define@key{CLZ}{boxwidth}[]{\clozesetoption[boxwidth]{#1}}
+\define@key{CLZ}{boxwidth}[]{\clozesetoption{boxwidth}{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{distance}}
@@ -535,7 +535,7 @@
 %
 %    \begin{macrocode}
 \DeclareStringOption{distance}
-\define@key{CLZ}{distance}[]{\clozesetoption[distance]{#1}}
+\define@key{CLZ}{distance}[]{\clozesetoption{distance}{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{hide}}
@@ -548,8 +548,8 @@
 %    \begin{macrocode}
 \DeclareVoidOption{hide}{%
   \clozeshowfalse%
-  \clozesetoption[hide]{true}%
-  \clozesetoption[show]{false}%
+  \clozesetoption{hide}{true}%
+  \clozesetoption{show}{false}%
 }
 %    \end{macrocode}
 %
@@ -561,8 +561,8 @@
 %    \begin{macrocode}
 \DeclareStringOption{linecolor}
 \define@key{CLZ}{linecolor}[]{%
-  \clozesetoption[linecolor]{\ClozeColor{#1}}%
-  \clozesetoption[linecolor_name]{#1}%
+  \clozesetoption{linecolor}{\ClozeColor{#1}}%
+  \clozesetoption{linecolor_name}{#1}%
 }
 %    \end{macrocode}
 %
@@ -573,7 +573,7 @@
 %
 %    \begin{macrocode}
 \DeclareStringOption{margin}
-\define@key{CLZ}{margin}[]{\clozesetoption[margin]{#1}}
+\define@key{CLZ}{margin}[]{\clozesetoption{margin}{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{show}}
@@ -586,8 +586,8 @@
 %    \begin{macrocode}
 \DeclareVoidOption{show}{%
   \clozeshowtrue%
-  \clozesetoption[show]{true}%
-  \clozesetoption[hide]{false}%
+  \clozesetoption{show}{true}%
+  \clozesetoption{hide}{false}%
 }
 %    \end{macrocode}
 %
@@ -598,7 +598,7 @@
 %
 %    \begin{macrocode}
 \DeclareStringOption{spacing}
-\define@key{CLZ}{spacing}[]{\clozesetoption[spacing]{#1}}
+\define@key{CLZ}{spacing}[]{\clozesetoption{spacing}{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{textcolor}}
@@ -609,8 +609,8 @@
 %    \begin{macrocode}
 \DeclareStringOption{textcolor}
 \define@key{CLZ}{textcolor}[]{%
-  \clozesetoption[textcolor]{\ClozeColor{#1}}%
-  \clozesetoption[textcolor_name]{#1}%
+  \clozesetoption{textcolor}{\ClozeColor{#1}}%
+  \clozesetoption{textcolor_name}{#1}%
 }
 %    \end{macrocode}
 %
@@ -621,7 +621,7 @@
 %
 %    \begin{macrocode}
 \DeclareStringOption{thickness}
-\define@key{CLZ}{thickness}[]{\clozesetoption[thickness]{#1}}
+\define@key{CLZ}{thickness}[]{\clozesetoption{thickness}{#1}}
 %    \end{macrocode}
 %
 % \paragraph{\tt{width}}
@@ -632,7 +632,7 @@
 %
 %    \begin{macrocode}
 \DeclareStringOption{width}
-\define@key{CLZ}{width}[]{\clozesetoption[width]{#1}}
+\define@key{CLZ}{width}[]{\clozesetoption{width}{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}

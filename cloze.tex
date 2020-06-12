@@ -50,7 +50,7 @@
   #1%
   \directlua{cloze.margin()}%
 }
-\def\clozesetoption[#1]#2{%
+\def\clozesetoption#1#2{%
   \ClozeSetToGlobal%
   \directlua{cloze.set_option('#1', '#2')}%
 }
@@ -61,14 +61,14 @@
 \def\clozeshow{%
   \clozeshowtrue%
   \ClozeSetToGlobal%
-  \clozesetoption[show]{true}%
-  \clozesetoption[hide]{false}%
+  \clozesetoption{show}{true}%
+  \clozesetoption{hide}{false}%
 }
 \def\clozehide{%
   \clozeshowfalse%
   \ClozeSetToGlobal%
-  \clozesetoption[hide]{true}%
-  \clozesetoption[show]{false}%
+  \clozesetoption{hide}{true}%
+  \clozesetoption{show}{false}%
 }
 \def\clozefont{\it}
 \def\clozesetfont#1{%
@@ -93,7 +93,7 @@
   \ClozeStopMarker{fix}%
 }
 \def\clozenol#1{%
-  \clozesetoption[thickness]{0pt}
+  \clozesetoption{thickness}{0pt}
   \ClozeStartMarker{basic}%
   {%
     \clozefont\relax%
