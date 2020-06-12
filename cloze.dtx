@@ -347,6 +347,22 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\clozeparcmd}
+% The usage of the macro \cmd{\clozeparcmd} is described in detail in
+% section \secref{sec:command-clozeparcmd}.
+%    \begin{macrocode}
+\def\clozeparcmd#1\par {%
+  \par%
+  \ClozeStartMarker{par}%
+  \clozefont\relax%
+  #1%
+  \ClozeStopMarker{par}%
+  \par%
+  \directlua{cloze.unregister('par')}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
 % \iffalse
 %</plaintex>
 % \fi
@@ -421,6 +437,20 @@
 %
 % Load the cloze lua module and put all return values in the variable
 % |cloze|.
+%
+% \begin{macro}{\clozesetoption}
+% \cmd{\clozesetoption} is a wrapper for the Lua function
+% |registry.set_option|. \cmd{\clozesetoption}\oarg{key}\marg{value}
+% sets a key \meta{key} to the value \meta{value}. The plain Lua\TeX{}
+% version always sets to the global options. The Lua\LaTeX-version
+% can set values both to the local and the global options store.
+%    \begin{macrocode}
+\let\clozesetoption=\undefined
+\newcommand{\clozesetoption}[2][]{%
+  \directlua{cloze.set_option('#1', '#2')}%
+}
+%    \end{macrocode}
+% \end{macro}
 %
 % \begin{macro}{\ClozeSetLocalOptions}
 % This macro is used in all cloze commands to handle the optional

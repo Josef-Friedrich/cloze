@@ -34,6 +34,11 @@
 \RequirePackage{ulem}
 \normalem
 \RequirePackage{transparent}
+
+\let\clozesetoption=\undefined
+\newcommand{\clozesetoption}[2][]{%
+  \directlua{cloze.set_option('#1', '#2')}%
+}
 \def\ClozeSetLocalOptions#1{%
   \ClozeSetToLocal%
   \kvsetkeys{CLZ}{#1}%
