@@ -7,7 +7,7 @@
 -- * _Variable_ names for _nodes_ are suffixed with `_node`, for example
 --   `head_node`.
 -- * _Variable_ names for _lengths_ (dimensions) are suffixed with
---   `_length`, for example `width_length`.
+--   `_length`, for example `width`.
 --
 -- @module cloze
 
@@ -641,25 +641,25 @@ end
 -- @tparam node head_node_input The head of a node list.
 local function make_fix(head_node_input)
 
-  --- Calculate the length of the whitespace before (`l.kern_start`) and
-  -- after (`l.kern_stop`) the text.
+  --- Calculate the length of the whitespace before (`kern_start_length`) and
+  -- after (`kern_stop_length`) the text.
   local function calculate_length(start, stop)
-    local l = {}
-    l.width = tex.sp(registry.get_value('width'))
-    l.text_width = node.dimensions(start, stop)
-    l.align = registry.get_value('align')
-    if l.align == 'right' then
-      l.kern_start = - l.text_width
-      l.kern_stop = 0
-    elseif l.align == 'center' then
-      l.half = (l.width - l.text_width) / 2
-      l.kern_start = - l.half - l.text_width
-      l.kern_stop = l.half
+    local width, kern_start_length, kern_stop_length, text_width, half_length, align
+    width = tex.sp(registry.get_value('width'))
+    text_width = node.dimensions(start, stop)
+    align = registry.get_value('align')
+    if align == 'right' then
+      kern_start_length = - text_width
+      kern_stop_length = 0
+    elseif align == 'center' then
+      half_length = (width - text_width) / 2
+      kern_start_length = - half_length - text_width
+      kern_stop_length = half_length
     else
-      l.kern_start = - l.width
-      l.kern_stop = l.width - l.text_width
+      kern_start_length = - width
+      kern_stop_length = width - text_width
     end
-    return l.width, l.kern_start, l.kern_stop
+    return width, kern_start_length, kern_stop_length
   end
 
   --- The function `make_single` generates a gap of fixed width.
@@ -671,7 +671,7 @@ local function make_fix(head_node_input)
   -- <table>
   -- <tbody>
   --   <tr>
-  --     <td>`n.start`</td>
+  --     <td>`start_node`</td>
   --     <td>`whatsit`</td>
   --     <td>`user_definded`</td>
   --     <td>`index`</td>
@@ -680,16 +680,16 @@ local function make_fix(head_node_input)
   --     <td>`line_node`</td>
   --     <td>`rule`</td>
   --     <td></td>
-  --     <td>`l.width`</td>
+  --     <td>`width`</td>
   --   </tr>
   --   <tr>
-  --     <td>`n.kern_start`</td>
+  --     <td>`kern_start_node`</td>
   --     <td>`kern`</td>
   --     <td>&amp; Depends on `align`</td>
   --     <td></td>
   --   </tr>
   --   <tr>
-  --     <td>`n.color_text`</td>
+  --     <td>`color_text_node`</td>
   --     <td>`whatsit`</td>
   --     <td>`pdf_colorstack`</td>
   --     <td>Text color</td>
@@ -713,7 +713,7 @@ local function make_fix(head_node_input)
   --     <td></td>
   --   </tr>
   --   <tr>
-  --     <td>`n.stop`</td>
+  --     <td>`stop_node`</td>
   --     <td>`whatsit`</td>
   --     <td>`user_definded`</td>
   --     <td>`index`</td>
@@ -726,7 +726,7 @@ local function make_fix(head_node_input)
   -- <table>
   -- <thead>
   --   <tr>
-  --     <th>`n.start`</th>
+  --     <th>`start_node`</th>
   --     <th>`whatsit`</th>
   --     <th>`user_definded`</th>
   --     <th>`index`</th>
@@ -737,10 +737,10 @@ local function make_fix(head_node_input)
   --     <td>`line_node`</td>
   --     <td>`rule`</td>
   --     <td></td>
-  --     <td>`l.width`</td>
+  --     <td>`width`</td>
   --   </tr>
   --   <tr>
-  --     <td>`n.stop`</td>
+  --     <td>`stop_node`</td>
   --     <td>`whatsit`</td>
   --     <td>`user_definded`</td>
   --     <td>`index`</td>
@@ -753,16 +753,15 @@ local function make_fix(head_node_input)
   -- @param start The node, where the gap begins
   -- @param stop The node, where the gap ends
   local function make_single(start, stop)
-    local l = {} -- length
-    local n = {} -- node
-    l.width, l.kern_start, l.kern_stop = calculate_length(start, stop)
-    n.line = nodex.insert_line(start, l.width)
+    local width, kern_start_length, kern_stop_length, line_node
+    width, kern_start_length, kern_stop_length = calculate_length(start, stop)
+    line_node = nodex.insert_line(start, width)
     if registry.get_value_show() then
       nodex.insert_list(
         'after',
-        n.line,
+        line_node,
         {
-          create_kern_node(l.kern_start),
+          create_kern_node(kern_start_length),
           nodex.create_color('text')
         }
       )
@@ -771,12 +770,12 @@ local function make_fix(head_node_input)
         stop,
         {
           nodex.create_color('reset'),
-          create_kern_node(l.kern_stop)
+          create_kern_node(kern_stop_length)
         },
         start
       )
     else
-      n.line.next = stop.next
+      line_node.next = stop.next
     end
     registry.remove_marker(start)
     registry.remove_marker(stop)
@@ -786,21 +785,20 @@ local function make_fix(head_node_input)
   --
   -- @tparam node head_node The head of a node list.
   local function make_fix_recursion(head_node)
-    local n = {} -- node
-    n.start, n.stop = false, false
+    local start_node, stop_node = false, false
     while head_node do
       if head_node.head then
         make_fix_recursion(head_node.head)
       else
-        if not n.start then
-          n.start = registry.get_marker(head_node, 'fix', 'start')
+        if not start_node then
+          start_node = registry.get_marker(head_node, 'fix', 'start')
         end
-        if not n.stop then
-          n.stop = registry.get_marker(head_node, 'fix', 'stop')
+        if not stop_node then
+          stop_node = registry.get_marker(head_node, 'fix', 'stop')
         end
-        if n.start and n.stop then
-          make_single(n.start, n.stop)
-          n.start, n.stop = false, false
+        if start_node and stop_node then
+          make_single(start_node, stop_node)
+          start_node, stop_node = false, false
         end
       end
       head_node = head_node.next
@@ -832,16 +830,16 @@ end
 --     <td>`line_node`</td>
 --     <td>`rule`</td>
 --     <td></td>
---     <td>`width_length` (Width from hlist)</td>
+--     <td>`width` (Width from hlist)</td>
 --   </tr>
 --   <tr>
 --     <td>`n.kern`</td>
 --     <td>`kern`</td>
 --     <td></td>
---     <td>`-width_length`</td>
+--     <td>`-width`</td>
 --   </tr>
 --   <tr>
---     <td>`n.color_text`</td>
+--     <td>`color_text_node`</td>
 --     <td>`whatsit`</td>
 --     <td>`pdf_colorstack`</td>
 --     <td>Text color</td>
@@ -883,27 +881,27 @@ end
 --     <td>`line_node`</td>
 --     <td>`rule`</td>
 --     <td></td>
---     <td>`width_length` (Width from hlist)</td>
+--     <td>`width` (Width from hlist)</td>
 --   </tr>
 -- </tbody>
 -- </table>
 --
 -- @tparam node head_node The head of a node list.
 local function make_par(head_node)
-  local strut_node, line_node, width_length
+  local strut_node, line_node, width
   for hlist_node in node.traverse_id(node.id('hlist'), head_node) do
     for whatsit in node.traverse_id(node.id('whatsit'), hlist_node.head) do
       registry.get_marker(whatsit, 'par', 'start')
     end
-    width_length = hlist_node.width
+    width = hlist_node.width
     hlist_node, strut_node, _ = insert_strut_into_hlist(hlist_node)
-    line_node = nodex.insert_line(strut_node, width_length)
+    line_node = nodex.insert_line(strut_node, width)
     if registry.get_value_show() then
       nodex.insert_list(
         'after',
         line_node,
         {
-          create_kern_node(-width_length),
+          create_kern_node(-width),
           nodex.create_color('text')
         }
       )
