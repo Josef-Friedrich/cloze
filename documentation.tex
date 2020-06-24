@@ -1147,38 +1147,70 @@ the cloze package and required special treatment to work as expected.
 By default the package uses |\itshape| to format the cloze text. In
 math mode you have to reset the cloze text format by calling
 |\clozesetfont{}|. A known bug is: You can’t show and hide
-a single display math formulas. Only the last |\clozeshow| or
+a single display math formula. Only the last |\clozeshow| or
 |\clozehide| takes effect on the whole document. Side note: The usage
-of the \TeX{} primitive syntax |$ $| is not recommended.
+of the \TeX{} primitive syntax |$$ $$| is not recommended.
 
 \clozesetfont{}
 
+%%
+%
+%%
+
+\bigskip
+\noindent
+\begin{minipage}{0.5\linewidth}
 \begin{minted}{latex}
 \clozesetfont{}
 $$1 + 1 = \cloze{2}$$
 \clozesetfont{\itshape}
 \end{minted}
-
+\end{minipage}
+\begin{minipage}{0.5\linewidth}
 $$1 + 1 = \cloze{2}$$
+\end{minipage}
+\bigskip
+
+%%
+%
+%%
 
 \noindent
 |\[\]| should be used instead.
 
+\noindent
+\begin{minipage}{0.5\linewidth}
 \begin{minted}{latex}
 \[123 + 456 = \cloze{579}\]
 \end{minted}
-
+\end{minipage}
+\begin{minipage}{0.5\linewidth}
 \[123 + 456 = \cloze{579}\]
+\end{minipage}
 
+%%
+%
+%%
+
+\bigskip
+\noindent
+A cloze inside a display math environment should work fine:
+
+\noindent
+\begin{minipage}{0.5\linewidth}
 \begin{minted}{latex}
 \begin{displaymath}
 2^{\cloze{2}} = 4
 \end{displaymath}
 \end{minted}
-
+\end{minipage}
+\begin{minipage}{0.5\linewidth}
 \begin{displaymath}
 2^{\cloze{2}} = 4
 \end{displaymath}
+\end{minipage}
+
+\bigskip
 
 \noindent
 The inline math mode works too:
@@ -1241,24 +1273,26 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 
 \subsubsection{The \tt{tabular} environment}
 
+\begin{minipage}{0.6\linewidth}
 \begin{minted}{latex}
 \begin{tabular}{l c}
-\cloze{Lorem} & \cloze{ipsum} \\
+\clozefix{Lorem} & \clozefix{ipsum} \\
 \clozefix{amet} & \clozefix{consectetur} \\
-\cloze{sed} & \cloze{do} \\
+\clozefix{sed} & \clozefix{do} \\
 \end{tabular}
 \end{minted}
-
+\end{minipage}
 % No |c| inside because of short verbatim.
-
+\begin{minipage}{0.4\linewidth}
 \begin{example}
-\clozeset{width=1cm}
-\begin{tabular}{l c}
-\cloze{Lorem} & \cloze{ipsum} \\
+\clozeset{width=2cm,align=center}
+\begin{tabular}{ll}
+\clozefix{Lorem} & \clozefix{ipsum} \\
 \clozefix{amet} & \clozefix{consectetur} \\
-\cloze{sed} & \cloze{do} \\
+\clozefix{sed} & \clozefix{do} \\
 \end{tabular}
 \end{example}
+\end{minipage}
 
 \section{Some graphics for better understanding of the node tree}
 
