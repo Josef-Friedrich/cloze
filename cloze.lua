@@ -149,7 +149,7 @@ end
 -- <table>
 -- <thead>
 --   <tr>
---     <th>`n.color_line`</th>
+--     <th>`color_line_node`</th>
 --     <th>`whatsit`</th>
 --     <th>`pdf_colorstack`</th>
 --     <th>Line color</th>
@@ -163,7 +163,7 @@ end
 --     <td>`width`</td>
 --   </tr>
 --   <tr>
---     <td>`n.color_reset`</td>
+--     <td>`color_reset_node`</td>
 --     <td>`whatsit`</td>
 --     <td>`pdf_colorstack`</td>
 --     <td>Reset color</td>
@@ -325,7 +325,7 @@ function registry.create_marker(index)
   return marker
 end
 
---- Write a marker node to \TeX's current node list.
+--- Write a marker node to TeX's current node list.
 --
 -- The argument `mode` accepts the string values `basic`, `fix` and
 -- `par`. The argument `position`. The argument `position` is either set
@@ -701,13 +701,13 @@ local function make_fix(head_node_input)
   --     <td></td>
   --   </tr>
   --   <tr>
-  --     <td>`n.color_reset`</td>
+  --     <td>`color_reset_node`</td>
   --     <td>`whatsit`</td>
   --     <td>`pdf_colorstack`</td>
   --     <td>Reset color</td>
   --   </tr>
   --   <tr>
-  --     <td>`n.kern_stop`</td>
+  --     <td>`kern_stop_node`</td>
   --     <td>`kern`</td>
   --     <td>&amp; Depends on `align`</td>
   --     <td></td>
@@ -833,7 +833,7 @@ end
 --     <td>`width` (Width from hlist)</td>
 --   </tr>
 --   <tr>
---     <td>`n.kern`</td>
+--     <td>`kern_node`</td>
 --     <td>`kern`</td>
 --     <td></td>
 --     <td>`-width`</td>
@@ -851,13 +851,13 @@ end
 --     <td>Text to show</td>
 --   </tr>
 --   <tr>
---     <td>`n.tail`</td>
+--     <td>`tail_node`</td>
 --     <td>`glyph`</td>
 --     <td></td>
 --     <td>Last glyph in hlist</td>
 --   </tr>
 --   <tr>
---     <td>`n.color_reset`</td>
+--     <td>`color_reset_node`</td>
 --     <td>`whatsit`</td>
 --     <td>`pdf_colorstack`</td>
 --     <td>Reset color</td>
