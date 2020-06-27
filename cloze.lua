@@ -262,13 +262,13 @@ end
 --
 -- @treturn node hlist_node
 -- @treturn node strut_node
--- @treturn node head_node
+-- @treturn node prev_head_node
 local function insert_strut_into_hlist(hlist_node)
-  local head_node = hlist_node.head
+  local prev_head_node = hlist_node.head
   local kern_node = create_kern_node(0)
-  local strut_node = node.insert_before(hlist_node.head, head_node, kern_node)
-  hlist_node.head = head_node.prev
-  return hlist_node, strut_node, head_node
+  local strut_node = node.insert_before(hlist_node.head, prev_head_node, kern_node)
+  hlist_node.head = prev_head_node.prev
+  return hlist_node, strut_node, prev_head_node
 end
 
 --- Write kern nodes to the current node list. This kern nodes can be used
@@ -278,22 +278,21 @@ function nodex.write_margin()
   node.write(kern)
 end
 
---- Search for a `hlist` (subtype `line`).
---
--- Insert a strut node into the list if a hlist is found.
+--- Search for a `hlist` (subtype `line`) and nsert a strut node into
+-- the list if a hlist is found.
 --
 -- @tparam node head_node The head of a node list.
 --
--- @treturn node|false Return false, if no `hlist` can
--- be found.
-local function search_hlist(head_node)
+-- @treturn node hlist_node
+-- @treturn node strut_node
+-- @treturn node prev_head_node
+local function prepare_hlist(head_node)
   while head_node do
     if head_node.id == node.id('hlist') and head_node.subtype == 1 then
       return insert_strut_into_hlist(head_node)
     end
     head_node = head_node.next
   end
-  return false
 end
 
 --- Option handling.
@@ -405,8 +404,13 @@ end
 --- This function removes a given whatsit marker.
 --
 -- It only deletes a node, if a marker is given.
+--
+-- @treturn node head
+-- @treturn node current
 function registry.remove_marker(marker)
-  if registry.is_marker(marker) then node.remove(marker, marker) end
+  if registry.is_marker(marker) then
+    return node.remove(marker, marker)
+  end
 end
 
 -- __Storage functions (storage)__
@@ -537,21 +541,16 @@ end
 --
 -- @treturn node The head of the node list.
 local function make_basic(head_node_input)
-  local continue = false
-  local hlist = nil
 
   --- The function `make_single()` makes one gap. The argument `start`
   -- is the node, where the gap begins. The argument `stop` is the node,
   -- where the gap ends.
-  local function make_single(start_node, end_node)
+  local function make_single(start_node, end_node, parent_hlist_node)
     local node_head = start_node
-    if not start_node or not end_node then
-      return
-    end
     local line_width = node.dimensions(
-      hlist.glue_set,
-      hlist.glue_sign,
-      hlist.glue_order,
+      parent_hlist_node.glue_set,
+      parent_hlist_node.glue_sign,
+      parent_hlist_node.glue_order,
       start_node,
       end_node
     )
@@ -568,71 +567,51 @@ local function make_basic(head_node_input)
     -- cloze has been created, the start and stop whatsit markers can be
     -- deleted.
     registry.remove_marker(start_node)
-    registry.remove_marker(end_node)
+    return registry.remove_marker(end_node)
   end
 
-  --- Search for a stop marker.
-  --
-  -- @tparam node head_node The head of a node list.
-  --
-  -- @treturn node The end node.
-  local function search_stop(head_node)
-    local end_node
+  -- local function start_continued_cloze(head_node, next_node)
+  --   hlist_node = prepare_hlist(head_node)
+  --   if hlist_node then
+  --     start_node = hlist_node.head
+  --     finalize_cloze(start_node)
+  --   end
+  -- end
+
+  local function finalize_cloze(start_node, parent_hlist_node)
+    local head_node = start_node
+    local last_node
     while head_node do
-      continue = true
-      end_node = head_node
-      if registry.check_marker(end_node, 'basic', 'stop') then
-        continue = false
-        break
+      if registry.check_marker(head_node, 'basic', 'stop') then
+        return make_single(start_node, head_node, parent_hlist_node)
       end
+      last_node = head_node
       head_node = head_node.next
     end
-    return end_node
+    return make_single(start_node, last_node, parent_hlist_node)
   end
 
-  --- Search for a start marker or begin a new cloze if the value
-  --  `continue` is true.
-  --
-  -- We have to find a hlist node and use its on the field `head`
-  -- attached node list to search for a start marker.
-  --
-  -- @tparam node head_node The head of a node list.
-  local function search_start(head_node)
-    local start_node, end_node, hlist_node
-    if continue then
-      hlist_node = search_hlist(head_node)
-      if hlist_node then
-        hlist = hlist_node
-        start_node = hlist_node.head
-      end
-    elseif registry.check_marker(head_node, 'basic', 'start') then
-      start_node = head_node
-    end
-    if start_node then
-      end_node = search_stop(start_node)
-      make_single(start_node, end_node)
-    end
-  end
-
-  --- Parse the node tree recursivley.
-  --
-  -- Start and end markers could be nested deeply in the node tree.
-  --
-  -- @tparam node head_node The head of a node list.
-  local function make_basic_recursive(head_node)
+  local function start_initial_cloze(head_node, parent_hlist_node, next_node)
     while head_node do
       if head_node.head then
-        hlist = head_node
-        make_basic_recursive(head_node.head)
-      else
-        search_start(head_node)
+        start_initial_cloze(head_node.head, head_node, head_node.next)
+      elseif registry.check_marker(head_node, 'basic', 'start') and parent_hlist_node then
+        prepare_hlist(parent_hlist_node)
+        head_node = finalize_cloze(head_node, parent_hlist_node)
       end
+      if head_node then
         head_node = head_node.next
+      else
+        break
+      end
+    end
+
+    if next_node then
+      start_initial_cloze(next_node)
     end
   end
 
-
-  make_basic_recursive(head_node_input)
+  start_initial_cloze(head_node_input)
   return head_node_input
 end
 
