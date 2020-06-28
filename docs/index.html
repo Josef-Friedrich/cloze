@@ -132,7 +132,8 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#search_hlist">search_hlist (head_node)</a></td>
-	<td class="summary">Search for a <code>hlist</code> (subtype <code>line</code>).</td>
+	<td class="summary">Search for a <code>hlist</code> (subtype <code>line</code>) and nsert a strut node into
+ the list if a hlist is found.</td>
 	</tr>
 </table>
 <h2><a href="#Option_handling">Option handling </a></h2>
@@ -232,21 +233,21 @@
 	<td class="summary">The corresponding LaTeX command to this lua function is <code>\cloze</code>.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#make_single">make_single (start_node, end_node)</a></td>
+	<td class="name" nowrap><a href="#make_single">make_single (start_node, stop_node, parent_node)</a></td>
 	<td class="summary">The function <code>make_single()</code> makes one gap.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#search_stop">search_stop (head_node)</a></td>
-	<td class="summary">Search for a stop marker.</td>
+	<td class="name" nowrap><a href="#search_stop">search_stop (start_node, parent_node)</a></td>
+	<td class="summary">Search for a stop marker or make a cloze up to the end of the node
+ list.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#search_start">search_start (head_node)</a></td>
-	<td class="summary">Search for a start marker or begin a new cloze if the value
-  <code>continue</code> is true.</td>
+	<td class="name" nowrap><a href="#continue_cloze">continue_cloze (parent_node)</a></td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#make_basic_recursive">make_basic_recursive (head_node)</a></td>
-	<td class="summary">Parse the node tree recursivley.</td>
+	<td class="name" nowrap><a href="#search_start">search_start (head_node, parent_node)</a></td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#make_fix">make_fix (head_node_input)</a></td>
@@ -439,7 +440,7 @@
 <p> <table>
  <thead>
    <tr>
-     <th><code>n.color_line</code></th>
+     <th><code>color_line_node</code></th>
      <th><code>whatsit</code></th>
      <th><code>pdf_colorstack</code></th>
      <th>Line color</th>
@@ -453,7 +454,7 @@
      <td><code>width</code></td>
    </tr>
    <tr>
-     <td><code>n.color_reset</code></td>
+     <td><code>color_reset_node</code></td>
      <td><code>whatsit</code></td>
      <td><code>pdf_colorstack</code></td>
      <td>Reset color</td>
@@ -602,7 +603,7 @@
         strut_node</li>
         <li>
            <span class="types"><span class="type">node</span></span>
-        head_node</li>
+        prev_head_node</li>
     </ol>
 
 
@@ -629,9 +630,8 @@
     <strong>search_hlist (head_node)</strong>
     </dt>
     <dd>
-    Search for a <code>hlist</code> (subtype <code>line</code>).</p>
-
-<p> Insert a strut node into the list if a hlist is found.
+    Search for a <code>hlist</code> (subtype <code>line</code>) and nsert a strut node into
+ the list if a hlist is found.
 
 
     <h3>Parameters:</h3>
@@ -644,10 +644,15 @@
 
     <h3>Returns:</h3>
     <ol>
-
-           <span class="types"><span class="type">node</span> or <span class="type">false</span></span>
-        Return false, if no <code>hlist</code> can
- be found.
+        <li>
+           <span class="types"><span class="type">node</span></span>
+        hlist_node</li>
+        <li>
+           <span class="types"><span class="type">node</span></span>
+        strut_node</li>
+        <li>
+           <span class="types"><span class="type">node</span></span>
+        prev_head_node</li>
     </ol>
 
 
@@ -868,6 +873,15 @@ some additional data like the local options.</li>
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><span class="type">node</span></span>
+        head</li>
+        <li>
+           <span class="types"><span class="type">node</span></span>
+        current</li>
+    </ol>
 
 
 
@@ -1131,7 +1145,7 @@ some additional data like the local options.</li>
 </dd>
     <dt>
     <a name = "make_single"></a>
-    <strong>make_single (start_node, end_node)</strong>
+    <strong>make_single (start_node, stop_node, parent_node)</strong>
     </dt>
     <dd>
     The function <code>make_single()</code> makes one gap.  The argument <code>start</code>
@@ -1144,11 +1158,23 @@ some additional data like the local options.</li>
         <li><span class="parameter">start_node</span>
 
         </li>
-        <li><span class="parameter">end_node</span>
+        <li><span class="parameter">stop_node</span>
+
+        </li>
+        <li><span class="parameter">parent_node</span>
 
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><span class="type">node</span></span>
+        stop_node</li>
+        <li>
+           <span class="types"><span class="type">node</span></span>
+        parent_node</li>
+    </ol>
 
 
 
@@ -1156,25 +1182,60 @@ some additional data like the local options.</li>
 </dd>
     <dt>
     <a name = "search_stop"></a>
-    <strong>search_stop (head_node)</strong>
+    <strong>search_stop (start_node, parent_node)</strong>
     </dt>
     <dd>
-    Search for a stop marker.
+    Search for a stop marker or make a cloze up to the end of the node
+ list.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">head_node</span>
-            <span class="types"><span class="type">node</span></span>
-         The head of a node list.
+        <li><span class="parameter">start_node</span>
+
+        </li>
+        <li><span class="parameter">parent_node</span>
+
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
+        <li>
+           <span class="types"><span class="type">head_node</span></span>
+        </li>
+        <li>
+           <span class="types"><span class="type">parent_node</span></span>
+        </li>
+    </ol>
 
-           <span class="types"><span class="type">node</span></span>
-        The end node.
+
+
+
+</dd>
+    <dt>
+    <a name = "continue_cloze"></a>
+    <strong>continue_cloze (parent_node)</strong>
+    </dt>
+    <dd>
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">parent_node</span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><span class="type">head_node</span></span>
+        </li>
+        <li>
+           <span class="types"><span class="type">parent_node</span></span>
+        </li>
     </ol>
 
 
@@ -1183,14 +1244,10 @@ some additional data like the local options.</li>
 </dd>
     <dt>
     <a name = "search_start"></a>
-    <strong>search_start (head_node)</strong>
+    <strong>search_start (head_node, parent_node)</strong>
     </dt>
     <dd>
-    Search for a start marker or begin a new cloze if the value
-  <code>continue</code> is true.</p>
 
-<p> We have to find a hlist node and use its on the field <code>head</code>
- attached node list to search for a start marker.
 
 
     <h3>Parameters:</h3>
@@ -1199,28 +1256,9 @@ some additional data like the local options.</li>
             <span class="types"><span class="type">node</span></span>
          The head of a node list.
         </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "make_basic_recursive"></a>
-    <strong>make_basic_recursive (head_node)</strong>
-    </dt>
-    <dd>
-    Parse the node tree recursivley.</p>
-
-<p> Start and end markers could be nested deeply in the node tree.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">head_node</span>
+        <li><span class="parameter">parent_node</span>
             <span class="types"><span class="type">node</span></span>
-         The head of a node list.
+         The parent node
         </li>
     </ul>
 
@@ -1294,13 +1332,13 @@ some additional data like the local options.</li>
      <td></td>
    </tr>
    <tr>
-     <td><code>n.color_reset</code></td>
+     <td><code>color_reset_node</code></td>
      <td><code>whatsit</code></td>
      <td><code>pdf_colorstack</code></td>
      <td>Reset color</td>
    </tr>
    <tr>
-     <td><code>n.kern_stop</code></td>
+     <td><code>kern_stop_node</code></td>
      <td><code>kern</code></td>
      <td>&amp; Depends on <code>align</code></td>
      <td></td>
@@ -1409,7 +1447,7 @@ some additional data like the local options.</li>
      <td><code>width</code> (Width from hlist)</td>
    </tr>
    <tr>
-     <td><code>n.kern</code></td>
+     <td><code>kern_node</code></td>
      <td><code>kern</code></td>
      <td></td>
      <td><code>-width</code></td>
@@ -1427,13 +1465,13 @@ some additional data like the local options.</li>
      <td>Text to show</td>
    </tr>
    <tr>
-     <td><code>n.tail</code></td>
+     <td><code>tail_node</code></td>
      <td><code>glyph</code></td>
      <td></td>
      <td>Last glyph in hlist</td>
    </tr>
    <tr>
-     <td><code>n.color_reset</code></td>
+     <td><code>color_reset_node</code></td>
      <td><code>whatsit</code></td>
      <td><code>pdf_colorstack</code></td>
      <td>Reset color</td>
@@ -1597,7 +1635,7 @@ some additional data like the local options.</li>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-06-27 09:01:42 </i>
+<i style="float:right;">Last updated 2020-06-28 14:17:35 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

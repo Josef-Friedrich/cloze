@@ -550,7 +550,6 @@ local function make_basic(head_node_input)
   -- @treturn node stop_node
   -- @treturn node parent_node
   local function make_single(start_node, stop_node, parent_node)
-    print('make_single', start_node, stop_node, parent_node)
     local node_head = start_node
     local line_width = node.dimensions(
       parent_node.glue_set,
@@ -581,7 +580,6 @@ local function make_basic(head_node_input)
   -- @treturn head_node
   -- @treturn parent_node
   function search_stop(start_node, parent_node)
-    print('search_stop', start_node, parent_node)
     local head_node = start_node
     local last_node
     while head_node do
@@ -604,7 +602,6 @@ local function make_basic(head_node_input)
   -- @treturn head_node
   -- @treturn parent_node
   function continue_cloze(parent_node)
-    print('continue_cloze', parent_node)
     local hlist_node = search_hlist(parent_node)
     if hlist_node then
       local start_node = hlist_node.head
@@ -616,14 +613,12 @@ local function make_basic(head_node_input)
   -- @tparam node head_node The head of a node list.
   -- @tparam node parent_node The parent node
   local function search_start(head_node, parent_node)
-    print('search_start', head_node, parent_node)
     while head_node do
       if head_node.head then
         search_start(head_node.head, head_node)
       elseif registry.check_marker(head_node, 'basic', 'start') and
              parent_node and
-             parent_node.id == node.id('hlist') and
-             parent_node.subtype == 1 then
+             parent_node.id == node.id('hlist') then
         search_hlist(parent_node)
         head_node, parent_node = search_stop(head_node, parent_node)
       end
@@ -633,12 +628,6 @@ local function make_basic(head_node_input)
         break
       end
     end
-
-    -- if parent_node and parent_node.next then
-    --   return search_start(parent_node.next)
-    -- else
-    --   return head_node, parent_node
-    -- end
   end
 
   search_start(head_node_input)
