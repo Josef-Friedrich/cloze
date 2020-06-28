@@ -594,9 +594,9 @@ local function make_basic(head_node_input)
     -- Make a cloze until the end of the node list.
     head_node = make_single(start_node, last_node, parent_node)
     if parent_node.next then
-      return continue_cloze(parent_node)
+      return continue_cloze(parent_node.next)
     else
-      return head_node
+      return head_node, parent_node
     end
   end
 
