@@ -541,63 +541,91 @@ end
 --
 -- @treturn node The head of the node list.
 local function make_basic(head_node_input)
+  local continue_cloze, search_stop
 
   --- The function `make_single()` makes one gap. The argument `start`
   -- is the node, where the gap begins. The argument `stop` is the node,
   -- where the gap ends.
-  local function make_single(start_node, end_node, parent_hlist_node)
+  --
+  -- @treturn node stop_node
+  -- @treturn node parent_node
+  local function make_single(start_node, stop_node, parent_node)
+    print('make_single', start_node, stop_node, parent_node)
     local node_head = start_node
     local line_width = node.dimensions(
-      parent_hlist_node.glue_set,
-      parent_hlist_node.glue_sign,
-      parent_hlist_node.glue_order,
+      parent_node.glue_set,
+      parent_node.glue_sign,
+      parent_node.glue_order,
       start_node,
-      end_node
+      stop_node
     )
     local line_node = nodex.insert_line(start_node, line_width)
     local color_text_node = nodex.insert_list('after', line_node, {nodex.create_color('text')})
     if registry.get_value_show() then
       nodex.insert_list('after', color_text_node, {create_kern_node(-line_width)})
-      nodex.insert_list('before', end_node, {nodex.create_color('reset')}, node_head)
+      nodex.insert_list('before', stop_node, {nodex.create_color('reset')}, node_head)
     else
-      line_node.next = end_node.next
-      end_node.prev = line_node -- not line_node.prev -> line color leaks out
+      line_node.next = stop_node.next
+      stop_node.prev = line_node -- not line_node.prev -> line color leaks out
     end
     -- In some edge cases the lua callbacks get fired up twice. After the
     -- cloze has been created, the start and stop whatsit markers can be
     -- deleted.
     registry.remove_marker(start_node)
-    return registry.remove_marker(end_node)
+    return registry.remove_marker(stop_node), parent_node
   end
 
-  -- local function start_continued_cloze(head_node, next_node)
-  --   hlist_node = prepare_hlist(head_node)
-  --   if hlist_node then
-  --     start_node = hlist_node.head
-  --     finalize_cloze(start_node)
-  --   end
-  -- end
-
-  local function finalize_cloze(start_node, parent_hlist_node)
+  --- Search for a stop marker or make a cloze up to the end of the node
+  -- list.
+  --
+  -- @treturn head_node
+  -- @treturn parent_node
+  function search_stop(start_node, parent_node)
+    print('search_stop', start_node, parent_node)
     local head_node = start_node
     local last_node
     while head_node do
       if registry.check_marker(head_node, 'basic', 'stop') then
-        return make_single(start_node, head_node, parent_hlist_node)
+        return make_single(start_node, head_node, parent_node)
       end
       last_node = head_node
       head_node = head_node.next
     end
-    return make_single(start_node, last_node, parent_hlist_node)
+    -- Make a cloze until the end of the node list.
+    head_node = make_single(start_node, last_node, parent_node)
+    if parent_node.next then
+      return continue_cloze(parent_node)
+    else
+      return head_node
+    end
   end
 
-  local function start_initial_cloze(head_node, parent_hlist_node, next_node)
+  ---
+  -- @treturn head_node
+  -- @treturn parent_node
+  function continue_cloze(parent_node)
+    print('continue_cloze', parent_node)
+    local hlist_node = prepare_hlist(parent_node)
+    if hlist_node then
+      local start_node = hlist_node.head
+      return search_stop(start_node, parent_node)
+    end
+  end
+
+  ---
+  -- @tparam node head_node The head of a node list.
+  -- @tparam node parent_node The parent node
+  local function search_start(head_node, parent_node)
+    print('search_start', head_node, parent_node)
     while head_node do
       if head_node.head then
-        start_initial_cloze(head_node.head, head_node, head_node.next)
-      elseif registry.check_marker(head_node, 'basic', 'start') and parent_hlist_node then
-        prepare_hlist(parent_hlist_node)
-        head_node = finalize_cloze(head_node, parent_hlist_node)
+        search_start(head_node.head, head_node)
+      elseif registry.check_marker(head_node, 'basic', 'start') and
+             parent_node and
+             parent_node.id == node.id('hlist') and
+             parent_node.subtype == 1 then
+        prepare_hlist(parent_node)
+        head_node, parent_node = search_stop(head_node, parent_node)
       end
       if head_node then
         head_node = head_node.next
@@ -606,12 +634,14 @@ local function make_basic(head_node_input)
       end
     end
 
-    if next_node then
-      start_initial_cloze(next_node)
-    end
+    -- if parent_node and parent_node.next then
+    --   return search_start(parent_node.next)
+    -- else
+    --   return head_node, parent_node
+    -- end
   end
 
-  start_initial_cloze(head_node_input)
+  search_start(head_node_input)
   return head_node_input
 end
 
