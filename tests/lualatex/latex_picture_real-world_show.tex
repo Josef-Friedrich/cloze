@@ -1,0 +1,19 @@
+%!TEX program = lualatex
+\documentclass{article}
+\usepackage{cloze}
+
+\begin{document}
+\setlength{\unitlength}{0.8cm}
+\begin{picture}(4.8,3.8)
+\thicklines
+\put(1,0.5){\line(2,1){3}}
+\put(4,2){\line(-2,1){2}}
+\put(2,3){\line(-2,-5){1}}
+\put(0.4,0.2){\cloze{A}}
+\put(4.05,1.9){$B$}
+\put(1.8,3.1){$C$}
+\put(3.1,2.5){$a$}
+\put(0.8,1.8){\cloze{b}}
+\put(2.5,0.9){\cloze{c}}
+\end{picture}
+\end{document}
