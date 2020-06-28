@@ -535,20 +535,30 @@ end
 --- Assembly to cloze texts.
 -- @section cloze_functions
 
---- The corresponding LaTeX command to this lua function is `\cloze`.
+--- Assemble a possibly muliline cloze.
+--
+-- The corresponding LaTeX command to this Lua function is `\cloze`.
+--  This function is used by other cloze TeX macros too: `\clozenol`,
+-- `\clozefil`
 --
 -- @tparam node head_node_input The head of a node list.
 --
 -- @treturn node The head of the node list.
 local function make_basic(head_node_input)
+  -- This local variables are overloaded by function who
+  -- call each other.
   local continue_cloze, search_stop
 
-  --- The function `make_single()` makes one gap. The argument `start`
-  -- is the node, where the gap begins. The argument `stop` is the node,
-  -- where the gap ends.
+  --- The function `make_single()` makes one gap. The argument
+  --  `start_node` is the node where the gap begins. The argument
+  --  `stop_node` is the node where the gap ends.
   --
-  -- @treturn node stop_node
-  -- @treturn node parent_node
+  -- @tparam node start_node The node to start / begin a new cloze.
+  -- @tparam node stop_node The node to stop / end a new cloze. @tparam
+  -- parent_node The parent node (hlist) of the start and the stop node.
+  --
+  -- @treturn node stop_node The stop node.
+  -- @treturn parent_node The parent node (hlist) of the stop node.
   local function make_single(start_node, stop_node, parent_node)
     local node_head = start_node
     local line_width = node.dimensions(
@@ -577,8 +587,11 @@ local function make_basic(head_node_input)
   --- Search for a stop marker or make a cloze up to the end of the node
   -- list.
   --
-  -- @treturn head_node
-  -- @treturn parent_node
+  -- @tparam node start_node The node to start a new cloze.
+  -- @tparam parent_node The parent node (hlist) of the start node.
+  --
+  -- @treturn head_node The fast forwarded new head of the node list.
+  -- @treturn parent_node The parent node (hlist) of the head node.
   function search_stop(start_node, parent_node)
     local head_node = start_node
     local last_node
@@ -598,9 +611,12 @@ local function make_basic(head_node_input)
     end
   end
 
-  ---
-  -- @treturn head_node
-  -- @treturn parent_node
+  --- Continue a multiline cloze.
+  --
+  -- @tparam node parent_node A parent node to search for a hlist node.
+  --
+  -- @treturn head_node The fast forwarded new head of the node list.
+  -- @treturn parent_node The parent node (hlist) of the head node.
   function continue_cloze(parent_node)
     local hlist_node = search_hlist(parent_node)
     if hlist_node then
@@ -609,9 +625,10 @@ local function make_basic(head_node_input)
     end
   end
 
-  ---
+  --- Search for a start marker.
+  --
   -- @tparam node head_node The head of a node list.
-  -- @tparam node parent_node The parent node
+  -- @tparam parent_node The parent node (hlist) of the head node.
   local function search_start(head_node, parent_node)
     while head_node do
       if head_node.head then
@@ -619,6 +636,8 @@ local function make_basic(head_node_input)
       elseif registry.check_marker(head_node, 'basic', 'start') and
              parent_node and
              parent_node.id == node.id('hlist') then
+        -- Adds also a strut at the first position. It prepars the
+        -- hlist and makes it ready to build a cloze.
         search_hlist(parent_node)
         head_node, parent_node = search_stop(head_node, parent_node)
       end
