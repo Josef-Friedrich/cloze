@@ -1232,36 +1232,54 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 \subsubsection{The \tt{picture} environment}
 
 \begin{minted}{latex}
-\begin{picture}(320,100)
-\put(80,25){\cloze{Lorem}}
-\put(160,50){\clozefix{ipsum}}
-\put(240,75){\clozefil{dolor}}
+\setlength{\unitlength}{0.8cm}
+\begin{picture}(4.8,3.8)
+\thicklines
+\put(1,0.5){\line(2,1){3}} \put(4,2){\line(-2,1){2}} \put(2,3){\line(-2,-5){1}}
+
+\put(0.4,0.2){\cloze{A}} \put(4.05,1.9){$B$} \put(1.8,3.1){$C$}
+
+\put(3.1,2.5){$a$} \put(0.8,1.8){\cloze{b}} \put(2.5,0.9){\cloze{c}}
 \end{picture}
 \end{minted}
-
-\begin{example}
-\begin{picture}(320,100)
-\put(80,25){\cloze{Lorem}}
-\put(160,50){\clozefix{ipsum}}
-\put(240,75){\clozefil{dolor}}
-\end{picture}
-\end{example}
-
+%
+\begin{minipage}[t]{0.5\linewidth}
+\begin{center}
+\clozehide
 \setlength{\unitlength}{0.8cm}
-\begin{picture}(6,5)
+\begin{picture}(4.8,3.8)
 \thicklines
 \put(1,0.5){\line(2,1){3}}
 \put(4,2){\line(-2,1){2}}
 \put(2,3){\line(-2,-5){1}}
-\put(0.7,0.3){\cloze{A}}
+\put(0.4,0.2){\cloze{A}}
 \put(4.05,1.9){$B$}
-\put(1.7,2.95){$C$}
+\put(1.8,3.1){$C$}
 \put(3.1,2.5){$a$}
-\put(1.3,1.7){$b$}
-\put(2.5,1.05){$c$}
-\put(0.3,4){$F=\sqrt{s(s-a)(s-b)(s-c)}$}
-\put(3.5,0.4){$\displaystyle s:=\frac{a+b+c}{2}$}
+\put(0.8,1.8){\cloze{b}}
+\put(2.5,0.9){\cloze{c}}
 \end{picture}
+\end{center}
+\end{minipage}
+%
+\begin{minipage}[t]{0.5\linewidth}
+\begin{center}
+\clozeshow
+\setlength{\unitlength}{0.8cm}
+\begin{picture}(4.8,3.8)
+\thicklines
+\put(1,0.5){\line(2,1){3}}
+\put(4,2){\line(-2,1){2}}
+\put(2,3){\line(-2,-5){1}}
+\put(0.4,0.2){\cloze{A}}
+\put(4.05,1.9){$B$}
+\put(1.8,3.1){$C$}
+\put(3.1,2.5){$a$}
+\put(0.8,1.8){\cloze{b}}
+\put(2.5,0.9){\cloze{c}}
+\end{picture}
+\end{center}
+\end{minipage}
 
 %%
 % tabular
@@ -1269,25 +1287,46 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 
 \subsubsection{The \tt{tabular} environment}
 
-\begin{minipage}{0.6\linewidth}
 \begin{minted}{latex}
-\begin{tabular}{l c}
-\clozefix{Lorem} & \clozefix{ipsum} \\
-\clozefix{amet} & \clozefix{consectetur} \\
-\clozefix{sed} & \clozefix{do} \\
+\begin{tabular}{l|l}
+  \textbf{englisch} & \textbf{deutsch} \\\hline
+  book & \clozefil{Buch} \\
+  \clozefil{scissors} & Schere\\
+  pen & \clozefil{Füller} \\
+  \clozefil{pencil} & Bleistift\\
 \end{tabular}
 \end{minted}
-\end{minipage}
-% No |c| inside because of short verbatim.
-\begin{minipage}{0.4\linewidth}
-\begin{example}
-\clozeset{width=2cm,align=center}
+%
+\begin{minipage}{0.5\linewidth}
+\clozeset{distance=4pt}
+\clozehide
+\renewcommand{\arraystretch}{1.5}
+\begin{center}
 \begin{tabular}{ll}
-\clozefix{Lorem} & \clozefix{ipsum} \\
-\clozefix{amet} & \clozefix{consectetur} \\
-\clozefix{sed} & \clozefix{do} \\
+\textbf{englisch} & \textbf{deutsch} \\
+\hline
+book & \clozefil{Buch} \\
+\clozefil{scissors} & Schere\\
+pen & \clozefil{Füller} \\
+\clozefil{pencil} & Bleistift\\
 \end{tabular}
-\end{example}
+\end{center}
+
+\end{minipage}
+%
+\begin{minipage}{0.5\linewidth}
+\clozeshow
+\renewcommand{\arraystretch}{1.5}
+\begin{center}
+\begin{tabular}{ll}
+\textbf{englisch} & \textbf{deutsch} \\
+\hline
+book & \clozefil{Buch} \\
+\clozefil{scissors} & Schere\\
+pen & \clozefil{Füller} \\
+\clozefil{pencil} & Bleistift\\
+\end{tabular}
+\end{center}
 \end{minipage}
 
 \section{Some graphics for better understanding of the node tree}
