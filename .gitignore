@@ -9,7 +9,7 @@
 *.log
 *.out
 *.pdf
-*.synctex.gz
+*.synctex*
 *.toc
 *.tar.gz
 cloze/

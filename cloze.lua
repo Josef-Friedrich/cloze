@@ -286,7 +286,7 @@ end
 -- @treturn node hlist_node
 -- @treturn node strut_node
 -- @treturn node prev_head_node
-local function prepare_hlist(head_node)
+local function search_hlist(head_node)
   while head_node do
     if head_node.id == node.id('hlist') and head_node.subtype == 1 then
       return insert_strut_into_hlist(head_node)
@@ -605,10 +605,10 @@ local function make_basic(head_node_input)
   -- @treturn parent_node
   function continue_cloze(parent_node)
     print('continue_cloze', parent_node)
-    local hlist_node = prepare_hlist(parent_node)
+    local hlist_node = search_hlist(parent_node)
     if hlist_node then
       local start_node = hlist_node.head
-      return search_stop(start_node, parent_node)
+      return search_stop(start_node, hlist_node)
     end
   end
 
@@ -624,7 +624,7 @@ local function make_basic(head_node_input)
              parent_node and
              parent_node.id == node.id('hlist') and
              parent_node.subtype == 1 then
-        prepare_hlist(parent_node)
+        search_hlist(parent_node)
         head_node, parent_node = search_stop(head_node, parent_node)
       end
       if head_node then
