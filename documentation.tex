@@ -1114,6 +1114,35 @@ option is \tt{\getdefaults{width}}.
 \end{example}
 
 %-----------------------------------------------------------------------
+% Handwriting fonts
+%-----------------------------------------------------------------------
+
+\subsection{Handwriting fonts}
+
+\def\TmpHandwriting#1{
+\subsubsection{#1}
+\clozeset{margin=7pt}
+\clozesetfont{\Large\fontspec{#1}}
+
+\begin{example}
+Lorem \cloze{ipsum} dolor sit amet, consetetur \cloze{sadipscing elitr,
+sed diam nonumy eirmod tempor} invidunt ut \cloze{labore et dolore magna
+aliquyam erat}, sed \cloze{diam} voluptua.
+\end{example}
+}
+
+\TmpHandwriting{LobsterTwo}
+\TmpHandwriting{Miama Nueva}
+\TmpHandwriting{QTBrushStroke}
+\TmpHandwriting{QTFlorencia}
+\TmpHandwriting{QTHandwriting}
+\TmpHandwriting{QTLinostroke}
+\TmpHandwriting{QTMerryScript}
+\TmpHandwriting{QTSlogantype}
+
+\clozereset
+
+%-----------------------------------------------------------------------
 % Special application areas
 %-----------------------------------------------------------------------
 
@@ -1281,6 +1310,8 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 \end{center}
 \end{minipage}
 
+\clozereset
+
 %%
 % tabular
 %%
@@ -1328,6 +1359,8 @@ pen & \clozefil{Füller} \\
 \end{tabular}
 \end{center}
 \end{minipage}
+
+\clozereset
 
 \section{Some graphics for better understanding of the node tree}
 
