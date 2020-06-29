@@ -1,0 +1,39 @@
+%!TEX program = lualatex
+\documentclass{article}
+\input ../cloze-test-macros.tex
+\usepackage{cloze}
+
+\begin{document}
+\TestTitleDesc{Inside the LaTeX environment tabular (different alignments)}
+{}
+
+\noindent
+\begin{tabular}{p{5cm}|l|c|r}
+paragraph & left & center & right \\
+
+\hline
+
+\cloze{Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+minim veniam, quis nostrud exercitation ullamco laboris nisi ut}
+&
+\cloze{left}
+&
+\cloze{center}
+&
+\cloze{right}
+\\
+
+Lorem ipsum dolor \cloze{sit amet, consectetur} adipisicing elit, sed do
+eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+minim veniam, quis nostrud exercitation \cloze{ullamco laboris nisi ut}
+&
+Sit \cloze{left} wit
+&
+Sit \cloze{center} wit
+&
+Sit \cloze{right} wit
+\\
+\end{tabular}
+
+\end{document}
