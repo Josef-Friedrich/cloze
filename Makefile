@@ -31,6 +31,8 @@ test: test_luatex test_lualatex
 
 test_luatex:
 	find tests/luatex -name "*.tex" -exec latexmk -latex=luatex -cd {} \;
+	pdftk tests/luatex/*.pdf cat output tests-luatex.pdf
+	xdg-open tests-luatex.pdf > /dev/null 2>&1 &
 
 test_lualatex:
 	find tests/lualatex -name "*.tex" -exec latexmk -latex=lualatex -cd {} \;

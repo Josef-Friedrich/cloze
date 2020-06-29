@@ -1,11 +1,12 @@
-%!TEX program = luatex
+\input ../cloze-test-macros.tex
 \input cloze.tex
 
-\clozesetoption{margin}{2cm}
-\clozesetoption{thickness}{0.4pt}
-lorem \cloze{ipsum} dolor
+\TestTitleDesc{Lua\TeX: macro \string\clozereset}
+{}
 
-TODO: Fix
+\clozesetoption{margin}{2cm}
+\clozesetoption{thickness}{2pt}
+lorem \cloze{ipsum} dolor
 
 \clozereset
 
