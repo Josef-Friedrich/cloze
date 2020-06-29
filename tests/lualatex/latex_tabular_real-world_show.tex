@@ -1,8 +1,11 @@
 %!TEX program = lualatex
 \documentclass{article}
-\usepackage[distance=4pt]{cloze}
+\input ../cloze-test-macros.tex
+\usepackage[distance=4pt,show]{cloze}
 
 \begin{document}
+\TestTitleDesc{Inside the LaTeX environment tabular (show)}
+{A real world example}
 
 \renewcommand{\arraystretch}{1.5}
 \begin{tabular}{l|l}

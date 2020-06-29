@@ -1,0 +1,21 @@
+\font\TestTypewriterFontBig=cmtt10 scaled \magstep3
+\font\TestTypewriterFontNormal=cmtt10
+
+\def\TestTitle#1{%
+  \noindent%
+  {\TestTypewriterFontBig #1}%
+}
+
+\def\TestDescription#1{%
+  \noindent%
+  {\TestTypewriterFontNormal #1}%
+}
+
+\def\TestTitleDesc#1#2{%
+  \TestTitle{#1}
+  \par
+  \TestDescription{#2}
+  \bigskip
+  \hrule width \linewidth
+  \bigskip
+}
