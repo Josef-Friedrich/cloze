@@ -503,10 +503,14 @@ Excepteur sint occaecat cupidatat non proident.
 
 \DescribeEnv{clozebox} |\begin{clozebox}|*\oarg{options} \dots
 \textit{some text} \dots |\end{clozebox}|: The environment \tt{clozebox}
-surrounds a text with a box. The starred version omits the line
-around the box. Use the options |boxwidth| and |boxheight| to specify
-the dimensions of the box. By default the width of the box is
-|\linewidth|.
+surrounds a text with a box. The starred version omits the line around
+the box. Use the options |boxwidth| and |boxheight| to specify the
+dimensions of the box. By default the width of the box is |\linewidth|.
+The height of the box is determined by the amount of text. This
+environment is realized by a combination of the |minipage| environment
+surrounded by a \cmd{\fbox}. For the cloze text the macro
+\cmd{\clozenol} is reused. New paragraphs are not allowed inside a cloze
+box. Use two backslashes multiple times |\\| instead.
 
 \begin{minted}{latex}
 \begin{clozebox}
@@ -538,21 +542,49 @@ tempor incididunt ut labore et dolore magna aliqua.
 \end{clozebox}
 \end{minipage}
 
+\noindent
+Like all cloze macros and environments hidden text vanishes from the
+rendered file. The next example demonstrates this by showing a different
+background color:
+
+\begin{mdframed}[backgroundcolor=gray!40,hidealllines=true]
+\noindent
+\hfil
+\begin{minipage}{0.45\linewidth}
+\clozehide
+\begin{clozebox}[hide]
+Lorem ipsum dolor sit amet.
+\end{clozebox}
+\end{minipage}
+%
+\hfil
+%
+\begin{minipage}{0.45\linewidth}
+\clozeshow
+\begin{clozebox}[show]
+Lorem ipsum dolor sit amet.
+\end{clozebox}
+\end{minipage}
+\hfil
+\end{mdframed}
+
 \paragraph{Option boxwidth}
 \label{sec:command-clozebox-boxwidth}
 See the documentation about the option \secref{sec:option-boxwidth}.
 
 \begin{minted}{latex}
 \begin{clozebox}[boxwidth=5cm]
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua.
-\end{clozebox}
 \end{minted}
 
 \begin{center}
+\begin{clozebox}[boxwidth=2.5cm]
+boxwidth: 2.5cm; Lorem ipsum dolor sit amet ...
+\end{clozebox}
+\begin{clozebox}[boxwidth=3cm]
+boxwidth: 3cm; Lorem ipsum dolor sit amet ...
+\end{clozebox}
 \begin{clozebox}[boxwidth=5cm]
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua.
+boxwidth: 4cm; Lorem ipsum dolor sit amet ...
 \end{clozebox}
 \end{center}
 
@@ -561,35 +593,43 @@ tempor incididunt ut labore et dolore magna aliqua.
 See the documentation about the option \secref{sec:option-boxheight}.
 
 \begin{minted}{latex}
-\begin{clozebox}[boxwidth=5cm,boxheight=5cm]
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua.
-\end{clozebox}
+\begin{clozebox}[boxheight=3cm]
 \end{minted}
 
 \begin{center}
-\begin{clozebox}[boxwidth=5cm,boxheight=5cm]
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua.
+\begin{clozebox}[boxheight=3cm,boxwidth=3cm]
+boxheight: 3cm; Lorem ipsum dolor sit amet ...
+\end{clozebox}
+\begin{clozebox}[boxheight=2cm,boxwidth=3cm]
+boxheight: 2cm; Lorem ipsum dolor sit amet ...
+\end{clozebox}
+\begin{clozebox}[boxheight=1cm,boxwidth=3cm]
+boxheight: 1cm; Lorem ipsum dolor sit amet ...
 \end{clozebox}
 \end{center}
 
 \paragraph{starred}
 
+The starred version omits the line around the box.
+
 % starred
+
+\begin{minipage}[t]{0.55\linewidth}
 \begin{minted}{latex}
-\begin{clozebox}*[boxwidth=5cm,boxheight=5cm]
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua.
+\begin{clozebox}*[boxheight=5cm]
+Lorem ...
 \end{clozebox}
 \end{minted}
-
+\end{minipage}
+%
+\begin{minipage}[t]{0.4\linewidth}
 \begin{center}
-\begin{clozebox}*[boxwidth=5cm,boxheight=5cm]
+\begin{clozebox}*[boxwidth=4cm,boxheight=5cm]
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua.
 \end{clozebox}
 \end{center}
+\end{minipage}
 
 %%
 % clozespace
@@ -1112,10 +1152,14 @@ option is \tt{\getdefaults{width}}.
 \end{example}
 
 %-----------------------------------------------------------------------
-% Handwriting fonts
+% Handwriting fonts from CTAN and \TeX{} Live
 %-----------------------------------------------------------------------
 
-\subsection{Handwriting fonts}
+\subsection{Handwriting fonts from CTAN and \TeX{} Live}
+
+If you want to imitate a hand-filled worksheet, then some fonts
+are suitable for this purpose. This section is intended to provide
+an overview of handwriting fonts available on CTAN and \TeX{} Live.
 
 \def\TmpHandwriting#1{
 \subsubsection{#1}
@@ -1137,6 +1181,41 @@ aliquyam erat}, sed \cloze{diam} voluptua.
 \TmpHandwriting{QTLinostroke}
 \TmpHandwriting{QTMerryScript}
 \TmpHandwriting{QTSlogantype}
+
+%-----------------------------------------------------------------------
+% Handwriting fonts from Google Fonts
+%-----------------------------------------------------------------------
+
+\subsection{Handwriting fonts from Google Fonts}
+
+You can get many more free handwriting fonts from Google Fonts. This
+section shows only a selection. I personally use the font named
+\emph{Kalam} for my worksheets.
+
+\TmpHandwriting{Annie Use Your Telescope}
+\TmpHandwriting{Architects Daughter}
+\TmpHandwriting{Bad Script}
+\TmpHandwriting{Caveat}
+\TmpHandwriting{Cedarville-Cursive}
+\TmpHandwriting{Coming Soon}
+\TmpHandwriting{Give You Glory}
+\TmpHandwriting{Gochi Hand}
+\TmpHandwriting{Handlee}
+\TmpHandwriting{Homemade Apple}
+\TmpHandwriting{Indie Flower}
+\TmpHandwriting{Just Another Hand}
+\TmpHandwriting{Just Me Again Down Here}
+\TmpHandwriting{Kalam}
+\TmpHandwriting{Kristi}
+\TmpHandwriting{La Belle Aurore}
+\TmpHandwriting{Marck Script}
+\TmpHandwriting{Neucha}
+\TmpHandwriting{Nothing You Could Do}
+\TmpHandwriting{Patrick Hand}
+\TmpHandwriting{Reenie Beanie}
+\TmpHandwriting{Seaweed Script}
+\TmpHandwriting{Shadows Into Light}
+\TmpHandwriting{Swanky and Moo Moo}
 
 \clozereset
 
