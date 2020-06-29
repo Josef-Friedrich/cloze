@@ -3,6 +3,7 @@
 \usepackage{graphicx}
 \usepackage{paralist}
 \usepackage{titlesec}
+\usepackage{forest}
 \usepackage{mdframed}
 \titleformat{\paragraph}[hang]{%
   \normalfont\normalsize\bfseries%
@@ -1360,6 +1361,43 @@ pen & \clozefil{Füller} \\
 \end{center}
 \end{minipage}
 
+%%
+% forest
+%%
+
+\subsubsection{The package \tt{forest}}
+
+\begin{minted}{latex}
+\begin{forest}
+[Johann Sebastian \cloze{Bach}
+  [\cloze{Wilhelm} Friedemann]
+  [Carl \cloze{Phillip} Emanuel
+    [Johann Sebastian (der \cloze{Jüngere})]
+  ]
+  [Johann Christoph \cloze{Friedrich}
+    [\cloze{Wilhelm} Friedrich Ernst]
+  ]
+  [\cloze{Johann Christian}]
+]
+\end{forest}
+\end{minted}
+
+{
+\noindent
+\scriptsize
+\begin{forest}
+[Johann Sebastian \cloze{Bach}
+  [\cloze{Wilhelm} Friedemann]
+  [Carl \cloze{Phillip} Emanuel
+    [Johann Sebastian (der \cloze{Jüngere})]
+  ]
+  [Johann Christoph \cloze{Friedrich}
+    [\cloze{Wilhelm} Friedrich Ernst]
+  ]
+  [\cloze{Johann Christian}]
+]
+\end{forest}
+}
 \clozereset
 
 \section{Some graphics for better understanding of the node tree}

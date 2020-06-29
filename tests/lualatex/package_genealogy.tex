@@ -1,0 +1,19 @@
+%!TEX program = lualatex
+\documentclass{article}
+\usepackage{cloze}
+\usepackage{forest}
+
+\begin{document}
+\begin{forest}
+[Johann Sebastian \cloze{Bach}
+  [\cloze{Wilhelm} Friedemann]
+  [Carl \cloze{Phillip} Emanuel
+    [Johann Sebastian (der \cloze{Jüngere})]
+  ]
+  [Johann Christoph \cloze{Friedrich}
+    [\cloze{Wilhelm} Friedrich Ernst]
+  ]
+  [\cloze{Johann Christian}]
+]
+\end{forest}
+\end{document}
