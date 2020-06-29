@@ -554,8 +554,9 @@ local function make_basic(head_node_input)
   --  `stop_node` is the node where the gap ends.
   --
   -- @tparam node start_node The node to start / begin a new cloze.
-  -- @tparam node stop_node The node to stop / end a new cloze. @tparam
-  -- parent_node The parent node (hlist) of the start and the stop node.
+  -- @tparam node stop_node The node to stop / end a new cloze.
+  -- @tparam node parent_node The parent node (hlist) of the start and
+  --   the stop node.
   --
   -- @treturn node stop_node The stop node.
   -- @treturn parent_node The parent node (hlist) of the stop node.
@@ -588,7 +589,7 @@ local function make_basic(head_node_input)
   -- list.
   --
   -- @tparam node start_node The node to start a new cloze.
-  -- @tparam parent_node The parent node (hlist) of the start node.
+  -- @tparam node parent_node The parent node (hlist) of the start node.
   --
   -- @treturn head_node The fast forwarded new head of the node list.
   -- @treturn parent_node The parent node (hlist) of the head node.
@@ -628,7 +629,7 @@ local function make_basic(head_node_input)
   --- Search for a start marker.
   --
   -- @tparam node head_node The head of a node list.
-  -- @tparam parent_node The parent node (hlist) of the head node.
+  -- @tparam node parent_node The parent node (hlist) of the head node.
   local function search_start(head_node, parent_node)
     while head_node do
       if head_node.head then
