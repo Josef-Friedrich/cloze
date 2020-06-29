@@ -4,7 +4,7 @@
 \usepackage{cloze}
 
 \begin{document}
-\TestTitleDesc{}
+\TestTitleDesc{LuaLa\TeX: environment clozebox}
 {}
 
 \section{default}
@@ -66,12 +66,13 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et.
 \end{clozebox}
 
-\section{Multiple paragraphs}
+\section{Multiple paragraphs (not allowed)}
 
 \begin{clozebox}
+\noindent
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et.
-
+tempor incididunt ut labore et.\\\\
+%
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et.
 \end{clozebox}

@@ -126,7 +126,7 @@
   \par%
   \directlua{cloze.unregister('par')}%
 }
-\newsavebox{\ClozeBox}
+\newsavebox{\ClozeBox}%
 \NewDocumentEnvironment{clozebox}{ s O{} +b}{%
   \ClozeSetLocalOptions{#2}%
   \noindent%
@@ -139,13 +139,9 @@
     else
       tex.print('\\begin{minipage}[t]{' .. boxwidth .. '}')
     end
-  }
-    \clozefont\relax%
-    \ifclozeshow%
-      \color{\directlua{tex.print(cloze.get_value('textcolor_name'))}}#3%
-    \else%
-      \color{white}#3%
-    \fi%
+  }%
+    \setlength{\parindent}{0pt}%
+    \clozenol[margin=0pt]{#3}%
   \end{minipage}%
   \end{lrbox}%
   \IfBooleanTF{#1}%
