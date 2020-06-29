@@ -28,6 +28,8 @@ doc_lua:
 	ldoc .
 
 test: test_luatex test_lualatex
+	pdftk tests-luatex.pdf tests-lualatex.pdf cat output tests.pdf
+	xdg-open tests.pdf > /dev/null 2>&1 &
 
 test_luatex:
 	find tests/luatex -name "*.tex" -exec latexmk -latex=luatex -cd {} \;
@@ -36,6 +38,8 @@ test_luatex:
 
 test_lualatex:
 	find tests/lualatex -name "*.tex" -exec latexmk -latex=lualatex -cd {} \;
+	pdftk tests/lualatex/*.pdf cat output tests-lualatex.pdf
+	xdg-open tests-lualatex.pdf > /dev/null 2>&1 &
 
 clean:
 	./clean.sh
