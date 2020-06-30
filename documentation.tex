@@ -1157,30 +1157,44 @@ option is \tt{\getdefaults{width}}.
 
 \subsection{Handwriting fonts from CTAN and \TeX{} Live}
 
-If you want to imitate a hand-filled worksheet, then some fonts
-are suitable for this purpose. This section is intended to provide
+If you want to imitate a hand-filled worksheet, then some handwriting
+fonts are suitable for this purpose. This section is intended to provide
 an overview of handwriting fonts available on CTAN and \TeX{} Live.
+The fonts are listed in alphabetical order:
 
-\def\TmpHandwriting#1{
-\subsubsection{#1}
-\clozeset{margin=7pt}
-\clozesetfont{\Large\fontspec{#1}}
-
-\begin{example}
-Lorem \cloze{ipsum} dolor sit amet, consetetur \cloze{sadipscing elitr,
-sed diam nonumy eirmod tempor} invidunt ut \cloze{labore et dolore magna
-aliquyam erat}, sed \cloze{diam} voluptua.
-\end{example}
+\def\TmpHandwritingExample{
+  \begin{example}
+  Lorem \cloze{ipsum} dolor sit amet, consetetur \cloze{sadipscing elitr,
+  sed diam nonumy eirmod tempor} invidunt ut \cloze{labore et dolore magna
+  aliquyam erat}, sed \cloze{diam} voluptua.
+  \end{example}
 }
 
-\TmpHandwriting{LobsterTwo}
-\TmpHandwriting{Miama Nueva}
-\TmpHandwriting{QTBrushStroke}
-\TmpHandwriting{QTFlorencia}
-\TmpHandwriting{QTHandwriting}
-\TmpHandwriting{QTLinostroke}
-\TmpHandwriting{QTMerryScript}
-\TmpHandwriting{QTSlogantype}
+\def\TmpHandwritingCtan#1#2{
+  \subsubsection*{#1}
+
+  \begin{tabbing}
+    \hspace{2.8cm} \= \hspace{8cm} \kill
+    CTAN: \> {\footnotesize\href{https://www.ctan.org/pkg/#2}{#2}}\\
+    \TeX{} Live: \> \texttt{\footnotesize tlmgr install #2}\\
+    Font selection: \> \texttt{\footnotesize\string\clozesetfont\{\string\fontspec\{#1\}\}}\\
+  \end{tabbing}
+  \vspace{-0.7cm}
+  %
+
+  \clozeset{margin=7pt}
+  \clozesetfont{\Large\fontspec{#1}}
+  \TmpHandwritingExample
+}
+
+\TmpHandwritingCtan{LobsterTwo}{lobster2}
+\TmpHandwritingCtan{Miama Nueva}{miama}
+\TmpHandwritingCtan{QT Brush Stroke}{qualitype}
+\TmpHandwritingCtan{QT Florencia}{qualitype}
+\TmpHandwritingCtan{QT Handwriting}{qualitype}
+\TmpHandwritingCtan{QT Linostroke}{qualitype}
+\TmpHandwritingCtan{QT Merry Script}{qualitype}
+\TmpHandwritingCtan{QT Slogantype}{qualitype}
 
 %-----------------------------------------------------------------------
 % Handwriting fonts from Google Fonts
@@ -1190,32 +1204,60 @@ aliquyam erat}, sed \cloze{diam} voluptua.
 
 You can get many more free handwriting fonts from Google Fonts. This
 section shows only a selection. I personally use the font named
-\emph{Kalam} for my worksheets.
+\emph{Kalam} for my worksheets. All Google Fonts are available
+in a \href{https://github.com/google/fonts}{Git respository}.
 
-\TmpHandwriting{Annie Use Your Telescope}
-\TmpHandwriting{Architects Daughter}
-\TmpHandwriting{Bad Script}
-\TmpHandwriting{Caveat}
-\TmpHandwriting{Cedarville-Cursive}
-\TmpHandwriting{Coming Soon}
-\TmpHandwriting{Give You Glory}
-\TmpHandwriting{Gochi Hand}
-\TmpHandwriting{Handlee}
-\TmpHandwriting{Homemade Apple}
-\TmpHandwriting{Indie Flower}
-\TmpHandwriting{Just Another Hand}
-\TmpHandwriting{Just Me Again Down Here}
-\TmpHandwriting{Kalam}
-\TmpHandwriting{Kristi}
-\TmpHandwriting{La Belle Aurore}
-\TmpHandwriting{Marck Script}
-\TmpHandwriting{Neucha}
-\TmpHandwriting{Nothing You Could Do}
-\TmpHandwriting{Patrick Hand}
-\TmpHandwriting{Reenie Beanie}
-\TmpHandwriting{Seaweed Script}
-\TmpHandwriting{Shadows Into Light}
-\TmpHandwriting{Swanky and Moo Moo}
+\begin{minted}{shell}
+git clone https://github.com/google/fonts.git
+\end{minted}
+
+\noindent
+The fonts are listed in alphabetical order:
+
+\def\TmpHandwritingGoogle#1{
+  \subsubsection*{#1}
+
+  \begin{tabbing}
+    \hspace{2.8cm} \= \hspace{8cm} \kill
+    URL: \> {\footnotesize\url{https://fonts.google.com/specimen/\directlua{
+      local font_name = '#1'
+      font_name = font_name:gsub(' ', '+')
+      tex.print(font_name)
+    }}}\\
+
+    Font selection: \> \texttt{\footnotesize\string\clozesetfont\{\string\fontspec\{#1\}\}}\\
+  \end{tabbing}
+  \vspace{-0.7cm}
+  %
+  \clozeset{margin=7pt}
+  \clozesetfont{\Large\fontspec{#1}}
+  \TmpHandwritingExample
+}
+
+\TmpHandwritingGoogle{Annie Use Your Telescope}
+\TmpHandwritingGoogle{Architects Daughter}
+\TmpHandwritingGoogle{Bad Script}
+\TmpHandwritingGoogle{Caveat}
+\TmpHandwritingGoogle{Cedarville Cursive}
+\TmpHandwritingGoogle{Coming Soon}
+\TmpHandwritingGoogle{Give You Glory}
+\TmpHandwritingGoogle{Gochi Hand}
+\TmpHandwritingGoogle{Handlee}
+\TmpHandwritingGoogle{Homemade Apple}
+\TmpHandwritingGoogle{Indie Flower}
+\TmpHandwritingGoogle{Just Another Hand}
+\TmpHandwritingGoogle{Just Me Again Down Here}
+\TmpHandwritingGoogle{Kalam}
+\TmpHandwritingGoogle{Kristi}
+\TmpHandwritingGoogle{La Belle Aurore}
+\TmpHandwritingGoogle{Marck Script}
+\TmpHandwritingGoogle{Neucha}
+\TmpHandwritingGoogle{Nothing You Could Do}
+\TmpHandwritingGoogle{Patrick Hand}
+\TmpHandwritingGoogle{Reenie Beanie}
+\TmpHandwritingGoogle{Seaweed Script}
+\TmpHandwritingGoogle{Shadows Into Light}
+\TmpHandwritingGoogle{Swanky and Moo Moo}
 
 \clozereset
 
