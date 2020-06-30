@@ -27,18 +27,22 @@ doc_pdf:
 doc_lua:
 	ldoc .
 
-test: test_luatex test_lualatex
+test: test_luatex_without_open test_lualatex_without_open
 	pdftk tests-luatex.pdf tests-lualatex.pdf cat output tests.pdf
 	xdg-open tests.pdf > /dev/null 2>&1 &
 
-test_luatex:
+test_luatex_without_open:
 	find tests/luatex -name "*.tex" -exec latexmk -latex=luatex -cd {} \;
 	pdftk tests/luatex/*.pdf cat output tests-luatex.pdf
+
+test_luatex: test_luatex_without_open
 	xdg-open tests-luatex.pdf > /dev/null 2>&1 &
 
-test_lualatex:
+test_lualatex_without_open:
 	find tests/lualatex -name "*.tex" -exec latexmk -latex=lualatex -cd {} \;
 	pdftk tests/lualatex/*.pdf cat output tests-lualatex.pdf
+
+test_lualatex: test_lualatex_without_open
 	xdg-open tests-lualatex.pdf > /dev/null 2>&1 &
 
 clean:
