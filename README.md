@@ -25,7 +25,7 @@ version 2005/12/01 or later.
 Since July 2015 the cloze package is included in the Comprehensive TeX
 Archive Network (CTAN).
 
-* TeX archive: http://mirror.ctan.org/tex-archive/macros/luatex/latex/cloze
+* TeX archive: http://mirror.ctan.org/tex-archive/macros/luatex/generic/cloze
 * Package page: https://www.ctan.org/pkg/cloze
 
 # Repository
