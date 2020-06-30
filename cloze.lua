@@ -20,7 +20,7 @@
 -- It is good form to provide some background informations about this Lua
 -- module.
 if not modules then modules = { } end modules ['cloze'] = {
-  version   = '1.5',
+  version   = '1.6',
   comment   = 'cloze',
   author    = 'Josef Friedrich, R.-M. Huber',
   copyright = 'Josef Friedrich, R.-M. Huber',

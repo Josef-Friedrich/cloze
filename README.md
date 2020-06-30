@@ -69,12 +69,16 @@ Update the version number in the file `cloze.dtx` on this locations:
       [2020/05/20 v1.4 Package to typeset cloze worksheets or cloze tests]
     %<*package>
 
-### In the markup for the package documentation (approximately at the line number 1250)
-
-Add a changes entry:
+Add a changes entry (approximately at the line 90):
 
 ```latex
 \changes{v1.4}{2020/05/20}{...}
+```
+
+### In the package documentation `documentation.tex` (approximately at the line number 125)
+
+```latex
+\date{v1.6~from 2020/06/30}
 ```
 
 ### In the markup for the file `cloze.lua` (approximately at the line number 1900)

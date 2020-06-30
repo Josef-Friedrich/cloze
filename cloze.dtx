@@ -28,7 +28,7 @@
 %<latex>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
 %<latex>\ProvidesPackage{cloze}
 %<*latex>
-    [2020/05/27 v1.5 Package to typeset cloze worksheets or cloze tests]
+    [2020/06/60 v1.6 Package to typeset cloze worksheets or cloze tests]
 %</latex>
 % \fi
 %
@@ -80,12 +80,14 @@
 % hide).
 % }
 %
-% \changes{v1.6}{2020/06/27}{
-% * Implement basic plain \TeX respectively plain Lua\TeX{} interface.
-% * Fix issue: Duplicate line generation on the second line in cloze
+% \changes{v1.6}{2020/06/30}{
+% * Implement basic plain \TeX{} respectively plain Lua\TeX{} interface.
+% * Fix issue: Duplicate line generation on the second line in cloze.
 % * Fix issue: width of first line wrong in itemize, mdframed.
-% * Fix issue \#4: clozenol not transparent
+% * Fix issue \#4: \texttt{\string\clozenol} not transparent.
+% * Fix issue: \texttt{clozebox} not transparent.
 % }
+%
 % \DoNotIndex{\newcommand,\newenvironment,\def,\directlua}
 %
 % \StopEventually{}
