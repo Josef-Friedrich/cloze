@@ -658,6 +658,14 @@ tempor incididunt ut labore et dolore magna aliqua.
 bigger font for the cloze text as for the normal text, you are getting
 irregular distances between the lines:
 
+\def\TmpOrbit{
+\clozesetfont{\Huge\fontspec{Kalam}}
+Today in the Discovery Lab we learned about three types of spacecraft
+that are helping us explore \cloze{Mars}. The \cloze{spacecraft} are on
+Mrs. Bratt’s Principal’s Reading Challenge board. One type of spacecraft
+is the \cloze{orbiter}.
+}
+
 \begin{minted}{latex}
 \clozesetfont{\Huge\fontspec{Kalam}}
 Today in the Discovery ...
@@ -665,11 +673,7 @@ Today in the Discovery ...
 \vspace{-0.3cm}
 % https://en.wikipedia.org/wiki/Cloze_test#/media/File:Student_matching_cloze_terms_on_smartboard.jpg
 \begin{TmpExample}
-\clozesetfont{\Huge\fontspec{Kalam}}
-Today in the Discovery Lab we learned about three types of spacecraft
-that are helping us explorer \cloze{Mars}. The \cloze{spacecraft} are on
-Mrs. Bratt’s Principal’s Reading Challenge board. One type of spacecraft
-is the \cloze{orbiter}.
+\TmpOrbit
 \end{TmpExample}
 
 \noindent
@@ -686,13 +690,9 @@ option |spacing| \TmpSecRef{sec:option-spacing}.
 \vspace{-0.3cm}
 \begin{TmpExample}
 \begin{clozespace}[spacing=2]
-\clozesetfont{\Huge\fontspec{Kalam}}
-Today in the Discovery Lab we learned about three types of spacecraft
-that are helping us explorer \cloze{Mars}. The \cloze{spacecraft} are on
-Mrs. Bratt’s Principal’s Reading Challenge board. One type of spacecraft
-is the \cloze{orbiter}.
-\vspace{-0.8cm}
+\TmpOrbit
 \end{clozespace}
+\vspace{-0.5cm}
 \end{TmpExample}
 
 \noindent
