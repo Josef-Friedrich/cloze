@@ -147,6 +147,18 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\ClozeGetOption}
+% This macro is used in the documentation to show the default values
+% of some options.
+%    \begin{macrocode}
+\def\ClozeGetOption#1{%
+  \directlua{
+    tex.print(cloze.get_value('#1'))
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}{\ClozeColor}
 % Convert a color definiton name to a PDF colorstack string, for example
 % convert the color name |blue| to the colorstack string

@@ -38,13 +38,11 @@
 \newcommand{\@minipagerestore}{\setlength{\parindent}{10pt}}
 \makeatother
 
-\newmdenv{example}
-\definecolor{graybackground}{gray}{0.97}
-\surroundwithmdframed[backgroundcolor=graybackground]{verbatim}
+\newmdenv[backgroundcolor=yellowbackground!2]{TmpExample}
+\definecolor{graybackground}{gray}{0.95}
+\definecolor{yellowbackground}{rgb}{1, 0.75012, 0}
 
-\newcommand{\getdefaults}[1]{%
-  \directlua{tex.print(cloze.get_defaults('#1'))}%
-}
+\surroundwithmdframed[backgroundcolor=graybackground]{verbatim}
 
 \newcommand{\expdesc}[1]{(|#1|)}
 
@@ -59,38 +57,6 @@
 \def\secref#1{(\rightarrow\ \ref{#1})}
 
 \newcommand{\option}[2]{\tt{[#1=}\meta{#2}\tt{]}}
-\newcommand{\clozeluafunction}[1]{
-  \marginpar{%
-    \raggedleft%
-    \MacroFont%
-    \tt{%
-      \scantokens{\catcode`\_=12\relax#1}%
-    }%
-  }%
-}
-
-\newcommand{\nodelisthfont}{\bfseries\sffamily}
-
-\newcommand{\nodelistheader}{
-  \hline
-  \nodelisthfont Variable name &
-  \nodelisthfont Node type &
-  \nodelisthfont Node subtype &
-  \nodelisthfont Parameter \\
-  \hline
-}
-
-\newenvironment{nodelist}{
-  \noindent
-  \begingroup
-  \footnotesize
-  \begin{tabular}{llll}
-  \nodelistheader
-}{
-  \hline
-  \end{tabular}
-  \endgroup
-}
 
 \EnableCrossrefs
 \CodelineIndex
@@ -157,9 +123,9 @@ aliqua. Ut enim ad minim veniam, quis nostrud \cloze{exercitation}
 ullamco laboris nisi ut \cloze{aliquip} ex ea commodo consequat.%
 }
 
-\begin{example}
+\begin{TmpExample}
 \clozelorem
-\end{example}
+\end{TmpExample}
 
 \clozeset{hide}
 
@@ -167,9 +133,9 @@ ullamco laboris nisi ut \cloze{aliquip} ex ea commodo consequat.%
 The command |\clozeset{hide}| only shows gaps. When you put both texts
 on top of each other you will see that they perfectly match.
 
-\begin{example}
+\begin{TmpExample}
 \clozelorem
-\end{example}
+\end{TmpExample}
 
 \clozeset{show}
 
@@ -245,28 +211,28 @@ width of a gap depends on the number of letters and the font used.
 The only option which affects the widths of a gap is the option
 |margin| \secref{sec:option-margin}.
 
-\begin{example}
+\begin{TmpExample}
 Lorem ipsum \cloze{dolor} sit amet, \cloze{consectetur} adipisicing
 elit, sed do eiusmod tempor incididunt ut labore et dolore
 \cloze{magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
 ullamco laboris nisi} ut aliquip ex ea commodo consequat.
-\end{example}
+\end{TmpExample}
 
 \noindent It is possible to convert a complete paragraph into a `gap'.
 But don't forget: There is a special environment for this: \tt{clozepar}
 \secref{sec:command-clozepar}.
 
-\begin{example}
+\begin{TmpExample}
 \cloze{Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
 minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
 ex ea commodo consequat.}
-\end{example}
+\end{TmpExample}
 
 \noindent The command \cmd{\cloze} doesn't change the behavior of the
 hyphenation. Let's try some long German words:
 
-\begin{example}
+\begin{TmpExample}
 es
 \cloze{Te\-le\-kom\-mu\-ni\-ka\-tions\-ü\-ber\-wach\-ung}
 geht
@@ -276,7 +242,7 @@ geht
 auch
 \cloze{Fil\-lial\-lei\-ter\-in}
 kurz.
-\end{example}
+\end{TmpExample}
 
 %%
 % \clozesetfont
@@ -296,9 +262,9 @@ has the same effect as
 
 \clozesetfont{\Large}
 
-\begin{example}
+\begin{TmpExample}
 Excepteur \cloze{sint} occaecat \cloze{cupidatat} non proident.
-\end{example}
+\end{TmpExample}
 
 \noindent Please do not put any color definitions in
 \cmd{\clozesetfont}, as it won't work. Use the option
@@ -309,9 +275,9 @@ into a normal sized typewriter font.
 
 \clozesetfont{\ttfamily\normalsize}
 
-\begin{example}
+\begin{TmpExample}
 Excepteur \cloze{sint} occaecat \cloze{cupidatat} non proident.
-\end{example}
+\end{TmpExample}
 
 \clozesetfont{\itshape}
 
@@ -324,9 +290,9 @@ Excepteur \cloze{sint} occaecat \cloze{cupidatat} non proident.
 
 \DescribeMacro{\clozefix} \cmd{\clozefix}\oarg{options}\marg{some text}:
 The command \cmd{\clozefix} creates gaps with a fixed width. The
-clozes are default concering the width \tt{\getdefaults{width}}.
+clozes are default concering the width \tt{\ClozeGetOption{width}}.
 
-\begin{example}
+\begin{TmpExample}
 \noindent Lorem ipsum dolor sit amet:
 \begin{compactenum}
 \item \clozefix[width=5cm]{consectetur}
@@ -334,27 +300,27 @@ clozes are default concering the width \tt{\getdefaults{width}}.
 \item \clozefix[width=5cm]{elit}
 \end{compactenum}
 sed do eiusmod.
-\end{example}
+\end{TmpExample}
 
 Gaps with a fixed width are much harder to solve.
 
-\begin{example}
+\begin{TmpExample}
 Lorem ipsum dolor \clozefix[align=center,width=3cm]{sit} amet,
 \clozefix[align=center,width=3cm]{consectetur} adipisicing elit, sed do
 eiusmod tempor incididunt \clozefix[align=center,width=3cm]{ut} labore
 et dolore magna aliqua.
-\end{example}
+\end{TmpExample}
 
 Using the option |align| you can make nice tabulars like this:
 
-\begin{example}
+\begin{TmpExample}
 \begin{tabular}{p{5cm}p{4cm}}
 \raggedleft Composer & Life span \\
 \clozefix[width=5cm,align=right]{Joseph Haydn} & \clozefix{1723-1809} \\
 \clozefix[width=5cm,align=right]{Wolfgang Amadeus Mozart} & \clozefix{1756-1791} \\
 \clozefix[width=5cm,align=right]{Ludwig van Beethoven} & \clozefix{1770-1827} \\
 \end{tabular}
-\end{example}
+\end{TmpExample}
 
 %%
 % \clozenol
@@ -372,17 +338,17 @@ the name suggests this macro typesets cloze texts without a line.
 Lorem \clozenol{ipsum dolor} sit amet.
 \end{minted}
 
-\begin{example}
+\begin{TmpExample}
 Lorem \clozenol{ipsum dolor} sit amet.
-\end{example}
+\end{TmpExample}
 
 \begin{minted}{latex}
 Lorem \clozenol[textcolor=green]{ipsum dolor} sit amet.
 \end{minted}
 
-\begin{example}
+\begin{TmpExample}
 Lorem \clozenol[textcolor=green]{ipsum dolor} sit amet.
-\end{example}
+\end{TmpExample}
 
 \noindent
 The next examples are showing that \cmd{\clozenol} behaves exactly as
@@ -422,12 +388,12 @@ The name of the command is inspired by \cmd{\hfil}, \cmd{\hfill}, and
 \cmd{\hfilll}. Only \cmd{\clozefil} fills out all available horizontal
 spaces with a line.
 
-\begin{example}
+\begin{TmpExample}
 Lorem ipsum dolor sit amet, \clozefil{consectetur adipisicing elit, sed
 do eiusmod.}
 
 Ut enim \clozefil{ad minim veniam} exercitation.
-\end{example}
+\end{TmpExample}
 
 %%
 % \clozeextend
@@ -450,7 +416,7 @@ aliqua.}
 \end{itemize}
 \end{minted}
 
-\begin{example}
+\begin{TmpExample}
 \begin{itemize}
 \item \clozefil{Lorem ipsum dolor sit amet, consectetur adipisicing
 elit, sed do eiusmod tempor incididunt ut labore et dolore magna
@@ -458,7 +424,7 @@ aliqua.}
 \item \clozefil{Ut enim ad minim veniam \clozeextend[20]}
 \item \clozefil{quis nostrud \clozeextend[20]}
 \end{itemize}
-\end{example}
+\end{TmpExample}
 
 %%
 % clozepar
@@ -472,7 +438,7 @@ aliqua.}
 transforms a complete paragraph into a cloze text. The options |align|,
 |margin| and |width| have no effect on this environment.
 
-\begin{example}
+\begin{TmpExample}
 Lorem ipsum dolor sit amet, consectetur adipisicing elit ullamco laboris
 nisi.
 
@@ -483,7 +449,7 @@ reprehenderit in voluptate velit esse cillum.
 \end{clozepar}
 
 Excepteur sint occaecat cupidatat non proident.
-\end{example}
+\end{TmpExample}
 
 %%
 % \clozeparcmd
@@ -639,30 +605,51 @@ tempor incididunt ut labore et dolore magna aliqua.
 \label{sec:command-clozespace}
 
 \DescribeEnv{clozespace} |\begin{clozespace}|\oarg{options} \dots
-\textit{some text} \dots |\end{clozespace}|
+\textit{some text} \dots |\end{clozespace}|: If your are using a
+bigger font for the cloze text as for the normal text your are getting
+irregular distances between the lines:
+
+\begin{minted}{latex}
+\clozesetfont{\Huge\fontspec{Kalam}}
+Today in the Discovery ...
+\end{minted}
+
+% https://en.wikipedia.org/wiki/Cloze_test#/media/File:Student_matching_cloze_terms_on_smartboard.jpg
+\begin{TmpExample}
+\clozesetfont{\Huge\fontspec{Kalam}}
+Today in the Discovery Lab we learned about three types of spacecraft
+that are helping us explorer \cloze{Mars}. The \cloze{spacecraft} are on
+Mrs. Bratt’s Principal’s Reading Challenge board. One type of spacecraft
+is the \cloze{orbiter}.
+\end{TmpExample}
+
+\noindent
+With the environment you get regular balanced line spacing. The default
+value for the option |spacing| is \ClozeGetOption{spacing}. Also take a
+look in the section about the option |spacing|
+\secref{sec:option-spacing}.
 
 \begin{minted}{latex}
 \begin{clozespace}[spacing=2]
-\clozesetfont{\ttfamily\Huge}
-Lorem \cloze{ipsum} dolor sit \cloze{amet}, consectetur adipisicing
-elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-aliqua. Ut enim ad minim veniam, quis \cloze{nostrud}
-exercitation ullamco \cloze{laboris} nisi ut aliquip ex ea commodo
-consequat.
+...
 \end{clozespace}
 \end{minted}
 
-\begin{example}
+\begin{TmpExample}
 \begin{clozespace}[spacing=2]
-\clozesetfont{\ttfamily\Huge}
-Lorem \cloze{ipsum} dolor sit \cloze{amet}, consectetur adipisicing
-elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-aliqua. Ut enim ad minim veniam, quis \cloze{nostrud}
-exercitation ullamco \cloze{laboris} nisi ut aliquip ex ea commodo
-consequat.
+\clozesetfont{\Huge\fontspec{Kalam}}
+Today in the Discovery Lab we learned about three types of spacecraft
+that are helping us explorer \cloze{Mars}. The \cloze{spacecraft} are on
+Mrs. Bratt’s Principal’s Reading Challenge board. One type of spacecraft
+is the \cloze{orbiter}.
 \vspace{-0.8cm}
 \end{clozespace}
-\end{example}
+\end{TmpExample}
+
+\noindent
+In the background the environement |clozespace| uses the package
+\href{https://www.ctan.org/pkg/setspace}{setspace} for setting the
+spacing between lines.
 
 %%
 % \clozeline
@@ -675,7 +662,7 @@ consequat.
 \cmd{\clozeline}\oarg{options}:
 To create a cloze line of a certain width, use the command
 \cmd{\clozeline}. The default width of the line is
-\tt{\getdefaults{width}}. In combination with the other cloze commands
+\tt{\ClozeGetOption{width}}. In combination with the other cloze commands
 you can create for example an irregular alignment of the cloze text.
 
 \begin{minted}{latex}
@@ -684,10 +671,10 @@ Ut enim ad
 minim veniam
 \end{minted}
 
-\begin{example}
+\begin{TmpExample}
 Ut enim ad \clozeline[width=1cm]\cloze{minim}\clozeline[width=3cm] minim
 veniam,
-\end{example}
+\end{TmpExample}
 
 %%
 % \clozelinefil
@@ -702,9 +689,9 @@ This command \cmd{\clozelinefil} fills the
 complete available horizontal space with a line. Moreover,
 \cmd{\clozelinefil} was used to create \cmd{\clozefil}.
 
-\begin{example}
+\begin{TmpExample}
 Lorem\clozelinefil
-\end{example}
+\end{TmpExample}
 
 %%
 % \clozestrike
@@ -714,49 +701,33 @@ Lorem\clozelinefil
 \label{sec:command-clozelinefil}
 
 \DescribeMacro{\clozestrike}
-\cmd{\clozestrike}\oarg{options}\marg{wrong text}\marg{correct text}
+\cmd{\clozestrike}\oarg{options}\marg{wrong text}\marg{correct text}:
+This macro can be useful for worksheets that contain intentionally
+errors. The pupils have to find and cross out the mistakes and
+write the right solution on top of the errors.
 
 \begin{minted}{latex}
-Lorem \clozestrike{ipsum}{dolor} sit amet.
+Wolfgang Amadeus Mozart was born in \clozestrike{Vienna}{Salzburg}.
 \end{minted}
 
-\begin{example}
-Lorem \clozestrike{ipsum}{dolor} sit amet.
-\end{example}
+\begin{TmpExample}
+Wolfgang Amadeus Mozart was born in \clozestrike{Vienna}{Salzburg}.
+\end{TmpExample}
+
+\noindent
+The option |linecolor| has no effect on the lines produced by the
+macro \cmd{\clozestrike}. The line color and and the text color
+are both the same, because the pupils have to draw the lines.
 
 \begin{minted}{latex}
-Lorem \clozestrike[textcolor=red]{ipsum}{dolor} sit amet.
+Mozart’s father was called
+\clozestrike[textcolor=red]{Ludwig}{Leopold} Mozart.
 \end{minted}
 
-\begin{example}
-Lorem \clozestrike[textcolor=red]{ipsum}{dolor} sit amet.
-\end{example}
-
-\begin{example}
-\begin{clozespace}
-invidunt ut \clozestrike{labore}{et dolore magna aliquyam erat}, sed
-diam voluptua. At \clozestrike{vero eos}{et accusam et justo} duo
-dolores et ea \clozestrike{rebum. Stet}{clita kasd gubergren}, no sea
-takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
-\clozestrike{dolor sit amet, consetetur }{sadipscing elitr, sed diam}
-nonumy eirmod tempor invidunt ut labore et dolore magna
-aliquyam erat, \clozestrike{sed diam voluptua}{At vero}.
-\end{clozespace}
-\end{example}
-
-\begin{example}
-\clozehide
-\begin{clozespace}
-invidunt ut \clozestrike{labore}{et dolore magna aliquyam erat}, sed
-diam voluptua. At \clozestrike{vero eos}{et accusam et justo} duo
-dolores et ea \clozestrike{rebum. Stet}{clita kasd gubergren}, no sea
-takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
-\clozestrike{dolor sit amet, consetetur }{sadipscing elitr, sed diam}
-nonumy eirmod tempor invidunt ut labore et dolore magna
-aliquyam erat, \clozestrike{sed diam voluptua}{At vero}.
-\end{clozespace}
-\clozeshow
-\end{example}
+\begin{TmpExample}
+Mozart’s father was called
+\clozestrike[textcolor=red]{Ludwig}{Leopold} Mozart.
+\end{TmpExample}
 
 %-----------------------------------------------------------------------
 % Options
@@ -805,10 +776,10 @@ options for each paragraph.
 \clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
 \end{minted}
 
-\begin{example}
+\begin{TmpExample}
 \clozeset{textcolor=red} Lorem \cloze{ipsum} dolor \par
 \clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
-\end{example}
+\end{TmpExample}
 
 \noindent \cmd{\clozeset} does not change the options within a
 paragraph. As you can see in the example below the last \cmd{\clozeset}
@@ -819,10 +790,10 @@ applies the color green for both gaps.
 \clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
 \end{minted}
 
-\begin{example}
+\begin{TmpExample}
 \clozeset{textcolor=red} Lorem \cloze{ipsum} dolor
 \clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
-\end{example}
+\end{TmpExample}
 
 \clozereset
 
@@ -848,18 +819,18 @@ default values. It has no effect on the \emph{local} options.
 
 \clozeset{thickness=3mm,linecolor=yellow,textcolor=magenta,margin=-2pt}
 
-\begin{example}
+\begin{TmpExample}
 Very \cloze{silly} global \cloze{options}.
-\end{example}
+\end{TmpExample}
 
 \begin{minted}{latex}
 \clozereset
 \end{minted}
 \clozereset
 
-\begin{example}
+\begin{TmpExample}
 \cloze{Relax!} We can reset \cloze{those} options.
-\end{example}
+\end{TmpExample}
 
 %%
 % \clozereset
@@ -878,20 +849,20 @@ Very \cloze{silly} global \cloze{options}.
 \end{minted}
 \clozehide
 
-\begin{example}
+\begin{TmpExample}
 Lorem \cloze{ipsum dolor sit} amet, consectetur \cloze{adipisicing}
 elit.
-\end{example}
+\end{TmpExample}
 
 \begin{minted}{latex}
 \clozeshow
 \end{minted}
 \clozeshow
 
-\begin{example}
+\begin{TmpExample}
 Lorem \cloze{ipsum dolor sit} amet, consectetur \cloze{adipisicing}
 elit.
-\end{example}
+\end{TmpExample}
 
 %%
 % align
@@ -912,11 +883,11 @@ of the line is larger than the width of the text.
   \desc{#1}%
 }
 
-\begin{example}
+\begin{TmpExample}
 \optionsalign{left}
 \optionsalign{center}
 \optionsalign{right}
-\end{example}
+\end{TmpExample}
 
 %%
 % boxheight
@@ -954,7 +925,7 @@ The option |distance| specifies the spacing between the baseline of the
 text and the gap line. The larger the dimension of the option
 |distance|, the more moves the line down. Negative values cause the line
 to appear above the baseline. The default value is
-\tt{\getdefaults{distance}}.
+\tt{\ClozeGetOption{distance}}.
 
 \newcommand{\optiondistance}[1]{%
   \noindent%
@@ -963,11 +934,11 @@ to appear above the baseline. The default value is
   \par%
 }
 
-\begin{example}
-\optiondistance{\getdefaults{distance}}
+\begin{TmpExample}
+\optiondistance{\ClozeGetOption{distance}}
 \optiondistance{3pt}
 \optiondistance{-3pt}
-\end{example}
+\end{TmpExample}
 
 %%
 % hide and show
@@ -989,12 +960,12 @@ options -- |hide| and |show| -- the last option "wins".
   \desc{#1}%
 }
 
-\begin{example}
+\begin{TmpExample}
 \optionshow{hide}
 \optionshow{show}
 \optionshow{show,hide}
 \optionshow{hide,show}
-\end{example}
+\end{TmpExample}
 
 %%
 % linecolor and textcolor
@@ -1022,29 +993,29 @@ package. To define your own color use the following command:
   \par%
 }
 
-\begin{example}
+\begin{TmpExample}
 \optioncolor{textcolor}{myclozecolor}
 \optioncolor{textcolor}{red}
 \optioncolor{textcolor}{green}
-\end{example}
+\end{TmpExample}
 
 \noindent You can use the same color names to colorize the cloze lines.
 
-\begin{example}
+\begin{TmpExample}
 \optioncolor{linecolor}{myclozecolor}
 \optioncolor{linecolor}{red}
 \optioncolor{linecolor}{green}
-\end{example}
+\end{TmpExample}
 
 \noindent
 And now hide the clozes:
 
 \clozehide
-\begin{example}
+\begin{TmpExample}
 \optioncolor{linecolor}{myclozecolor}
 \optioncolor{linecolor}{red}
 \optioncolor{linecolor}{green}
-\end{example}
+\end{TmpExample}
 \clozeshow
 
 %%
@@ -1058,7 +1029,7 @@ And now hide the clozes:
 The option |margin| indicates how far the line sticks up from the text.
 The option can be used with the commands \cmd{\cloze}, \cmd{\clozefix}
 and \cmd{\clozefil}. The default value of the option is
-\tt{\getdefaults{margin}}.
+\tt{\ClozeGetOption{margin}}.
 
 \newcommand{\optionmargin}[1]{%
   \noindent%
@@ -1066,13 +1037,13 @@ and \cmd{\clozefil}. The default value of the option is
   \desc{#1}%
 }
 
-\begin{example}
+\begin{TmpExample}
 \optionmargin{0pt}
 \optionmargin{5mm}
 \optionmargin{1cm}
 \optionmargin{6em}
 \optionmargin{-4pt}
-\end{example}
+\end{TmpExample}
 
 % Folgt ein Satzzeichen direkt auf eine Lücke, so findet der
 % Zeilenumbruch erst nach dem Satzzeichen statt. Auch ein noch so großer
@@ -1081,12 +1052,12 @@ and \cmd{\clozefil}. The default value of the option is
 line breaks after this punctation mark. Even the most large value of
 |margin| does not affect this behavior.
 
-\begin{example}
+\begin{TmpExample}
 \clozeset{margin=3mm}
 \cloze{Lorem}, \cloze{ipsum}. \cloze{dolor}; \cloze{sit}: \cloze{amet},
 \cloze{consectetur}. \cloze{adipisicing}; \cloze{elit}: \cloze{sed},
 \cloze{do}. \cloze{eiusmod}; \cloze{tempor}.
-\end{example}
+\end{TmpExample}
 
 \clozereset
 
@@ -1114,7 +1085,7 @@ This option only affects the environment |clozespace|
 The option |thickness| indicates how thick the line is. The option
 |distance| \secref{sec:option-distance} is not affected by this option,
 because the bottom of the line moves down. The default value of this
-option is \tt{\getdefaults{thickness}}.
+option is \tt{\ClozeGetOption{thickness}}.
 
 \newcommand{\optionthickness}[1]{%
   \noindent%
@@ -1122,11 +1093,11 @@ option is \tt{\getdefaults{thickness}}.
   \desc{#1}%
 }
 
-\begin{example}
+\begin{TmpExample}
 \optionthickness{0.01pt}
 \optionthickness{1pt}
 \optionthickness{2pt}
-\end{example}
+\end{TmpExample}
 
 %%
 % width
@@ -1137,7 +1108,7 @@ option is \tt{\getdefaults{thickness}}.
 \option{width}{dimen}:
 The only command which can be changed by the option |width| is
 \cmd{\clozefix} \secref{sec:command-clozefix}. The default value of the
-option is \tt{\getdefaults{width}}.
+option is \tt{\ClozeGetOption{width}}.
 
 \newcommand{\optionwidth}[1]{%
   \noindent%
@@ -1145,11 +1116,11 @@ option is \tt{\getdefaults{width}}.
   \desc{#1}%
 }
 
-\begin{example}
+\begin{TmpExample}
 \optionwidth{3cm}
 \optionwidth{5cm}
 \optionwidth{7cm}
-\end{example}
+\end{TmpExample}
 
 %-----------------------------------------------------------------------
 % Handwriting fonts from CTAN and \TeX{} Live
@@ -1163,11 +1134,11 @@ an overview of handwriting fonts available on CTAN and \TeX{} Live.
 The fonts are listed in alphabetical order:
 
 \def\TmpHandwritingExample{
-  \begin{example}
+  \begin{TmpExample}
   Lorem \cloze{ipsum} dolor sit amet, consetetur \cloze{sadipscing elitr,
   sed diam nonumy eirmod tempor} invidunt ut \cloze{labore et dolore magna
   aliquyam erat}, sed \cloze{diam} voluptua.
-  \end{example}
+  \end{TmpExample}
 }
 
 \def\TmpHandwritingCtan#1#2{
@@ -1366,12 +1337,12 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 \end{tabbing}
 \end{minted}
 
-\begin{example}
+\begin{TmpExample}
 \begin{tabbing}
 col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 \cloze{col1} \> \> \clozefix{col3} \\
 \end{tabbing}
-\end{example}
+\end{TmpExample}
 
 %%
 % picture

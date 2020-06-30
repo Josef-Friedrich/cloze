@@ -33,6 +33,11 @@
     cloze.set_is_global(false)
   }%
 }
+\def\ClozeGetOption#1{%
+  \directlua{
+    tex.print(cloze.get_value('#1'))
+  }%
+}
 \def\ClozeColor#1{\csname\string\color@#1\endcsname}
 \def\ClozeStartMarker#1{%
   \strut\directlua{
