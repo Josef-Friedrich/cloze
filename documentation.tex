@@ -35,10 +35,11 @@
 
 \usepackage{mdframed}
 \definecolor{TmpGray}{gray}{0.95}
-\definecolor{TmpYellow}{rgb}{1, 0.75012, 0}
+% f2d6aa 242 214 170
+\definecolor{TmpYellow}{rgb}{0.949019608, 0.839215686, 0.666666667}
 \newmdenv[
-  backgroundcolor=TmpYellow!1,
-  linecolor=TmpYellow!50
+  backgroundcolor=TmpYellow!3,
+  linecolor=TmpYellow!70
 ]{TmpExample}
 \surroundwithmdframed[backgroundcolor=TmpGray]{verbatim}
 
@@ -103,6 +104,10 @@
   \clozeshow%
 }
 
+\def\TmpReduceVspace{%
+  \vspace{-0.2cm}%
+}
+
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -123,7 +128,8 @@ Lua\TeX{} that would be extremely painful otherwise"} in TUGboat, Volume
 \author{%
   Josef Friedrich\\%
   \url{josef@friedrich.rocks}\\%
-  \href{https://github.com/Josef-Friedrich/cloze}{github.com/Josef-Friedrich/cloze}%
+  \href{https://github.com/Josef-Friedrich/cloze}
+  {github.com/Josef-Friedrich/cloze}%
 }
 \date{v1.6~from 2020/06/30}
 
@@ -203,7 +209,8 @@ on top of each other you will see that they perfectly match.
 The main difference between the plain \TeX{} and the \LaTeX{} interface
 is option handling. In \LaTeX{} options can be set using a key-value
 pairs. In plain \TeX{} the only possibility to set options in plain
-\TeX{} is using the \cmd{\clozesetoption} \TmpSecRef{sec:cmd-clozesetoption}.
+\TeX{} is using the \cmd{\clozesetoption}
+\TmpSecRef{sec:command-clozesetoption}.
 
 %%
 %
@@ -365,9 +372,15 @@ Using the option |align| you can make nice tabulars like this:
 \begin{TmpExample}
 \begin{tabular}{p{5cm}p{4cm}}
 \raggedleft Composer & Life span \\
-\clozefix[width=5cm,align=right]{Joseph Haydn} & \clozefix{1723-1809} \\
-\clozefix[width=5cm,align=right]{Wolfgang Amadeus Mozart} & \clozefix{1756-1791} \\
-\clozefix[width=5cm,align=right]{Ludwig van Beethoven} & \clozefix{1770-1827} \\
+
+\clozefix[width=5cm,align=right]{Joseph Haydn} &
+\clozefix{1723-1809} \\
+
+\clozefix[width=5cm,align=right]{Wolfgang Amadeus Mozart} &
+\clozefix{1756-1791} \\
+
+\clozefix[width=5cm,align=right]{Ludwig van Beethoven} &
+\clozefix{1770-1827} \\
 \end{tabular}
 \end{TmpExample}
 
@@ -558,30 +571,32 @@ tempor incididunt ut labore et dolore magna aliqua.
 \end{minipage}
 
 \noindent
-Like all cloze macros and environments hidden text vanishes from the
-rendered file. The next example demonstrates this by showing a different
-background color:
+Like with all cloze macros and environments the hidden text vanishes
+from the rendered file. The next example demonstrates this by showing a
+different background color:
 
-\begin{mdframed}[backgroundcolor=gray!40,hidealllines=true]
-\noindent
-\hfil
-\begin{minipage}{0.45\linewidth}
-\clozehide
-\begin{clozebox}[hide]
-Lorem ipsum dolor sit amet.
-\end{clozebox}
-\end{minipage}
-%
-\hfil
-%
-\begin{minipage}{0.45\linewidth}
-\clozeshow
-\begin{clozebox}[show]
-Lorem ipsum dolor sit amet.
-\end{clozebox}
-\end{minipage}
-\hfil
-\end{mdframed}
+\def\TmpClozeBox{
+  \bigskip
+  \begin{center}
+  \begin{clozebox}[boxwidth=4cm]
+  Lorem ipsum dolor sit amet.
+  \end{clozebox}
+  \end{center}
+  \bigskip
+}
+
+\begin{multicols}{2}
+
+\TmpHide
+\begin{TmpExample}
+\TmpClozeBox
+\end{TmpExample}
+
+\TmpShow
+\begin{TmpExample}
+\TmpClozeBox
+\end{TmpExample}
+\end{multicols}
 
 \paragraph{Option boxwidth}
 \label{sec:command-clozebox-boxwidth}
@@ -591,6 +606,8 @@ See the documentation about the option \TmpSecRef{sec:option-boxwidth}.
 \begin{clozebox}[boxwidth=5cm]
 \end{minted}
 
+\begin{TmpExample}
+\bigskip
 \begin{center}
 \begin{clozebox}[boxwidth=2.5cm]
 boxwidth: 2.5cm; Lorem ipsum dolor sit amet ...
@@ -602,6 +619,8 @@ boxwidth: 3cm; Lorem ipsum dolor sit amet ...
 boxwidth: 4cm; Lorem ipsum dolor sit amet ...
 \end{clozebox}
 \end{center}
+\bigskip
+\end{TmpExample}
 
 \paragraph{Option boxheight}
 \label{sec:command-clozebox-boxheight}
@@ -611,6 +630,10 @@ See the documentation about the option \TmpSecRef{sec:option-boxheight}.
 \begin{clozebox}[boxheight=3cm]
 \end{minted}
 
+\TmpReduceVspace
+
+\begin{TmpExample}
+\bigskip
 \begin{center}
 \begin{clozebox}[boxheight=3cm,boxwidth=3cm]
 boxheight: 3cm; Lorem ipsum dolor sit amet ...
@@ -622,6 +645,8 @@ boxheight: 2cm; Lorem ipsum dolor sit amet ...
 boxheight: 1cm; Lorem ipsum dolor sit amet ...
 \end{clozebox}
 \end{center}
+\bigskip
+\end{TmpExample}
 
 \paragraph{starred}
 
@@ -638,12 +663,14 @@ Lorem ...
 \end{minipage}
 %
 \begin{minipage}[t]{0.4\linewidth}
+\begin{TmpExample}
 \begin{center}
-\begin{clozebox}*[boxwidth=4cm,boxheight=5cm]
+\begin{clozebox}*[boxwidth=4cm,boxheight=3cm]
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua.
 \end{clozebox}
 \end{center}
+\end{TmpExample}
 \end{minipage}
 
 %%
@@ -670,7 +697,7 @@ is the \cloze{orbiter}.
 \clozesetfont{\Huge\fontspec{Kalam}}
 Today in the Discovery ...
 \end{minted}
-\vspace{-0.3cm}
+\TmpReduceVspace
 % https://en.wikipedia.org/wiki/Cloze_test#/media/File:Student_matching_cloze_terms_on_smartboard.jpg
 \begin{TmpExample}
 \TmpOrbit
@@ -687,12 +714,12 @@ option |spacing| \TmpSecRef{sec:option-spacing}.
 ...
 \end{clozespace}
 \end{minted}
-\vspace{-0.3cm}
+\TmpReduceVspace
 \begin{TmpExample}
 \begin{clozespace}[spacing=2]
 \TmpOrbit
 \end{clozespace}
-\vspace{-0.5cm}
+\TmpReduceVspace
 \end{TmpExample}
 
 \noindent
@@ -708,11 +735,12 @@ setting the spacing between the lines.
 \label{sec:command-clozeline}
 
 \DescribeMacro{\clozeline}
-\cmd{\clozeline}\oarg{options}:
-To create a cloze line of a certain width, use the command
-\cmd{\clozeline}. The default width of the line is
-\tt{\ClozeGetOption{width}}. In combination with the other cloze commands
-you can create for example an irregular alignment of the cloze text.
+%
+\cmd{\clozeline}\oarg{options}: To create a cloze line of a certain
+width, use the command \cmd{\clozeline}. The default width of the line
+is \tt{\ClozeGetOption{width}}. In combination with the other cloze
+commands you can create for example an irregular alignment of the cloze
+text.
 
 \begin{minted}{latex}
 Ut enim ad
@@ -921,8 +949,9 @@ elit.
 \label{sec:option-align}
 
 \TmpOption{align}{left/center/right}:
-Only the macro \cmd{\clozefix} \TmpSecRef{sec:command-clozefix} takes the
-option \tt{align} into account. Possible values are \tt{left},
+%
+Only the macro \cmd{\clozefix} \TmpSecRef{sec:command-clozefix} takes
+the option \tt{align} into account. Possible values are \tt{left},
 \tt{center} and \tt{right}. This option only makes sense, if the width
 of the line is larger than the width of the text.
 
@@ -957,8 +986,8 @@ An example can be found in the section about the environment
 \subsubsection{\tt{boxwidth}}
 \label{sec:option-boxwidth}
 
-|boxwidth| specifies the width of a cloze box. This option has only
-an effect on the environment |clozebox| \TmpSecRef{sec:command-clozebox}.
+|boxwidth| specifies the width of a cloze box. This option has only an
+effect on the environment |clozebox| \TmpSecRef{sec:command-clozebox}.
 An example can be found in the section about the environment
 \TmpSecRef{sec:command-clozebox-boxwidth}.
 
@@ -1117,11 +1146,12 @@ line breaks after this punctation mark. Even the most large value of
 \subsubsection{\tt{spacing}}
 \label{sec:option-spacing}
 
-\TmpOption{spacing}{number}: This option provides support for setting the
-spacing  between lines. A larger font used for the cloze texts needs
-more line space to avoid unsteady line distances.
-This option only affects the environment |clozespace|
-\TmpSecRef{sec:command-clozespace}.
+\TmpOption{spacing}{number}:
+%
+This option provides support for setting the spacing  between lines. A
+larger font used for the cloze texts needs more line space to avoid
+unsteady line distances. This option only affects the environment
+|clozespace| \TmpSecRef{sec:command-clozespace}.
 
 %%
 % thickness
@@ -1131,10 +1161,11 @@ This option only affects the environment |clozespace|
 \label{sec:option-thickness}
 
 \TmpOption{thickness}{dimen}:
+%
 The option |thickness| indicates how thick the line is. The option
-|distance| \TmpSecRef{sec:option-distance} is not affected by this option,
-because the bottom of the line moves down. The default value of this
-option is \tt{\ClozeGetOption{thickness}}.
+|distance| \TmpSecRef{sec:option-distance} is not affected by this
+option, because the bottom of the line moves down. The default value of
+this option is \tt{\ClozeGetOption{thickness}}.
 
 \newcommand{\TmpOptionthickness}[1]{%
   \noindent%
@@ -1155,9 +1186,10 @@ option is \tt{\ClozeGetOption{thickness}}.
 \subsubsection{\tt{width}}\label{sec:option-width}
 
 \TmpOption{width}{dimen}:
+%
 The only command which can be changed by the option |width| is
-\cmd{\clozefix} \TmpSecRef{sec:command-clozefix}. The default value of the
-option is \tt{\ClozeGetOption{width}}.
+\cmd{\clozefix} \TmpSecRef{sec:command-clozefix}. The default value of
+the option is \tt{\ClozeGetOption{width}}.
 
 \newcommand{\TmpOptionwidth}[1]{%
   \noindent%
@@ -1179,14 +1211,14 @@ option is \tt{\ClozeGetOption{width}}.
 
 If you want to imitate a hand-filled worksheet, then some handwriting
 fonts are suitable for this purpose. This section is intended to provide
-an overview of handwriting fonts available on CTAN and \TeX{} Live.
-The fonts are listed in alphabetical order:
+an overview of handwriting fonts available on CTAN and \TeX{} Live. The
+fonts are listed in alphabetical order:
 
 \def\TmpHandwritingExample{
   \begin{TmpExample}
-  Lorem \cloze{ipsum} dolor sit amet, consetetur \cloze{sadipscing elitr,
-  sed diam nonumy eirmod tempor} invidunt ut \cloze{labore et dolore magna
-  aliquyam erat}, sed \cloze{diam} voluptua.
+  Lorem \cloze{ipsum} dolor sit amet, consetetur \cloze{sadipscing
+  elitr, sed diam nonumy eirmod tempor} invidunt ut \cloze{labore et
+  dolore magna aliquyam erat}, sed \cloze{diam} voluptua.
   \end{TmpExample}
 }
 
@@ -1195,9 +1227,15 @@ The fonts are listed in alphabetical order:
 
   \begin{tabbing}
     \hspace{2.8cm} \= \hspace{8cm} \kill
-    CTAN: \> {\footnotesize\href{https://www.ctan.org/pkg/#2}{#2}}\\
-    \TeX{} Live: \> \texttt{\footnotesize tlmgr install #2}\\
-    Font selection: \> \texttt{\footnotesize\string\clozesetfont\{\string\fontspec\{#1\}\}}\\
+
+    CTAN: \>
+    {\footnotesize\href{https://www.ctan.org/pkg/#2}{#2}}\\
+
+    \TeX{} Live: \>
+    \texttt{\footnotesize tlmgr install #2}\\
+
+    Font selection: \>
+    \texttt{\footnotesize\string\clozesetfont\{\string\fontspec\{#1\}\}}\\
   \end{tabbing}
   \vspace{-0.7cm}
   %
@@ -1243,9 +1281,12 @@ The fonts are listed in alphabetical order:
       local font_name = '#1'
       font_name = font_name:gsub(' ', '+')
       tex.print(font_name)
-    }}}\\
+    }}}
+    \\
 
-    Font selection: \> \texttt{\footnotesize\string\clozesetfont\{\string\fontspec\{#1\}\}}\\
+    Font selection: \>
+    \texttt{\footnotesize\string\clozesetfont\{\string\fontspec\{#1\}\}}
+    \\
   \end{tabbing}
   \vspace{-0.7cm}
   %
@@ -1306,17 +1347,21 @@ of the \TeX{} primitive syntax |$$ $$| is not recommended.
 %%
 
 \bigskip
-\noindent
-\begin{minipage}{0.5\linewidth}
+
+\begin{multicols}{2}
 \begin{minted}{latex}
 \clozesetfont{}
 $$1 + 1 = \cloze{2}$$
 \clozesetfont{\itshape}
 \end{minted}
-\end{minipage}
-\begin{minipage}{0.5\linewidth}
+
+\columnbreak
+
+\begin{TmpExample}
 $$1 + 1 = \cloze{2}$$
-\end{minipage}
+\end{TmpExample}
+\end{multicols}
+
 \bigskip
 
 %%
@@ -1326,15 +1371,17 @@ $$1 + 1 = \cloze{2}$$
 \noindent
 |\[\]| should be used instead.
 
-\noindent
-\begin{minipage}{0.5\linewidth}
+\begin{multicols}{2}
 \begin{minted}{latex}
 \[123 + 456 = \cloze{579}\]
 \end{minted}
-\end{minipage}
-\begin{minipage}{0.5\linewidth}
+
+\columnbreak
+
+\begin{TmpExample}
 \[123 + 456 = \cloze{579}\]
-\end{minipage}
+\end{TmpExample}
+\end{multicols}
 
 %%
 %
@@ -1344,19 +1391,21 @@ $$1 + 1 = \cloze{2}$$
 \noindent
 A cloze inside a display math environment should work fine:
 
-\noindent
-\begin{minipage}{0.5\linewidth}
+\begin{multicols}{2}
 \begin{minted}{latex}
 \begin{displaymath}
 2^{\cloze{2}} = 4
 \end{displaymath}
 \end{minted}
-\end{minipage}
-\begin{minipage}{0.5\linewidth}
+
+\columnbreak
+
+\begin{TmpExample}
 \begin{displaymath}
 2^{\cloze{2}} = 4
 \end{displaymath}
-\end{minipage}
+\end{TmpExample}
+\end{multicols}
 
 \bigskip
 
@@ -1367,9 +1416,11 @@ The inline math mode works too:
 ${\sqrt[3]{\cloze{8}}} = 2$ and ${\sqrt[\cloze{3}]{\cloze{8}}} = 2$
 \end{minted}
 
+\begin{TmpExample}
 \begin{center}
 ${\sqrt[3]{\cloze{8}}} = 2$ and ${\sqrt[\cloze{3}]{\cloze{8}}} = 2$
 \end{center}
+\end{TmpExample}
 
 \clozesetfont{\itshape}
 
@@ -1435,6 +1486,8 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 \center{\TmpPicture}
 \end{TmpExample}
 
+\columnbreak
+
 \TmpShow
 
 \begin{TmpExample}
@@ -1479,7 +1532,9 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 \begin{TmpExample}
 \center{\TmpTabluarEnglishGerman}
 \end{TmpExample}
-%
+
+\columnbreak
+
 \TmpShow
 \begin{TmpExample}
 \center{\TmpTabluarEnglishGerman}
