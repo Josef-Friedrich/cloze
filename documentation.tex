@@ -2,9 +2,14 @@
 \usepackage[show]{cloze}
 \usepackage{graphicx}
 \usepackage{paralist}
-\usepackage{titlesec}
 \usepackage{forest}
-\usepackage{mdframed}
+\usepackage{multicol}
+
+%%
+% titlesec
+%%
+
+\usepackage{titlesec}
 \titleformat{\paragraph}[hang]{%
   \normalfont\normalsize\bfseries%
   }{\theparagraph}{1em}{}
@@ -13,6 +18,10 @@
   }{\thesubparagraph}{1em}{}
   \titlespacing*{\subparagraph}{0pt}{*1}{0pt}
 
+%%
+% hyperref
+%%
+
 \usepackage[
   colorlinks=true,
   linkcolor=red,
@@ -20,9 +29,29 @@
   urlcolor=red,
 ]{hyperref}
 
+%%
+% mdframed
+%%
+
+\usepackage{mdframed}
+\definecolor{TmpGray}{gray}{0.95}
+\definecolor{TmpYellow}{rgb}{1, 0.75012, 0}
+\newmdenv[
+  backgroundcolor=TmpYellow!1,
+  linecolor=TmpYellow!50
+]{TmpExample}
+\surroundwithmdframed[backgroundcolor=TmpGray]{verbatim}
+
+%%
+% minted
+%%
+
 \usepackage{minted}
 \usemintedstyle{colorful}
-\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=gray!3]}
+\BeforeBeginEnvironment{minted}{\begin{mdframed}[
+  backgroundcolor=TmpGray!60,
+  linecolor=gray!40,
+]}
 \AfterEndEnvironment{minted}{\end{mdframed}}
 \setminted{
   breaklines=true,
@@ -38,30 +67,50 @@
 \newcommand{\@minipagerestore}{\setlength{\parindent}{10pt}}
 \makeatother
 
-\newmdenv[backgroundcolor=yellowbackground!2]{TmpExample}
-\definecolor{graybackground}{gray}{0.95}
-\definecolor{yellowbackground}{rgb}{1, 0.75012, 0}
+%%
+% Temporary local macros
+%%
 
-\surroundwithmdframed[backgroundcolor=graybackground]{verbatim}
+\newcommand{\TmpExpDesc}[1]{(|#1|)}
 
-\newcommand{\expdesc}[1]{(|#1|)}
-
-\newcommand{\desc}[1]{%
+\newcommand{\TmpDesc}[1]{%
   \hfill%
-  \expdesc{#1}%
+  \TmpExpDesc{#1}%
   \par%
 }
 
-\def\tt#1{\texttt{#1}}
+\def\tt#1{%
+  \texttt{#1}%
+}
 
-\def\secref#1{(\rightarrow\ \ref{#1})}
+\def\TmpSecRef#1{%
+  (\rightarrow\ \ref{#1})%
+}
 
-\newcommand{\option}[2]{\tt{[#1=}\meta{#2}\tt{]}}
+\def\TmpOption#1#2{%
+  \tt{[#1=}\meta{#2}\tt{]}%
+}
+
+\def\TmpHide{%
+  \noindent%
+  \texttt{\string\clozehide}:%
+  \clozehide%
+}
+
+\def\TmpShow{%
+  \noindent%
+  \texttt{\string\clozeshow}:%
+  \clozeshow%
+}
 
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
 \begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \providecommand*{\url}{\texttt}
 \GetFileInfo{cloze.dtx}
@@ -114,7 +163,7 @@ luatex cloze-text.tex
 
 \noindent
 The main feature of the package is that the formatting doesn't change
-when using the |hide| and |show| \secref{sec:option-hide} options.
+when using the |hide| and |show| \TmpSecRef{sec:option-hide} options.
 
 \newcommand{\clozelorem}{%
 Lorem ipsum \cloze{dolor sit} amet, consectetur \cloze{adipisicing}
@@ -154,7 +203,7 @@ on top of each other you will see that they perfectly match.
 The main difference between the plain \TeX{} and the \LaTeX{} interface
 is option handling. In \LaTeX{} options can be set using a key-value
 pairs. In plain \TeX{} the only possibility to set options in plain
-\TeX{} is using the \cmd{\clozesetoption} \secref{sec:cmd-clozesetoption}.
+\TeX{} is using the \cmd{\clozesetoption} \TmpSecRef{sec:cmd-clozesetoption}.
 
 %%
 %
@@ -209,7 +258,7 @@ command \cmd{\cloze} is similar to a command that offers the possibility
 to underline the texts. \cmd{\cloze} does not prevent line breaks. The
 width of a gap depends on the number of letters and the font used.
 The only option which affects the widths of a gap is the option
-|margin| \secref{sec:option-margin}.
+|margin| \TmpSecRef{sec:option-margin}.
 
 \begin{TmpExample}
 Lorem ipsum \cloze{dolor} sit amet, \cloze{consectetur} adipisicing
@@ -220,7 +269,7 @@ ullamco laboris nisi} ut aliquip ex ea commodo consequat.
 
 \noindent It is possible to convert a complete paragraph into a `gap'.
 But don't forget: There is a special environment for this: \tt{clozepar}
-\secref{sec:command-clozepar}.
+\TmpSecRef{sec:command-clozepar}.
 
 \begin{TmpExample}
 \cloze{Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
@@ -268,7 +317,7 @@ Excepteur \cloze{sint} occaecat \cloze{cupidatat} non proident.
 
 \noindent Please do not put any color definitions in
 \cmd{\clozesetfont}, as it won't work. Use the option
-|textcolor| instead \secref{sec:option-textcolor}.
+|textcolor| instead \TmpSecRef{sec:option-textcolor}.
 
 |\clozesetfont{\ttfamily\normalsize}| changes the gap text for example
 into a normal sized typewriter font.
@@ -536,7 +585,7 @@ Lorem ipsum dolor sit amet.
 
 \paragraph{Option boxwidth}
 \label{sec:command-clozebox-boxwidth}
-See the documentation about the option \secref{sec:option-boxwidth}.
+See the documentation about the option \TmpSecRef{sec:option-boxwidth}.
 
 \begin{minted}{latex}
 \begin{clozebox}[boxwidth=5cm]
@@ -556,7 +605,7 @@ boxwidth: 4cm; Lorem ipsum dolor sit amet ...
 
 \paragraph{Option boxheight}
 \label{sec:command-clozebox-boxheight}
-See the documentation about the option \secref{sec:option-boxheight}.
+See the documentation about the option \TmpSecRef{sec:option-boxheight}.
 
 \begin{minted}{latex}
 \begin{clozebox}[boxheight=3cm]
@@ -605,15 +654,15 @@ tempor incididunt ut labore et dolore magna aliqua.
 \label{sec:command-clozespace}
 
 \DescribeEnv{clozespace} |\begin{clozespace}|\oarg{options} \dots
-\textit{some text} \dots |\end{clozespace}|: If your are using a
-bigger font for the cloze text as for the normal text your are getting
+\textit{some text} \dots |\end{clozespace}|: If you are using a
+bigger font for the cloze text as for the normal text, you are getting
 irregular distances between the lines:
 
 \begin{minted}{latex}
 \clozesetfont{\Huge\fontspec{Kalam}}
 Today in the Discovery ...
 \end{minted}
-
+\vspace{-0.3cm}
 % https://en.wikipedia.org/wiki/Cloze_test#/media/File:Student_matching_cloze_terms_on_smartboard.jpg
 \begin{TmpExample}
 \clozesetfont{\Huge\fontspec{Kalam}}
@@ -624,17 +673,17 @@ is the \cloze{orbiter}.
 \end{TmpExample}
 
 \noindent
-With the environment you get regular balanced line spacing. The default
-value for the option |spacing| is \ClozeGetOption{spacing}. Also take a
-look in the section about the option |spacing|
-\secref{sec:option-spacing}.
+With the environment |clozespace| you are able to restore the regular
+balanced line spacing. The default value for the option |spacing| is
+\tt{\ClozeGetOption{spacing}}. Also take a look in the section about the
+option |spacing| \TmpSecRef{sec:option-spacing}.
 
 \begin{minted}{latex}
 \begin{clozespace}[spacing=2]
 ...
 \end{clozespace}
 \end{minted}
-
+\vspace{-0.3cm}
 \begin{TmpExample}
 \begin{clozespace}[spacing=2]
 \clozesetfont{\Huge\fontspec{Kalam}}
@@ -647,9 +696,9 @@ is the \cloze{orbiter}.
 \end{TmpExample}
 
 \noindent
-In the background the environement |clozespace| uses the package
-\href{https://www.ctan.org/pkg/setspace}{setspace} for setting the
-spacing between lines.
+The environment |clozespace| uses the package
+\href{https://www.ctan.org/pkg/setspace}{setspace} in the background for
+setting the spacing between the lines.
 
 %%
 % \clozeline
@@ -871,22 +920,22 @@ elit.
 \subsubsection{\tt{align}}
 \label{sec:option-align}
 
-\option{align}{left/center/right}:
-Only the macro \cmd{\clozefix} \secref{sec:command-clozefix} takes the
+\TmpOption{align}{left/center/right}:
+Only the macro \cmd{\clozefix} \TmpSecRef{sec:command-clozefix} takes the
 option \tt{align} into account. Possible values are \tt{left},
 \tt{center} and \tt{right}. This option only makes sense, if the width
 of the line is larger than the width of the text.
 
-\newcommand{\optionsalign}[1]{%
+\newcommand{\TmpOptionsalign}[1]{%
   \noindent%
   \clozefix[align=#1,width=8cm]{Lorem ipsum}%
-  \desc{#1}%
+  \TmpDesc{#1}%
 }
 
 \begin{TmpExample}
-\optionsalign{left}
-\optionsalign{center}
-\optionsalign{right}
+\TmpOptionsalign{left}
+\TmpOptionsalign{center}
+\TmpOptionsalign{right}
 \end{TmpExample}
 
 %%
@@ -897,9 +946,9 @@ of the line is larger than the width of the text.
 \label{sec:option-boxheight}
 
 |boxheight| specifies the height of a cloze box. This option has only
-an effect on the environment |clozebox| \secref{sec:command-clozebox}.
+an effect on the environment |clozebox| \TmpSecRef{sec:command-clozebox}.
 An example can be found in the section about the environment
-\secref{sec:command-clozebox-boxheight}.
+\TmpSecRef{sec:command-clozebox-boxheight}.
 
 %%
 % boxwidth
@@ -909,9 +958,9 @@ An example can be found in the section about the environment
 \label{sec:option-boxwidth}
 
 |boxwidth| specifies the width of a cloze box. This option has only
-an effect on the environment |clozebox| \secref{sec:command-clozebox}.
+an effect on the environment |clozebox| \TmpSecRef{sec:command-clozebox}.
 An example can be found in the section about the environment
-\secref{sec:command-clozebox-boxwidth}.
+\TmpSecRef{sec:command-clozebox-boxwidth}.
 
 %%
 % distance
@@ -920,24 +969,24 @@ An example can be found in the section about the environment
 \subsubsection{\tt{distance}}
 \label{sec:option-distance}
 
-\option{distance}{dimen}:
+\TmpOption{distance}{dimen}:
 The option |distance| specifies the spacing between the baseline of the
 text and the gap line. The larger the dimension of the option
 |distance|, the more moves the line down. Negative values cause the line
 to appear above the baseline. The default value is
 \tt{\ClozeGetOption{distance}}.
 
-\newcommand{\optiondistance}[1]{%
+\newcommand{\TmpOptiondistance}[1]{%
   \noindent%
   \clozefil[distance=#1]{Lorem ipsum dolor sit amet.}
-  \expdesc{#1}
+  \TmpExpDesc{#1}
   \par%
 }
 
 \begin{TmpExample}
-\optiondistance{\ClozeGetOption{distance}}
-\optiondistance{3pt}
-\optiondistance{-3pt}
+\TmpOptiondistance{\ClozeGetOption{distance}}
+\TmpOptiondistance{3pt}
+\TmpOptiondistance{-3pt}
 \end{TmpExample}
 
 %%
@@ -953,18 +1002,18 @@ By default the cloze text is displayed. Use the option |hide| to remove
 the cloze text from the output.  If you accidentally specify both
 options -- |hide| and |show| -- the last option "wins".
 
-\newcommand{\optionshow}[1]{%
+\newcommand{\TmpOptionshow}[1]{%
   \noindent%
   Lorem ipsum \cloze[#1]{dolor sit amet}, consectetur
   \cloze[#1]{adipisicing} elit.%
-  \desc{#1}%
+  \TmpDesc{#1}%
 }
 
 \begin{TmpExample}
-\optionshow{hide}
-\optionshow{show}
-\optionshow{show,hide}
-\optionshow{hide,show}
+\TmpOptionshow{hide}
+\TmpOptionshow{show}
+\TmpOptionshow{show,hide}
+\TmpOptionshow{hide,show}
 \end{TmpExample}
 
 %%
@@ -975,8 +1024,8 @@ options -- |hide| and |show| -- the last option "wins".
 \label{sec:option-linecolor}
 \label{sec:option-textcolor}
 
-\option{linecolor}{color name} and
-\option{textcolor}{color name}:
+\TmpOption{linecolor}{color name} and
+\TmpOption{textcolor}{color name}:
 Values for both color options are color names used by the xcolor
 package. To define your own color use the following command:
 
@@ -986,25 +1035,25 @@ package. To define your own color use the following command:
 \end{minted}
 \definecolor{myclozecolor}{rgb}{0.1,0.4,0.6}
 
-\newcommand{\optioncolor}[2]{%
+\newcommand{\TmpOptioncolor}[2]{%
   \noindent%
   \clozefil[#1=#2]{Lorem ipsum dolor sit amet, consectetur} %
-  \expdesc{#2}%
+  \TmpExpDesc{#2}%
   \par%
 }
 
 \begin{TmpExample}
-\optioncolor{textcolor}{myclozecolor}
-\optioncolor{textcolor}{red}
-\optioncolor{textcolor}{green}
+\TmpOptioncolor{textcolor}{myclozecolor}
+\TmpOptioncolor{textcolor}{red}
+\TmpOptioncolor{textcolor}{green}
 \end{TmpExample}
 
 \noindent You can use the same color names to colorize the cloze lines.
 
 \begin{TmpExample}
-\optioncolor{linecolor}{myclozecolor}
-\optioncolor{linecolor}{red}
-\optioncolor{linecolor}{green}
+\TmpOptioncolor{linecolor}{myclozecolor}
+\TmpOptioncolor{linecolor}{red}
+\TmpOptioncolor{linecolor}{green}
 \end{TmpExample}
 
 \noindent
@@ -1012,9 +1061,9 @@ And now hide the clozes:
 
 \clozehide
 \begin{TmpExample}
-\optioncolor{linecolor}{myclozecolor}
-\optioncolor{linecolor}{red}
-\optioncolor{linecolor}{green}
+\TmpOptioncolor{linecolor}{myclozecolor}
+\TmpOptioncolor{linecolor}{red}
+\TmpOptioncolor{linecolor}{green}
 \end{TmpExample}
 \clozeshow
 
@@ -1025,24 +1074,24 @@ And now hide the clozes:
 \subsubsection{\tt{margin}}
 \label{sec:option-margin}
 
-\option{margin}{dimen}:
+\TmpOption{margin}{dimen}:
 The option |margin| indicates how far the line sticks up from the text.
 The option can be used with the commands \cmd{\cloze}, \cmd{\clozefix}
 and \cmd{\clozefil}. The default value of the option is
 \tt{\ClozeGetOption{margin}}.
 
-\newcommand{\optionmargin}[1]{%
+\newcommand{\TmpOptionmargin}[1]{%
   \noindent%
   Lorem ipsum \cloze[margin=#1]{dolor} sit amet.%
-  \desc{#1}%
+  \TmpDesc{#1}%
 }
 
 \begin{TmpExample}
-\optionmargin{0pt}
-\optionmargin{5mm}
-\optionmargin{1cm}
-\optionmargin{6em}
-\optionmargin{-4pt}
+\TmpOptionmargin{0pt}
+\TmpOptionmargin{5mm}
+\TmpOptionmargin{1cm}
+\TmpOptionmargin{6em}
+\TmpOptionmargin{-4pt}
 \end{TmpExample}
 
 % Folgt ein Satzzeichen direkt auf eine Lücke, so findet der
@@ -1068,11 +1117,11 @@ line breaks after this punctation mark. Even the most large value of
 \subsubsection{\tt{spacing}}
 \label{sec:option-spacing}
 
-\option{spacing}{number}: This option provides support for setting the
+\TmpOption{spacing}{number}: This option provides support for setting the
 spacing  between lines. A larger font used for the cloze texts needs
 more line space to avoid unsteady line distances.
 This option only affects the environment |clozespace|
-\secref{sec:command-clozespace}.
+\TmpSecRef{sec:command-clozespace}.
 
 %%
 % thickness
@@ -1081,22 +1130,22 @@ This option only affects the environment |clozespace|
 \subsubsection{\tt{thickness}}
 \label{sec:option-thickness}
 
-\option{thickness}{dimen}:
+\TmpOption{thickness}{dimen}:
 The option |thickness| indicates how thick the line is. The option
-|distance| \secref{sec:option-distance} is not affected by this option,
+|distance| \TmpSecRef{sec:option-distance} is not affected by this option,
 because the bottom of the line moves down. The default value of this
 option is \tt{\ClozeGetOption{thickness}}.
 
-\newcommand{\optionthickness}[1]{%
+\newcommand{\TmpOptionthickness}[1]{%
   \noindent%
   Lorem \cloze[thickness=#1]{ipsum dolor sit} amet.%
-  \desc{#1}%
+  \TmpDesc{#1}%
 }
 
 \begin{TmpExample}
-\optionthickness{0.01pt}
-\optionthickness{1pt}
-\optionthickness{2pt}
+\TmpOptionthickness{0.01pt}
+\TmpOptionthickness{1pt}
+\TmpOptionthickness{2pt}
 \end{TmpExample}
 
 %%
@@ -1105,21 +1154,21 @@ option is \tt{\ClozeGetOption{thickness}}.
 
 \subsubsection{\tt{width}}\label{sec:option-width}
 
-\option{width}{dimen}:
+\TmpOption{width}{dimen}:
 The only command which can be changed by the option |width| is
-\cmd{\clozefix} \secref{sec:command-clozefix}. The default value of the
+\cmd{\clozefix} \TmpSecRef{sec:command-clozefix}. The default value of the
 option is \tt{\ClozeGetOption{width}}.
 
-\newcommand{\optionwidth}[1]{%
+\newcommand{\TmpOptionwidth}[1]{%
   \noindent%
   Lorem \clozefix[width=#1]{dolor} amet.%
-  \desc{#1}%
+  \TmpDesc{#1}%
 }
 
 \begin{TmpExample}
-\optionwidth{3cm}
-\optionwidth{5cm}
-\optionwidth{7cm}
+\TmpOptionwidth{3cm}
+\TmpOptionwidth{5cm}
+\TmpOptionwidth{7cm}
 \end{TmpExample}
 
 %-----------------------------------------------------------------------
@@ -1361,44 +1410,37 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 \put(3.1,2.5){$a$} \put(0.8,1.8){\cloze{b}} \put(2.5,0.9){\cloze{c}}
 \end{picture}
 \end{minted}
+
+\def\TmpPicture{
+  \setlength{\unitlength}{0.8cm}
+  \begin{picture}(4.8,3.8)
+  \thicklines
+  \put(1,0.5){\line(2,1){3}}
+  \put(4,2){\line(-2,1){2}}
+  \put(2,3){\line(-2,-5){1}}
+  \put(0.4,0.2){\cloze{A}}
+  \put(4.05,1.9){$B$}
+  \put(1.8,3.1){$C$}
+  \put(3.1,2.5){$a$}
+  \put(0.8,1.8){\cloze{b}}
+  \put(2.5,0.9){\cloze{c}}
+  \end{picture}
+}
 %
-\begin{minipage}[t]{0.5\linewidth}
-\begin{center}
-\clozehide
-\setlength{\unitlength}{0.8cm}
-\begin{picture}(4.8,3.8)
-\thicklines
-\put(1,0.5){\line(2,1){3}}
-\put(4,2){\line(-2,1){2}}
-\put(2,3){\line(-2,-5){1}}
-\put(0.4,0.2){\cloze{A}}
-\put(4.05,1.9){$B$}
-\put(1.8,3.1){$C$}
-\put(3.1,2.5){$a$}
-\put(0.8,1.8){\cloze{b}}
-\put(2.5,0.9){\cloze{c}}
-\end{picture}
-\end{center}
-\end{minipage}
-%
-\begin{minipage}[t]{0.5\linewidth}
-\begin{center}
-\clozeshow
-\setlength{\unitlength}{0.8cm}
-\begin{picture}(4.8,3.8)
-\thicklines
-\put(1,0.5){\line(2,1){3}}
-\put(4,2){\line(-2,1){2}}
-\put(2,3){\line(-2,-5){1}}
-\put(0.4,0.2){\cloze{A}}
-\put(4.05,1.9){$B$}
-\put(1.8,3.1){$C$}
-\put(3.1,2.5){$a$}
-\put(0.8,1.8){\cloze{b}}
-\put(2.5,0.9){\cloze{c}}
-\end{picture}
-\end{center}
-\end{minipage}
+
+\begin{multicols}{2}
+\TmpHide
+
+\begin{TmpExample}
+\center{\TmpPicture}
+\end{TmpExample}
+
+\TmpShow
+
+\begin{TmpExample}
+\center{\TmpPicture}
+\end{TmpExample}
+\end{multicols}
 
 \clozereset
 
@@ -1417,38 +1459,32 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
   \clozefil{pencil} & Bleistift\\
 \end{tabular}
 \end{minted}
-%
-\begin{minipage}{0.5\linewidth}
-\clozeset{distance=4pt}
-\clozehide
-\renewcommand{\arraystretch}{1.5}
-\begin{center}
-\begin{tabular}{ll}
-\textbf{englisch} & \textbf{deutsch} \\
-\hline
-book & \clozefil{Buch} \\
-\clozefil{scissors} & Schere\\
-pen & \clozefil{Füller} \\
-\clozefil{pencil} & Bleistift\\
-\end{tabular}
-\end{center}
 
-\end{minipage}
+\def\TmpTabluarEnglishGerman{
+  \clozeset{distance=4pt}
+  \renewcommand{\arraystretch}{1.5}
+  \begin{tabular}{ll}
+  \textbf{englisch} & \textbf{deutsch} \\
+  \hline
+  book & \clozefil{Buch} \\
+  \clozefil{scissors} & Schere\\
+  pen & \clozefil{Füller} \\
+  \clozefil{pencil} & Bleistift\\
+  \end{tabular}
+  \vspace{0.2cm}
+}
+
+\begin{multicols}{2}
+\TmpHide
+\begin{TmpExample}
+\center{\TmpTabluarEnglishGerman}
+\end{TmpExample}
 %
-\begin{minipage}{0.5\linewidth}
-\clozeshow
-\renewcommand{\arraystretch}{1.5}
-\begin{center}
-\begin{tabular}{ll}
-\textbf{englisch} & \textbf{deutsch} \\
-\hline
-book & \clozefil{Buch} \\
-\clozefil{scissors} & Schere\\
-pen & \clozefil{Füller} \\
-\clozefil{pencil} & Bleistift\\
-\end{tabular}
-\end{center}
-\end{minipage}
+\TmpShow
+\begin{TmpExample}
+\center{\TmpTabluarEnglishGerman}
+\end{TmpExample}
+\end{multicols}
 
 %%
 % forest
@@ -1459,7 +1495,6 @@ pen & \clozefil{Füller} \\
 \begin{minted}{latex}
 \begin{forest}
 [Johann Sebastian \cloze{Bach}
-  [\cloze{Wilhelm} Friedemann]
   [Carl \cloze{Phillip} Emanuel
     [Johann Sebastian (der \cloze{Jüngere})]
   ]
@@ -1471,22 +1506,40 @@ pen & \clozefil{Füller} \\
 \end{forest}
 \end{minted}
 
-{
-\noindent
-\scriptsize
-\begin{forest}
-[Johann Sebastian \cloze{Bach}
-  [\cloze{Wilhelm} Friedemann]
-  [Carl \cloze{Phillip} Emanuel
-    [Johann Sebastian (der \cloze{Jüngere})]
+\def\TmpForestBach{
+  {
+  \noindent
+  \scriptsize
+  \begin{forest}
+  [Johann Sebastian \cloze{Bach}
+    [Carl \cloze{Phillip} Emanuel
+      [Johann Sebastian (der \cloze{Jüngere})]
+    ]
+    [Johann Christoph \cloze{Friedrich}
+      [\cloze{Wilhelm} Friedrich Ernst]
+    ]
+    [\cloze{Johann Christian}]
   ]
-  [Johann Christoph \cloze{Friedrich}
-    [\cloze{Wilhelm} Friedrich Ernst]
-  ]
-  [\cloze{Johann Christian}]
-]
-\end{forest}
+  \end{forest}
+  }
 }
+
+\TmpHide
+
+\begin{TmpExample}
+\begin{center}
+\TmpForestBach
+\end{center}
+\end{TmpExample}
+
+\TmpShow
+
+\begin{TmpExample}
+\begin{center}
+\TmpForestBach
+\end{center}
+\end{TmpExample}
+
 \clozereset
 
 \section{Some graphics for better understanding of the node tree}

@@ -224,7 +224,7 @@
 %
 % \begin{macro}{\clozereset}
 % The usage of the command \cmd{\clozereset} is described in detail in
-% section \secref{sec:command-clozereset}.
+% section \TmpSecRef{sec:command-clozereset}.
 %    \begin{macrocode}
 \def\clozereset{%
   \ClozeSetToGlobal%
@@ -235,7 +235,7 @@
 %
 % \begin{macro}{\clozeshow}
 % The usage of the command \cmd{\clozeshow} is described in detail in
-% section \secref{sec:command-clozeshow}.
+% section \TmpSecRef{sec:command-clozeshow}.
 %    \begin{macrocode}
 \def\clozeshow{%
   \clozeshowtrue%
@@ -248,7 +248,7 @@
 %
 % \begin{macro}{\clozehide}
 % The usage of the command \cmd{\clozehide} is described in detail in
-% section \secref{sec:command-clozehide}.
+% section \TmpSecRef{sec:command-clozehide}.
 %    \begin{macrocode}
 \def\clozehide{%
   \clozeshowfalse%
@@ -262,7 +262,7 @@
 %
 % \begin{macro}{\clozefont}
 % The usage of the command \cmd{\clozefont} is described in detail in
-% section \secref{sec:command-clozefont}.
+% section \TmpSecRef{sec:command-clozefont}.
 %    \begin{macrocode}
 \def\clozefont{\it}
 %    \end{macrocode}
@@ -270,7 +270,7 @@
 %
 % \begin{macro}{\clozesetfont}
 % The usage of the command \cmd{\clozesetfont} is described in detail in
-% section \secref{sec:command-clozesetfont}.
+% section \TmpSecRef{sec:command-clozesetfont}.
 %    \begin{macrocode}
 \def\clozesetfont#1{%
   \def\clozefont{%
@@ -297,7 +297,7 @@
 % \begin{macro}{\clozefix}
 % This is the plain Lua\TeX-Version of \cmd{\clozefix}. The usage of the
 % command \cmd{\clozefix} is described in detail in
-% section \secref{sec:command-clozefix}.
+% section \TmpSecRef{sec:command-clozefix}.
 %    \begin{macrocode}
 \def\clozefix#1{%
   \ClozeStartMarker{fix}%
@@ -313,7 +313,7 @@
 % \begin{macro}{\clozenol}
 % This is the plain Lua\TeX-Version of the macro \cmd{\clozenol}. The
 % usage of the command \cmd{\clozenol} is described in detail in
-% section \secref{sec:command-clozenol}.
+% section \TmpSecRef{sec:command-clozenol}.
 %    \begin{macrocode}
 \def\clozenol#1{%
   \clozesetoption{thickness}{0pt}%
@@ -330,7 +330,7 @@
 % \begin{macro}{\clozeline}
 % This is the plain Lua\TeX-Version of the macro \cmd{\clozeline}. The
 % usage of the command \cmd{\clozeline} is described in detail in
-% section \secref{sec:command-clozeline}.
+% section \TmpSecRef{sec:command-clozeline}.
 %    \begin{macrocode}
 \def\clozeline{%
   \directlua{cloze.line()}%
@@ -341,7 +341,7 @@
 % \begin{macro}{\clozelinefil}
 % This is the plain Lua\TeX-Version of the macro \cmd{\clozelinefil}.
 % The usage of the command \cmd{\clozelinefil} is described in detail in
-% section \secref{sec:command-clozelinefil}.
+% section \TmpSecRef{sec:command-clozelinefil}.
 %    \begin{macrocode}
 \def\clozelinefil{%
   \strut%
@@ -354,7 +354,7 @@
 % \begin{macro}{\clozefil}
 % This is the plain Lua\TeX-Version of the macro \cmd{\clozefil}.
 % The usage of the command \cmd{\clozefil} is described in detail in
-% section \secref{sec:command-clozefil}.
+% section \TmpSecRef{sec:command-clozefil}.
 %    \begin{macrocode}
 \def\clozefil#1{%
   \cloze{#1}\clozelinefil%
@@ -364,7 +364,7 @@
 %
 % \begin{macro}{\clozeparcmd}
 % The usage of the macro \cmd{\clozeparcmd} is described in detail in
-% section \secref{sec:command-clozeparcmd}.
+% section \TmpSecRef{sec:command-clozeparcmd}.
 %    \begin{macrocode}
 \def\clozeparcmd#1\par {%
   \par%
@@ -510,9 +510,9 @@
 %
 % \paragraph{\tt{align}}
 %
-% \noindent Please read the section \secref{sec:option-align} how to use
+% \noindent Please read the section \TmpSecRef{sec:option-align} how to use
 % the option |align|. |align| affects only the command \cmd{\clozefix}
-% \secref{sec:command-clozefix}.
+% \TmpSecRef{sec:command-clozefix}.
 %
 %    \begin{macrocode}
 \DeclareStringOption{align}
@@ -521,10 +521,10 @@
 %
 % \paragraph{\tt{boxheight}}
 %
-% \noindent Please read the section \secref{sec:command-clozebox}
+% \noindent Please read the section \TmpSecRef{sec:command-clozebox}
 % how to use the option |boxheight|. |boxheight| affects only the
 % environment |clozebox|.
-% \secref{sec:command-clozefix}.
+% \TmpSecRef{sec:command-clozefix}.
 %
 %    \begin{macrocode}
 \DeclareStringOption{boxheight}
@@ -533,10 +533,10 @@
 %
 % \paragraph{\tt{boxwidth}}
 %
-% \noindent Please read the section \secref{sec:command-clozebox}
+% \noindent Please read the section \TmpSecRef{sec:command-clozebox}
 % how to use the option |boxwidth|. |boxwidth| affects only the
 % environment |clozebox|.
-% \secref{sec:command-clozefix}.
+% \TmpSecRef{sec:command-clozefix}.
 %
 %    \begin{macrocode}
 \DeclareStringOption{boxwidth}
@@ -545,7 +545,7 @@
 %
 % \paragraph{\tt{distance}}
 %
-% \noindent Please read the section \secref{sec:option-distance} how to
+% \noindent Please read the section \TmpSecRef{sec:option-distance} how to
 % use the option |distance|.
 %
 %    \begin{macrocode}
@@ -557,7 +557,7 @@
 %
 % \noindent If the option |hide| appears in the commands, |hide| will be
 % set to \emph{true} and |show| to \emph{false} on the Lua side. Please
-% read the section \secref{sec:option-hide} how to use the option
+% read the section \TmpSecRef{sec:option-hide} how to use the option
 % |hide|.
 %
 %    \begin{macrocode}
@@ -570,7 +570,7 @@
 %
 % \paragraph{\tt{linecolor}}
 %
-% \noindent Please read the section \secref{sec:option-linecolor} how to
+% \noindent Please read the section \TmpSecRef{sec:option-linecolor} how to
 % use the option |linecolor|.
 %
 %    \begin{macrocode}
@@ -583,7 +583,7 @@
 %
 % \paragraph{\tt{margin}}
 %
-% \noindent Please read the section \secref{sec:option-margin} how to
+% \noindent Please read the section \TmpSecRef{sec:option-margin} how to
 % use the option |margin|.
 %
 %    \begin{macrocode}
@@ -595,7 +595,7 @@
 %
 % \noindent If the option |show| appears in the commands, |show| will be
 % set to \emph{true} and |true| to \emph{false} on the Lua side. Please
-% read the section \secref{sec:option-show} how to use the option
+% read the section \TmpSecRef{sec:option-show} how to use the option
 % |show|.
 %
 %    \begin{macrocode}
@@ -608,7 +608,7 @@
 %
 % \paragraph{\tt{spacing}}
 %
-% \noindent Please read the section \secref{sec:option-spacing} how to
+% \noindent Please read the section \TmpSecRef{sec:option-spacing} how to
 % use the option |spacing|.
 %
 %    \begin{macrocode}
@@ -618,7 +618,7 @@
 %
 % \paragraph{\tt{textcolor}}
 %
-% \noindent Please read the section \secref{sec:option-textcolor} how to
+% \noindent Please read the section \TmpSecRef{sec:option-textcolor} how to
 % use the option |textcolor|.
 %
 %    \begin{macrocode}
@@ -631,7 +631,7 @@
 %
 % \paragraph{\tt{thickness}}
 %
-% \noindent Please read the section \secref{sec:option-thickness} how to
+% \noindent Please read the section \TmpSecRef{sec:option-thickness} how to
 % use the option |thickness|.
 %
 %    \begin{macrocode}
@@ -641,9 +641,9 @@
 %
 % \paragraph{\tt{width}}
 %
-% \noindent Please read the section \secref{sec:option-width} how to use
+% \noindent Please read the section \TmpSecRef{sec:option-width} how to use
 % the option |width|. |width| affects only the command \cmd{\clozefix}
-% \secref{sec:command-clozefix}.
+% \TmpSecRef{sec:command-clozefix}.
 %
 %    \begin{macrocode}
 \DeclareStringOption{width}
@@ -660,7 +660,7 @@
 %
 % \begin{macro}{\clozeset}
 % The usage of the command \cmd{\clozeset} is described in detail in
-% section \secref{sec:command-clozeset}.
+% section \TmpSecRef{sec:command-clozeset}.
 %    \begin{macrocode}
 \newcommand{\clozeset}[1]{%
   \ClozeSetToGlobal%
@@ -671,7 +671,7 @@
 %
 % \begin{macro}{\clozeshow}
 % The usage of the command \cmd{\clozeshow} is described in detail in
-% section \secref{sec:command-clozeshow}.
+% section \TmpSecRef{sec:command-clozeshow}.
 %    \begin{macrocode}
 \let\clozeshow=\undefined
 \newcommand{\clozeshow}{%
@@ -682,7 +682,7 @@
 %
 % \begin{macro}{\clozehide}
 % The usage of the command \cmd{\clozehide} is described in detail in
-% section \secref{sec:command-clozehide}.
+% section \TmpSecRef{sec:command-clozehide}.
 %    \begin{macrocode}
 \let\clozehide=\undefined
 \newcommand{\clozehide}{%
@@ -693,7 +693,7 @@
 %
 % \begin{macro}{\cloze}
 % The usage of the command \cmd{\cloze} is described in detail in
-% section \secref{sec:command-cloze}.
+% section \TmpSecRef{sec:command-cloze}.
 %    \begin{macrocode}
 \let\clozeplain=\cloze
 \let\cloze=\undefined
@@ -706,7 +706,7 @@
 %
 % \begin{macro}{\clozefix}
 % The usage of the command \cmd{\clozefix} is described in detail in
-% section \secref{sec:command-clozefix}.
+% section \TmpSecRef{sec:command-clozefix}.
 %    \begin{macrocode}
 \let\clozefixplain=\clozefix
 \let\clozefix=\undefined
@@ -719,7 +719,7 @@
 %
 % \begin{macro}{\clozenol}
 % The usage of the command \cmd{\clozenol} is described in detail in
-% section \secref{sec:command-clozenol}.
+% section \TmpSecRef{sec:command-clozenol}.
 %    \begin{macrocode}
 \let\clozenolplain=\clozenol
 \let\clozenol=\undefined
@@ -732,7 +732,7 @@
 %
 % \begin{environment}{clozepar}
 % The usage of the environment |clozepar| is described in detail in
-% section \secref{sec:command-clozepar}.
+% section \TmpSecRef{sec:command-clozepar}.
 %    \begin{macrocode}
 \newenvironment{clozepar}[1][]%
 {%
@@ -751,7 +751,7 @@
 %
 % \begin{environment}{clozebox}
 % The usage of the environment |clozebox| is described in detail in
-% section \secref{sec:command-clozebox}.
+% section \TmpSecRef{sec:command-clozebox}.
 % TODO: Realize this macro with lua code, without ugly |\color{white}|
 % command.
 %    \begin{macrocode}
@@ -782,7 +782,7 @@
 %
 % \begin{environment}{clozespace}
 % The usage of the environment |clozespace| is described in detail in
-% section \secref{sec:command-clozespace}.
+% section \TmpSecRef{sec:command-clozespace}.
 % TODO: Realization without setspace package.
 %    \begin{macrocode}
 \newenvironment{clozespace}[1][]%
@@ -795,7 +795,7 @@
 %
 % \begin{macro}{\clozeline}
 % The usage of the command \cmd{\clozeline} is described in detail in
-% section \secref{sec:command-clozeline}.
+% section \TmpSecRef{sec:command-clozeline}.
 %    \begin{macrocode}
 \let\clozelineplain=\clozeline
 \let\clozeline=\undefined
@@ -808,7 +808,7 @@
 %
 % \begin{macro}{\clozelinefil}
 % The usage of the command \cmd{\clozelinefil} is described in detail in
-% section \secref{sec:command-clozelinefil}.
+% section \TmpSecRef{sec:command-clozelinefil}.
 %    \begin{macrocode}
 \let\clozelinefilplain=\clozelinefil
 \let\clozelinefil=\undefined
@@ -821,7 +821,7 @@
 %
 % \begin{macro}{\clozefil}
 % The usage of the command \cmd{\clozefil} is described in detail in
-% section \secref{sec:command-clozefil}.
+% section \TmpSecRef{sec:command-clozefil}.
 %    \begin{macrocode}
 \let\clozefil=\undefined
 \newcommand{\clozefil}[2][]{%
