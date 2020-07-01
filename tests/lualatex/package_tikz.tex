@@ -1,0 +1,14 @@
+%!TEX program = lualatex
+\documentclass{article}
+\input ../cloze-test-macros-lualatex.tex
+\usepackage{cloze}
+\usepackage{tikz}
+
+\begin{document}
+\TestTitleDesc{LuaLa\TeX: package tikz}
+{}
+\begin{tikzpicture}
+\node{\cloze{Lorem}};
+\end{tikzpicture}
+
+\end{document}
