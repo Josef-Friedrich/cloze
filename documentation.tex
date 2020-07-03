@@ -5,6 +5,7 @@
 \usepackage{forest}
 \usepackage{multicol}
 \usepackage{tikz}
+\usetikzlibrary{positioning}
 
 %%
 % titlesec
@@ -1601,45 +1602,46 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 %%
 
 \paragraph{Example Multiline alignment in TikZ}
+\def\TmpTikzExampleAlignment{
+  \begin{tikzpicture}[
+    cloze box/.style={draw,text width=3cm},
+    scale=0.8,
+    transform shape
+  ]
+  \def\TmpLorem{
+    \clozenol[margin=0pt]{Damit Ihr indess erkennt, woher
+      dieser ganze Irrthum gekommen ist.}
+  }
 
-\def\TmpLorem#1{
-  \texttt{\footnotesize{}align=#1:}
-  \clozenol[margin=0pt]{Damit Ihr indess erkennt, woher
-    dieser ganze Irrthum gekommen ist.}
-}
+  \def\TmpTextBox##1##2##3{
+    \node (##1) at (##2) [cloze box,align=##1] {\TmpLorem};
+    \node [##3=0cm of ##1] {\texttt{\footnotesize{}align=##1}};
+    \draw (##1) -- (tikz);
+  }
 
-\def\TmpTextBox#1#2{
-  \node (#1) at (#2) [align=#1] {\TmpLorem{#1}};
-  \draw (#1) -- (tikz);
-}
-
-\def\TmpTikzMultiLine{
-  \begin{center}
-  \begin{tikzpicture}[every node/.style={draw,text width=3cm}]
   \node (tikz) at (4,4) [circle, text width=3cm, align=center] {
     \textbf{TikZ}\\Alignment of Multi-Line\\ Text
   };
 
-  \TmpTextBox{left}         {0,8}
-  \TmpTextBox{center}       {4,8}
-  \TmpTextBox{right}        {8,8}
-  \TmpTextBox{flush right}  {8,4}
-  \TmpTextBox{none}         {8,0}
-  \TmpTextBox{flush center}      {4,0}
-  \TmpTextBox{justify} {0,0}
-  \TmpTextBox{flush left}   {0,4}
+  \TmpTextBox{left}         {0,8}{above}
+  \TmpTextBox{center}       {4,8}{above}
+  \TmpTextBox{right}        {8,8}{above}
+  \TmpTextBox{flush right}  {8,4}{above}
+  \TmpTextBox{none}         {8,0}{below}
+  \TmpTextBox{flush center} {4,0}{below}
+  \TmpTextBox{justify}      {0,0}{below}
+  \TmpTextBox{flush left}   {0,4}{above}
   \end{tikzpicture}
-  \end{center}
 }
 
 \TmpHide
 \begin{TmpExample}
-\TmpTikzMultiLine
+\center{\TmpTikzExampleAlignment}
 \end{TmpExample}
 
 \TmpShow
 \begin{TmpExample}
-\TmpTikzMultiLine
+\center{\TmpTikzExampleAlignment}
 \end{TmpExample}
 
 %%
@@ -1746,6 +1748,54 @@ col1 \hspace{1cm} \= col2 \hspace{1cm} \= col3 \hspace{1cm} \= col4 \\
 \begin{TmpExample}
 \begin{center}
 \TmpTimeline
+\end{center}
+\end{TmpExample}
+
+\paragraph{Number pyramid}
+
+\clozesetfont{\ttfamily}
+\def\TmpNumberPyramid(#1,#2,#3,#4,#5,#6){
+  \begin{tikzpicture}[
+    node distance = 0pt,
+    every node/.style = {
+      draw,
+      minimum width=10mm,
+      minimum height=6mm,
+      inner sep=0pt,
+      outer sep=0pt,
+      font=\ttfamily,
+    }
+  ]
+  \node (n1)  {#1};
+  %
+  \node (n11) [below left=of n1.south]    {#2};
+  \node (n12) [right=of n11]              {#3};
+  %
+  \node (n21) [below left=of n11.south]   {#4};
+  \node (n22) [right=of n21]              {#5};
+  \node (n23) [right=of n22]              {#6};
+  \end{tikzpicture}
+}
+
+\def\TmpNumberPyramids{
+  \TmpNumberPyramid(\clozenol{17},\clozenol{12},\clozenol{5},10,2,3)
+  \TmpNumberPyramid(\clozenol{19},10,\clozenol{9},3,\clozenol{7},2)
+  \TmpNumberPyramid(10,\clozenol{7},3,\clozenol{5},2,\clozenol{1})
+}
+
+\TmpHide
+
+\begin{TmpExample}
+\begin{center}
+\TmpNumberPyramids
+\end{center}
+\end{TmpExample}
+
+\TmpShow
+
+\begin{TmpExample}
+\begin{center}
+\TmpNumberPyramids
 \end{center}
 \end{TmpExample}
 
