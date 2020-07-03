@@ -1,0 +1,36 @@
+%!TEX program = lualatex
+\documentclass{article}
+\input ../cloze-test-macros-lualatex.tex
+\usepackage{cloze}
+\usepackage{tikz}
+
+\begin{document}
+\TestTitleDesc{LuaLa\TeX: package tikz}
+{}
+\begin{tikzpicture}[every node/.style={draw,text width=3cm}]
+\def\TmpLorem#1{
+  \texttt{\footnotesize{}align=#1:}
+  \clozenol[margin=0pt]{Damit Ihr indess erkennt, woher
+    dieser ganze Irrthum gekommen ist.}
+}
+
+\def\TmpTextBox#1#2{
+  \node (#1) at (#2) [align=#1] {\TmpLorem{#1}};
+  \draw (#1) -- (tikz);
+}
+
+\node (tikz) at (4,4) [circle, text width=3cm, align=center] {
+  \textbf{TikZ}\\Alignment of Multi-Line\\ Text
+};
+
+\TmpTextBox{left}         {0,8}
+\TmpTextBox{center}       {4,8}
+\TmpTextBox{right}        {8,8}
+\TmpTextBox{flush right}  {8,4}
+\TmpTextBox{none}         {8,0}
+\TmpTextBox{flush center}      {4,0}
+\TmpTextBox{justify} {0,0}
+\TmpTextBox{flush left}   {0,4}
+\end{tikzpicture}
+
+\end{document}
