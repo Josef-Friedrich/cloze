@@ -4,15 +4,15 @@
 \documentclass{article}
 \usepackage{tikz}
 \usepackage[show]{cloze}
-\tikzset{>=latex} % for LaTeX arrow head
 
 \begin{document}
 
-\begin{tikzpicture}[
+\def\TmpTimeline{\begin{tikzpicture}[
   scale=0.7,
   transform shape,
-  text box/.style={black, text width=3cm, align=left, draw},
-  arrow/.style={<-,thick,black,align=center}
+  text box/.style={black, text width=3cm, align=flush left, draw},
+  arrow/.style={<-,thick,black,align=center},
+  >=latex
 ]
 
   % limits
@@ -24,22 +24,22 @@
   \def\oneTickLength{0.30}
 
   % help functions
-  % #1: year
-  % #2: distance arrow timeline: - below + above
-  % #3: arrow length
-  % #4: Text
-  % #5: left or right or empty (->center)
-  \def\yearArrowLabel(#1,#2,#3,#4,#5){
-    \def\xy{{(#1-\yearOne)*\widthOfAxes/\numberOfDecades/10}};
-    \pgfmathparse{int(#2*100)};
+  % ##1: year
+  % ##2: distance arrow timeline: - below + above
+  % ##3: arrow length
+  % ##4: Text
+  % ##5: left or right or empty (-> center)
+  \def\yearArrowLabel(##1,##2,##3,##4,##5){
+    \def\xy{{(##1-\yearOne)*\widthOfAxes/\numberOfDecades/10}};
+    \pgfmathparse{int(##2*100)};
     \ifnum \pgfmathresult<0
       % below
-      \def\yyp{{(\tenTickLength*(0.90+#2))}}; \def\yyw{{(\yyp-\tenTickLength*#3)}}
-      \draw[arrow] (\xy,\yyp) -- (\xy,\yyw) node[below #5,text box] at (\xy,\yyw) {\footnotesize\textbf{#1}: #4};
+      \def\yyp{{(\tenTickLength*(0.90+##2))}}; \def\yyw{{(\yyp-\tenTickLength*##3)}}
+      \draw[arrow] (\xy,\yyp) -- (\xy,\yyw) node[below ##5,text box] at (\xy,\yyw) {\footnotesize\textbf{##1}: ##4};
     \else
       % above
-      \def\yyp{{(\tenTickLength*(0.10+#2)}}; \def\yyw{{(\yyp+\tenTickLength*#3)}}
-      \draw[arrow] (\xy,\yyp) -- (\xy,\yyw) node[above #5,text box] at (\xy,\yyw) {\footnotesize\textbf{#1:} #4};
+      \def\yyp{{(\tenTickLength*(0.10+##2)}}; \def\yyw{{(\yyp+\tenTickLength*##3)}}
+      \draw[arrow] (\xy,\yyp) -- (\xy,\yyw) node[above ##5,text box] at (\xy,\yyw) {\footnotesize\textbf{##1:} ##4};
     \fi
   }
 
@@ -67,28 +67,37 @@
 
   % label
   \yearArrowLabel(1865,-1,3,
-    Thirteenth \cloze{Amendment} to constitution abolishes \cloze{Slavery} 1865,)
+    Thirteenth \cloze{Amendment} to constitution abolishes \cloze{Slavery},)
 
   \yearArrowLabel(1875,1,2,
-    \cloze{Civil Rights Act} is passed giving black citizens \cloze{equal} treatment. 1875,)
+    \cloze{Civil Rights Act} is passed giving black citizens \cloze{equal} treatment.,)
 
   \yearArrowLabel(1896,-1,3,
-    Plessy v. \cloze{Ferguson} say that segregation is \cloze{constitutional} 1896,)
+    Plessy v. \cloze{Ferguson} say that segregation is \cloze{constitutional},)
 
   \yearArrowLabel(1909,1,2,
-    \cloze{NAACP} is founded in New York and led by W.E.B. Du \cloze{Bois} 1909,)
+    \cloze{NAACP} is founded in New York and led by W.E.B. Du \cloze{Bois},)
 
   \yearArrowLabel(1946,1,2,
-    U.S. Supreme court bans segregation on \cloze{Public Transit} (i.e. subways). 1946,left)
+    U.S. Supreme court bans segregation on \cloze{Public Transit} (i.e. subways).,left)
 
   \yearArrowLabel(1955,-1,3,
-    Rosa \cloze{Parks} refuses to give up her seat on a \cloze{bus} in \cloze{Alabama} 1955,left)
+    Rosa \cloze{Parks} refuses to give up her seat on a \cloze{bus} in \cloze{Alabama},left)
 
   \yearArrowLabel(1963,1,2,
-    Martin Luther \cloze{King} Jr. delivers his ‘I Have a \cloze{Dream}’ speech in \cloze{Washington} D.C. 1963,)
+    Martin Luther \cloze{King} Jr. delivers his ‘I Have a \cloze{Dream}’ speech in \cloze{Washington} D.C.,)
 
   \yearArrowLabel(1968,-3,2,
-    Martin Luther King Jr. is \cloze{assassinated} 1968,right)
+    Martin Luther King Jr. is \cloze{assassinated},right)
 \end{tikzpicture}
+}
+
+\clozehide
+
+\TmpTimeline
+
+\clozeshow
+
+\TmpTimeline
 
 \end{document}
