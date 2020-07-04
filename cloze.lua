@@ -913,6 +913,7 @@ end
 --
 -- @tparam node head_node The head of a node list.
 local function make_par(head_node)
+
   --- Add one additinal and empty line at the end of a paragraph.
   --
   -- @tparam node last_hlist_node The last hlist node of a paragraph.
@@ -936,7 +937,7 @@ local function make_par(head_node)
   --- Add multiple empty lines at the end of a paragraph.
   --
   -- @tparam node last_hlist_node The last hlist node of a paragraph.
-  -- @tparam number count Count the lines to add at the end.
+  -- @tparam number count Count of the lines to add at the end.
   local function add_additional_lines(last_hlist_node, count)
     local i = 0
     while i < count do
