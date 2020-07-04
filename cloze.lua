@@ -914,17 +914,34 @@ end
 -- @tparam node head_node The head of a node list.
 local function make_par(head_node)
 
-  --- Add one additinal and empty line at the end of a paragraph.
+  --- Add one additional empty line at the end of a paragraph.
+  --
+  -- All fields from the last hlist node are copied to the created
+  -- hlist.
   --
   -- @tparam node last_hlist_node The last hlist node of a paragraph.
   --
-  -- @treturn node The created new hlist node containing the line
+  -- @treturn node The created new hlist node containing the line.
   local function add_additional_line(last_hlist_node)
     local hlist_node = node.new(node.id('hlist'))
     hlist_node.subtype = 1
-    hlist_node.width = last_hlist_node.width
-    hlist_node.depth = last_hlist_node.depth
-    hlist_node.height = last_hlist_node.height
+
+    local fields = {
+      'width',
+      'depth',
+      'height',
+      'shift',
+      'glue_order',
+      'glue_set',
+      'glue_sign',
+      'dir'
+    }
+    for _, field in ipairs(fields) do
+      if last_hlist_node[field] then
+        hlist_node[field] = last_hlist_node[field]
+      end
+    end
+
     local kern_node = create_kern_node(0)
     hlist_node.head = kern_node
     nodex.insert_line(kern_node, last_hlist_node.width)
@@ -946,31 +963,36 @@ local function make_par(head_node)
     end
   end
 
-  local strut_node, line_node, width, last_hlist_node
+  local strut_node, line_node, width, last_hlist_node, hlist_node
   local line_count = 0
-  for hlist_node in node.traverse_id(node.id('hlist'), head_node) do
-    line_count = line_count + 1
-    last_hlist_node = hlist_node
-    width = hlist_node.width
-    hlist_node, strut_node, _ = insert_strut_into_hlist(hlist_node)
-    line_node = nodex.insert_line(strut_node, width)
-    if registry.get_value_show() then
-      nodex.insert_list(
-        'after',
-        line_node,
-        {
-          create_kern_node(-width),
-          nodex.create_color('text')
-        }
-      )
-      nodex.insert_list(
-        'after',
-        node.tail(head_node),
-        {nodex.create_color('reset')}
-      )
-    else
-      line_node.next = nil
+  while head_node do
+    if head_node.id == node.id('hlist') then
+      hlist_node = head_node
+
+      line_count = line_count + 1
+      last_hlist_node = hlist_node
+      width = hlist_node.width
+      hlist_node, strut_node, _ = insert_strut_into_hlist(hlist_node)
+      line_node = nodex.insert_line(strut_node, width)
+      if registry.get_value_show() then
+        nodex.insert_list(
+          'after',
+          line_node,
+          {
+            create_kern_node(-width),
+            nodex.create_color('text')
+          }
+        )
+        nodex.insert_list(
+          'after',
+          node.tail(head_node),
+          {nodex.create_color('reset')}
+        )
+      else
+        line_node.next = nil
+      end
     end
+    head_node = head_node.next
   end
 
   local minlines = registry.get_value('minlines')
@@ -980,7 +1002,7 @@ local function make_par(head_node)
     add_additional_lines(last_hlist_node, additional_lines)
   end
 
-  return head_node
+  return true
 end
 
 ---
