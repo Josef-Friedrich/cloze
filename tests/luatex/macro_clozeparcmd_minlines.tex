@@ -1,0 +1,31 @@
+\input ../cloze-test-macros-luatex.tex
+\input cloze.tex
+
+\TestTitleDesc{Lua\TeX: macro \string\clozeparcmd}
+{With the option minlines}
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+erat, sed diam voluptua.
+
+\TestSection{minlines=4}
+
+\clozesetoption{minlines}{4}
+\clozeparcmd Lorem ipsum dolor sit amet.
+
+\TestSection{minlines=3}
+
+\clozesetoption{minlines}{3}
+\clozeparcmd Lorem ipsum dolor sit amet.
+
+\TestSection{minlines=2}
+
+\clozesetoption{minlines}{2}
+\clozeparcmd Lorem ipsum dolor sit amet.
+
+\TestSection{minlines=1}
+
+\clozesetoption{minlines}{1}
+\clozeparcmd Lorem ipsum dolor sit amet.
+
+\bye

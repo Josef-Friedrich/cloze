@@ -1,9 +1,10 @@
-\font\TestTypewriterFontBig=cmtt10 scaled \magstep3
+\font\TestTypewriterFontBigger=cmtt10 scaled \magstep3
+\font\TestTypewriterFontBig=cmtt10 scaled \magstep1
 \font\TestTypewriterFontNormal=cmtt10
 
 \def\TestTitle#1{%
   \noindent%
-  {\TestTypewriterFontBig #1}%
+  {\TestTypewriterFontBigger #1}%
 }
 
 \def\TestDescription#1{%
@@ -18,4 +19,11 @@
   \bigskip
   \hrule width 6cm
   \bigskip
+}
+
+\def\TestSection#1{%
+  \bigskip%
+  \noindent%
+  {\TestTypewriterFontBig#1}%
+  \bigskip%
 }

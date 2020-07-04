@@ -799,7 +799,7 @@ Mozart’s father was called
 
 \tt{minlines} &
 \TmpDescriptionLine{The minimum of lines a \tt{clozepar} environment must have.} &
-\TmpSecRef{sec:option-margin} \\
+\TmpSecRef{sec:option-minlines} \\
 
 \tt{show} &
 \TmpDescriptionLine{Show the cloze text.} &
@@ -1199,42 +1199,35 @@ line breaks after this punctation mark. Even the most large value of
 \subsubsection{\tt{minlines}}
 \label{sec:option-minlines}
 
-\TmpOption{minlines}{integer}:
+\TmpOption{minlines}{integer}: \tt{minlines} stands for
+“\textbf{min}imum \textbf{lines}”. With the option \tt{minlines} you can
+set how many lines a \tt{clozepar} at least must have. If the text to be
+typeset results in fewer lines, empty lines are appended to the end. If
+the text of a \tt{clozepar} produces more lines as specified in
+\tt{minlines}, the option has no effect at all. The option \tt{minlines}
+only affects the behavior of the environment \tt{clozepar}
+\TmpSecRef{sec:command-clozepar} and the macro version \cmd{\clozeparcmd}
+\TmpSecRef{sec:command-clozeparcmd}.
 
 % https://www.pinterest.de/pin/856176579144764867/
 
-\begin{multicols}{2}
 \begin{minted}{latex}
-\clozesetoption{minlines}{3}
+\clozeset{minlines=4}
 \begin{enumerate}
 \item Battlements
 
 \begin{clozepar}
 Higher ...
-\end{clozepar}
-
-\item Embrasures
-
-\begin{clozepar}
-Heavily ...
-\end{clozepar}
-
-\item Partcullis
-
-\begin{clozepar}
-Arrow ...
-\end{clozepar}
-\end{enumerate}
 \end{minted}
 
-\columnbreak
-\begin{TmpExample}
-\clozesetoption{minlines}{4}
+\clozeset{minlines=4}
 
+\def\TmpExampleMinlines{
 \textbf{\Large{}Defending a Castle}
 
 \noindent
-Here is a list of features on castle in the Middle Ages that would help to defend it.
+Here is a list of features on castle in the Middle Ages that would help
+to defend it.
 
 \begin{enumerate}
 \item Battlements
@@ -1256,8 +1249,23 @@ Heavily protected entrance
 Arrow slits with a round hole for firing musket guns
 \end{clozepar}
 \end{enumerate}
+}
+
+\begin{multicols}{2}
+\TmpHide
+\begin{TmpExample}
+\TmpExampleMinlines
+\end{TmpExample}
+
+\columnbreak
+
+\TmpShow
+\begin{TmpExample}
+\TmpExampleMinlines
 \end{TmpExample}
 \end{multicols}
+
+\clozereset
 
 %%
 % spacing
