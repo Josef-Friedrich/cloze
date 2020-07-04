@@ -363,20 +363,33 @@
 }
 %    \end{macrocode}
 % \end{macro}
-%
-% \begin{macro}{\clozeparcmd}
-% The usage of the macro \cmd{\clozeparcmd} is described in detail in
-% section \TmpSecRef{sec:command-clozeparcmd}.
+
+% \begin{macro}{\clozeparplain}
+% The usage of the macro \cmd{\clozeparplain} is described in detail in
+% section \TmpSecRef{sec:command-clozeparplain}.
 %    \begin{macrocode}
-\def\clozeparcmd#1\par {%
+\def\clozeparplain#1{%
   \par%
   \ClozeStartMarker{par}%
-  \clozefont\relax%
-  #1%
+  {%
+    \clozefont\relax%
+    #1%
+  }%
   \ClozeStopMarker{par}%
   \par%
   \directlua{cloze.unregister('par')}%
 }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozeparcapture}
+% The usage of the macro \cmd{\clozeparcapture} is described in detail in
+% section \TmpSecRef{sec:command-clozeparcapture}.
+%    \begin{macrocode}
+\def\clozeparcapture#1\par {%
+  \clozeparplain{#1}%
+}
+\let\clozeparcmd=\clozeparcapture
 %    \end{macrocode}
 % \end{macro}
 %
@@ -707,11 +720,11 @@
 % The usage of the command \cmd{\cloze} is described in detail in
 % section \TmpSecRef{sec:command-cloze}.
 %    \begin{macrocode}
-\let\clozeplain=\cloze
+\let\clozePLAIN=\cloze
 \let\cloze=\undefined
 \newcommand{\cloze}[2][]{%
   \ClozeSetLocalOptions{#1}%
-  \clozeplain{#2}%
+  \clozePLAIN{#2}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -720,11 +733,11 @@
 % The usage of the command \cmd{\clozefix} is described in detail in
 % section \TmpSecRef{sec:command-clozefix}.
 %    \begin{macrocode}
-\let\clozefixplain=\clozefix
+\let\clozefixPLAIN=\clozefix
 \let\clozefix=\undefined
 \newcommand{\clozefix}[2][]{%
   \ClozeSetLocalOptions{#1}%
-  \clozefixplain{#2}%
+  \clozefixPLAIN{#2}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -733,11 +746,11 @@
 % The usage of the command \cmd{\clozenol} is described in detail in
 % section \TmpSecRef{sec:command-clozenol}.
 %    \begin{macrocode}
-\let\clozenolplain=\clozenol
+\let\clozenolPLAIN=\clozenol
 \let\clozenol=\undefined
 \newcommand{\clozenol}[2][]{%
   \ClozeSetLocalOptions{#1}%
-  \clozenolplain{#2}%
+  \clozenolPLAIN{#2}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -760,6 +773,20 @@
 }
 %    \end{macrocode}
 % \end{environment}
+%
+%
+% \begin{macro}{\clozeparplain}
+% The usage of the command \cmd{\clozeparplain} is described in detail in
+% section \TmpSecRef{sec:command-clozeparplain}.
+%    \begin{macrocode}
+\let\clozeparplainPLAIN=\clozeparplain
+\let\clozeparplain=\undefined
+\newcommand{\clozeparplain}[2][]{%
+  \ClozeSetLocalOptions{#1}%
+  \clozeparplainPLAIN{#2}%
+}
+%    \end{macrocode}
+% \end{macro}
 %
 % \begin{environment}{clozebox}
 % The usage of the environment |clozebox| is described in detail in
@@ -809,11 +836,11 @@
 % The usage of the command \cmd{\clozeline} is described in detail in
 % section \TmpSecRef{sec:command-clozeline}.
 %    \begin{macrocode}
-\let\clozelineplain=\clozeline
+\let\clozelinePLAIN=\clozeline
 \let\clozeline=\undefined
 \newcommand{\clozeline}[1][]{%
   \ClozeSetLocalOptions{#1}%
-  \clozelineplain%
+  \clozelinePLAIN%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -822,11 +849,11 @@
 % The usage of the command \cmd{\clozelinefil} is described in detail in
 % section \TmpSecRef{sec:command-clozelinefil}.
 %    \begin{macrocode}
-\let\clozelinefilplain=\clozelinefil
+\let\clozelinefilPLAIN=\clozelinefil
 \let\clozelinefil=\undefined
 \newcommand{\clozelinefil}[1][]{%
   \ClozeSetLocalOptions{#1}%
-  \clozelinefilplain%
+  \clozelinefilPLAIN%
 }
 %    \end{macrocode}
 % \end{macro}

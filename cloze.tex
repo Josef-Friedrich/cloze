@@ -117,15 +117,22 @@
 \def\clozefil#1{%
   \cloze{#1}\clozelinefil%
 }
-\def\clozeparcmd#1\par {%
+
+\def\clozeparplain#1{%
   \par%
   \ClozeStartMarker{par}%
-  \clozefont\relax%
-  #1%
+  {%
+    \clozefont\relax%
+    #1%
+  }%
   \ClozeStopMarker{par}%
   \par%
   \directlua{cloze.unregister('par')}%
 }
+\def\clozeparcapture#1\par {%
+  \clozeparplain{#1}%
+}
+\let\clozeparcmd=\clozeparcapture
 \endinput
 %%
 %% End of file `cloze.tex'.

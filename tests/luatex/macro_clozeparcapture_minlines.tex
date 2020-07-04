@@ -1,7 +1,7 @@
 \input ../cloze-test-macros-luatex.tex
 \input cloze.tex
 
-\TestTitleDesc{Lua\TeX: macro \string\clozeparcmd}
+\TestTitleDesc{Lua\TeX: macro \string\clozeparcapture}
 {With the option minlines}
 
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
@@ -11,21 +11,21 @@ erat, sed diam voluptua.
 \TestSection{minlines=4}
 
 \clozesetoption{minlines}{4}
-\clozeparcmd Lorem ipsum dolor sit amet.
+\clozeparcapture Lorem ipsum dolor sit amet.
 
 \TestSection{minlines=3}
 
 \clozesetoption{minlines}{3}
-\clozeparcmd Lorem ipsum dolor sit amet.
+\clozeparcapture Lorem ipsum dolor sit amet.
 
 \TestSection{minlines=2}
 
 \clozesetoption{minlines}{2}
-\clozeparcmd Lorem ipsum dolor sit amet.
+\clozeparcapture Lorem ipsum dolor sit amet.
 
 \TestSection{minlines=1}
 
 \clozesetoption{minlines}{1}
-\clozeparcmd Lorem ipsum dolor sit amet.
+\clozeparcapture Lorem ipsum dolor sit amet.
 
 \bye

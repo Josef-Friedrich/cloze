@@ -1,0 +1,21 @@
+\input ../cloze-test-macros-luatex.tex
+\input cloze.tex
+
+\TestTitleDesc{Lua\TeX: macro \string\clozeparcapture}
+{}
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+erat, sed diam voluptua.
+
+\TestSection{Use line breaks}
+
+\clozeparcapture Lorem ipsum dolor sit amet, consetetur sadipscing
+elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+aliquyam erat, sed diam voluptua.
+
+\TestSection{Use par to mark end}
+
+At vero \clozeparcapture eos \par et.
+
+\bye

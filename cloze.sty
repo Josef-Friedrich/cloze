@@ -98,23 +98,23 @@
 \newcommand{\clozehide}{%
   \clozeset{hide}
 }
-\let\clozeplain=\cloze
+\let\clozePLAIN=\cloze
 \let\cloze=\undefined
 \newcommand{\cloze}[2][]{%
   \ClozeSetLocalOptions{#1}%
-  \clozeplain{#2}%
+  \clozePLAIN{#2}%
 }
-\let\clozefixplain=\clozefix
+\let\clozefixPLAIN=\clozefix
 \let\clozefix=\undefined
 \newcommand{\clozefix}[2][]{%
   \ClozeSetLocalOptions{#1}%
-  \clozefixplain{#2}%
+  \clozefixPLAIN{#2}%
 }
-\let\clozenolplain=\clozenol
+\let\clozenolPLAIN=\clozenol
 \let\clozenol=\undefined
 \newcommand{\clozenol}[2][]{%
   \ClozeSetLocalOptions{#1}%
-  \clozenolplain{#2}%
+  \clozenolPLAIN{#2}%
 }
 \newenvironment{clozepar}[1][]%
 {%
@@ -127,6 +127,12 @@
   \ClozeStopMarker{par}%
   \par%
   \directlua{cloze.unregister('par')}%
+}
+\let\clozeparplainPLAIN=\clozeparplain
+\let\clozeparplain=\undefined
+\newcommand{\clozeparplain}[2][]{%
+  \ClozeSetLocalOptions{#1}%
+  \clozeparplainPLAIN{#2}%
 }
 \newsavebox{\ClozeBox}%
 \NewDocumentEnvironment{clozebox}{ s O{} +b}{%
@@ -155,17 +161,17 @@
   \ClozeSetLocalOptions{#1}%
   \begin{spacing}{\directlua{tex.print(cloze.get_value('spacing'))}}%
 }{\end{spacing}}
-\let\clozelineplain=\clozeline
+\let\clozelinePLAIN=\clozeline
 \let\clozeline=\undefined
 \newcommand{\clozeline}[1][]{%
   \ClozeSetLocalOptions{#1}%
-  \clozelineplain%
+  \clozelinePLAIN%
 }
-\let\clozelinefilplain=\clozelinefil
+\let\clozelinefilPLAIN=\clozelinefil
 \let\clozelinefil=\undefined
 \newcommand{\clozelinefil}[1][]{%
   \ClozeSetLocalOptions{#1}%
-  \clozelinefilplain%
+  \clozelinefilPLAIN%
 }
 \let\clozefil=\undefined
 \newcommand{\clozefil}[2][]{%

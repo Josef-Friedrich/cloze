@@ -1,0 +1,28 @@
+%!TEX program = lualatex
+\documentclass{article}
+\usepackage{tikz}
+\usepackage[show]{cloze}
+
+\begin{document}
+\begin{tikzpicture}
+\node[draw,text width=5cm]{
+  \begin{clozepar}[minlines=15]
+  Lorem ipsum dolor sit amet, consetetur sadipscing
+  elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+  aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo
+  dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus
+  est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit a
+  \end{clozepar}
+};
+
+\node (plain) at (6,0) [draw,text width=5cm]{
+  \clozeparplain{
+  Lorem ipsum dolor sit amet, consetetur sadipscing
+  elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+  aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo
+  dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus
+  est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit a}
+};
+\end{tikzpicture}
+
+\end{document}

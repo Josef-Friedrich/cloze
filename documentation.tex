@@ -241,7 +241,7 @@ There are the commands
 \cmd{\clozefix},
 \cmd{\clozefil},
 \cmd{\clozenol},
-\cmd{\clozeparcmd},
+\cmd{\clozeparcapture},
 \cmd{\clozestrike} and the environments
 |clozepar| and
 |clozebox|
@@ -279,8 +279,10 @@ minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
 ex ea commodo consequat.}
 \end{TmpExample}
 
-\noindent The command \cmd{\cloze} doesn't change the behavior of the
-hyphenation. Let's try some long German words:
+\noindent The command \cmd{\cloze} doesn’t (better shouldn’t)  change
+the behavior of the hyphenation. Let’s try some long German words (Known
+issue: Sometimes you have to insert manual hyphenation points (|\-|). I
+don’t know why. Solutions and suggestions are very welcome.):
 
 \begin{TmpExample}
 es
@@ -308,7 +310,7 @@ The gap font can be changed by using the command
 \cmd{\clozefont} which contains the font definition.
 Thus, the command \tt{\string\clozesetfont\string{\string\Large\string}}
 has the same effect as
-|\def\clozefont{\Large}|
+|\def\clozefont{\Large}|.
 
 \clozesetfont{\Large}
 
@@ -330,6 +332,12 @@ Excepteur \cloze{sint} occaecat \cloze{cupidatat} non proident.
 \end{TmpExample}
 
 \clozesetfont{\itshape}
+
+\noindent
+If you use clozes in math mode you have to overwrite the default cloze
+font (|\clozesetfont{\itshape}|) of the package, because \cmd{\itshape}
+is not available in math mode. |\clozesetfont{}| will do the
+trick.
 
 %%
 % \clozefix
@@ -443,14 +451,37 @@ erat, sed diam voluptua} sit amet.
 
 \DescribeMacro{\clozefil} \cmd{\clozefil}\oarg{options}\marg{some text}:
 The name of the command is inspired by \cmd{\hfil}, \cmd{\hfill}, and
-\cmd{\hfilll}. Only \cmd{\clozefil} fills out all available horizontal
-spaces with a line.
+\cmd{\hfilll}. \cmd{\clozefil} fills out all available horizontal
+space with a line. The macros \cmd{\clozefill} and \cmd{\clozefilll}
+doesn’t exist, only \cmd{\clozefil} (with one |l|) does.
 
+\def\TmpExampleClozefil{
+Complete the sentences below to share more about yourself:
+\bigskip
+
+\noindent
+I am someone who loves \clozefil{to write cloze worksheets in \TeX}.
+
+\noindent
+I am someone who hate \clozefil{to write cloze worksheets in MS Word}.
+
+\noindent
+I am someone who can \clozefil{write cloze worksheets in \TeX}.
+
+\noindent
+I am someone who can’t \clozefil{write cloze worksheets in MS Word}.
+}
+
+\bigskip
+
+\TmpHide
 \begin{TmpExample}
-Lorem ipsum dolor sit amet, \clozefil{consectetur adipisicing elit, sed
-do eiusmod.}
+\TmpExampleClozefil
+\end{TmpExample}
 
-Ut enim \clozefil{ad minim veniam} exercitation.
+\TmpShow
+\begin{TmpExample}
+\TmpExampleClozefil
 \end{TmpExample}
 
 %%
@@ -460,9 +491,11 @@ Ut enim \clozefil{ad minim veniam} exercitation.
 \subsubsection{\cmd{\clozeextend}}
 \label{sec:command-clozeextend}
 
-\DescribeMacro{\clozeextend} \cmd{\clozeextend}\oarg{spaces}:
-The command |\clozeextend| adds some invisible placeholders to extend
-some cloze texts with blank space.
+\DescribeMacro{\clozeextend} \cmd{\clozeextend}\oarg{spaces}: The
+command |\clozeextend| adds some invisible placeholders to extend some
+cloze texts with blank space. Keep in mind that there is the option
+\tt{minlines} \TmpSecRef{sec:option-minlines}, if you want to extend some
+cloze paragraphs.
 
 \begin{minted}{latex}
 \begin{itemize}
@@ -510,13 +543,25 @@ Excepteur sint occaecat cupidatat non proident.
 \end{TmpExample}
 
 %%
-% \clozeparcmd
+% \clozeparplain
 %%
 
-\subsubsection{\cmd{\clozeparcmd}}
-\label{sec:command-clozeparcmd}
-\DescribeMacro{\clozeparcmd} \cmd{\clozeparcmd}: The command
-\cmd{\clozeparcmd} is the macro version of the environment |clozepar|.
+\subsubsection{\cmd{\clozeparplain}}
+\label{sec:command-clozeparplain}
+\DescribeMacro{\clozeparplain} \cmd{\clozeparplain}: The command
+\cmd{\clozeparplain} is the macro version of the environment |clozepar|
+\TmpSecRef{sec:command-clozepar}. It is intended to provide cloze
+support on full paragraphs in plain Lua\TeX.
+
+%%
+% \clozeparcapture
+%%
+
+\subsubsection{\cmd{\clozeparcapture}}
+\label{sec:command-clozeparcapture}
+\DescribeMacro{\clozeparcapture} \cmd{\clozeparcapture}: The command is
+defined to capture all text until the next paragraph (|\par|):
+\mintinline{latex}{\def\clozeparcapture#1\par{...}}.
 
 %%
 % clozebox
@@ -594,8 +639,7 @@ different background color:
 \end{TmpExample}
 \end{multicols}
 
-\paragraph{starred}
-
+\noindent
 The starred version omits the line around the box.
 
 % starred
@@ -1206,8 +1250,8 @@ typeset results in fewer lines, empty lines are appended to the end. If
 the text of a \tt{clozepar} produces more lines as specified in
 \tt{minlines}, the option has no effect at all. The option \tt{minlines}
 only affects the behavior of the environment \tt{clozepar}
-\TmpSecRef{sec:command-clozepar} and the macro version \cmd{\clozeparcmd}
-\TmpSecRef{sec:command-clozeparcmd}.
+\TmpSecRef{sec:command-clozepar} and the macro version \cmd{\clozeparcapture}
+\TmpSecRef{sec:command-clozeparcapture}.
 
 % https://www.pinterest.de/pin/856176579144764867/
 
