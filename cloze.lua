@@ -19,7 +19,6 @@
 
 -- It is good form to provide some background informations about this Lua
 -- module.
-local nodetree = require('nodetree')
 if not modules then modules = { } end modules ['cloze'] = {
   version   = '1.6',
   comment   = 'cloze',
@@ -45,16 +44,17 @@ registry.defaults = {
   ['boxwidth'] = '\\linewidth',
   ['distance'] = '1.5pt',
   ['hide'] = false,
-  ['linecolor'] = '0 0 0 rg 0 0 0 RG', -- black
   ['linecolor_name'] = 'black',
+  ['linecolor'] = '0 0 0 rg 0 0 0 RG', -- black
   ['margin'] = '3pt',
-  ['resetcolor'] = '0 0 0 rg 0 0 0 RG', -- black
+  ['minlines'] = 0,
   ['resetcolor_name'] = 'black',
+  ['resetcolor'] = '0 0 0 rg 0 0 0 RG', -- black
   ['show_text'] = true,
   ['show'] = true,
   ['spacing'] = '1.6',
-  ['textcolor'] = '0 0 1 rg 0 0 1 RG', -- blue
   ['textcolor_name'] = 'blue', -- blue
+  ['textcolor'] = '0 0 1 rg 0 0 1 RG', -- blue
   ['thickness'] = '0.4pt',
   ['width'] = '2cm',
 }
@@ -379,14 +379,16 @@ function registry.get_marker(item, mode, position)
   return out
 end
 
---- `registry.get_marker_data` tests whether the node `item` is a
---  marker.
+--- Test whether the node `item` is a marker and retrieve the
+-- the corresponding registry data.
 --
--- The argument `item` is a node of unspecified type.
+-- @tparam node item The argument `item` is a node of unspecified type.
+--
+-- @treturn table The marker data.
 function registry.get_marker_data(item)
-  if item.id == node.id('whatsit')
-    and item.subtype == node.subtype('user_defined')
-    and item.user_id == registry.user_id then
+  if item.id == node.id('whatsit') and
+     item.subtype == node.subtype('user_defined') and
+     item.user_id == registry.user_id then
     return registry.get_storage(item.value)
   else
     return false
@@ -490,6 +492,10 @@ end
 --- Retrieve a value from a given key. First search for the value in the
 -- local options, then in the global options. If both option storages are
 -- empty, the default value will be returned.
+--
+-- @tparam string key The name of the options key.
+--
+-- @treturn mixed The value of the corresponding option key.
 function registry.get_value(key)
   if registry.has_value(registry.local_options[key]) then
     return registry.local_options[key]
@@ -944,10 +950,6 @@ local function make_par(head_node)
   for hlist_node in node.traverse_id(node.id('hlist'), head_node) do
     line_count = line_count + 1
     last_hlist_node = hlist_node
-    print(hlist_node)
-    for whatsit in node.traverse_id(node.id('whatsit'), hlist_node.head) do
-      registry.get_marker(whatsit, 'par', 'start')
-    end
     width = hlist_node.width
     hlist_node, strut_node, _ = insert_strut_into_hlist(hlist_node)
     line_node = nodex.insert_line(strut_node, width)
@@ -970,7 +972,12 @@ local function make_par(head_node)
     end
   end
 
-  add_additional_lines(last_hlist_node, 0)
+  local minlines = registry.get_value('minlines')
+  local additional_lines = minlines - line_count
+
+  if additional_lines > 0 then
+    add_additional_lines(last_hlist_node, additional_lines)
+  end
 
   return head_node
 end

@@ -1,0 +1,46 @@
+%!TEX program = lualatex
+\documentclass{article}
+\input ../cloze-test-macros-lualatex.tex
+\usepackage[minlines=3]{cloze}
+\begin{document}
+\TestTitleDesc{Option minlines}
+{}
+
+\section{Global: \texttt{minlines=5}}
+
+\begin{clozepar}
+Lorem ipsum.
+\end{clozepar}
+
+\section{Local: \texttt{minlines=5}}
+
+\begin{clozepar}[minlines=5]
+Lorem ipsum.
+\end{clozepar}
+
+\section{Local: \texttt{minlines=7}}
+
+\begin{clozepar}[minlines=7]
+Lorem ipsum.
+\end{clozepar}
+
+\section{after clozereset}
+
+\clozereset
+
+\begin{clozepar}
+Lorem ipsum.
+\end{clozepar}
+
+\section{Local: \texttt{minlines=-1}}
+
+\begin{clozepar}[minlines=-1]
+Lorem ipsum.
+\end{clozepar}
+
+\section{Local: \texttt{minlines=1} and more text }
+
+\begin{clozepar}[minlines=-1]
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.\end{clozepar}
+
+\end{document}
