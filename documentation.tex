@@ -594,56 +594,6 @@ different background color:
 \end{TmpExample}
 \end{multicols}
 
-\paragraph{Option boxwidth}
-\label{sec:command-clozebox-boxwidth}
-See the documentation about the option \TmpSecRef{sec:option-boxwidth}.
-
-\begin{minted}{latex}
-\begin{clozebox}[boxwidth=5cm]
-\end{minted}
-
-\begin{TmpExample}
-\bigskip
-\begin{center}
-\begin{clozebox}[boxwidth=2.5cm]
-boxwidth: 2.5cm; Lorem ipsum dolor sit amet ...
-\end{clozebox}
-\begin{clozebox}[boxwidth=3cm]
-boxwidth: 3cm; Lorem ipsum dolor sit amet ...
-\end{clozebox}
-\begin{clozebox}[boxwidth=5cm]
-boxwidth: 4cm; Lorem ipsum dolor sit amet ...
-\end{clozebox}
-\end{center}
-\bigskip
-\end{TmpExample}
-
-\paragraph{Option boxheight}
-\label{sec:command-clozebox-boxheight}
-See the documentation about the option \TmpSecRef{sec:option-boxheight}.
-
-\begin{minted}{latex}
-\begin{clozebox}[boxheight=3cm]
-\end{minted}
-
-\TmpReduceVspace
-
-\begin{TmpExample}
-\bigskip
-\begin{center}
-\begin{clozebox}[boxheight=3cm,boxwidth=3cm]
-boxheight: 3cm; Lorem ipsum dolor sit amet ...
-\end{clozebox}
-\begin{clozebox}[boxheight=2cm,boxwidth=3cm]
-boxheight: 2cm; Lorem ipsum dolor sit amet ...
-\end{clozebox}
-\begin{clozebox}[boxheight=1cm,boxwidth=3cm]
-boxheight: 1cm; Lorem ipsum dolor sit amet ...
-\end{clozebox}
-\end{center}
-\bigskip
-\end{TmpExample}
-
 \paragraph{starred}
 
 The starred version omits the line around the box.
@@ -1034,10 +984,31 @@ of the line is larger than the width of the text.
 \subsubsection{\tt{boxheight}}
 \label{sec:option-boxheight}
 
-|boxheight| specifies the height of a cloze box. This option has only
+\TmpOption{boxheight}{dimen}:
+specifies the height of a cloze box. This option has only
 an effect on the environment |clozebox| \TmpSecRef{sec:command-clozebox}.
-An example can be found in the section about the environment
-\TmpSecRef{sec:command-clozebox-boxheight}.
+
+\begin{minted}{latex}
+\begin{clozebox}[boxwidth=5cm]
+\end{minted}
+
+\TmpReduceVspace
+
+\begin{TmpExample}
+\bigskip
+\begin{center}
+\begin{clozebox}[boxwidth=2.5cm]
+boxwidth: 2.5cm; Lorem ipsum dolor sit amet ...
+\end{clozebox}
+\begin{clozebox}[boxwidth=3cm]
+boxwidth: 3cm; Lorem ipsum dolor sit amet ...
+\end{clozebox}
+\begin{clozebox}[boxwidth=5cm]
+boxwidth: 4cm; Lorem ipsum dolor sit amet ...
+\end{clozebox}
+\end{center}
+\bigskip
+\end{TmpExample}
 
 %%
 % boxwidth
@@ -1046,10 +1017,31 @@ An example can be found in the section about the environment
 \subsubsection{\tt{boxwidth}}
 \label{sec:option-boxwidth}
 
-|boxwidth| specifies the width of a cloze box. This option has only an
+\TmpOption{boxwidth}{dimen}:
+specifies the width of a cloze box. This option has only an
 effect on the environment |clozebox| \TmpSecRef{sec:command-clozebox}.
-An example can be found in the section about the environment
-\TmpSecRef{sec:command-clozebox-boxwidth}.
+
+\begin{minted}{latex}
+\begin{clozebox}[boxheight=3cm]
+\end{minted}
+
+\TmpReduceVspace
+
+\begin{TmpExample}
+\bigskip
+\begin{center}
+\begin{clozebox}[boxheight=3cm,boxwidth=3cm]
+boxheight: 3cm; Lorem ipsum dolor sit amet ...
+\end{clozebox}
+\begin{clozebox}[boxheight=2cm,boxwidth=3cm]
+boxheight: 2cm; Lorem ipsum dolor sit amet ...
+\end{clozebox}
+\begin{clozebox}[boxheight=1cm,boxwidth=3cm]
+boxheight: 1cm; Lorem ipsum dolor sit amet ...
+\end{clozebox}
+\end{center}
+\bigskip
+\end{TmpExample}
 
 %%
 % distance
@@ -1198,6 +1190,74 @@ line breaks after this punctation mark. Even the most large value of
 \end{TmpExample}
 
 \clozereset
+
+%%
+% minlines
+%%
+
+\newpage
+\subsubsection{\tt{minlines}}
+\label{sec:option-minlines}
+
+\TmpOption{minlines}{integer}:
+
+% https://www.pinterest.de/pin/856176579144764867/
+
+\begin{multicols}{2}
+\begin{minted}{latex}
+\clozesetoption{minlines}{3}
+\begin{enumerate}
+\item Battlements
+
+\begin{clozepar}
+Higher ...
+\end{clozepar}
+
+\item Embrasures
+
+\begin{clozepar}
+Heavily ...
+\end{clozepar}
+
+\item Partcullis
+
+\begin{clozepar}
+Arrow ...
+\end{clozepar}
+\end{enumerate}
+\end{minted}
+
+\columnbreak
+\begin{TmpExample}
+\clozesetoption{minlines}{4}
+
+\textbf{\Large{}Defending a Castle}
+
+\noindent
+Here is a list of features on castle in the Middle Ages that would help to defend it.
+
+\begin{enumerate}
+\item Battlements
+
+\begin{clozepar}
+Higher than the walls and jutting out from them to allow
+defenders to fire at people who had reached the walls
+\end{clozepar}
+
+\item Embrasures
+
+\begin{clozepar}
+Heavily protected entrance
+\end{clozepar}
+
+\item Portcullis
+
+\begin{clozepar}
+Arrow slits with a round hole for firing musket guns
+\end{clozepar}
+\end{enumerate}
+\end{TmpExample}
+\end{multicols}
 
 %%
 % spacing

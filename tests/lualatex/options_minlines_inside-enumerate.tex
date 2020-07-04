@@ -1,0 +1,37 @@
+%!TEX program = lualatex
+\documentclass{article}
+\input ../cloze-test-macros-lualatex.tex
+\usepackage[minlines=3]{cloze}
+\begin{document}
+\TestTitleDesc{Option minlines}
+{Inside an enumerate environment. }
+
+\clozesetoption{minlines}{4}
+
+\textbf{\Large{}Defending a Castle}
+
+\noindent
+Here is a list of features on castle in the Middle Ages that would help to defend it.
+
+\begin{enumerate}
+\item Battlements
+
+\begin{clozepar}
+Higher than the walls and jutting out from them to allow
+defenders to fire at people who had reached the walls
+\end{clozepar}
+
+\item Embrasures
+
+\begin{clozepar}
+Heavily protected entrance
+\end{clozepar}
+
+\item Portcullis
+
+\begin{clozepar}
+Arrow slits with a round hole for firing musket guns
+\end{clozepar}
+\end{enumerate}
+
+\end{document}
