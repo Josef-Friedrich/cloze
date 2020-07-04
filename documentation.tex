@@ -352,6 +352,7 @@ clozes are default concering the width \tt{\ClozeGetOption{width}}.
 sed do eiusmod.
 \end{TmpExample}
 
+\noindent
 Gaps with a fixed width are much harder to solve.
 
 \begin{TmpExample}
@@ -361,6 +362,7 @@ eiusmod tempor incididunt \clozefix[align=center,width=3cm]{ut} labore
 et dolore magna aliqua.
 \end{TmpExample}
 
+\noindent
 Using the option |align| you can make nice tabulars like this:
 
 \begin{TmpExample}
@@ -805,6 +807,66 @@ Mozart’s father was called
 %-----------------------------------------------------------------------
 
 \subsection{The options}
+
+\subsubsection{Overview over all options}
+
+\def\TmpDescriptionLine#1{
+  {\footnotesize#1}
+}
+
+\begin{tabular}{lll}
+\textbf{Option} &
+\textbf{Description} &
+\textbf{Reference} \\\hline
+
+\tt{align} &
+\TmpDescriptionLine{Align the text of fixed size cloze (\cmd{\clozefix})}. &
+\TmpSecRef{sec:option-align} \\
+
+\tt{boxheight} &
+\TmpDescriptionLine{The height of a cloze box (\tt{clozebox}).} &
+\TmpSecRef{sec:option-boxheight} \\
+
+\tt{boxwidth} &
+\TmpDescriptionLine{The width of a cloze box (\tt{clozebox}).} &
+\TmpSecRef{sec:option-boxwidth} \\
+
+\tt{distance} &
+\TmpDescriptionLine{The distance between the cloze text and the cloze line.} &
+\TmpSecRef{sec:option-distance} \\
+
+\tt{hide} &
+\TmpDescriptionLine{Hide the cloze text.} &
+\TmpSecRef{sec:option-hide} \\
+
+\tt{linecolor} &
+\TmpDescriptionLine{A color name to colorize the cloze line.} &
+\TmpSecRef{sec:option-linecolor} \\
+
+\tt{margin} &
+\TmpDescriptionLine{Additional margin between the normal and the cloze text.} &
+\TmpSecRef{sec:option-margin} \\
+
+\tt{show} &
+\TmpDescriptionLine{Show the cloze text.} &
+\TmpSecRef{sec:option-show} \\
+
+\tt{spacing} &
+\TmpDescriptionLine{The distance of the lines in the environment \tt{clozespace}.} &
+\TmpSecRef{sec:option-spacing} \\
+
+\tt{textcolor} &
+\TmpDescriptionLine{A color name to colorize the cloze text.} &
+\TmpSecRef{sec:option-textcolor} \\
+
+\tt{thickness} &
+\TmpDescriptionLine{The thickness of a line.} &
+\TmpSecRef{sec:option-thickness} \\
+
+\tt{width} &
+\TmpDescriptionLine{The width of a fixed size cloze (\cmd{\clozefix}).} &
+\TmpSecRef{sec:option-show} \\
+\end{tabular}
 
 %%
 % Local and global options
