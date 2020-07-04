@@ -19,6 +19,7 @@
 
 -- It is good form to provide some background informations about this Lua
 -- module.
+local nodetree = require('nodetree')
 if not modules then modules = { } end modules ['cloze'] = {
   version   = '1.6',
   comment   = 'cloze',
@@ -906,8 +907,44 @@ end
 --
 -- @tparam node head_node The head of a node list.
 local function make_par(head_node)
-  local strut_node, line_node, width
+  --- Add one additinal and empty line at the end of a paragraph.
+  --
+  -- @tparam node last_hlist_node The last hlist node of a paragraph.
+  --
+  -- @treturn node The created new hlist node containing the line
+  local function add_additional_line(last_hlist_node)
+    local hlist_node = node.new(node.id('hlist'))
+    hlist_node.subtype = 1
+    hlist_node.width = last_hlist_node.width
+    hlist_node.depth = last_hlist_node.depth
+    hlist_node.height = last_hlist_node.height
+    local kern_node = create_kern_node(0)
+    hlist_node.head = kern_node
+    nodex.insert_line(kern_node, last_hlist_node.width)
+    last_hlist_node.next = hlist_node
+    hlist_node.prev = last_hlist_node
+    hlist_node.next = nil
+    return hlist_node
+  end
+
+  --- Add multiple empty lines at the end of a paragraph.
+  --
+  -- @tparam node last_hlist_node The last hlist node of a paragraph.
+  -- @tparam number count Count the lines to add at the end.
+  local function add_additional_lines(last_hlist_node, count)
+    local i = 0
+    while i < count do
+      last_hlist_node = add_additional_line(last_hlist_node)
+      i = i + 1
+    end
+  end
+
+  local strut_node, line_node, width, last_hlist_node
+  local line_count = 0
   for hlist_node in node.traverse_id(node.id('hlist'), head_node) do
+    line_count = line_count + 1
+    last_hlist_node = hlist_node
+    print(hlist_node)
     for whatsit in node.traverse_id(node.id('whatsit'), hlist_node.head) do
       registry.get_marker(whatsit, 'par', 'start')
     end
@@ -932,6 +969,9 @@ local function make_par(head_node)
       line_node.next = nil
     end
   end
+
+  add_additional_lines(last_hlist_node, 0)
+
   return head_node
 end
 
