@@ -199,6 +199,18 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\ClozeWrapWithFont}
+% \cmd{\ClozeWrapWithFont} wraps the text with the font definition.
+%    \begin{macrocode}
+\def\ClozeWrapWithFont#1{%
+  {%
+    \clozefont\relax%
+    #1%
+  }%
+}%
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}{\ClozeMargin}
 % \cmd{\ClozeMargin} surrounds a text in a gap with two |kerns|.
 %    \begin{macrocode}
@@ -287,10 +299,7 @@
 %    \begin{macrocode}
 \def\cloze#1{%
   \ClozeStartMarker{basic}%
-  {%
-    \clozefont\relax%
-    \ClozeMargin{#1}%
-  }%
+  \ClozeWrapWithFont{\ClozeMargin{#1}}%
   \ClozeStopMarker{basic}%
 }
 %    \end{macrocode}
@@ -320,10 +329,7 @@
 \def\clozenol#1{%
   \clozesetoption{thickness}{0pt}%
   \ClozeStartMarker{basic}%
-  {%
-    \clozefont\relax%
-    \ClozeMargin{#1}%
-  }%
+  \ClozeWrapWithFont{\ClozeMargin{#1}}%
   \ClozeStopMarker{basic}%
 }
 %    \end{macrocode}
@@ -371,10 +377,7 @@
 \def\clozeparplain#1{%
   \par%
   \ClozeStartMarker{par}%
-  {%
-    \clozefont\relax%
-    #1%
-  }%
+  \ClozeWrapWithFont{#1}%
   \ClozeStopMarker{par}%
   \par%
   \directlua{cloze.unregister('par')}%

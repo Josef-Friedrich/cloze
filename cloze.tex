@@ -50,6 +50,12 @@
     cloze.marker('#1', 'stop')
   }%
 }
+\def\ClozeWrapWithFont#1{%
+  {%
+    \clozefont\relax%
+    #1%
+  }%
+}%
 \def\ClozeMargin#1{%
   \directlua{cloze.margin()}%
   #1%
@@ -83,10 +89,7 @@
 }
 \def\cloze#1{%
   \ClozeStartMarker{basic}%
-  {%
-    \clozefont\relax%
-    \ClozeMargin{#1}%
-  }%
+  \ClozeWrapWithFont{\ClozeMargin{#1}}%
   \ClozeStopMarker{basic}%
 }
 \def\clozefix#1{%
@@ -100,10 +103,7 @@
 \def\clozenol#1{%
   \clozesetoption{thickness}{0pt}%
   \ClozeStartMarker{basic}%
-  {%
-    \clozefont\relax%
-    \ClozeMargin{#1}%
-  }%
+  \ClozeWrapWithFont{\ClozeMargin{#1}}%
   \ClozeStopMarker{basic}%
 }
 \def\clozeline{%
@@ -121,10 +121,7 @@
 \def\clozeparplain#1{%
   \par%
   \ClozeStartMarker{par}%
-  {%
-    \clozefont\relax%
-    #1%
-  }%
+  \ClozeWrapWithFont{#1}%
   \ClozeStopMarker{par}%
   \par%
   \directlua{cloze.unregister('par')}%
