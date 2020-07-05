@@ -1294,8 +1294,9 @@ typeset results in fewer lines, empty lines are appended to the end. If
 the text of a \tt{clozepar} produces more lines as specified in
 \tt{minlines}, the option has no effect at all. The option \tt{minlines}
 only affects the behavior of the environment \tt{clozepar}
-\TmpSecRef{sec:command-clozepar} and the macro version \cmd{\clozeparcapture}
-\TmpSecRef{sec:command-clozeparcapture}.
+\TmpSecRef{sec:command-clozepar} and the macro versions
+\cmd{\clozeparplain} \TmpSecRef{sec:command-clozeparplain} and
+\cmd{\clozeparcapture} \TmpSecRef{sec:command-clozeparcapture}.
 
 % https://www.pinterest.de/pin/856176579144764867/
 
@@ -1638,7 +1639,42 @@ ${\sqrt[3]{\cloze{8}}} = 2$ and ${\sqrt[\cloze{3}]{\cloze{8}}} = 2$
 \end{center}
 \end{TmpExample}
 
+\def\TmpSubtraction{
+  Missing Subtraction Facts to 12
+
+  \def\TmpMath##1{
+    \hspace{0.3cm}\scalebox{1.5}{$##1$}
+  }
+
+  \clozeset{margin=8pt}
+  \renewcommand{\labelenumi}{\alph{enumi})}
+  \begin{enumerate}
+  \item \TmpMath{8 - 6 = \cloze{2}}
+  \item \TmpMath{10 - 4 = \cloze{6}}
+  \item \TmpMath{7 - \cloze{2} = 5}
+  \item \TmpMath{6 - \cloze{1} = 5}
+  \item \TmpMath{\cloze{6} - 3 = 3}
+  \item \TmpMath{\cloze{10} - 2 = 8}
+  \end{enumerate}
+}
+
+\begin{multicols}{2}
+\TmpHide
+\begin{TmpExample}
+\TmpSubtraction
+\end{TmpExample}
+
+\columnbreak
+
+\TmpShow
+\begin{TmpExample}
+\TmpSubtraction
+\end{TmpExample}
+
+\end{multicols}
+
 \clozesetfont{\itshape}
+\clozereset
 
 %%
 % tabbing
