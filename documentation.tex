@@ -460,7 +460,7 @@ Complete the sentences below to share more about yourself:
 \bigskip
 
 \noindent
-I am someone who loves \clozefil{to write cloze worksheets in \TeX}.
+I am someone who love \clozefil{to write cloze worksheets in \TeX}.
 
 \noindent
 I am someone who hate \clozefil{to write cloze worksheets in MS Word}.
@@ -561,7 +561,76 @@ support on full paragraphs in plain Lua\TeX.
 \label{sec:command-clozeparcapture}
 \DescribeMacro{\clozeparcapture} \cmd{\clozeparcapture}: The command is
 defined to capture all text until the next paragraph (|\par|):
-\mintinline{latex}{\def\clozeparcapture#1\par{...}}.
+\mintinline{latex}{\def\clozeparcapture#1\par{...}}. In some cases (see
+example below) you have to set the paragraph end manually by inserting a
+|\par|.
+
+\begin{minted}{latex}
+\begin{enumerate}
+\item Solid state drives (SSD) ...
+
+\clozeparcapture
+They do not need to get up to speed to work properly / No latency;
+...
+\par
+
+\end{enumerate}
+\end{minted}
+
+\TmpReduceVspace
+
+% https://www.bitsofbytes.co/exam-questions---memory--storage.html
+\begin{TmpExample}
+\begin{enumerate}
+\item Solid state drives (SSD) are replacing hard disc drives (HDD) in
+some computers. Give some reasons why this is happening.
+
+\clozeparcapture
+They do not need to get up to speed to work properly / No latency;
+Less power consumption / More energy efficient;
+Run cooler;
+Run quieter;
+Data access is faster;
+Occupies less physical space - more compact;
+Lighter, so suitable for portable computer / laptop;
+No moving parts so more reliable / durable in a portable computer / laptop.
+\par
+\end{enumerate}
+\end{TmpExample}
+
+\noindent
+It is often sufficient to insert an empty line.
+
+\begin{minted}{latex}
+Explain three ways that RAM is different to ROM.
+
+1:
+
+\clozeparcapture RAM is Volatile, ROM is non-volatile
+
+2:
+\end{minted}
+
+\TmpReduceVspace
+% https://www.bitsofbytes.co/exam-questions---memory--storage.html
+\begin{TmpExample}
+\noindent
+Explain three ways that RAM is different to ROM.
+
+\def\TmpWay#1{\medskip\noindent\textbf{#1:}\medskip}
+
+\TmpWay{1}
+
+\clozeparcapture RAM is Volatile, ROM is non-volatile
+
+\TmpWay{2}
+
+\clozeparcapture RAM is temporary, ROM is (semi) permanent
+
+\TmpWay{3}
+
+\clozeparcapture RAM normally has a larger capacity than ROM \par
+\end{TmpExample}
 
 %%
 % clozebox
@@ -573,13 +642,14 @@ defined to capture all text until the next paragraph (|\par|):
 \DescribeEnv{clozebox} |\begin{clozebox}|*\oarg{options} \dots
 \textit{some text} \dots |\end{clozebox}|: The environment \tt{clozebox}
 surrounds a text with a box. The starred version omits the line around
-the box. Use the options |boxwidth| and |boxheight| to specify the
-dimensions of the box. By default the width of the box is |\linewidth|.
-The height of the box is determined by the amount of text. This
-environment is realized by a combination of the |minipage| environment
-surrounded by a \cmd{\fbox}. For the cloze text the macro
-\cmd{\clozenol} is reused. New paragraphs are not allowed inside a cloze
-box. Use two backslashes multiple times |\\| instead.
+the box. Use the options |boxheight| \TmpSecRef{sec:option-boxheight}
+and |boxwidth| \TmpSecRef{sec:option-boxwidth} to specify the dimensions
+of the box. By default the width of the box is |\linewidth|. The height
+of the box is determined by the amount of text. This environment is
+realized by a combination of the |minipage| environment surrounded by a
+\cmd{\fbox}. For the cloze text the macro \cmd{\clozenol} is reused. New
+paragraphs are not allowed inside a cloze box. Use two backslashes
+multiple times |\\| instead.
 
 \begin{minted}{latex}
 \begin{clozebox}
@@ -588,80 +658,54 @@ tempor incididunt ut labore et dolore magna aliqua.
 \end{clozebox}
 \end{minted}
 
-\noindent
-\begin{minipage}{0.4\linewidth}
-\noindent
-|\clozehide|
-\clozehide
-\bigskip
+\begin{multicols}{2}
+\TmpHide
+
+\begin{TmpExample}
 \begin{clozebox}
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua.
 \end{clozebox}
-\end{minipage}
-\hfil
-\begin{minipage}{0.4\linewidth}
-\noindent
-|\clozeshow|
-\clozeshow
-\bigskip
+\end{TmpExample}
+
+\columnbreak
+
+\TmpShow
+
+\begin{TmpExample}
 \begin{clozebox}[margin=0pt]
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua.
 \end{clozebox}
-\end{minipage}
-
-\noindent
-Like with all cloze macros and environments the hidden text vanishes
-from the rendered file. The next example demonstrates this by showing a
-different background color:
-
-\def\TmpClozeBox{
-  \bigskip
-  \begin{center}
-  \begin{clozebox}[boxwidth=4cm]
-  Lorem ipsum dolor sit amet.
-  \end{clozebox}
-  \end{center}
-  \bigskip
-}
-
-\begin{multicols}{2}
-
-\TmpHide
-\begin{TmpExample}
-\TmpClozeBox
 \end{TmpExample}
 
-\TmpShow
-\begin{TmpExample}
-\TmpClozeBox
-\end{TmpExample}
 \end{multicols}
 
 \noindent
-The starred version omits the line around the box.
+Like with all cloze macros and environments the hidden text vanishes
+from the rendered file. The starred version omits the line around the
+box:
 
 % starred
 
-\begin{minipage}[t]{0.55\linewidth}
+\begin{multicols}{2}
 \begin{minted}{latex}
-\begin{clozebox}*[boxheight=5cm]
+\begin{clozebox}*
 Lorem ...
 \end{clozebox}
 \end{minted}
-\end{minipage}
-%
-\begin{minipage}[t]{0.4\linewidth}
+
+\columnbreak
+
 \begin{TmpExample}
 \begin{center}
-\begin{clozebox}*[boxwidth=4cm,boxheight=3cm]
+\begin{clozebox}*
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua.
 \end{clozebox}
 \end{center}
 \end{TmpExample}
-\end{minipage}
+\end{multicols}
 
 %%
 % clozespace
