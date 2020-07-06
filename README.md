@@ -1,3 +1,5 @@
+Warning: Currently the TeX Live package of `cloze` is broken.
+
 # Description
 
 EN: `cloze` is a LuaLaTeX/LaTeX package to generate cloze. It uses the
@@ -58,24 +60,37 @@ https://github.com/Josef-Friedrich/cloze
 * [User documentation as a PDF](http://mirror.ctan.org/tex-archive/macros/luatex/generic/cloze/cloze.pdf)
 * [API documentation of the Lua code](https://josef-friedrich.github.io/cloze)
 
-# Installation
+# Installation ()
 
-Get source:
+## TeX Live
+
+    tlmgr install cloze (At the moment broken)
+
+## Manually
 
     git clone git@github.com:Josef-Friedrich/cloze.git
     cd cloze
 
-Compile:
+### Using make (assumes your TeX environment takes `$HOME/texmf` into account)
 
-    make
+    make install
 
-or manually:
+### By hand
 
-    luatex cloze.ins
-    lualatex --shell-escape cloze.dtx
-    makeindex -s gglo.ist -o cloze.gls cloze.glo
-    makeindex -s gind.ist -o cloze.ind cloze.idx
-    lualatex --shell-escape cloze.dtx
+    mkdir -p $HOME/texmf/tex/luatex/cloze
+    cp -f cloze.tex $HOME/texmf/tex/luatex/cloze
+    cp -f cloze.sty $HOME/texmf/tex/luatex/cloze
+    cp -f cloze.lua $HOME/texmf/tex/luatex/cloze
+
+## Compile the documentation:
+
+    lualatex --shell-escape documentation.tex
+    makeindex -s gglo.ist -o documentation.gls documentation.glo
+    makeindex -s gind.ist -o documentation.ind documentation.idx
+    lualatex --shell-escape documentation.tex
+    mv documentation.pdf cloze.pdf
+    mkdir -p $HOME/texmf/doc/luatex/cloze
+    cp -f cloze.pdf $HOME/texmf/doc/luatex/cloze
 
 # Development
 
