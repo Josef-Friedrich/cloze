@@ -911,6 +911,77 @@ Mozart’s father was called
 \end{tabular}
 
 %%
+%
+%%
+
+\noindent
+\begin{tikzpicture}[x=1cm,y=1cm,scale=0.8,transform shape]
+% \draw (0,0) grid[step=1] (13,8);
+% \draw[help lines] (0,0) grid[step=0.2] (13,8);
+\node (cloze) at (-1,0) [node font=\fontsize{180}{1.2},anchor=south west]{
+  \cloze[distance=15pt,thickness=3pt,margin=40pt]{cl…}
+};
+
+\node (distance) at (3,1.9) {distance};
+\draw [|<->|] (4,1.7) --  (4,2.05);
+
+\node (thickness) at (0,1.65) {thickness};
+\draw [->] (1.3,2.2) --  (1.3,1.8);
+\draw [->] (1.3,1) --  (1.3,1.4);
+
+\node (margin) at (2.2,4) {margin};
+\draw [|<->|] (1.5,3.5) --  (3,3.5);
+
+\node (margin) at (11.75,4) {margin};
+\draw [|<->|] (11,3.5) --  (12.5,3.5);
+
+\node (textcolor) at (4.5,6) {textcolor};
+\draw [->] (textcolor) --  (6.4,5);
+
+\node (linecolor) at (7,0.5) {linecolor};
+\draw [->] (linecolor) --  (7,1.5);
+\end{tikzpicture}
+
+%%
+% clozefix
+%%
+
+\noindent
+\begin{tikzpicture}[
+  x=1cm,
+  y=1cm,
+  clozefix/.style={
+    node font=\fontsize{40}{1.2}
+  },
+  scale=0.95,
+  transform shape
+]
+% \draw (0,0) grid[step=1] (13,7);
+% \draw[help lines] (0,0) grid[step=0.2] (13,7);
+
+\node (right) at (7,6) [clozefix]{
+  \clozefix[distance=10pt,thickness=2pt,width=8cm,align=right]{clozefix}
+};
+
+\node (center) at (5,4) [clozefix]{
+  \clozefix[distance=10pt,thickness=2pt,width=8cm,align=center]{clozefix}
+};
+
+\node (left) at (3,2) [clozefix]{
+  \clozefix[distance=10pt,thickness=2pt,width=8cm]{clozefix}
+};
+
+\node (width) at (5,0.7) {width};
+\draw [|<->|] (0.8,1) --  (8.7,1);
+\node (alignleft) at (6.5,2) {align=left};
+
+\node (aligncenter) at (3.3,4) {align=center};
+
+\node (alignright) at (7,6) {align=right};
+\end{tikzpicture}
+\clozereset
+
+%%
 % Local and global options
 %%
 
