@@ -8,17 +8,17 @@
 \TestTitleDesc{LuaLa\TeX: macro \string\cloze}
 {With different options.}
 
-\section{Simple}
+\TestSection{Simple}
 
 Lorem ipsum \cloze{dolor sit} amet.
 
-\section{Multi lines}
+\TestSection{Multi lines}
 
 Lorem ipsum \cloze{dolor sit amet, consectetur adipisicing elit, sed do
 eiusmod tempor incididunt ut labore} et dolore magna aliqua. Ut enim ad
 minim veniam exercitation ullamco.
 
-\section{Behaviour after punctation}
+\TestSection{Behaviour after punctation}
 
 \def\clozepunctation{%
   Lorem ipsum dolor sit amet, consectetur adipisicing elit sit amet
@@ -38,7 +38,7 @@ minim veniam exercitation ullamco.
 }
 \Repeat[20]\clozepunctation
 
-\section{Hide and show}
+\TestSection{Hide and show}
 
 \begin{itemize}
 \item Hide: \cloze[hide]{Lorem ipsum dolor sit amet.}
@@ -46,7 +46,7 @@ minim veniam exercitation ullamco.
 \item Hide: \cloze[hide]{Magna aliqua. Ut enim ad minim veniam.}
 \end{itemize}
 
-\section{Text color}
+\TestSection{Text color}
 
 \begin{itemize}
 \item Black: \cloze[textcolor=black]{Lorem ipsum dolor sit amet.}
@@ -54,7 +54,7 @@ minim veniam exercitation ullamco.
 \item Green: \cloze[textcolor=green]{Magna aliqua. Ut enim ad minim veniam.}
 \end{itemize}
 
-\section{Line color}
+\TestSection{Line color}
 
 \begin{itemize}
 \item Black: \cloze[linecolor=black]{Lorem ipsum dolor sit amet.}
@@ -62,7 +62,7 @@ minim veniam exercitation ullamco.
 \item Green: \cloze[linecolor=green]{Magna aliqua. Ut enim ad minim veniam.}
 \end{itemize}
 
-\section{Margin}
+\TestSection{Margin}
 
 \begin{itemize}
 \item 0pt: \cloze[margin=0pt]{Lorem ipsum dolor sit amet.}
@@ -70,7 +70,7 @@ minim veniam exercitation ullamco.
 \item 20pt: \cloze[margin=20pt]{Magna aliqua. Ut enim ad minim veniam.}
 \end{itemize}
 
-\section{Thickness}
+\TestSection{Thickness}
 
 \begin{itemize}
 \item 1mm: \cloze[thickness=1mm]{Lorem ipsum dolor sit amet.}
@@ -78,7 +78,7 @@ minim veniam exercitation ullamco.
 \item 3mm: \cloze[thickness=3mm]{Magna aliqua. Ut enim ad minim veniam.}
 \end{itemize}
 
-\section{distance}
+\TestSection{distance}
 
 \begin{itemize}
 \item 1mm: \cloze[distance=1mm]{Lorem ipsum dolor sit amet.}
