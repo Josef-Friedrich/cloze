@@ -1,8 +1,0 @@
-\input{regression-test.tex}
-\documentclass{article}
-\usepackage{cloze}
-\begin{document}
-\START
-lorem \cloze{ipsum} sit
-\END
-\end{document}
