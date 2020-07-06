@@ -41,6 +41,7 @@ registry.storage = {}
 registry.defaults = {
   ['align'] = 'l',
   ['boxheight'] = false,
+  ['boxrule'] = '0.4pt',
   ['boxwidth'] = '\\linewidth',
   ['distance'] = '1.5pt',
   ['hide'] = false,
@@ -542,7 +543,7 @@ end
 --- Assembly to cloze texts.
 -- @section cloze_functions
 
---- Assemble a possibly muliline cloze.
+--- Assemble a possibly multiline cloze.
 --
 -- The corresponding LaTeX command to this Lua function is `\cloze`.
 --  This function is used by other cloze TeX macros too: `\clozenol`,
@@ -1100,7 +1101,12 @@ function base.unregister(mode)
   end
 end
 
--- Publish some functions to the `cloze.sty` file.
+-- Export some functions and values.
+
+---
+-- Variable that can be used to store the previous fbox rule thickness
+-- to be able to restore the previous thickness.
+base.fboxrule_restore = nil
 base.linefil = nodex.write_linefil
 base.line = nodex.write_line
 base.margin = nodex.write_margin

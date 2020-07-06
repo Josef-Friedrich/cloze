@@ -865,6 +865,10 @@ Mozart’s father was called
 \TmpDescriptionLine{The height of a cloze box (\tt{clozebox}).} &
 \TmpSecRef{sec:option-boxheight} \\
 
+\tt{boxrule} &
+\TmpDescriptionLine{The thickness of the rule around a \tt{clozebox}.} &
+\TmpSecRef{sec:option-boxrule} \\
+
 \tt{boxwidth} &
 \TmpDescriptionLine{The width of a cloze box (\tt{clozebox}).} &
 \TmpSecRef{sec:option-boxwidth} \\
@@ -980,6 +984,20 @@ Mozart’s father was called
 \node (alignright) at (7,6) {align=right};
 \end{tikzpicture}
 \clozereset
+
+\begin{tikzpicture}
+% \draw (0,0) grid[step=1] (12,7);
+% \draw[help lines] (0,0) grid[step=0.2] (12,7);
+\node (onlytikz) at (6,3.5) [draw,text width=3cm,scale=3,transform shape,thick] {
+  \clozeparplain[minlines=3,]{clozebox}
+};
+
+\node (boxheight) at (0.5,3.5) [rotate=90)] {boxheight};
+\draw [|<->|] (1,1.05) --  (1,5.95);
+
+\node (boxwidth) at (6,0.5){boxwidth};
+\draw [|<->|] (1.15,0.9) --  (10.85,0.9);
+\end{tikzpicture}
 
 %%
 % Local and global options
@@ -1164,6 +1182,39 @@ boxwidth: 3cm; Lorem ipsum dolor sit amet ...
 \end{clozebox}
 \begin{clozebox}[boxwidth=5cm]
 boxwidth: 4cm; Lorem ipsum dolor sit amet ...
+\end{clozebox}
+\end{center}
+\bigskip
+\end{TmpExample}
+
+%%
+% boxrule
+%%
+
+\subsubsection{\tt{boxrule}}
+\label{sec:option-boxrule}
+
+\TmpOption{boxrule}{dimen}: specifies the thickness of the rule around a
+cloze box. This option has only an effect on the environment |clozebox|
+\TmpSecRef{sec:command-clozebox}.
+
+\begin{minted}{latex}
+\begin{clozebox}[boxrule=2pt]
+\end{minted}
+
+\TmpReduceVspace
+
+\begin{TmpExample}
+\bigskip
+\begin{center}
+\begin{clozebox}[boxrule=1pt,boxwidth=3cm]
+boxrule: 1pt
+\end{clozebox}
+\begin{clozebox}[boxrule=2pt,boxwidth=3cm]
+boxrule: 2pt
+\end{clozebox}
+\begin{clozebox}[boxrule=3pt,boxwidth=3cm]
+boxrule: 3pt
 \end{clozebox}
 \end{center}
 \bigskip

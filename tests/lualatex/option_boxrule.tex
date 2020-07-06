@@ -1,0 +1,44 @@
+%!TEX program = lualatex
+\documentclass{article}
+\input ../cloze-test-macros-lualatex.tex
+\usepackage{cloze}
+
+\begin{document}
+\TestTitleDesc{LuaLa\TeX: option boxrule}
+{}
+
+\TestSection{The dimension fboxrule gets restored}
+
+\setlength{\fboxrule}{10pt}
+\fbox{fboxrule 10pt}
+
+\begin{clozebox}
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et.
+\end{clozebox}
+
+\fbox{fboxrule 10pt}
+
+\TestSection{Try different rule thicknesses}
+
+\begin{clozebox}[boxrule=1pt]
+1pt
+\end{clozebox}
+
+\begin{clozebox}[boxrule=2pt]
+2pt
+\end{clozebox}
+
+\begin{clozebox}[boxrule=3pt]
+3pt
+\end{clozebox}
+
+\TestSection{Restore to default values}
+
+\clozereset
+
+\begin{clozebox}
+restore
+\end{clozebox}
+
+\end{document}

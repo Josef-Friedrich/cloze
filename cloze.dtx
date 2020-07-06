@@ -539,22 +539,34 @@
 %
 % \paragraph{\tt{boxheight}}
 %
-% \noindent Please read the section \TmpSecRef{sec:command-clozebox}
+% \noindent Please read the section \TmpSecRef{sec:option-boxheight}
 % how to use the option |boxheight|. |boxheight| affects only the
-% environment |clozebox|.
-% \TmpSecRef{sec:command-clozefix}.
+% environment |clozebox|
+% \TmpSecRef{sec:command-clozebox}.
 %
 %    \begin{macrocode}
 \DeclareStringOption{boxheight}
 \define@key{CLZ}{boxheight}[]{\clozesetoption{boxheight}{#1}}
 %    \end{macrocode}
 %
+% \paragraph{\tt{boxrule}}
+%
+% \noindent Please read the section \TmpSecRef{sec:option-boxrule}
+% how to use the option |boxrule|. |boxrule| affects only the
+% environment |clozebox|
+% \TmpSecRef{sec:command-clozebox}.
+%
+%    \begin{macrocode}
+\DeclareStringOption{boxrule}
+\define@key{CLZ}{boxrule}[]{\clozesetoption{boxrule}{#1}}
+%    \end{macrocode}
+%
 % \paragraph{\tt{boxwidth}}
 %
-% \noindent Please read the section \TmpSecRef{sec:command-clozebox}
+% \noindent Please read the section \TmpSecRef{sec:option-boxwidth}
 % how to use the option |boxwidth|. |boxwidth| affects only the
-% environment |clozebox|.
-% \TmpSecRef{sec:command-clozefix}.
+% environment |clozebox|
+% \TmpSecRef{sec:command-clozebox}.
 %
 %    \begin{macrocode}
 \DeclareStringOption{boxwidth}
@@ -794,12 +806,19 @@
 % \begin{environment}{clozebox}
 % The usage of the environment |clozebox| is described in detail in
 % section \TmpSecRef{sec:command-clozebox}.
-% TODO: Realize this macro with lua code, without ugly |\color{white}|
-% command.
+% For the box rule a \cmd{\fbox} is used. We store the original rule
+% thickness and restore the dimension after the clozebox is set.
+% The dimension |fboxrule| have to be set before the environment
+% |lrbox|.
 %    \begin{macrocode}
 \newsavebox{\ClozeBox}%
 \NewDocumentEnvironment{clozebox}{ s O{} +b}{%
   \ClozeSetLocalOptions{#2}%
+  \directlua{
+    cloze.fboxrule_restore = tex.dimen['fboxrule']
+    print(cloze.get_value('boxrule'))
+    tex.dimen['fboxrule'] = tex.sp(cloze.get_value('boxrule'))
+  }%
   \noindent%
   \begin{lrbox}{\ClozeBox}%
   \directlua{
@@ -818,7 +837,11 @@
   \IfBooleanTF{#1}%
     {\usebox{\ClozeBox}}%
     {\fbox{\usebox{\ClozeBox}}}%
-}{}
+}{%
+  \directlua{
+    tex.dimen['fboxrule'] = cloze.fboxrule_restore
+  }%
+}
 %    \end{macrocode}
 % \end{environment}
 %

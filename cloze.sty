@@ -51,6 +51,8 @@
 \define@key{CLZ}{align}[]{\clozesetoption{align}{#1}}
 \DeclareStringOption{boxheight}
 \define@key{CLZ}{boxheight}[]{\clozesetoption{boxheight}{#1}}
+\DeclareStringOption{boxrule}
+\define@key{CLZ}{boxrule}[]{\clozesetoption{boxrule}{#1}}
 \DeclareStringOption{boxwidth}
 \define@key{CLZ}{boxwidth}[]{\clozesetoption{boxwidth}{#1}}
 \DeclareStringOption{distance}
@@ -137,6 +139,11 @@
 \newsavebox{\ClozeBox}%
 \NewDocumentEnvironment{clozebox}{ s O{} +b}{%
   \ClozeSetLocalOptions{#2}%
+  \directlua{
+    cloze.fboxrule_restore = tex.dimen['fboxrule']
+    print(cloze.get_value('boxrule'))
+    tex.dimen['fboxrule'] = tex.sp(cloze.get_value('boxrule'))
+  }%
   \noindent%
   \begin{lrbox}{\ClozeBox}%
   \directlua{
@@ -155,7 +162,11 @@
   \IfBooleanTF{#1}%
     {\usebox{\ClozeBox}}%
     {\fbox{\usebox{\ClozeBox}}}%
-}{}
+}{%
+  \directlua{
+    tex.dimen['fboxrule'] = cloze.fboxrule_restore
+  }%
+}
 \newenvironment{clozespace}[1][]%
 {%
   \ClozeSetLocalOptions{#1}%
