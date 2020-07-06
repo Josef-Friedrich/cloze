@@ -31,8 +31,8 @@ if not modules then modules = { } end modules ['cloze'] = {
 --- `nodex` is a abbreviation for __node eXtended__.
 local nodex = {}
 
---- All values and functions, which are related to the option management,
--- are stored in a table called `registry`.
+--- All values and functions, which are related to the option
+--  management, are stored in a table called `registry`.
 local registry = {}
 
 --- I didn’t know what value I should take as `user_id`. Therefore I
@@ -57,6 +57,8 @@ registry.user_id = 3121978
 -- }
 -- </code>
 registry.storage = {}
+
+--- The default options.
 registry.defaults = {
   ['align'] = 'l',
   ['boxheight'] = false,
@@ -78,7 +80,11 @@ registry.defaults = {
   ['thickness'] = '0.4pt',
   ['width'] = '2cm',
 }
+
+--- The global options set by the user.
 registry.global_options = {}
+
+--- The local options.
 registry.local_options = {}
 
 -- The `base` table contains some basic functions. `base` is the only
@@ -446,6 +452,9 @@ end
 
 --- `registry.index` is a counter. The functions `registry.get_index()`
 -- increases the counter by one and then returns it.
+--
+-- @treturn int The index number of the corresponding table in
+--   `registry.storage`.
 function registry.get_index()
   if not registry.index then
     registry.index = 0
@@ -464,15 +473,20 @@ end
 --   `basic`, `fix` and `par`.
 -- @tparam string position The argument `position` is either set
 --   to `start` or to `stop`.
+--
+-- @treturn int The index number of the corresponding table in
+--   `registry.storage`.
 function registry.set_storage(mode, position)
   local index = registry.get_index()
   local data = {
     ['mode'] = mode,
     ['position'] = position
   }
-  data.values = {}
-  for key, value in pairs(registry.local_options) do
-    data.values[key] = value
+  if position == 'start' then
+    data.values = {}
+    for key, value in pairs(registry.local_options) do
+      data.values[key] = value
+    end
   end
   registry.storage[index] = data
   return index

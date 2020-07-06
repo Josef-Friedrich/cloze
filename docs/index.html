@@ -72,12 +72,24 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#registry">registry</a></td>
-	<td class="summary">All values and functions, which are related to the option management,
- are stored in a table called <a href="index.html#registry">registry</a>.</td>
+	<td class="summary">All values and functions, which are related to the option
+  management, are stored in a table called <a href="index.html#registry">registry</a>.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#registry.storage">registry.storage</a></td>
 	<td class="summary">Store all local options of the markers.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#registry.defaults">registry.defaults</a></td>
+	<td class="summary">The default options.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#registry.global_options">registry.global_options</a></td>
+	<td class="summary">The global options set by the user.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#registry.local_options">registry.local_options</a></td>
+	<td class="summary">The local options.</td>
 	</tr>
 </table>
 <h2><a href="#Fields">Fields</a></h2>
@@ -194,8 +206,8 @@
 	<tr>
 	<td class="name" nowrap><a href="#registry.set_option">registry.set_option (key, value)</a></td>
 	<td class="summary">This function stores a value <code>value</code> and his associated key <code>key</code>
-  either to the global (<code>registry.global_options</code>) or to the local
-  (<code>registry.local_options</code>) option table.</td>
+  either to the global (<a href="index.html#registry.global_options">registry.global_options</a>) or to the local
+  (<a href="index.html#registry.local_options">registry.local_options</a>) option table.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#registry.set_is_global">registry.set_is_global (is_global)</a></td>
@@ -326,8 +338,8 @@
     <strong>registry</strong>
     </dt>
     <dd>
-    All values and functions, which are related to the option management,
- are stored in a table called <a href="index.html#registry">registry</a>.
+    All values and functions, which are related to the option
+  management, are stored in a table called <a href="index.html#registry">registry</a>.
 
 
 
@@ -344,8 +356,122 @@
     Store all local options of the markers.</p>
 
 <p> <code>
- print(&lsquo;lua&rsquo;)
+ registry.storage = {
+   {
+     mode = &ldquo;basic&rdquo;,
+     position = &ldquo;start&rdquo;,
+     values = {
+       distance = &ldquo;3mm&rdquo;
+     }
+   },
+   {
+     mode = &ldquo;basic&rdquo;,
+     position = &ldquo;stop&rdquo;
+   }
+ }
  </code>
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "registry.defaults"></a>
+    <strong>registry.defaults</strong>
+    </dt>
+    <dd>
+    The default options.
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">[align]</span>
+
+        </li>
+        <li><span class="parameter">[boxheight]</span>
+
+        </li>
+        <li><span class="parameter">[boxrule]</span>
+
+        </li>
+        <li><span class="parameter">[boxwidth]</span>
+
+        </li>
+        <li><span class="parameter">[distance]</span>
+
+        </li>
+        <li><span class="parameter">[hide]</span>
+
+        </li>
+        <li><span class="parameter">[linecolor_name]</span>
+
+        </li>
+        <li><span class="parameter">[linecolor]</span>
+        black
+        </li>
+        <li><span class="parameter">[margin]</span>
+
+        </li>
+        <li><span class="parameter">[minlines]</span>
+
+        </li>
+        <li><span class="parameter">[resetcolor_name]</span>
+
+        </li>
+        <li><span class="parameter">[resetcolor]</span>
+        black
+        </li>
+        <li><span class="parameter">[show_text]</span>
+
+        </li>
+        <li><span class="parameter">[show]</span>
+
+        </li>
+        <li><span class="parameter">[spacing]</span>
+
+        </li>
+        <li><span class="parameter">[textcolor_name]</span>
+        blue
+        </li>
+        <li><span class="parameter">[textcolor]</span>
+        blue
+        </li>
+        <li><span class="parameter">[thickness]</span>
+
+        </li>
+        <li><span class="parameter">[width]</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "registry.global_options"></a>
+    <strong>registry.global_options</strong>
+    </dt>
+    <dd>
+    The global options set by the user.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "registry.local_options"></a>
+    <strong>registry.local_options</strong>
+    </dt>
+    <dd>
+    The local options.
 
 
 
@@ -940,6 +1066,13 @@ additional data like the local options.</li>
 
 
 
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The index number of the corresponding table in
+   <a href="index.html#registry.storage">registry.storage</a>.
+    </ol>
 
 
 
@@ -971,6 +1104,13 @@ additional data like the local options.</li>
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The index number of the corresponding table in
+   <a href="index.html#registry.storage">registry.storage</a>.
+    </ol>
 
 
 
@@ -1005,10 +1145,10 @@ additional data like the local options.</li>
     </dt>
     <dd>
     This function stores a value <code>value</code> and his associated key <code>key</code>
-  either to the global (<code>registry.global_options</code>) or to the local
-  (<code>registry.local_options</code>) option table.</p>
+  either to the global (<a href="index.html#registry.global_options">registry.global_options</a>) or to the local
+  (<a href="index.html#registry.local_options">registry.local_options</a>) option table.</p>
 
-<p> The global boolean variable <code>registry.local_options</code> controls in
+<p> The global boolean variable <a href="index.html#registry.local_options">registry.local_options</a> controls in
  which table the values are stored.
 
 
@@ -1753,7 +1893,7 @@ additional data like the local options.</li>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-07-06 21:36:23 </i>
+<i style="float:right;">Last updated 2020-07-06 22:22:04 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

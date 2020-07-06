@@ -1,0 +1,15 @@
+\input ../cloze-test-macros-luatex.tex
+\input cloze.tex
+
+\TestTitleDesc{Lua\TeX: macro \string\clozesetlocaloption}
+{}
+
+lorem \cloze{ipsum} dolor
+
+\clozesetlocaloption{thickness}{2pt}
+
+lorem \cloze{ipsum} dolor
+
+lorem \cloze{ipsum} dolor
+
+\bye

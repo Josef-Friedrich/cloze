@@ -236,6 +236,19 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\clozesetlocaloption}
+% \cmd{\clozesetlocaloption} is a wrapper for the Lua function
+% |registry.set_option|. \cmd{\clozesetlocaloption}\marg{key}\marg{value}
+% sets a key \meta{key} to the value \meta{value}.
+%    \begin{macrocode}
+\def\clozesetlocaloption#1#2{%
+  \ClozeSetToLocal%
+  \directlua{cloze.set_option('#1', '#2')}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
 % \begin{macro}{\clozereset}
 % The usage of the command \cmd{\clozereset} is described in detail in
 % section \TmpSecRef{sec:command-clozereset}.

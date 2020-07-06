@@ -65,6 +65,10 @@
   \ClozeSetToGlobal%
   \directlua{cloze.set_option('#1', '#2')}%
 }
+\def\clozesetlocaloption#1#2{%
+  \ClozeSetToLocal%
+  \directlua{cloze.set_option('#1', '#2')}%
+}
 \def\clozereset{%
   \ClozeSetToGlobal%
   \directlua{cloze.reset()}%

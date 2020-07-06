@@ -26,6 +26,8 @@ doc_pdf:
 
 doc_lua:
 	ldoc .
+
+doc_lua_open:
 	xdg-open docs/index.html
 
 test: test_luatex_without_open test_lualatex_without_open
