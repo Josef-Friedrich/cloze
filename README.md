@@ -28,6 +28,15 @@ Archive Network (CTAN).
 * TeX archive: http://mirror.ctan.org/tex-archive/macros/luatex/generic/cloze
 * Package page: https://www.ctan.org/pkg/cloze
 
+# Distributions
+
+* MiKTeX: https://miktex.org/packages/cloze
+* TeX Live:
+  * https://www.tug.org/texlive//Contents/live/texmf-dist/scripts/cloze/cloze.lua
+  * https://www.tug.org/texlive/Contents/live/texmf-dist/tex/lualatex/cloze/cloze.sty
+  * https://www.tug.org/texlive/Contents/live/texmf-dist/doc/lualatex/cloze/cloze.pdf
+  * https://www.tug.org/texlive/Contents/live/texmf-dist/doc/lualatex/cloze/README.md
+
 # Repository
 
 https://github.com/Josef-Friedrich/cloze
