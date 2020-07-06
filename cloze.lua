@@ -19,6 +19,7 @@
 
 -- It is good form to provide some background informations about this Lua
 -- module.
+
 if not modules then modules = { } end modules ['cloze'] = {
   version   = '1.6',
   comment   = 'cloze',
@@ -34,9 +35,27 @@ local nodex = {}
 -- are stored in a table called `registry`.
 local registry = {}
 
---- I didn't know what value I should take as `user_id`. Therefore I
--- took my birthday and transformed it to a large number.
+--- I didn’t know what value I should take as `user_id`. Therefore I
+-- took my birthday and transformed it into a large number.
 registry.user_id = 3121978
+
+--- Store all local options of the markers.
+--
+-- <code>
+-- registry.storage = {
+--   {
+--     mode = "basic",
+--     position = "start",
+--     values = {
+--       distance = "3mm"
+--     }
+--   },
+--   {
+--     mode = "basic",
+--     position = "stop"
+--   }
+-- }
+-- </code>
 registry.storage = {}
 registry.defaults = {
   ['align'] = 'l',
@@ -186,7 +205,7 @@ end
 
 --- This function enclozes a rule node with color nodes as it the function
 -- `nodex.insert_line` does. In contrast to `nodex.insert_line` the three
--- nodes are appended to \TeX’s ‘current list’. They are not inserted in
+-- nodes are appended to TeX’s ‘current list’. They are not inserted in
 -- a node list, which is accessed by a Lua callback.
 --
 -- __Node list__
@@ -237,7 +256,7 @@ function nodex.create_linefil()
 end
 
 --- The function `nodex.write_linefil` surrounds a indefinitely strechable
--- line with color whatsits and puts it to \TeX’s ‘current (node) list’.
+-- line with color whatsits and puts it to TeX’s ‘current (node) list’.
 function nodex.write_linefil()
   node.write(nodex.create_color('line'))
   node.write(nodex.create_linefil())
@@ -299,16 +318,18 @@ end
 
 --- Option handling.
 --
--- The table `registry` bundels functions that deal with option handling.
+-- The table `registry` bundles functions that deal with the option
+-- handling.
 --
 -- <h2>Marker processing (marker)</h2>
 --
--- A marker is a whatsit node of the subtype `user_defined`. A marker has
--- two purposes:
+-- A marker is a whatsit node of the subtype `user_defined`. A marker
+-- has two purposes:
 --
 -- * Mark the begin and the end of a gap.
--- * Store a index number, that points to a Lua table, which holds
---   some additional data like the local options.
+-- * Store a index number, that points to a Lua table, which holds some
+--   additional data like the local options.
+--
 -- @section registry
 
 --- We create a user defined whatsit node that can store a number (type
@@ -319,7 +340,7 @@ end
 -- node a marker. The argument `index` is a number, which is associated
 -- to values in the `registry.storage` table.
 function registry.create_marker(index)
-  local marker = node.new('whatsit','user_defined')
+  local marker = node.new('whatsit', 'user_defined')
   marker.type = 100 -- number
   marker.user_id = registry.user_id
   marker.value = index
@@ -343,39 +364,43 @@ function registry.is_marker(item)
     and item.subtype == node.subtype('user_defined')
     and item.user_id == registry.user_id then
     return true
-  else
-    return false
   end
+  return false
 end
 
 --- This functions tests, whether the given node `item` is a marker.
 --
--- The argument `item` is a node. The argument `mode` accepts the string
--- values `basic`, `fix` and `par`. The argument `position` is either
--- set to `start` or to `stop`.
-function registry.check_marker(item, mode, position)
-  local data = registry.get_marker_data(item)
+-- @tparam node head_node The current node.
+-- @tparam string mode The argument `mode` accepts the string values
+--   `basic`, `fix` and `par`.
+-- @tparam string position The argument `position` is either set
+--   to `start` or to `stop`.
+function registry.check_marker(head_node, mode, position)
+  local data = registry.get_marker_data(head_node)
   if data and data.mode == mode and data.position == position then
     return true
-  else
-    return false
   end
+  return false
 end
 
 --- `registry.get_marker` returns the given marker.
 --
--- The argument `item` is a node. The argument `mode` accepts the string
--- values `basic`, `fix` and `par`. The argument `position` is either
--- set to `start` or to `stop`.
-function registry.get_marker(item, mode, position)
+-- @tparam node head_node The current node.
+-- @tparam string mode The argument `mode` accepts the string values
+--   `basic`, `fix` and `par`.
+-- @tparam string position The argument `position` is either set
+--   to `start` or to `stop`.
+--
+-- @treturn mixed The node if `head_node` is a marker node.
+function registry.get_marker(head_node, mode, position)
   local out
-  if registry.check_marker(item, mode, position) then
-    out = item
+  if registry.check_marker(head_node, mode, position) then
+    out = head_node
   else
     out = false
   end
   if out and position == 'start' then
-    registry.get_marker_values(item)
+    registry.get_marker_values(head_node)
   end
   return out
 end
@@ -433,15 +458,22 @@ end
 --  `registry.storage`.
 --
 -- It returns a numeric index number. This index number is the key,
--- where the local options in the Lua table are stored. The argument
--- `mode` accepts the string values `basic`, `fix` and `par`.
+-- where the local options in the Lua table are stored.
+--
+-- @tparam string mode The argument `mode` accepts the string values
+--   `basic`, `fix` and `par`.
+-- @tparam string position The argument `position` is either set
+--   to `start` or to `stop`.
 function registry.set_storage(mode, position)
   local index = registry.get_index()
   local data = {
     ['mode'] = mode,
     ['position'] = position
   }
-  data.values = registry.local_options
+  data.values = {}
+  for key, value in pairs(registry.local_options) do
+    data.values[key] = value
+  end
   registry.storage[index] = data
   return index
 end
@@ -462,6 +494,9 @@ end
 --
 -- The global boolean variable `registry.local_options` controls in
 -- which table the values are stored.
+--
+-- @tparam string key The option key.
+-- @tparam mixed value The value that is stored under the options key.
 function registry.set_option(key, value)
   if value == '' or value == '\\color@ ' then
     return false
@@ -473,11 +508,11 @@ function registry.set_option(key, value)
   end
 end
 
---- `registry.set_is_global()` sets the variable `registry.is_global` to
--- the value `value`. It is intended, that the variable takes boolean
--- values.
-function registry.set_is_global(value)
-  registry.is_global = value
+--- Set the variable `registry.is_global`.
+--
+-- @tparam boolean is_global
+function registry.set_is_global(is_global)
+  registry.is_global = is_global
 end
 
 --- This function unsets the local options.
@@ -526,6 +561,10 @@ end
 
 --- This function tests whether the value `value` is not empty and has a
 -- value.
+--
+-- @tparam mixed value A value of different types.
+--
+-- @treturn boolean True is the value is set otherwise false.
 function registry.has_value(value)
   if value == nil or value == '' or value == '\\color@ ' then
     return false
@@ -534,10 +573,13 @@ function registry.has_value(value)
   end
 end
 
---- `registry.get_defaults(option)` returns a the default value of the
--- given option.
-function registry.get_defaults(option)
-  return registry.defaults[option]
+--- Return the default value of the given option.
+--
+-- @tparam string key The name of the options key.
+--
+-- @treturn mixed The corresponding value of the options key.
+function registry.get_defaults(key)
+  return registry.defaults[key]
 end
 
 --- Assembly to cloze texts.

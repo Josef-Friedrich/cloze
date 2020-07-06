@@ -75,12 +75,16 @@
 	<td class="summary">All values and functions, which are related to the option management,
  are stored in a table called <a href="index.html#registry">registry</a>.</td>
 	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#registry.storage">registry.storage</a></td>
+	<td class="summary">Store all local options of the markers.</td>
+	</tr>
 </table>
 <h2><a href="#Fields">Fields</a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#registry.user_id">registry.user_id</a></td>
-	<td class="summary">I didn&rsquo;t know what value I should take as <a href="index.html#registry.user_id">user_id</a>.</td>
+	<td class="summary">I didn’t know what value I should take as <a href="index.html#registry.user_id">user_id</a>.</td>
 	</tr>
 </table>
 <h2><a href="#Node_precessing__nodex_">Node precessing (nodex) </a></h2>
@@ -115,7 +119,7 @@
 	<tr>
 	<td class="name" nowrap><a href="#nodex.write_linefil">nodex.write_linefil ()</a></td>
 	<td class="summary">The function <a href="index.html#nodex.write_linefil">nodex.write_linefil</a> surrounds a indefinitely strechable
- line with color whatsits and puts it to \TeX’s ‘current (node) list’.</td>
+ line with color whatsits and puts it to TeX’s ‘current (node) list’.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#create_kern_node">create_kern_node (width)</a></td>
@@ -152,11 +156,11 @@
 	<td class="summary">This functions checks if the given node <code>item</code> is a marker.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#registry.check_marker">registry.check_marker (item, mode, position)</a></td>
+	<td class="name" nowrap><a href="#registry.check_marker">registry.check_marker (head_node, mode, position)</a></td>
 	<td class="summary">This functions tests, whether the given node <code>item</code> is a marker.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#registry.get_marker">registry.get_marker (item, mode, position)</a></td>
+	<td class="name" nowrap><a href="#registry.get_marker">registry.get_marker (head_node, mode, position)</a></td>
 	<td class="summary"><a href="index.html#registry.get_marker">registry.get_marker</a> returns the given marker.</td>
 	</tr>
 	<tr>
@@ -180,7 +184,7 @@
 	<tr>
 	<td class="name" nowrap><a href="#registry.set_storage">registry.set_storage (mode, position)</a></td>
 	<td class="summary"><code>registry.set_storage()</code> stores the local options in the Lua table
-  <code>registry.storage</code>.</td>
+  <a href="index.html#registry.storage">registry.storage</a>.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#registry.get_storage">registry.get_storage (index)</a></td>
@@ -194,9 +198,8 @@
   (<code>registry.local_options</code>) option table.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#registry.set_is_global">registry.set_is_global (value)</a></td>
-	<td class="summary"><code>registry.set_is_global()</code> sets the variable <code>registry.is_global</code> to
- the value <code>value</code>.</td>
+	<td class="name" nowrap><a href="#registry.set_is_global">registry.set_is_global (is_global)</a></td>
+	<td class="summary">Set the variable <code>registry.is_global</code>.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#registry.unset_local_options">registry.unset_local_options ()</a></td>
@@ -221,16 +224,15 @@
  value.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#registry.get_defaults">registry.get_defaults (option)</a></td>
-	<td class="summary"><code>registry.get_defaults(option)</code> returns a the default value of the
- given option.</td>
+	<td class="name" nowrap><a href="#registry.get_defaults">registry.get_defaults (key)</a></td>
+	<td class="summary">Return the default value of the given option.</td>
 	</tr>
 </table>
 <h2><a href="#Assembly_to_cloze_texts">Assembly to cloze texts </a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#make_basic">make_basic (head_node_input)</a></td>
-	<td class="summary">Assemble a possibly muliline cloze.</td>
+	<td class="summary">Assemble a possibly multiline cloze.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#make_single">make_single (start_node, stop_node, parent_node)</a></td>
@@ -291,6 +293,11 @@
 	<td class="summary"><code>base.unregister(mode)</code> deletes the registered functions from the
  Lua callbacks.</td>
 	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#base.fboxrule_restore">base.fboxrule_restore</a></td>
+	<td class="summary">Variable that can be used to store the previous fbox rule thickness
+ to be able to restore the previous thickness.</td>
+	</tr>
 </table>
 
 <br/>
@@ -329,6 +336,24 @@
 
 
 </dd>
+    <dt>
+    <a name = "registry.storage"></a>
+    <strong>registry.storage</strong>
+    </dt>
+    <dd>
+    Store all local options of the markers.</p>
+
+<p> <code>
+ print(&lsquo;lua&rsquo;)
+ </code>
+
+
+
+
+
+
+
+</dd>
 </dl>
     <h2 class="section-header "><a name="Fields"></a>Fields</h2>
 
@@ -338,8 +363,8 @@
     <strong>registry.user_id</strong>
     </dt>
     <dd>
-    I didn&rsquo;t know what value I should take as <a href="index.html#registry.user_id">user_id</a>.  Therefore I
- took my birthday and transformed it to a large number.
+    I didn’t know what value I should take as <a href="index.html#registry.user_id">user_id</a>.  Therefore I
+ took my birthday and transformed it into a large number.
 
 
 
@@ -489,7 +514,7 @@
     <dd>
     This function enclozes a rule node with color nodes as it the function
  <a href="index.html#nodex.insert_line">nodex.insert_line</a> does.  In contrast to <a href="index.html#nodex.insert_line">nodex.insert_line</a> the three
- nodes are appended to \TeX’s ‘current list’. They are not inserted in
+ nodes are appended to TeX’s ‘current list’. They are not inserted in
  a node list, which is accessed by a Lua callback.</p>
 
 <p> <strong>Node list</strong></p>
@@ -547,7 +572,7 @@
     </dt>
     <dd>
     The function <a href="index.html#nodex.write_linefil">nodex.write_linefil</a> surrounds a indefinitely strechable
- line with color whatsits and puts it to \TeX’s ‘current (node) list’.
+ line with color whatsits and puts it to TeX’s ‘current (node) list’.
 
 
 
@@ -667,17 +692,18 @@
     <h2 class="section-header has-description"><a name="Option_handling"></a>Option handling </h2>
 
           <div class="section-description">
-          <p> The table <a href="index.html#registry">registry</a> bundels functions that deal with option handling.</p>
+          <p> The table <a href="index.html#registry">registry</a> bundles functions that deal with the option
+ handling.</p>
 
 <p> <h2>Marker processing (marker)</h2></p>
 
-<p> A marker is a whatsit node of the subtype <code>user_defined</code>. A marker has
- two purposes:</p>
+<p> A marker is a whatsit node of the subtype <code>user_defined</code>. A marker
+ has two purposes:</p>
 
 <ul>
 <li>Mark the begin and the end of a gap.</li>
-<li>Store a index number, that points to a Lua table, which holds
-some additional data like the local options.</li>
+<li>Store a index number, that points to a Lua table, which holds some
+additional data like the local options.</li>
 </ul>
 
           </div>
@@ -693,7 +719,7 @@ some additional data like the local options.</li>
 <p> In order to distinguish this node from other user defined whatsit
  nodes we set the <a href="index.html#registry.user_id">user_id</a> to a large number. We call this whatsit
  node a marker. The argument <code>index</code> is a number, which is associated
- to values in the <code>registry.storage</code> table.
+ to values in the <a href="index.html#registry.storage">registry.storage</a> table.
 
 
     <h3>Parameters:</h3>
@@ -757,26 +783,27 @@ some additional data like the local options.</li>
 </dd>
     <dt>
     <a name = "registry.check_marker"></a>
-    <strong>registry.check_marker (item, mode, position)</strong>
+    <strong>registry.check_marker (head_node, mode, position)</strong>
     </dt>
     <dd>
-    This functions tests, whether the given node <code>item</code> is a marker.</p>
-
-<p> The argument <code>item</code> is a node. The argument <code>mode</code> accepts the string
- values <code>basic</code>, <code>fix</code> and <code>par</code>. The argument <code>position</code> is either
- set to <code>start</code> or to <code>stop</code>.
+    This functions tests, whether the given node <code>item</code> is a marker.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">item</span>
-
+        <li><span class="parameter">head_node</span>
+            <span class="types"><span class="type">node</span></span>
+         The current node.
         </li>
         <li><span class="parameter">mode</span>
-
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         The argument <code>mode</code> accepts the string values
+   <code>basic</code>, <code>fix</code> and <code>par</code>.
         </li>
         <li><span class="parameter">position</span>
-
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         The argument <code>position</code> is either set
+   to <code>start</code> or to <code>stop</code>.
         </li>
     </ul>
 
@@ -787,29 +814,36 @@ some additional data like the local options.</li>
 </dd>
     <dt>
     <a name = "registry.get_marker"></a>
-    <strong>registry.get_marker (item, mode, position)</strong>
+    <strong>registry.get_marker (head_node, mode, position)</strong>
     </dt>
     <dd>
-    <a href="index.html#registry.get_marker">registry.get_marker</a> returns the given marker.</p>
-
-<p> The argument <code>item</code> is a node. The argument <code>mode</code> accepts the string
- values <code>basic</code>, <code>fix</code> and <code>par</code>. The argument <code>position</code> is either
- set to <code>start</code> or to <code>stop</code>.
+    <a href="index.html#registry.get_marker">registry.get_marker</a> returns the given marker.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">item</span>
-
+        <li><span class="parameter">head_node</span>
+            <span class="types"><span class="type">node</span></span>
+         The current node.
         </li>
         <li><span class="parameter">mode</span>
-
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         The argument <code>mode</code> accepts the string values
+   <code>basic</code>, <code>fix</code> and <code>par</code>.
         </li>
         <li><span class="parameter">position</span>
-
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         The argument <code>position</code> is either set
+   to <code>start</code> or to <code>stop</code>.
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">mixed</span></span>
+        The node if <code>head_node</code> is a marker node.
+    </ol>
 
 
 
@@ -917,20 +951,23 @@ some additional data like the local options.</li>
     </dt>
     <dd>
     <code>registry.set_storage()</code> stores the local options in the Lua table
-  <code>registry.storage</code>.</p>
+  <a href="index.html#registry.storage">registry.storage</a>.</p>
 
 <p> It returns a numeric index number. This index number is the key,
- where the local options in the Lua table are stored. The argument
- <code>mode</code> accepts the string values <code>basic</code>, <code>fix</code> and <code>par</code>.
+ where the local options in the Lua table are stored.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">mode</span>
-
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         The argument <code>mode</code> accepts the string values
+   <code>basic</code>, <code>fix</code> and <code>par</code>.
         </li>
         <li><span class="parameter">position</span>
-
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         The argument <code>position</code> is either set
+   to <code>start</code> or to <code>stop</code>.
         </li>
     </ul>
 
@@ -978,10 +1015,12 @@ some additional data like the local options.</li>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">key</span>
-
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         The option key.
         </li>
         <li><span class="parameter">value</span>
-
+            <span class="types"><span class="type">mixed</span></span>
+         The value that is stored under the options key.
         </li>
     </ul>
 
@@ -992,17 +1031,16 @@ some additional data like the local options.</li>
 </dd>
     <dt>
     <a name = "registry.set_is_global"></a>
-    <strong>registry.set_is_global (value)</strong>
+    <strong>registry.set_is_global (is_global)</strong>
     </dt>
     <dd>
-    <code>registry.set_is_global()</code> sets the variable <code>registry.is_global</code> to
- the value <code>value</code>.  It is intended, that the variable takes boolean
- values.
+    Set the variable <code>registry.is_global</code>.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">value</span>
+        <li><span class="parameter">is_global</span>
+            <span class="types"><span class="type">boolean</span></span>
 
         </li>
     </ul>
@@ -1098,10 +1136,17 @@ some additional data like the local options.</li>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">value</span>
-
+            <span class="types"><span class="type">mixed</span></span>
+         A value of different types.
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        True is the value is set otherwise false.
+    </ol>
 
 
 
@@ -1109,20 +1154,26 @@ some additional data like the local options.</li>
 </dd>
     <dt>
     <a name = "registry.get_defaults"></a>
-    <strong>registry.get_defaults (option)</strong>
+    <strong>registry.get_defaults (key)</strong>
     </dt>
     <dd>
-    <code>registry.get_defaults(option)</code> returns a the default value of the
- given option.
+    Return the default value of the given option.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">option</span>
-
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         The name of the options key.
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">mixed</span></span>
+        The corresponding value of the options key.
+    </ol>
 
 
 
@@ -1137,7 +1188,7 @@ some additional data like the local options.</li>
     <strong>make_basic (head_node_input)</strong>
     </dt>
     <dd>
-    Assemble a possibly muliline cloze.</p>
+    Assemble a possibly multiline cloze.</p>
 
 <p> The corresponding LaTeX command to this Lua function is <code>\cloze</code>.
   This function is used by other cloze TeX macros too: <code>\clozenol</code>,
@@ -1680,6 +1731,21 @@ some additional data like the local options.</li>
 
 
 </dd>
+    <dt>
+    <a name = "base.fboxrule_restore"></a>
+    <strong>base.fboxrule_restore</strong>
+    </dt>
+    <dd>
+    Variable that can be used to store the previous fbox rule thickness
+ to be able to restore the previous thickness.
+
+
+
+
+
+
+
+</dd>
 </dl>
 
 
@@ -1687,7 +1753,7 @@ some additional data like the local options.</li>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-07-05 08:30:44 </i>
+<i style="float:right;">Last updated 2020-07-06 21:36:23 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

@@ -26,6 +26,7 @@ doc_pdf:
 
 doc_lua:
 	ldoc .
+	xdg-open docs/index.html
 
 test: test_luatex_without_open test_lualatex_without_open
 	pdftk tests-luatex.pdf tests-lualatex.pdf cat output tests.pdf
