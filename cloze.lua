@@ -57,6 +57,9 @@ local capture_fold = lpeg.Cf
 --- See [lpeg.Cg](http://www.inf.puc-rio.br/~roberto/lpeg#cap-g)
 local capture_group = lpeg.Cg
 
+local capture_constant = lpeg.Cc
+
+
 --- A naive key value parser written with Lpeg to get rid of kvoptions.
 --
 -- * `patt^0` = `expression *` (peg.js)
@@ -97,9 +100,28 @@ local function key_value_parser(input)
   -- no value, there is no captured value.
   local dimension = (sign^0 * number * unit) / tex.sp
 
+  local boolean_true = (
+    Pattern('true') +
+    Pattern('TRUE') +
+    Pattern('yes') +
+    Pattern('YES')
+  ) * capture_constant(true)
+
+  local boolean_false = (
+    Pattern('false') +
+    Pattern('FALSE') +
+    Pattern('no') +
+    Pattern('NO')
+  ) * capture_constant(false)
+
+  local boolean =
+    white_space *
+    (boolean_true + boolean_false) *
+    white_space
+
   local key =
     white_space *
-    capture(Range('az', 'AZ')^1) *
+    capture(Range('az')^1) *
     white_space
 
   local string =
@@ -107,14 +129,22 @@ local function key_value_parser(input)
     capture(Range('az', 'AZ', '09')^1) *
     white_space
 
-  local keyval = capture_group(
+  -- For example: hide -> hide = true
+  local key_only =
+    key *
+    capture_constant(true)
+
+  local key_value =
     key *
     Pattern('=') *
-    (dimension + string) *
+    (dimension + boolean + string)
+
+  local keyval_groups = capture_group(
+    (key_value + key_only) *
     Pattern(',')^-1
   )
 
-  local kvlist = capture_fold(capture_table('') * keyval^0, rawset)
+  local kvlist = capture_fold(capture_table('') * keyval_groups^0, rawset)
   return kvlist:match(input)
 end
 
