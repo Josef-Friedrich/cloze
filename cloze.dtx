@@ -180,7 +180,7 @@
 %    \begin{macrocode}
 \def\ClozeStartMarker#1{%
   \strut\directlua{
-    cloze.register('#1')
+    cloze.register_callback('#1')
     cloze.marker('#1', 'start')
   }%
 }
@@ -215,9 +215,9 @@
 % \cmd{\ClozeMargin} surrounds a text in a gap with two |kerns|.
 %    \begin{macrocode}
 \def\ClozeMargin#1{%
-  \directlua{cloze.margin()}%
+  \directlua{cloze.write_margin_node()}%
   #1%
-  \directlua{cloze.margin()}%
+  \directlua{cloze.write_margin_node()}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -354,7 +354,7 @@
 % section \TmpSecRef{sec:command-clozeline}.
 %    \begin{macrocode}
 \def\clozeline{%
-  \directlua{cloze.line()}%
+  \directlua{cloze.write_line_nodes()}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -366,7 +366,7 @@
 %    \begin{macrocode}
 \def\clozelinefil{%
   \strut%
-  \directlua{cloze.linefil()}%
+  \directlua{cloze.write_linefil_nodes()}%
   \strut%
 }
 %    \end{macrocode}
@@ -393,7 +393,7 @@
   \ClozeWrapWithFont{#1}%
   \ClozeStopMarker{par}%
   \par%
-  \directlua{cloze.unregister('par')}%
+  \directlua{cloze.unregister_callback('par')}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -797,7 +797,7 @@
 {%
   \ClozeStopMarker{par}%
   \par%
-  \directlua{cloze.unregister('par')}%
+  \directlua{cloze.unregister_callback('par')}%
 }
 %    \end{macrocode}
 % \end{environment}

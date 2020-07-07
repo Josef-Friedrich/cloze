@@ -41,7 +41,7 @@
 \def\ClozeColor#1{\csname\string\color@#1\endcsname}
 \def\ClozeStartMarker#1{%
   \strut\directlua{
-    cloze.register('#1')
+    cloze.register_callback('#1')
     cloze.marker('#1', 'start')
   }%
 }
@@ -57,9 +57,9 @@
   }%
 }%
 \def\ClozeMargin#1{%
-  \directlua{cloze.margin()}%
+  \directlua{cloze.write_margin_node()}%
   #1%
-  \directlua{cloze.margin()}%
+  \directlua{cloze.write_margin_node()}%
 }
 \def\clozesetoption#1#2{%
   \ClozeSetToGlobal%
@@ -111,11 +111,11 @@
   \ClozeStopMarker{basic}%
 }
 \def\clozeline{%
-  \directlua{cloze.line()}%
+  \directlua{cloze.write_line_nodes()}%
 }
 \def\clozelinefil{%
   \strut%
-  \directlua{cloze.linefil()}%
+  \directlua{cloze.write_linefil_nodes()}%
   \strut%
 }
 \def\clozefil#1{%
@@ -128,7 +128,7 @@
   \ClozeWrapWithFont{#1}%
   \ClozeStopMarker{par}%
   \par%
-  \directlua{cloze.unregister('par')}%
+  \directlua{cloze.unregister_callback('par')}%
 }
 \def\clozeparcapture#1\par {%
   \clozeparplain{#1}%

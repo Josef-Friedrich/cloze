@@ -41,7 +41,7 @@ registry.user_id = 3121978
 
 --- Store all local options of the markers.
 --
--- <code>
+-- <code><pre>
 -- registry.storage = {
 --   {
 --     mode = "basic",
@@ -54,8 +54,7 @@ registry.user_id = 3121978
 --     mode = "basic",
 --     position = "stop"
 --   }
--- }
--- </code>
+-- }</pre></code>
 registry.storage = {}
 
 --- The default options.
@@ -204,10 +203,11 @@ function nodex.insert_line(current, width)
   )
 end
 
---- This function enclozes a rule node with color nodes as it the function
--- `nodex.insert_line` does. In contrast to `nodex.insert_line` the three
--- nodes are appended to TeX’s ‘current list’. They are not inserted in
--- a node list, which is accessed by a Lua callback.
+--- This function enclozes a rule node with color nodes as it the
+--  function `nodex.insert_line` does. In contrast to
+--  `nodex.insert_line` the three nodes are appended to TeX’s ‘current
+--  list’. They are not inserted in a node list, which is accessed by a
+--  Lua callback.
 --
 -- __Node list__
 --
@@ -235,7 +235,7 @@ end
 --   </tr>
 -- </tbody>
 -- </table>
-function nodex.write_line()
+local function write_line_nodes()
   node.write(nodex.create_color('line'))
   node.write(nodex.create_line(tex.sp(registry.get_value('width'))))
   node.write(nodex.create_color('reset'))
@@ -256,9 +256,9 @@ function nodex.create_linefil()
   return glue
 end
 
---- The function `nodex.write_linefil` surrounds a indefinitely strechable
--- line with color whatsits and puts it to TeX’s ‘current (node) list’.
-function nodex.write_linefil()
+--- Surround a indefinitely strechable line with color whatsits and puts
+--  it to TeX’s ‘current (node) list’ (write).
+local function write_linefil_nodes()
   node.write(nodex.create_color('line'))
   node.write(nodex.create_linefil())
   node.write(nodex.create_color('reset'))
@@ -293,11 +293,10 @@ local function insert_strut_into_hlist(hlist_node)
   return hlist_node, strut_node, prev_head_node
 end
 
---- Write kern nodes to the current node list. This kern nodes can be used
--- to build a margin.
-function nodex.write_margin()
-  local kern = create_kern_node(tex.sp(registry.get_value('margin')))
-  node.write(kern)
+--- Write a kern node to the current node list. This kern node can be
+--  used to build a margin.
+function write_margin_node()
+  node.write(create_kern_node(tex.sp(registry.get_value('margin'))))
 end
 
 --- Search for a `hlist` (subtype `line`) and nsert a strut node into
@@ -1120,7 +1119,7 @@ export.is_registered = {}
 -- display math mode. The `post_linebreak_filter` is not called on
 -- display math formulas. I’m not sure if the `pre_output_filter` is the
 -- right choice to capture the display math formulas.
-function export.register(mode)
+function export.register_callback(mode)
   if mode == 'par' then
     register_callback(
       'post_linebreak_filter',
@@ -1158,7 +1157,7 @@ end
 --
 -- @tparam string mode The argument `mode` accepts the string values
 -- `basic`, `fix` and `par`.
-function export.unregister(mode)
+function export.unregister_callback(mode)
   if mode == 'basic' then
     unregister_callback('post_linebreak_filter', mode)
     unregister_callback('pre_output_filter', mode)
@@ -1174,9 +1173,9 @@ end
 --- Variable that can be used to store the previous fbox rule thickness
 --  to be able to restore the previous thickness.
 export.fboxrule_restore = nil
-export.linefil = nodex.write_linefil
-export.line = nodex.write_line
-export.margin = nodex.write_margin
+export.write_linefil_nodes = write_linefil_nodes
+export.write_line_nodes = write_line_nodes
+export.write_margin_node = write_margin_node
 export.set_option = registry.set_option
 export.set_is_global = registry.set_is_global
 export.unset_local_options = registry.unset_local_options
