@@ -31,6 +31,7 @@
 <ul>
 <li><a href="#Tables">Tables</a></li>
 <li><a href="#Fields">Fields</a></li>
+<li><a href="#Local_Functions">Local Functions</a></li>
 <li><a href="#Node_precessing__nodex_">Node precessing (nodex) </a></li>
 <li><a href="#Option_handling">Option handling </a></li>
 <li><a href="#Assembly_to_cloze_texts">Assembly to cloze texts </a></li>
@@ -95,8 +96,43 @@
 <h2><a href="#Fields">Fields</a></h2>
 <table class="function_list">
 	<tr>
+	<td class="name" nowrap><a href="#Pattern">Pattern</a></td>
+	<td class="summary">See <a href="http://www.inf.puc-rio.br/~roberto/lpeg#op-p">lpeg.P</a></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Range">Range</a></td>
+	<td class="summary">See <a href="http://www.inf.puc-rio.br/~roberto/lpeg#op-r">lpeg.R</a></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Set">Set</a></td>
+	<td class="summary">See <a href="http://www.inf.puc-rio.br/~roberto/lpeg#op-s">lpeg.S</a></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#capture">capture</a></td>
+	<td class="summary">See <a href="http://www.inf.puc-rio.br/~roberto/lpeg#cap-c">lpeg.C</a></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#capture_table">capture_table</a></td>
+	<td class="summary">See <a href="http://www.inf.puc-rio.br/~roberto/lpeg#cap-t">lpeg.Ct</a></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#capture_fold">capture_fold</a></td>
+	<td class="summary">See <a href="http://www.inf.puc-rio.br/~roberto/lpeg#cap-f">lpeg.Cf</a></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#capture_group">capture_group</a></td>
+	<td class="summary">See <a href="http://www.inf.puc-rio.br/~roberto/lpeg#cap-g">lpeg.Cg</a></td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#registry.user_id">registry.user_id</a></td>
 	<td class="summary">I didn’t know what value I should take as <a href="index.html#registry.user_id">user_id</a>.</td>
+	</tr>
+</table>
+<h2><a href="#Local_Functions">Local Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#key_value_parser">key_value_parser (input)</a></td>
+	<td class="summary">A naive key value parser written with Lpeg to get rid of kvoptions.</td>
 	</tr>
 </table>
 <h2><a href="#Node_precessing__nodex_">Node precessing (nodex) </a></h2>
@@ -119,9 +155,9 @@
 	<td class="summary">Enclose a rule node (cloze line) with two PDF colorstack whatsits.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#nodex.write_line">nodex.write_line ()</a></td>
-	<td class="summary">This function enclozes a rule node with color nodes as it the function
- <a href="index.html#nodex.insert_line">nodex.insert_line</a> does.</td>
+	<td class="name" nowrap><a href="#write_line_nodes">write_line_nodes ()</a></td>
+	<td class="summary">This function enclozes a rule node with color nodes as it the
+  function <a href="index.html#nodex.insert_line">nodex.insert_line</a> does.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#nodex.create_linefil">nodex.create_linefil ()</a></td>
@@ -129,9 +165,9 @@
  horizontal direction.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#nodex.write_linefil">nodex.write_linefil ()</a></td>
-	<td class="summary">The function <a href="index.html#nodex.write_linefil">nodex.write_linefil</a> surrounds a indefinitely strechable
- line with color whatsits and puts it to TeX’s ‘current (node) list’.</td>
+	<td class="name" nowrap><a href="#write_linefil_nodes">write_linefil_nodes ()</a></td>
+	<td class="summary">Surround a indefinitely strechable line with color whatsits and puts
+  it to TeX’s ‘current (node) list’ (write).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#create_kern_node">create_kern_node (width)</a></td>
@@ -143,8 +179,8 @@
   character).</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#nodex.write_margin">nodex.write_margin ()</a></td>
-	<td class="summary">Write kern nodes to the current node list.</td>
+	<td class="name" nowrap><a href="#write_margin_node">write_margin_node ()</a></td>
+	<td class="summary">Write a kern node to the current node list.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#search_hlist">search_hlist (head_node)</a></td>
@@ -305,12 +341,12 @@
  a certain mode (<code>basic</code>, <code>fix</code>, <code>par</code>).</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#export.register">export.register (mode)</a></td>
+	<td class="name" nowrap><a href="#export.register_callback">export.register_callback (mode)</a></td>
 	<td class="summary">This function registers the functions <a href="index.html#make_par">make_par</a>, <a href="index.html#make_basic">make_basic</a> and
   <a href="index.html#make_fix">make_fix</a> the Lua callbacks.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#export.unregister">export.unregister (mode)</a></td>
+	<td class="name" nowrap><a href="#export.unregister_callback">export.unregister_callback (mode)</a></td>
 	<td class="summary">Delete the registered functions from the Lua callbacks.</td>
 	</tr>
 	<tr>
@@ -363,7 +399,7 @@
     <dd>
     Store all local options of the markers.</p>
 
-<p> <code>
+<p> <code><pre>
  registry.storage = {
    {
      mode = &ldquo;basic&rdquo;,
@@ -376,8 +412,7 @@
      mode = &ldquo;basic&rdquo;,
      position = &ldquo;stop&rdquo;
    }
- }
- </code>
+ }</pre></code>
 
 
 
@@ -493,6 +528,104 @@
 
     <dl class="function">
     <dt>
+    <a name = "Pattern"></a>
+    <strong>Pattern</strong>
+    </dt>
+    <dd>
+    See <a href="http://www.inf.puc-rio.br/~roberto/lpeg#op-p">lpeg.P</a>  Like <code>&quot;literal&quot;</code> in peg.js.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Range"></a>
+    <strong>Range</strong>
+    </dt>
+    <dd>
+    See <a href="http://www.inf.puc-rio.br/~roberto/lpeg#op-r">lpeg.R</a>  Like <code>[a-z]</code> in peg.js.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Set"></a>
+    <strong>Set</strong>
+    </dt>
+    <dd>
+    See <a href="http://www.inf.puc-rio.br/~roberto/lpeg#op-s">lpeg.S</a>  Like <code>[characters]</code> in peg.js.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "capture"></a>
+    <strong>capture</strong>
+    </dt>
+    <dd>
+    See <a href="http://www.inf.puc-rio.br/~roberto/lpeg#cap-c">lpeg.C</a>
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "capture_table"></a>
+    <strong>capture_table</strong>
+    </dt>
+    <dd>
+    See <a href="http://www.inf.puc-rio.br/~roberto/lpeg#cap-t">lpeg.Ct</a>
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "capture_fold"></a>
+    <strong>capture_fold</strong>
+    </dt>
+    <dd>
+    See <a href="http://www.inf.puc-rio.br/~roberto/lpeg#cap-f">lpeg.Cf</a>
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "capture_group"></a>
+    <strong>capture_group</strong>
+    </dt>
+    <dd>
+    See <a href="http://www.inf.puc-rio.br/~roberto/lpeg#cap-g">lpeg.Cg</a>
+
+
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "registry.user_id"></a>
     <strong>registry.user_id</strong>
     </dt>
@@ -502,6 +635,48 @@
 
 
 
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Local_Functions"></a>Local Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "key_value_parser"></a>
+    <strong>key_value_parser (input)</strong>
+    </dt>
+    <dd>
+    <p>A naive key value parser written with Lpeg to get rid of kvoptions.</p>
+
+<ul>
+<li><code>patt<sup>0</sup></code> = <code>expression *</code> (peg.js)</li>
+<li><code>patt<sup>1</sup></code> = <code>expression +</code> (peg.js)</li>
+<li><code>patt1 * patt2</code> = <code>expression1 expression2</code> (peg.js)</li>
+<li><p><code>patt1 + patt2</code> = <code>expression1 / expression2</code> (peg.js)</p></li>
+<li><p><a href="https://tug.org/TUGboat/tb40-2/tb125menke-lpeg.pdf">TUGboat article: Parsing complex data formats in LuaTEX with LPEG</a></p></li>
+<li><a href="https://github.com/lualatex/lualibs/blob/master/lualibs-util-dim.lua">Dimension handling</a></li>
+</ul>
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">input</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         The key value options in a unparsed fashion as a
+   string.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
+        The key value options as a table.
+    </ol>
 
 
 
@@ -642,14 +817,15 @@
 
 </dd>
     <dt>
-    <a name = "nodex.write_line"></a>
-    <strong>nodex.write_line ()</strong>
+    <a name = "write_line_nodes"></a>
+    <strong>write_line_nodes ()</strong>
     </dt>
     <dd>
-    This function enclozes a rule node with color nodes as it the function
- <a href="index.html#nodex.insert_line">nodex.insert_line</a> does.  In contrast to <a href="index.html#nodex.insert_line">nodex.insert_line</a> the three
- nodes are appended to TeX’s ‘current list’. They are not inserted in
- a node list, which is accessed by a Lua callback.</p>
+    This function enclozes a rule node with color nodes as it the
+  function <a href="index.html#nodex.insert_line">nodex.insert_line</a> does.  In contrast to
+  <a href="index.html#nodex.insert_line">nodex.insert_line</a> the three nodes are appended to TeX’s ‘current
+  list’. They are not inserted in a node list, which is accessed by a
+  Lua callback.</p>
 
 <p> <strong>Node list</strong></p>
 
@@ -701,12 +877,12 @@
 
 </dd>
     <dt>
-    <a name = "nodex.write_linefil"></a>
-    <strong>nodex.write_linefil ()</strong>
+    <a name = "write_linefil_nodes"></a>
+    <strong>write_linefil_nodes ()</strong>
     </dt>
     <dd>
-    The function <a href="index.html#nodex.write_linefil">nodex.write_linefil</a> surrounds a indefinitely strechable
- line with color whatsits and puts it to TeX’s ‘current (node) list’.
+    Surround a indefinitely strechable line with color whatsits and puts
+  it to TeX’s ‘current (node) list’ (write).
 
 
 
@@ -774,12 +950,12 @@
 
 </dd>
     <dt>
-    <a name = "nodex.write_margin"></a>
-    <strong>nodex.write_margin ()</strong>
+    <a name = "write_margin_node"></a>
+    <strong>write_margin_node ()</strong>
     </dt>
     <dd>
-    Write kern nodes to the current node list.  This kern nodes can be used
- to build a margin.
+    Write a kern node to the current node list.  This kern node can be
+  used to build a margin.
 
 
 
@@ -1865,8 +2041,8 @@ additional data like the local options.</li>
 
 </dd>
     <dt>
-    <a name = "export.register"></a>
-    <strong>export.register (mode)</strong>
+    <a name = "export.register_callback"></a>
+    <strong>export.register_callback (mode)</strong>
     </dt>
     <dd>
     This function registers the functions <a href="index.html#make_par">make_par</a>, <a href="index.html#make_basic">make_basic</a> and
@@ -1894,8 +2070,8 @@ additional data like the local options.</li>
 
 </dd>
     <dt>
-    <a name = "export.unregister"></a>
-    <strong>export.unregister (mode)</strong>
+    <a name = "export.unregister_callback"></a>
+    <strong>export.unregister_callback (mode)</strong>
     </dt>
     <dd>
     Delete the registered functions from the Lua callbacks.
@@ -1937,7 +2113,7 @@ additional data like the local options.</li>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-07-07 13:36:46 </i>
+<i style="float:right;">Last updated 2020-07-07 14:40:05 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

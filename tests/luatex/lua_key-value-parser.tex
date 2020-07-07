@@ -1,0 +1,13 @@
+\input ../cloze-test-macros-luatex.tex
+\input cloze.tex
+
+\TestTitleDesc{Lua: Test function key\_value\_parser}
+{}
+
+\directlua{
+  local cloze = require('cloze')
+  local key_value_parser = cloze.key_value_parser
+  print(cloze.key_value_parser('thickness=3mm,linecolor=yellow,textcolor=magenta,margin=-2pt'))
+}
+
+\bye
