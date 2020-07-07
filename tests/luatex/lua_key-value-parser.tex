@@ -8,14 +8,12 @@
   local inspect = require('inspect')
   local cloze = require('cloze')
   local key_value_parser = cloze.key_value_parser
-  print(cloze.key_value_parser('thickness=3mm,linecolor=yellow,textcolor=magenta,margin=-2pt'))
 
   local function debug(input)
     print(inspect(cloze.key_value_parser(input)))
   end
 
-  debug('margin=2pt')
-  debug('thickness=3mm,linecolor=yellow,textcolor=magenta,margin=-2pt')
+  debug('margin=2pt,textcolor=red')
 }
 
 \bye

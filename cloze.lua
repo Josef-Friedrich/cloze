@@ -76,7 +76,7 @@ local function key_value_parser(input)
   local white_space = Set(' \t\r\n')^0
   local sign = Set('-+')
   local integer = Range('09')^1
-  local number = integer^0 * Pattern('.')^0 * integer^0
+  local number = integer^1 * Pattern('.')^0 * integer^0
 
   local unit =
     Pattern('pt') +
@@ -89,28 +89,28 @@ local function key_value_parser(input)
     Pattern('dd') +
     Pattern('cc')
 
-  local dimension = capture(sign^0 * number * unit^0)
+    -- patt / function
+    -- Creates a function capture. It calls the given function passing
+    -- all captures made by patt as arguments, or the whole match if
+    -- patt made no capture. The values returned by the function are the
+    -- final values of the capture. In particular, if function returns
+    -- no value, there is no captured value.
+  local dimension = (sign^0 * number * unit) / tex.sp
 
   local key =
     white_space *
     capture(Range('az', 'AZ')^1) *
     white_space
 
-  local name =
+  local string =
     white_space *
-    capture(Range('az', 'AZ', '09', '++', '--')^1) *
-    white_space
-
-  local quote =
-    white_space *
-    Pattern('{') *
-    capture((1 - Pattern('}'))^0) * Pattern('}') *
+    capture(Range('az', 'AZ', '09')^1) *
     white_space
 
   local keyval = capture_group(
     key *
     Pattern('=') *
-    (quote + name) *
+    (dimension + string) *
     Pattern(',')^-1
   )
 
