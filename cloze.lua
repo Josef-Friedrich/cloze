@@ -61,8 +61,9 @@ local capture_group = lpeg.Cg
 --
 -- * `patt^0` = `expression *` (peg.js)
 -- * `patt^1` = `expression +` (peg.js)
--- * `patt1 * patt2` = `expression1 expression2` (peg.js)
--- * `patt1 + patt2` = `expression1 / expression2` (peg.js)
+-- * `patt^-1` = `expression ?` (peg.js)
+-- * `patt1 * patt2` = `expression1 expression2` (peg.js) -> Sequence
+-- * `patt1 + patt2` = `expression1 / expression2` (peg.js) -> Ordered choice
 --
 -- * [TUGboat article: Parsing complex data formats in LuaTEX with LPEG](https://tug.org/TUGboat/tb40-2/tb125menke-lpeg.pdf)
 -- * [Dimension handling](https://github.com/lualatex/lualibs/blob/master/lualibs-util-dim.lua)
@@ -72,6 +73,7 @@ local capture_group = lpeg.Cg
 --
 -- @treturn table The key value options as a table.
 local function key_value_parser(input)
+  local white_space = Set(' \t\r\n')^0
   local sign = Set('-+')
   local integer = Range('09')^1
   local number = integer^0 * Pattern('.')^0 * integer^0
@@ -89,7 +91,6 @@ local function key_value_parser(input)
 
   local dimension = capture(sign^0 * number * unit^0)
 
-  local white_space = Set(' \t\r\n')^0
   local key =
     white_space *
     capture(Range('az', 'AZ')^1) *
