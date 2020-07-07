@@ -34,7 +34,7 @@
 <li><a href="#Node_precessing__nodex_">Node precessing (nodex) </a></li>
 <li><a href="#Option_handling">Option handling </a></li>
 <li><a href="#Assembly_to_cloze_texts">Assembly to cloze texts </a></li>
-<li><a href="#Basic_module_functions">Basic module functions </a></li>
+<li><a href="#Exported_functions">Exported functions </a></li>
 </ul>
 
 
@@ -293,22 +293,30 @@
 	<td class="summary"></td>
 	</tr>
 </table>
-<h2><a href="#Basic_module_functions">Basic module functions </a></h2>
+<h2><a href="#Exported_functions">Exported functions </a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#base.register">base.register (mode)</a></td>
+	<td class="name" nowrap><a href="#export">export</a></td>
+	<td class="summary">The <a href="index.html#export">export</a> table contains some basic functions.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#export.is_registered">export.is_registered</a></td>
+	<td class="summary">Store informations if the callbacks are already registered for
+ a certain mode (<code>basic</code>, <code>fix</code>, <code>par</code>).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#export.register">export.register (mode)</a></td>
 	<td class="summary">This function registers the functions <a href="index.html#make_par">make_par</a>, <a href="index.html#make_basic">make_basic</a> and
   <a href="index.html#make_fix">make_fix</a> the Lua callbacks.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#base.unregister">base.unregister (mode)</a></td>
-	<td class="summary"><code>base.unregister(mode)</code> deletes the registered functions from the
- Lua callbacks.</td>
+	<td class="name" nowrap><a href="#export.unregister">export.unregister (mode)</a></td>
+	<td class="summary">Delete the registered functions from the Lua callbacks.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#base.fboxrule_restore">base.fboxrule_restore</a></td>
+	<td class="name" nowrap><a href="#export.fboxrule_restore">export.fboxrule_restore</a></td>
 	<td class="summary">Variable that can be used to store the previous fbox rule thickness
- to be able to restore the previous thickness.</td>
+  to be able to restore the previous thickness.</td>
 	</tr>
 </table>
 
@@ -1812,16 +1820,53 @@ additional data like the local options.</li>
 
 </dd>
 </dl>
-    <h2 class="section-header has-description"><a name="Basic_module_functions"></a>Basic module functions </h2>
+    <h2 class="section-header has-description"><a name="Exported_functions"></a>Exported functions </h2>
 
           <div class="section-description">
-           The <code>base</code> table contains functions which are published to the
- <code>cloze.sty</code> file.
+           The <a href="index.html#export">export</a> table contains functions which are published to the
+ <code>cloze.lua</code> and <code>cloze.sty</code> file.
           </div>
     <dl class="function">
     <dt>
-    <a name = "base.register"></a>
-    <strong>base.register (mode)</strong>
+    <a name = "export"></a>
+    <strong>export</strong>
+    </dt>
+    <dd>
+    The <a href="index.html#export">export</a> table contains some basic functions.  <a href="index.html#export">export</a> is the
+ only table of this Lua module that will be exported.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "export.is_registered"></a>
+    <strong>export.is_registered</strong>
+    </dt>
+    <dd>
+    Store informations if the callbacks are already registered for
+ a certain mode (<code>basic</code>, <code>fix</code>, <code>par</code>).</p>
+
+<p> <code><pre>
+ is_registered = {
+   fix = true,
+   basic = false,
+   par = false,
+ }</pre></code>
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "export.register"></a>
+    <strong>export.register (mode)</strong>
     </dt>
     <dd>
     This function registers the functions <a href="index.html#make_par">make_par</a>, <a href="index.html#make_basic">make_basic</a> and
@@ -1849,12 +1894,11 @@ additional data like the local options.</li>
 
 </dd>
     <dt>
-    <a name = "base.unregister"></a>
-    <strong>base.unregister (mode)</strong>
+    <a name = "export.unregister"></a>
+    <strong>export.unregister (mode)</strong>
     </dt>
     <dd>
-    <code>base.unregister(mode)</code> deletes the registered functions from the
- Lua callbacks.
+    Delete the registered functions from the Lua callbacks.
 
 
     <h3>Parameters:</h3>
@@ -1872,12 +1916,12 @@ additional data like the local options.</li>
 
 </dd>
     <dt>
-    <a name = "base.fboxrule_restore"></a>
-    <strong>base.fboxrule_restore</strong>
+    <a name = "export.fboxrule_restore"></a>
+    <strong>export.fboxrule_restore</strong>
     </dt>
     <dd>
     Variable that can be used to store the previous fbox rule thickness
- to be able to restore the previous thickness.
+  to be able to restore the previous thickness.
 
 
 
@@ -1893,7 +1937,7 @@ additional data like the local options.</li>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-07-06 22:22:04 </i>
+<i style="float:right;">Last updated 2020-07-07 13:36:46 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

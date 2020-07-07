@@ -87,11 +87,6 @@ registry.global_options = {}
 --- The local options.
 registry.local_options = {}
 
--- The `base` table contains some basic functions. `export` is the only
--- table of this Lua module that will be exported.
-local export = {}
-export.is_registered = {}
-
 --- Node precessing (nodex)
 -- @section nodex
 
@@ -1098,6 +1093,22 @@ end
 -- `cloze.lua` and `cloze.sty` file.
 --
 -- @section export
+
+--- The `export` table contains some basic functions. `export` is the
+-- only table of this Lua module that will be exported.
+local export = {}
+
+--- Store informations if the callbacks are already registered for
+-- a certain mode (`basic`, `fix`, `par`).
+--
+-- <code><pre>
+-- is_registered = {
+--   fix = true,
+--   basic = false,
+--   par = false,
+-- }</pre></code>
+--
+export.is_registered = {}
 
 --- This function registers the functions `make_par`, `make_basic` and
 --  `make_fix` the Lua callbacks.
