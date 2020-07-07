@@ -87,10 +87,10 @@ registry.global_options = {}
 --- The local options.
 registry.local_options = {}
 
--- The `base` table contains some basic functions. `base` is the only
+-- The `base` table contains some basic functions. `export` is the only
 -- table of this Lua module that will be exported.
-local base = {}
-base.is_registered = {}
+local export = {}
+export.is_registered = {}
 
 --- Node precessing (nodex)
 -- @section nodex
@@ -1092,10 +1092,12 @@ local function unregister_callback(callback_name, description)
   end
 end
 
---- Basic module functions.
--- The `base` table contains functions which are published to the
--- `cloze.sty` file.
--- @section base
+--- Exported functions.
+--
+-- The `export` table contains functions which are published to the
+-- `cloze.lua` and `cloze.sty` file.
+--
+-- @section export
 
 --- This function registers the functions `make_par`, `make_basic` and
 --  `make_fix` the Lua callbacks.
@@ -1107,7 +1109,7 @@ end
 -- display math mode. The `post_linebreak_filter` is not called on
 -- display math formulas. I’m not sure if the `pre_output_filter` is the
 -- right choice to capture the display math formulas.
-function base.register(mode)
+function export.register(mode)
   if mode == 'par' then
     register_callback(
       'post_linebreak_filter',
@@ -1116,7 +1118,7 @@ function base.register(mode)
     )
     return true
   end
-  if not base.is_registered[mode] then
+  if not export.is_registered[mode] then
     if mode == 'basic' then
       register_callback(
         'post_linebreak_filter',
@@ -1137,16 +1139,15 @@ function base.register(mode)
     else
       return false
     end
-    base.is_registered[mode] = true
+    export.is_registered[mode] = true
   end
 end
 
---- `base.unregister(mode)` deletes the registered functions from the
--- Lua callbacks.
+--- Delete the registered functions from the Lua callbacks.
 --
 -- @tparam string mode The argument `mode` accepts the string values
 -- `basic`, `fix` and `par`.
-function base.unregister(mode)
+function export.unregister(mode)
   if mode == 'basic' then
     unregister_callback('post_linebreak_filter', mode)
     unregister_callback('pre_output_filter', mode)
@@ -1159,19 +1160,18 @@ end
 
 -- Export some functions and values.
 
----
--- Variable that can be used to store the previous fbox rule thickness
--- to be able to restore the previous thickness.
-base.fboxrule_restore = nil
-base.linefil = nodex.write_linefil
-base.line = nodex.write_line
-base.margin = nodex.write_margin
-base.set_option = registry.set_option
-base.set_is_global = registry.set_is_global
-base.unset_local_options = registry.unset_local_options
-base.reset = registry.unset_global_options
-base.get_defaults = registry.get_defaults
-base.get_value = registry.get_value
-base.marker = registry.write_marker
+--- Variable that can be used to store the previous fbox rule thickness
+--  to be able to restore the previous thickness.
+export.fboxrule_restore = nil
+export.linefil = nodex.write_linefil
+export.line = nodex.write_line
+export.margin = nodex.write_margin
+export.set_option = registry.set_option
+export.set_is_global = registry.set_is_global
+export.unset_local_options = registry.unset_local_options
+export.reset = registry.unset_global_options
+export.get_defaults = registry.get_defaults
+export.get_value = registry.get_value
+export.marker = registry.write_marker
 
-return base
+return export
