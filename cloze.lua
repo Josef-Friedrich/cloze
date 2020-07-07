@@ -89,12 +89,12 @@ local function key_value_parser(input)
     Pattern('dd') +
     Pattern('cc')
 
-    -- patt / function
-    -- Creates a function capture. It calls the given function passing
-    -- all captures made by patt as arguments, or the whole match if
-    -- patt made no capture. The values returned by the function are the
-    -- final values of the capture. In particular, if function returns
-    -- no value, there is no captured value.
+  -- patt / function
+  -- Creates a function capture. It calls the given function passing
+  -- all captures made b nby patt as arguments, or the whole match if
+  -- patt made no capture. The values returned by the function are the
+  -- final values of the capture. In particular, if function returns
+  -- no value, there is no captured value.
   local dimension = (sign^0 * number * unit) / tex.sp
 
   local key =
