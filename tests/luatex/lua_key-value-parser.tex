@@ -4,19 +4,6 @@
 \TestTitleDesc{Lua: Test function key\_value\_parser}
 {}
 
-\directlua{
-  local inspect = require('inspect')
-  local cloze = require('cloze')
-  local key_value_parser = cloze.key_value_parser
-
-  local function debug(input)
-    print(inspect(cloze.key_value_parser(input)))
-  end
-
-  debug('hide,margin=2pt,textcolor =red,linecolor=green, show,')
-  debug('one=true,two=TRUE,three = false, four=FALSE,five')
-  debug('one=no,two=NO,three = yes, four=YES,five')
-
-}
+\directlua{dofile('lua_key-value-parser.lua')}
 
 \bye

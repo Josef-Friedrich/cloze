@@ -57,8 +57,8 @@ local capture_fold = lpeg.Cf
 --- See [lpeg.Cg](http://www.inf.puc-rio.br/~roberto/lpeg#cap-g)
 local capture_group = lpeg.Cg
 
+--- See [lpeg.Cg](http://www.inf.puc-rio.br/~roberto/lpeg#cap-cc)
 local capture_constant = lpeg.Cc
-
 
 --- A naive key value parser written with Lpeg to get rid of kvoptions.
 --
@@ -69,7 +69,7 @@ local capture_constant = lpeg.Cc
 -- * `patt1 + patt2` = `expression1 / expression2` (peg.js) -> Ordered choice
 --
 -- * [TUGboat article: Parsing complex data formats in LuaTEX with LPEG](https://tug.org/TUGboat/tb40-2/tb125menke-lpeg.pdf)
--- * [Dimension handling](https://github.com/lualatex/lualibs/blob/master/lualibs-util-dim.lua)
+-- * [Dimension handling in lualibs](https://github.com/lualatex/lualibs/blob/master/lualibs-util-dim.lua)
 --
 -- @tparam string input The key value options in a unparsed fashion as a
 --   string.
@@ -77,56 +77,91 @@ local capture_constant = lpeg.Cc
 -- @treturn table The key value options as a table.
 local function key_value_parser(input)
   local white_space = Set(' \t\r\n')^0
-  local sign = Set('-+')
-  local integer = Range('09')^1
-  local number = integer^1 * Pattern('.')^0 * integer^0
 
-  local unit =
-    Pattern('pt') +
-    Pattern('cm') +
-    Pattern('mm') +
-    Pattern('sp') +
-    Pattern('bp') +
-    Pattern('in') +
-    Pattern('pc') +
-    Pattern('dd') +
-    Pattern('cc')
+  --- Define data type boolean.
+  --
+  -- @return Lpeg patterns
+  local function data_type_boolean ()
+    local boolean_true = (
+      Pattern('true') +
+      Pattern('TRUE') +
+      Pattern('yes') +
+      Pattern('YES')
+    ) * capture_constant(true)
 
-  -- patt / function
-  -- Creates a function capture. It calls the given function passing
-  -- all captures made b nby patt as arguments, or the whole match if
-  -- patt made no capture. The values returned by the function are the
-  -- final values of the capture. In particular, if function returns
-  -- no value, there is no captured value.
-  local dimension = (sign^0 * number * unit) / tex.sp
+    local boolean_false = (
+      Pattern('false') +
+      Pattern('FALSE') +
+      Pattern('no') +
+      Pattern('NO')
+    ) * capture_constant(false)
 
-  local boolean_true = (
-    Pattern('true') +
-    Pattern('TRUE') +
-    Pattern('yes') +
-    Pattern('YES')
-  ) * capture_constant(true)
+    return boolean_true + boolean_false
+  end
 
-  local boolean_false = (
-    Pattern('false') +
-    Pattern('FALSE') +
-    Pattern('no') +
-    Pattern('NO')
-  ) * capture_constant(false)
+  --- Define data type integer.
+  --
+  -- @return Lpeg patterns
+  local function data_type_integer()
+    -- patt / function
+    -- Creates a function capture. It calls the given function passing
+    -- all captures made b nby patt as arguments, or the whole match if
+    -- patt made no capture. The values returned by the function are the
+    -- final values of the capture. In particular, if function returns
+    -- no value, there is no captured value
+    return Range('09')^1 / tonumber
+  end
 
-  local boolean =
-    white_space *
-    (boolean_true + boolean_false) *
-    white_space
+  --- Define data type dimension.
+  --
+  -- @return Lpeg patterns
+  local function data_type_dimension()
+    local sign = Set('-+')
+    local integer = Range('09')^1
+    local number = integer^1 * Pattern('.')^0 * integer^0
+    local unit =
+      Pattern('pt') +
+      Pattern('cm') +
+      Pattern('mm') +
+      Pattern('sp') +
+      Pattern('bp') +
+      Pattern('in') +
+      Pattern('pc') +
+      Pattern('dd') +
+      Pattern('cc')
+
+    -- patt / function -> function capture
+    return (sign^0 * number * unit) / tex.sp
+  end
+
+  --- Define data type string.
+  --
+  -- @return Lpeg patterns
+  local data_type_string = function()
+    return capture(Range('az', 'AZ', '09')^1)
+  end
+
+  local data_type = {
+    boolean = data_type_boolean(),
+    integer = data_type_integer(),
+    dimension = data_type_dimension(),
+    string = data_type_string(),
+  }
+
+  local minimun_lines =
+    (Pattern('minimumlines') + Pattern('minlines')) *
+    capture_constant('minimum lines')
+
+  local generic_key = capture(Range('az')^1)
 
   local key =
     white_space *
-    capture(Range('az')^1) *
+    (minimun_lines + generic_key) *
     white_space
 
-  local string =
+  local value =
     white_space *
-    capture(Range('az', 'AZ', '09')^1) *
+    (data_type.dimension + data_type.integer + data_type.boolean + data_type.string) *
     white_space
 
   -- For example: hide -> hide = true
@@ -137,13 +172,17 @@ local function key_value_parser(input)
   local key_value =
     key *
     Pattern('=') *
-    (dimension + boolean + string)
+    value
 
   local keyval_groups = capture_group(
     (key_value + key_only) *
     Pattern(',')^-1
   )
 
+  -- rawset (table, index, value)
+  -- Sets the real value of table[index] to value, without invoking the
+  -- __newindex metamethod. table must be a table, index any value
+  -- different from nil and NaN, and value any Lua value.
   local kvlist = capture_fold(capture_table('') * keyval_groups^0, rawset)
   return kvlist:match(input)
 end
