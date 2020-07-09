@@ -1,5 +1,3 @@
-Warning: Currently the TeX Live package of `cloze` is broken.
-
 # Description
 
 EN: `cloze` is a LuaLaTeX/LaTeX package to generate cloze. It uses the
@@ -64,7 +62,7 @@ https://github.com/Josef-Friedrich/cloze
 
 ## TeX Live
 
-    tlmgr install cloze (At the moment broken)
+    tlmgr install cloze
 
 ## Manually
 
