@@ -33,12 +33,12 @@ Archive Network (CTAN).
 * MiKTeX: https://miktex.org/packages/cloze
 * TeX Live:
   * run files:
-    * [cloze.lua](https://tug.org/svn/texlive/trunk/Master/texmf-dist/scripts/cloze/cloze.lua)
-    * [cloze.sty](https://tug.org/svn/texlive/trunk/Master/texmf-dist/tex/luatex/cloze/cloze.sty)
-    * [cloze.tex](https://tug.org/svn/texlive/trunk/Master/texmf-dist/tex/luatex/cloze/cloze.tex)
+    * [cloze.lua](https://tug.org/svn/texlive/trunk/Master/texmf-dist/scripts/cloze/cloze.lua) texmf-dist/scripts/cloze/cloze.lua
+    * [cloze.sty](https://tug.org/svn/texlive/trunk/Master/texmf-dist/tex/luatex/cloze/cloze.sty) texmf-dist/tex/luatex/cloze/cloze.sty
+    * [cloze.tex](https://tug.org/svn/texlive/trunk/Master/texmf-dist/tex/luatex/cloze/cloze.tex) texmf-dist/tex/luatex/cloze/cloze.tex
   * doc files:
-    * [cloze.pdf)](https://tug.org/svn/texlive/trunk/Master/texmf-dist/doc/luatex/cloze/cloze.pdf)
-    * [README.md](https://tug.org/svn/texlive/trunk/Master/texmf-dist/doc/luatex/cloze/README.md)
+    * [cloze.pdf](https://tug.org/svn/texlive/trunk/Master/texmf-dist/doc/luatex/cloze/cloze.pdf) texmf-dist/doc/luatex/cloze/cloze.pdf
+    * [README.md](https://tug.org/svn/texlive/trunk/Master/texmf-dist/doc/luatex/cloze/README.md) texmf-dist/doc/luatex/cloze/README.md
 
 # Repository
 
