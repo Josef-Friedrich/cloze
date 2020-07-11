@@ -32,10 +32,13 @@ Archive Network (CTAN).
 
 * MiKTeX: https://miktex.org/packages/cloze
 * TeX Live:
-  * https://www.tug.org/texlive//Contents/live/texmf-dist/scripts/cloze/cloze.lua
-  * https://www.tug.org/texlive/Contents/live/texmf-dist/tex/lualatex/cloze/cloze.sty
-  * https://www.tug.org/texlive/Contents/live/texmf-dist/doc/lualatex/cloze/cloze.pdf
-  * https://www.tug.org/texlive/Contents/live/texmf-dist/doc/lualatex/cloze/README.md
+  * run files:
+    * [cloze.lua](https://tug.org/svn/texlive/trunk/Master/texmf-dist/scripts/cloze/cloze.lua)
+    * [cloze.sty](https://tug.org/svn/texlive/trunk/Master/texmf-dist/tex/luatex/cloze/cloze.sty)
+    * [cloze.tex](https://tug.org/svn/texlive/trunk/Master/texmf-dist/tex/luatex/cloze/cloze.tex)
+  * doc files:
+    * [cloze.pdf)](https://tug.org/svn/texlive/trunk/Master/texmf-dist/doc/luatex/cloze/cloze.pdf)
+    * [README.md](https://tug.org/svn/texlive/trunk/Master/texmf-dist/doc/luatex/cloze/README.md)
 
 # Repository
 
