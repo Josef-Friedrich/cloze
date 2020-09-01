@@ -709,7 +709,6 @@ function registry.get_value(key)
   return registry.defaults[key]
 end
 
-
 --- The function `registry.get_value_show()` returns the boolean value
 -- `true` if the option `show` is true. In contrast to the function
 -- `registry.get_value()` it converts the string value `true' to a

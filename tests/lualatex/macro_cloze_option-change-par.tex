@@ -1,0 +1,18 @@
+%!TEX program = lualatex
+\documentclass{article}
+\input ../cloze-test-macros-lualatex.tex
+\usepackage[show]{cloze}
+\usepackage{multicol}
+
+\begin{document}
+\TestTitleDesc{LuaLa\TeX: macro \string\cloze}
+{Option change inside a paragraph}
+
+\TestSection{Text color}
+
+Lorem ipsum \cloze[textcolor=green]{dolor} sit
+\cloze[textcolor=red]{amet}, consectetur adipisicing elit, sed do
+eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+minim veniam exercitation ullamco.
+
+\end{document}
