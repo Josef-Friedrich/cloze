@@ -22,10 +22,22 @@
 
 ---@class Node
 ---@field next Node|nil # the next node in a list, or nil
+---@field prev Node|nil
 ---@field id number # the node’s type (id) number
 ---@field subtype number # the node subtype identifier
+---@field head? Node
+
+---@class WhatsitNode: Node
+---@field type number
 ---@field user_id number
----@field value any
+---@field value number
+
+---@class HlistNode: Node
+---@field head Node
+---@field glue_set number
+---@field glue_sign number
+---@field glue_order number
+---@field width number
 
 if not modules then modules = { } end modules ['cloze'] = {
   version   = '1.6',
@@ -471,9 +483,9 @@ end
 -- Now we can add line, color etc. nodes after the first node of a hlist
 -- not before - after is much more easier.
 --
----@param hlist_node Node
+---@param hlist_node HlistNode
 --
----@return Node hlist_node
+---@return HlistNode hlist_node
 ---@return Node strut_node
 ---@return Node prev_head_node
 local function insert_strut_into_hlist(hlist_node)
@@ -495,12 +507,13 @@ end
 --
 ---@param head_node Node # The head of a node list.
 --
----@return Node|nil hlist_node
+---@return HlistNode|nil hlist_node
 ---@return Node|nil strut_node
 ---@return Node|nil prev_head_node
 local function search_hlist(head_node)
   while head_node do
     if head_node.id == node.id('hlist') and head_node.subtype == 1 then
+      ---@cast head_node HlistNode
       return insert_strut_into_hlist(head_node)
     end
     head_node = head_node.next
@@ -528,12 +541,11 @@ end
 --
 -- In order to distinguish this node from other user defined whatsit
 -- nodes we set the `user_id` to a large number. We call this whatsit
--- node a marker. The argument `index` is a number, which is associated
--- to values in the `registry.storage` table.
+-- node a marker.
 ---
----@param index number
+---@param index number The argument `index` is a number, which is associated to values in the `registry.storage` table.
 ---
----@return any
+---@return WhatsitNode
 function registry.create_marker(index)
   local marker = node.new('whatsit', 'user_defined')
   marker.type = 100 -- number
@@ -554,7 +566,7 @@ end
 
 --- This functions checks if the given node `item` is a marker.
 ---
----@param item Node
+---@param item WhatsitNode
 ---
 ---@return boolean
 function registry.is_marker(item)
@@ -602,9 +614,9 @@ end
 --- Test whether the node `item` is a marker and retrieve the
 -- the corresponding registry data.
 --
----@param item Node # The argument `item` is a node of unspecified type.
+---@param item WhatsitNode # The argument `item` is a node of unspecified type.
 --
----@return table # The marker data.
+---@return table|false # The marker data.
 function registry.get_marker_data(item)
   if item.id == node.id('whatsit') and
      item.subtype == node.subtype('user_defined') and
@@ -729,9 +741,9 @@ end
 -- local options, then in the global options. If both option storages are
 -- empty, the default value will be returned.
 --
----@param string key The name of the options key.
+---@param key string # The name of the options key.
 --
----@return mixed The value of the corresponding option key.
+---@return any # The value of the corresponding option key.
 function registry.get_value(key)
   if registry.has_value(registry.local_options[key]) then
     return registry.local_options[key]
@@ -746,6 +758,8 @@ end
 -- `true` if the option `show` is true. In contrast to the function
 -- `registry.get_value()` it converts the string value `true' to a
 -- boolean value.
+---
+---@return boolean
 function registry.get_value_show()
   if
     registry.get_value('show') == true
@@ -761,7 +775,7 @@ end
 --- This function tests whether the value `value` is not empty and has a
 -- value.
 --
----@param mixed value  A value of different types.
+---@param value any # A value of different types.
 --
 ---@return boolean # True is the value is set otherwise false.
 function registry.has_value(value)
@@ -774,7 +788,7 @@ end
 
 --- Return the default value of the given option.
 --
----@param key any #  The name of the options key.
+---@param key any # The name of the options key.
 --
 ---@return any # The corresponding value of the options key.
 function registry.get_defaults(key)
@@ -790,9 +804,9 @@ end
 --  This function is used by other cloze TeX macros too: `\clozenol`,
 -- `\clozefil`
 --
----@param node head_node_input The head of a node list.
+---@param head_node_input Node # The head of a node list.
 --
----@return node The head of the node list.
+---@return Node # The head of the node list.
 local function make_basic(head_node_input)
   -- This local variables are overloaded by function who
   -- call each other.
@@ -804,10 +818,10 @@ local function make_basic(head_node_input)
   --
   ---@param start_node Node # The node to start / begin a new cloze.
   ---@param stop_node Node # The node to stop / end a new cloze.
-  ---@param parent_node Node # The parent node (hlist) of the start and the stop node.
+  ---@param parent_node HlistNode # The parent node (hlist) of the start and the stop node.
   --
   ---@return Node stop_node # The stop node.
-  ---@return Node parent_node # The parent node (hlist) of the stop node.
+  ---@return HlistNode parent_node # The parent node (hlist) of the stop node.
   local function make_single(start_node, stop_node, parent_node)
     local node_head = start_node
     local line_width = node.dimensions(
@@ -837,10 +851,10 @@ local function make_basic(head_node_input)
   -- list.
   --
   ---@param start_node Node # The node to start a new cloze.
-  ---@param parent_node Node # The parent node (hlist) of the start node.
+  ---@param parent_node HlistNode # The parent node (hlist) of the start node.
   --
-  ---@return Node head_node # The fast forwarded new head of the node list.
-  ---@return Node parent_node # The parent node (hlist) of the head node.
+  ---@return Node|nil head_node # The fast forwarded new head of the node list.
+  ---@return Node|nil parent_node # The parent node (hlist) of the head node.
   function search_stop(start_node, parent_node)
     local head_node = start_node
     local last_node
@@ -877,12 +891,13 @@ local function make_basic(head_node_input)
   --- Search for a start marker.
   --
   ---@param head_node Node # The head of a node list.
-  ---@param parent_node Node # The parent node (hlist) of the head node.
+  ---@param parent_node HlistNode # The parent node (hlist) of the head node.
   ---
   ---@return Node
   local function search_start(head_node, parent_node)
     while head_node do
       if head_node.head then
+        ---@cast head_node HlistNode
         search_start(head_node.head, head_node)
       elseif registry.check_marker(head_node, 'basic', 'start') and
              parent_node and
@@ -1169,9 +1184,9 @@ local function make_par(head_node)
   -- All fields from the last hlist node are copied to the created
   -- hlist.
   --
-  ---@param last_hlist_node Node # The last hlist node of a paragraph.
+  ---@param last_hlist_node HlistNode # The last hlist node of a paragraph.
   --
-  ---@return Node # The created new hlist node containing the line.
+  ---@return HlistNode # The created new hlist node containing the line.
   local function add_additional_line(last_hlist_node)
     local hlist_node = node.new(node.id('hlist'))
     hlist_node.subtype = 1
@@ -1203,7 +1218,7 @@ local function make_par(head_node)
 
   --- Add multiple empty lines at the end of a paragraph.
   --
-  ---@param last_hlist_node Node # The last hlist node of a paragraph.
+  ---@param last_hlist_node HlistNode # The last hlist node of a paragraph.
   ---@param count number # Count of the lines to add at the end.
   local function add_additional_lines(last_hlist_node, count)
     local i = 0
@@ -1213,10 +1228,21 @@ local function make_par(head_node)
     end
   end
 
-  local strut_node, line_node, width, last_hlist_node, hlist_node
+  ---@type Node
+  local strut_node
+  ---@type Node
+  local line_node
+  ---@type number
+  local width
+  ---@type HlistNode
+  local last_hlist_node
+  ---@type HlistNode
+  local hlist_node
+
   local line_count = 0
   while head_node do
     if head_node.id == node.id('hlist') then
+      ---@cast head_node HlistNode
       hlist_node = head_node
 
       line_count = line_count + 1
