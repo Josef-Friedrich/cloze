@@ -24,6 +24,8 @@
 ---@field next Node|nil # the next node in a list, or nil
 ---@field id number # the node’s type (id) number
 ---@field subtype number # the node subtype identifier
+---@field user_id number
+---@field value any
 
 if not modules then modules = { } end modules ['cloze'] = {
   version   = '1.6',
@@ -493,9 +495,9 @@ end
 --
 ---@param head_node Node # The head of a node list.
 --
----@return Node hlist_node
----@return Node strut_node
----@return Node prev_head_node
+---@return Node|nil hlist_node
+---@return Node|nil strut_node
+---@return Node|nil prev_head_node
 local function search_hlist(head_node)
   while head_node do
     if head_node.id == node.id('hlist') and head_node.subtype == 1 then
@@ -528,6 +530,10 @@ end
 -- nodes we set the `user_id` to a large number. We call this whatsit
 -- node a marker. The argument `index` is a number, which is associated
 -- to values in the `registry.storage` table.
+---
+---@param index number
+---
+---@return any
 function registry.create_marker(index)
   local marker = node.new('whatsit', 'user_defined')
   marker.type = 100 -- number
@@ -598,7 +604,7 @@ end
 --
 ---@param item Node # The argument `item` is a node of unspecified type.
 --
----@return table The marker data.
+---@return table # The marker data.
 function registry.get_marker_data(item)
   if item.id == node.id('whatsit') and
      item.subtype == node.subtype('user_defined') and
@@ -622,8 +628,8 @@ end
 --
 -- It only deletes a node, if a marker is given.
 --
----@return node head
----@return node current
+---@return Node|nil head
+---@return Node|nil current
 function registry.remove_marker(marker)
   if registry.is_marker(marker) then
     return node.remove(marker, marker)
@@ -635,7 +641,7 @@ end
 --- `registry.index` is a counter. The functions `registry.get_index()`
 -- increases the counter by one and then returns it.
 --
----@return int The index number of the corresponding table in
+---@return integer # The index number of the corresponding table in
 --   `registry.storage`.
 function registry.get_index()
   if not registry.index then
@@ -651,12 +657,10 @@ end
 -- It returns a numeric index number. This index number is the key,
 -- where the local options in the Lua table are stored.
 --
----@param string mode The argument `mode` accepts the string values
---   `basic`, `fix` and `par`.
----@param string position The argument `position` is either set
---   to `start` or to `stop`.
+---@param mode 'basic'|'fix'|'par' # The argument `mode` accepts the string values `basic`, `fix` and `par`.
+---@param position 'start'|'stop' # The argument `position` is either set to `start` or to `stop`.
 --
----@return int The index number of the corresponding table in
+---@return number # The index number of the corresponding table in
 --   `registry.storage`.
 function registry.set_storage(mode, position)
   local index = registry.get_index()
@@ -691,8 +695,8 @@ end
 -- The global boolean variable `registry.local_options` controls in
 -- which table the values are stored.
 --
----@param string key The option key.
----@param mixed value The value that is stored under the options key.
+---@param key string # The option key.
+---@param value any # The value that is stored under the options key.
 function registry.set_option(key, value)
   if value == '' or value == '\\color@ ' then
     return false
@@ -706,7 +710,7 @@ end
 
 --- Set the variable `registry.is_global`.
 --
----@param boolean is_global
+---@param is_global boolean
 function registry.set_is_global(is_global)
   registry.is_global = is_global
 end
@@ -757,9 +761,9 @@ end
 --- This function tests whether the value `value` is not empty and has a
 -- value.
 --
----@param mixed value A value of different types.
+---@param mixed value  A value of different types.
 --
----@return boolean True is the value is set otherwise false.
+---@return boolean # True is the value is set otherwise false.
 function registry.has_value(value)
   if value == nil or value == '' or value == '\\color@ ' then
     return false
@@ -770,9 +774,9 @@ end
 
 --- Return the default value of the given option.
 --
----@param string key The name of the options key.
+---@param key any #  The name of the options key.
 --
----@return mixed The corresponding value of the options key.
+---@return any # The corresponding value of the options key.
 function registry.get_defaults(key)
   return registry.defaults[key]
 end
@@ -798,13 +802,12 @@ local function make_basic(head_node_input)
   --  `start_node` is the node where the gap begins. The argument
   --  `stop_node` is the node where the gap ends.
   --
-  ---@param node start_node The node to start / begin a new cloze.
-  ---@param node stop_node The node to stop / end a new cloze.
-  ---@param node parent_node The parent node (hlist) of the start and
-  --   the stop node.
+  ---@param start_node Node # The node to start / begin a new cloze.
+  ---@param stop_node Node # The node to stop / end a new cloze.
+  ---@param parent_node Node # The parent node (hlist) of the start and the stop node.
   --
-  ---@return node stop_node The stop node.
-  ---@return parent_node The parent node (hlist) of the stop node.
+  ---@return Node stop_node # The stop node.
+  ---@return Node parent_node # The parent node (hlist) of the stop node.
   local function make_single(start_node, stop_node, parent_node)
     local node_head = start_node
     local line_width = node.dimensions(
@@ -833,11 +836,11 @@ local function make_basic(head_node_input)
   --- Search for a stop marker or make a cloze up to the end of the node
   -- list.
   --
-  ---@param node start_node The node to start a new cloze.
-  ---@param node parent_node The parent node (hlist) of the start node.
+  ---@param start_node Node # The node to start a new cloze.
+  ---@param parent_node Node # The parent node (hlist) of the start node.
   --
-  ---@return head_node The fast forwarded new head of the node list.
-  ---@return parent_node The parent node (hlist) of the head node.
+  ---@return Node head_node # The fast forwarded new head of the node list.
+  ---@return Node parent_node # The parent node (hlist) of the head node.
   function search_stop(start_node, parent_node)
     local head_node = start_node
     local last_node
@@ -859,10 +862,10 @@ local function make_basic(head_node_input)
 
   --- Continue a multiline cloze.
   --
-  ---@param node parent_node A parent node to search for a hlist node.
+  ---@param parent_node Node # A parent node to search for a hlist node.
   --
-  ---@return head_node The fast forwarded new head of the node list.
-  ---@return parent_node The parent node (hlist) of the head node.
+  ---@return Node|nil head_node # The fast forwarded new head of the node list.
+  ---@return Node|nil parent_node # The parent node (hlist) of the head node.
   function continue_cloze(parent_node)
     local hlist_node = search_hlist(parent_node)
     if hlist_node then
@@ -873,8 +876,10 @@ local function make_basic(head_node_input)
 
   --- Search for a start marker.
   --
-  ---@param node head_node The head of a node list.
-  ---@param node parent_node The parent node (hlist) of the head node.
+  ---@param head_node Node # The head of a node list.
+  ---@param parent_node Node # The parent node (hlist) of the head node.
+  ---
+  ---@return Node
   local function search_start(head_node, parent_node)
     while head_node do
       if head_node.head then
@@ -901,11 +906,18 @@ end
 
 --- The corresponding LaTeX command to this Lua function is `\clozefix`.
 --
----@param node head_node_input The head of a node list.
+---@param head_node_input Node # The head of a node list.
 local function make_fix(head_node_input)
 
   --- Calculate the length of the whitespace before (`kern_start_length`) and
   -- after (`kern_stop_length`) the text.
+  ---
+  ---@param start Node
+  ---@param stop Node
+  ---
+  ---@return number width
+  ---@return number kern_start_length
+  ---@return number kern_stop_length
   local function calculate_length(start, stop)
     local width, kern_start_length, kern_stop_length, text_width, half_length, align
     width = tex.sp(registry.get_value('width'))
@@ -1013,8 +1025,8 @@ local function make_fix(head_node_input)
   --
   -- Make fixed size cloze.
   --
-  -- @param start The node, where the gap begins
-  -- @param stop The node, where the gap ends
+  ---@param start Node # The node, where the gap begins
+  ---@param stop Node # The node, where the gap ends
   local function make_single(start, stop)
     local width, kern_start_length, kern_stop_length, line_node
     width, kern_start_length, kern_stop_length = calculate_length(start, stop)
@@ -1046,7 +1058,7 @@ local function make_fix(head_node_input)
 
   --- Function to recurse the node list and search after marker.
   --
-  ---@param node head_node The head of a node list.
+  ---@param head_node Node # The head of a node list.
   local function make_fix_recursion(head_node)
     local start_node, stop_node = false, false
     while head_node do
@@ -1149,7 +1161,7 @@ end
 -- </tbody>
 -- </table>
 --
----@param node head_node The head of a node list.
+---@param head_node Node # The head of a node list.
 local function make_par(head_node)
 
   --- Add one additional empty line at the end of a paragraph.
@@ -1157,9 +1169,9 @@ local function make_par(head_node)
   -- All fields from the last hlist node are copied to the created
   -- hlist.
   --
-  ---@param node last_hlist_node The last hlist node of a paragraph.
+  ---@param last_hlist_node Node # The last hlist node of a paragraph.
   --
-  ---@return node The created new hlist node containing the line.
+  ---@return Node # The created new hlist node containing the line.
   local function add_additional_line(last_hlist_node)
     local hlist_node = node.new(node.id('hlist'))
     hlist_node.subtype = 1
@@ -1191,8 +1203,8 @@ local function make_par(head_node)
 
   --- Add multiple empty lines at the end of a paragraph.
   --
-  ---@param node last_hlist_node The last hlist node of a paragraph.
-  ---@param number count Count of the lines to add at the end.
+  ---@param last_hlist_node Node # The last hlist node of a paragraph.
+  ---@param count number # Count of the lines to add at the end.
   local function add_additional_lines(last_hlist_node, count)
     local i = 0
     while i < count do
@@ -1244,9 +1256,9 @@ local function make_par(head_node)
 end
 
 ---
----@param string callback_name The name of a callback
----@param function func A function to register for the callback
----@param string description Only used in LuaLatex
+---@param callback_name string # The name of a callback
+---@param func function # A function to register for the callback
+---@param description string # Only used in LuaLatex
 local function register_callback(callback_name, func, description)
   if luatexbase then
     luatexbase.add_to_callback(
@@ -1260,8 +1272,8 @@ local function register_callback(callback_name, func, description)
 end
 
 ---
----@param string callback_name The name of a callback
----@param string description Only used in LuaLatex
+---@param callback_name string # The name of a callback
+---@param description string # Only used in LuaLatex
 local function unregister_callback(callback_name, description)
   if luatexbase then
     luatexbase.remove_from_callback(
