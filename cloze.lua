@@ -32,6 +32,10 @@
 ---@field user_id number
 ---@field value number
 
+---@class ColorstackWhatsitNode: WhatsitNode
+---@field stack number
+---@field data string
+
 ---@class HlistNode: Node
 ---@field head Node
 ---@field glue_set number
@@ -116,11 +120,11 @@ registry.local_options = {}
 
 -- __Color handling (color)__
 
--- __create_colorstack__
--- Create a whatsit node of the subtype `pdf_colorstack`. `data` is a PDF
--- colorstack string like `0 0 0 rg 0 0 0 RG`.
+---Create a whatsit node of the subtype `pdf_colorstack`.
 ---
----@return Node
+---@param data? string # `data` is a PDF colorstack string like `0 0 0 rg 0 0 0 RG`.
+---
+---@return ColorstackWhatsitNode
 function nodex.create_colorstack(data)
   if not data then
     data = '0 0 0 rg 0 0 0 RG' -- black
@@ -134,12 +138,11 @@ end
 ---
 -- `nodex.create_color()` is a wrapper for the function
 -- `nodex.create_colorstack()`. It queries the current values of the
--- options `linecolor` and `textcolor`. The argument `option` accepts the
--- strings `line`, `text` and `reset`.
+-- options `linecolor` and `textcolor`.
 ---
----@param option 'line'|'text'|'reset'
+---@param option 'line'|'text'|'reset' # The argument `option` accepts the strings `line`, `text` and `reset`.
 ---
----@return Node
+---@return ColorstackWhatsitNode
 function nodex.create_color(option)
   local data
   if option == 'line' then
@@ -158,10 +161,9 @@ end
 
 --- Create a rule node, which is used as a line for the cloze texts. The
 -- `depth` and the `height` of the rule are calculated form the options
--- `thickness` and `distance`. The argument `width` must have the length
--- unit __scaled points__.
+-- `thickness` and `distance`.
 ---
----@param width number
+---@param width number # The argument `width` must have the length unit __scaled points__.
 ---
 ---@return Node
 function nodex.create_line(width)
@@ -176,10 +178,9 @@ end
 
 --- Insert a `list` of nodes after or before the `current`. The `head`
 -- argument is optional. In some edge cases it is unfortately necessary.
--- if `head` is omitted the `current` node is used. The argument
--- `position` can take the values `'after'` or `'before'`.
+-- if `head` is omitted the `current` node is used.
 ---
----@param position 'before'|'after'
+---@param position 'before'|'after' # The argument `position` can take the values `'after'` or `'before'`.
 ---@param current Node
 ---@param list table
 ---@param head_node? Node
@@ -200,7 +201,7 @@ function nodex.insert_list(position, current, list, head_node)
 end
 
 --- Enclose a rule node (cloze line) with two PDF colorstack whatsits.
---  The first colorstack node dyes the line, the seccond resets the
+--  The first colorstack node colors the line, the second resets the
 --  color.
 --
 -- __Node list__
@@ -311,6 +312,7 @@ end
 -- __Kern handling (kern)__
 
 --- This function creates a kern node with a given width.
+---
 ---@param width number # The argument `width` had to be specified in scaled points.
 ---
 ---@return Node
