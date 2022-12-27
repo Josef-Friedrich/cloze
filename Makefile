@@ -28,10 +28,12 @@ doc_pdf:
 	cp $(jobname).pdf $(texmf)/doc
 
 doc_lua:
-	ldoc .
+	# vs code lua server annotations (Emmy) and ldocs are not compatible
+	-ldoc .
 
 doc_lua_open:
-	ldoc .
+	# vs code lua server annotations (Emmy) and ldocs are not compatible
+	-ldoc .
 	xdg-open docs/index.html
 
 test: test_luatex_without_open test_lualatex_without_open
