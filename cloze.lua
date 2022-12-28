@@ -32,6 +32,10 @@
 ---@field user_id number
 ---@field value number
 
+---@class ColorstackWhatsitNode: WhatsitNode
+---@field stack number
+---@field data string
+
 ---@class HlistNode: Node
 ---@field head Node
 ---@field glue_set number
@@ -47,164 +51,26 @@ if not modules then modules = { } end modules ['cloze'] = {
   license   = 'The LaTeX Project Public License Version 1.3c 2008-05-04'
 }
 
-local lpeg = require('lpeg')
+local luakeys = require('luakeys').get_private_instance()
 
---- See [lpeg.P](http://www.inf.puc-rio.br/~roberto/lpeg#op-p)
---
--- Like `"literal"` in peg.js.
-local Pattern = lpeg.P
-
---- See [lpeg.R](http://www.inf.puc-rio.br/~roberto/lpeg#op-r)
---
--- Like `[a-z]` in peg.js.
-local Range = lpeg.R
-
---- See [lpeg.S](http://www.inf.puc-rio.br/~roberto/lpeg#op-s)
---
--- Like `[characters]` in peg.js.
-local Set = lpeg.S
-
---- See [lpeg.C](http://www.inf.puc-rio.br/~roberto/lpeg#cap-c)
-local capture = lpeg.C
-
---- See [lpeg.Ct](http://www.inf.puc-rio.br/~roberto/lpeg#cap-t)
-local capture_table = lpeg.Ct
-
---- See [lpeg.Cf](http://www.inf.puc-rio.br/~roberto/lpeg#cap-f)
-local capture_fold = lpeg.Cf
-
---- See [lpeg.Cg](http://www.inf.puc-rio.br/~roberto/lpeg#cap-g)
-local capture_group = lpeg.Cg
-
---- See [lpeg.Cg](http://www.inf.puc-rio.br/~roberto/lpeg#cap-cc)
-local capture_constant = lpeg.Cc
-
---- A naive key value parser written with Lpeg to get rid of kvoptions.
---
--- * `patt^0` = `expression *` (peg.js)
--- * `patt^1` = `expression +` (peg.js)
--- * `patt^-1` = `expression ?` (peg.js)
--- * `patt1 * patt2` = `expression1 expression2` (peg.js) -> Sequence
--- * `patt1 + patt2` = `expression1 / expression2` (peg.js) -> Ordered choice
---
--- * [TUGboat article: Parsing complex data formats in LuaTEX with LPEG](https://tug.org/TUGboat/tb40-2/tb125menke-lpeg.pdf)
--- * [Dimension handling in lualibs](https://github.com/lualatex/lualibs/blob/master/lualibs-util-dim.lua)
---
----@param input string # The key value options in a unparsed fashion as a
---   string.
---
----@return table The key value options as a table.
-local function key_value_parser(input)
-  local white_space = Set(' \t\r\n')^0
-
-  --- Define data type boolean.
-  --
-  -- @return Lpeg patterns
-  local function data_type_boolean ()
-    local boolean_true = (
-      Pattern('true') +
-      Pattern('TRUE') +
-      Pattern('yes') +
-      Pattern('YES')
-    ) * capture_constant(true)
-
-    local boolean_false = (
-      Pattern('false') +
-      Pattern('FALSE') +
-      Pattern('no') +
-      Pattern('NO')
-    ) * capture_constant(false)
-
-    return boolean_true + boolean_false
-  end
-
-  --- Define data type integer.
-  --
-  -- @return Lpeg patterns
-  local function data_type_integer()
-    -- patt / function
-    -- Creates a function capture. It calls the given function passing
-    -- all captures made b nby patt as arguments, or the whole match if
-    -- patt made no capture. The values returned by the function are the
-    -- final values of the capture. In particular, if function returns
-    -- no value, there is no captured value
-    return Range('09')^1 / tonumber
-  end
-
-  --- Define data type dimension.
-  --
-  -- @return Lpeg patterns
-  local function data_type_dimension()
-    local sign = Set('-+')
-    local integer = Range('09')^1
-    local number = integer^1 * Pattern('.')^0 * integer^0
-    local unit =
-      Pattern('pt') +
-      Pattern('cm') +
-      Pattern('mm') +
-      Pattern('sp') +
-      Pattern('bp') +
-      Pattern('in') +
-      Pattern('pc') +
-      Pattern('dd') +
-      Pattern('cc')
-
-    -- patt / function -> function capture
-    return (sign^0 * number * unit) / tex.sp
-  end
-
-  --- Define data type string.
-  --
-  -- @return Lpeg patterns
-  local data_type_string = function()
-    return capture(Range('az', 'AZ', '09')^1)
-  end
-
-  local data_type = {
-    boolean = data_type_boolean(),
-    integer = data_type_integer(),
-    dimension = data_type_dimension(),
-    string = data_type_string(),
-  }
-
-  local minimun_lines =
-    (Pattern('minimumlines') + Pattern('minlines')) *
-    capture_constant('minimum lines')
-
-  local generic_key = capture(Range('az')^1)
-
-  local key =
-    white_space *
-    (minimun_lines + generic_key) *
-    white_space
-
-  local value =
-    white_space *
-    (data_type.dimension + data_type.integer + data_type.boolean + data_type.string) *
-    white_space
-
-  -- For example: hide -> hide = true
-  local key_only =
-    key *
-    capture_constant(true)
-
-  local key_value =
-    key *
-    Pattern('=') *
-    value
-
-  local keyval_groups = capture_group(
-    (key_value + key_only) *
-    Pattern(',')^-1
-  )
-
-  -- rawset (table, index, value)
-  -- Sets the real value of table[index] to value, without invoking the
-  -- __newindex metamethod. table must be a table, index any value
-  -- different from nil and NaN, and value any Lua value.
-  local kvlist = capture_fold(capture_table('') * keyval_groups^0, rawset)
-  return kvlist:match(input)
-end
+local defs = {
+  align = { description = 'Align the text of a fixed size cloze.' },
+  boxheight = { description = 'The height of a cloze box.' },
+  boxrule = { description = 'The thickness of the rule around a cloze box.' },
+  boxwidth = { description = 'The width of a cloze box.'},
+  distance = { description = 'The distance between the cloze text and the cloze line.'},
+  visibility = {
+    description = 'Show or hide the cloze text.',
+    opposite_values = { [true] = 'show', [false] = 'hide' }
+  },
+  linecolor = { description = 'A color name to colorize the cloze line.' },
+  margin = { description = 'Indicates how far the cloze line sticks up horizontally from the text.'},
+  minlines = { description = 'How many lines a clozepar at least must have.'},
+  spacing = { description = 'The spacing between lines (environment clozespace).' },
+  textcolor = { description = 'The color (name) of the cloze text.' },
+  thickness = { description = 'The thickness of the cloze line.' },
+  width = { description = 'The width of the cloze line of the command \\clozefix.' }
+}
 
 --- `nodex` is a abbreviation for __node eXtended__.
 local nodex = {}
@@ -273,11 +139,11 @@ registry.local_options = {}
 
 -- __Color handling (color)__
 
--- __create_colorstack__
--- Create a whatsit node of the subtype `pdf_colorstack`. `data` is a PDF
--- colorstack string like `0 0 0 rg 0 0 0 RG`.
+---Create a whatsit node of the subtype `pdf_colorstack`.
 ---
----@return Node
+---@param data? string # `data` is a PDF colorstack string like `0 0 0 rg 0 0 0 RG`.
+---
+---@return ColorstackWhatsitNode
 function nodex.create_colorstack(data)
   if not data then
     data = '0 0 0 rg 0 0 0 RG' -- black
@@ -291,12 +157,11 @@ end
 ---
 -- `nodex.create_color()` is a wrapper for the function
 -- `nodex.create_colorstack()`. It queries the current values of the
--- options `linecolor` and `textcolor`. The argument `option` accepts the
--- strings `line`, `text` and `reset`.
+-- options `linecolor` and `textcolor`.
 ---
----@param option 'line'|'text'|'reset'
+---@param option 'line'|'text'|'reset' # The argument `option` accepts the strings `line`, `text` and `reset`.
 ---
----@return Node
+---@return ColorstackWhatsitNode
 function nodex.create_color(option)
   local data
   if option == 'line' then
@@ -315,10 +180,9 @@ end
 
 --- Create a rule node, which is used as a line for the cloze texts. The
 -- `depth` and the `height` of the rule are calculated form the options
--- `thickness` and `distance`. The argument `width` must have the length
--- unit __scaled points__.
+-- `thickness` and `distance`.
 ---
----@param width number
+---@param width number # The argument `width` must have the length unit __scaled points__.
 ---
 ---@return Node
 function nodex.create_line(width)
@@ -333,10 +197,9 @@ end
 
 --- Insert a `list` of nodes after or before the `current`. The `head`
 -- argument is optional. In some edge cases it is unfortately necessary.
--- if `head` is omitted the `current` node is used. The argument
--- `position` can take the values `'after'` or `'before'`.
+-- if `head` is omitted the `current` node is used.
 ---
----@param position 'before'|'after'
+---@param position 'before'|'after' # The argument `position` can take the values `'after'` or `'before'`.
 ---@param current Node
 ---@param list table
 ---@param head_node? Node
@@ -357,7 +220,7 @@ function nodex.insert_list(position, current, list, head_node)
 end
 
 --- Enclose a rule node (cloze line) with two PDF colorstack whatsits.
---  The first colorstack node dyes the line, the seccond resets the
+--  The first colorstack node colors the line, the second resets the
 --  color.
 --
 -- __Node list__
@@ -468,6 +331,7 @@ end
 -- __Kern handling (kern)__
 
 --- This function creates a kern node with a given width.
+---
 ---@param width number # The argument `width` had to be specified in scaled points.
 ---
 ---@return Node
@@ -1408,6 +1272,6 @@ export.reset = registry.unset_global_options
 export.get_defaults = registry.get_defaults
 export.get_value = registry.get_value
 export.marker = registry.write_marker
-export.key_value_parser = key_value_parser
+export.key_value_parser = luakeys.parse
 
 return export
