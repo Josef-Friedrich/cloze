@@ -53,25 +53,6 @@ if not modules then modules = { } end modules ['cloze'] = {
 
 local luakeys = require('luakeys').get_private_instance()
 
-local defs = {
-  align = { description = 'Align the text of a fixed size cloze.' },
-  boxheight = { description = 'The height of a cloze box.' },
-  boxrule = { description = 'The thickness of the rule around a cloze box.' },
-  boxwidth = { description = 'The width of a cloze box.'},
-  distance = { description = 'The distance between the cloze text and the cloze line.'},
-  visibility = {
-    description = 'Show or hide the cloze text.',
-    opposite_values = { [true] = 'show', [false] = 'hide' }
-  },
-  linecolor = { description = 'A color name to colorize the cloze line.' },
-  margin = { description = 'Indicates how far the cloze line sticks up horizontally from the text.'},
-  minlines = { description = 'How many lines a clozepar at least must have.'},
-  spacing = { description = 'The spacing between lines (environment clozespace).' },
-  textcolor = { description = 'The color (name) of the cloze text.' },
-  thickness = { description = 'The thickness of the cloze line.' },
-  width = { description = 'The width of the cloze line of the command \\clozefix.' }
-}
-
 --- `nodex` is a abbreviation for __node eXtended__.
 local nodex = {}
 
@@ -657,6 +638,29 @@ end
 ---@return any # The corresponding value of the options key.
 function registry.get_defaults(key)
   return registry.defaults[key]
+end
+
+function parse_options(kv_string)
+  local defs = {
+    align = { description = 'Align the text of a fixed size cloze.' },
+    boxheight = { description = 'The height of a cloze box.' },
+    boxrule = { description = 'The thickness of the rule around a cloze box.' },
+    boxwidth = { description = 'The width of a cloze box.'},
+    distance = { description = 'The distance between the cloze text and the cloze line.'},
+    visibility = {
+      description = 'Show or hide the cloze text.',
+      opposite_values = { [true] = 'show', [false] = 'hide' }
+    },
+    linecolor = { description = 'A color name to colorize the cloze line.' },
+    margin = { description = 'Indicates how far the cloze line sticks up horizontally from the text.'},
+    minlines = { description = 'How many lines a clozepar at least must have.'},
+    spacing = { description = 'The spacing between lines (environment clozespace).' },
+    textcolor = { description = 'The color (name) of the cloze text.' },
+    thickness = { description = 'The thickness of the cloze line.' },
+    width = { description = 'The width of the cloze line of the command \\clozefix.' }
+  }
+
+  luakeys.parse(kv_string)
 end
 
 --- Assembly to cloze texts.

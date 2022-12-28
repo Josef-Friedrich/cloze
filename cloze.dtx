@@ -445,11 +445,6 @@
 %    \begin{macrocode}
 \RequirePackage{luatexbase-mcb}
 %    \end{macrocode}
-% The package \href{https://www.ctan.org/pkg/kvoptions}{kvoptions}
-% takes the handling of the options.
-%    \begin{macrocode}
-\RequirePackage{kvoptions}
-%    \end{macrocode}
 % The package \href{https://www.ctan.org/pkg/setspace}{setspace} is used
 % by the environment |clozespace|.
 %    \begin{macrocode}
@@ -500,211 +495,22 @@
 %
 % \begin{macro}{\ClozeSetLocalOptions}
 % This macro is used in all cloze commands to handle the optional
-% arguments. First it sets the option storage to local and then it
-% commits the options to the package \emph{kvoptions} via the macro
-% |\kvsetkeys{CLZ}{}|.
+% arguments.
 %    \begin{macrocode}
 \def\ClozeSetLocalOptions#1{%
   \ClozeSetToLocal%
-  \kvsetkeys{CLZ}{#1}%
+  % TODO insert parse
 }
 %    \end{macrocode}
 % \end{macro}
 %
 % \subsubsection{Options}
 %
-% \emph{cloze} offers key-value pairs to use as options. For processing
-% the key-value pairs we use the package
-% \href{https://www.ctan.org/pkg/kvoptions}{kvoptions}.
-% To make all key-value pairs accessibly to Lua code, we use the
-% declaration
-% \cmd{\define@key}\marg{CLZ}\marg{option}\oarg[]\marg{\dots}. This
-% declaration comes from the package
-% \href{https://www.ctan.org/pkg/keyval}{keyval}.
-%
 % At start all values are declared as global options. At the Lua side
 % all values are now stored in the |registry.global_options| table.
 %
 %    \begin{macrocode}
 \ClozeSetToGlobal
-%    \end{macrocode}
-%
-% We use the abbreviation |CLZ| for \emph{cloze} as family name and
-% prefix.
-%
-%    \begin{macrocode}
-\SetupKeyvalOptions{
-  family=CLZ,
-  prefix=CLZ@
-}
-%    \end{macrocode}
-%
-% \paragraph{\tt{align}}
-%
-% \noindent Please read the section \TmpSecRef{sec:option-align} how to use
-% the option |align|. |align| affects only the command \cmd{\clozefix}
-% \TmpSecRef{sec:command-clozefix}.
-%
-%    \begin{macrocode}
-\DeclareStringOption{align}
-\define@key{CLZ}{align}[]{\clozesetoption{align}{#1}}
-%    \end{macrocode}
-%
-% \paragraph{\tt{boxheight}}
-%
-% \noindent Please read the section \TmpSecRef{sec:option-boxheight}
-% how to use the option |boxheight|. |boxheight| affects only the
-% environment |clozebox|
-% \TmpSecRef{sec:command-clozebox}.
-%
-%    \begin{macrocode}
-\DeclareStringOption{boxheight}
-\define@key{CLZ}{boxheight}[]{\clozesetoption{boxheight}{#1}}
-%    \end{macrocode}
-%
-% \paragraph{\tt{boxrule}}
-%
-% \noindent Please read the section \TmpSecRef{sec:option-boxrule}
-% how to use the option |boxrule|. |boxrule| affects only the
-% environment |clozebox|
-% \TmpSecRef{sec:command-clozebox}.
-%
-%    \begin{macrocode}
-\DeclareStringOption{boxrule}
-\define@key{CLZ}{boxrule}[]{\clozesetoption{boxrule}{#1}}
-%    \end{macrocode}
-%
-% \paragraph{\tt{boxwidth}}
-%
-% \noindent Please read the section \TmpSecRef{sec:option-boxwidth}
-% how to use the option |boxwidth|. |boxwidth| affects only the
-% environment |clozebox|
-% \TmpSecRef{sec:command-clozebox}.
-%
-%    \begin{macrocode}
-\DeclareStringOption{boxwidth}
-\define@key{CLZ}{boxwidth}[]{\clozesetoption{boxwidth}{#1}}
-%    \end{macrocode}
-%
-% \paragraph{\tt{distance}}
-%
-% \noindent Please read the section \TmpSecRef{sec:option-distance} how to
-% use the option |distance|.
-%
-%    \begin{macrocode}
-\DeclareStringOption{distance}
-\define@key{CLZ}{distance}[]{\clozesetoption{distance}{#1}}
-%    \end{macrocode}
-%
-% \paragraph{\tt{hide}}
-%
-% \noindent If the option |hide| appears in the commands, |hide| will be
-% set to \emph{true} and |show| to \emph{false} on the Lua side. Please
-% read the section \TmpSecRef{sec:option-hide} how to use the option
-% |hide|.
-%
-%    \begin{macrocode}
-\DeclareVoidOption{hide}{%
-  \clozeshowfalse%
-  \clozesetoption{hide}{true}%
-  \clozesetoption{show}{false}%
-}
-%    \end{macrocode}
-%
-% \paragraph{\tt{linecolor}}
-%
-% \noindent Please read the section \TmpSecRef{sec:option-linecolor} how to
-% use the option |linecolor|.
-%
-%    \begin{macrocode}
-\DeclareStringOption{linecolor}
-\define@key{CLZ}{linecolor}[]{%
-  \clozesetoption{linecolor}{\ClozeColor{#1}}%
-  \clozesetoption{linecolor_name}{#1}%
-}
-%    \end{macrocode}
-%
-% \paragraph{\tt{margin}}
-%
-% \noindent Please read the section \TmpSecRef{sec:option-margin} how to
-% use the option |margin|.
-%
-%    \begin{macrocode}
-\DeclareStringOption{margin}
-\define@key{CLZ}{margin}[]{\clozesetoption{margin}{#1}}
-%    \end{macrocode}
-%
-% \paragraph{\tt{minlines}}
-%
-% \noindent Please read the section \TmpSecRef{sec:option-minlines} how
-% to use the option |minlines|.
-%
-%    \begin{macrocode}
-\DeclareStringOption{minlines}
-\define@key{CLZ}{minlines}[]{\clozesetoption{minlines}{#1}}
-%    \end{macrocode}
-%
-% \paragraph{\tt{show}}
-%
-% \noindent If the option |show| appears in the commands, |show| will be
-% set to \emph{true} and |true| to \emph{false} on the Lua side. Please
-% read the section \TmpSecRef{sec:option-show} how to use the option
-% |show|.
-%
-%    \begin{macrocode}
-\DeclareVoidOption{show}{%
-  \clozeshowtrue%
-  \clozesetoption{show}{true}%
-  \clozesetoption{hide}{false}%
-}
-%    \end{macrocode}
-%
-% \paragraph{\tt{spacing}}
-%
-% \noindent Please read the section \TmpSecRef{sec:option-spacing} how to
-% use the option |spacing|.
-%
-%    \begin{macrocode}
-\DeclareStringOption{spacing}
-\define@key{CLZ}{spacing}[]{\clozesetoption{spacing}{#1}}
-%    \end{macrocode}
-%
-% \paragraph{\tt{textcolor}}
-%
-% \noindent Please read the section \TmpSecRef{sec:option-textcolor} how to
-% use the option |textcolor|.
-%
-%    \begin{macrocode}
-\DeclareStringOption{textcolor}
-\define@key{CLZ}{textcolor}[]{%
-  \clozesetoption{textcolor}{\ClozeColor{#1}}%
-  \clozesetoption{textcolor_name}{#1}%
-}
-%    \end{macrocode}
-%
-% \paragraph{\tt{thickness}}
-%
-% \noindent Please read the section \TmpSecRef{sec:option-thickness} how to
-% use the option |thickness|.
-%
-%    \begin{macrocode}
-\DeclareStringOption{thickness}
-\define@key{CLZ}{thickness}[]{\clozesetoption{thickness}{#1}}
-%    \end{macrocode}
-%
-% \paragraph{\tt{width}}
-%
-% \noindent Please read the section \TmpSecRef{sec:option-width} how to use
-% the option |width|. |width| affects only the command \cmd{\clozefix}
-% \TmpSecRef{sec:command-clozefix}.
-%
-%    \begin{macrocode}
-\DeclareStringOption{width}
-\define@key{CLZ}{width}[]{\clozesetoption{width}{#1}}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\ProcessKeyvalOptions{CLZ}
 %    \end{macrocode}
 %
 % \subsubsection{Public macros}
