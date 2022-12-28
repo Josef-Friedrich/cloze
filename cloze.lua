@@ -624,41 +624,117 @@ function registry.get_defaults(key)
   return registry.defaults[key]
 end
 
-function parse_options(kv_string)
+---@param kv_string string
+---@param to_global? boolean
+local function parse_options(kv_string, to_global)
+  if to_global == nil then
+    to_global = false
+  end
+
+  registry.set_is_global(to_global)
   local defs = {
-    align = { description = 'Align the text of a fixed size cloze.' },
-    boxheight = { description = 'The height of a cloze box.' },
+    align = {
+      description = 'Align the text of a fixed size cloze.',
+      process = function(value)
+        registry.set_option('align', value)
+      end,
+    },
+    boxheight = {
+      description = 'The height of a cloze box.',
+      process = function(value)
+        registry.set_option('boxheight', value)
+      end,
+    },
     boxrule = {
       description = 'The thickness of the rule around a cloze box.',
+      process = function(value)
+        registry.set_option('boxrule', value)
+      end,
     },
-    boxwidth = { description = 'The width of a cloze box.' },
+    boxwidth = {
+      description = 'The width of a cloze box.',
+      process = function(value)
+        registry.set_option('boxwidth', value)
+      end,
+    },
     distance = {
       description = 'The distance between the cloze text and the cloze line.',
+      process = function(value)
+        registry.set_option('distance', value)
+      end,
+    },
+    hide = {
+      description = 'Hide the cloze text.',
+      process = function(value)
+        tex.print('\\clozeshowfalse')
+        registry.set_option('show', false)
+        registry.set_option('hide', true)
+      end,
+    },
+    show = {
+      description = 'Show the cloze text.',
+      process = function(value)
+        tex.print('\\clozeshowfalse')
+        registry.set_option('show', true)
+        registry.set_option('hide', false)
+      end,
     },
     visibility = {
       description = 'Show or hide the cloze text.',
-      opposite_values = { [true] = 'show', [false] = 'hide' },
+      opposite_keys = { [true] = 'show', [false] = 'hide' },
+      process = function(value)
+        registry.set_option('visibility', value)
+      end,
     },
     linecolor = {
       description = 'A color name to colorize the cloze line.',
+      process = function(value)
+        -- TODO
+        -- registry.set_option('linecolor', '???')
+        registry.set_option('linecolor_name', value)
+      end,
     },
     margin = {
       description = 'Indicates how far the cloze line sticks up horizontally from the text.',
+      process = function(value)
+        registry.set_option('margin', value)
+      end,
     },
     minlines = {
       description = 'How many lines a clozepar at least must have.',
+      process = function(value)
+        registry.set_option('minlines', value)
+      end,
     },
     spacing = {
       description = 'The spacing between lines (environment clozespace).',
+      process = function(value)
+        registry.set_option('spacing', value)
+      end,
     },
-    textcolor = { description = 'The color (name) of the cloze text.' },
-    thickness = { description = 'The thickness of the cloze line.' },
+    textcolor = {
+      description = 'The color (name) of the cloze text.',
+      process = function(value)
+        -- TODO
+        -- registry.set_option('textcolor', '???')
+        registry.set_option('textcolor_name', value)
+      end,
+    },
+    thickness = {
+      description = 'The thickness of the cloze line.',
+      process = function(value)
+        registry.set_option('thickness', value)
+      end,
+    },
     width = {
       description = 'The width of the cloze line of the command \\clozefix.',
+      process = function(value)
+        registry.set_option('width', value)
+      end,
     },
   }
 
-  luakeys.parse(kv_string)
+  luakeys.parse(kv_string, { defs = defs })
 end
 
 --- Assembly to cloze texts.
@@ -1240,6 +1316,6 @@ export.reset = registry.unset_global_options
 export.get_defaults = registry.get_defaults
 export.get_value = registry.get_value
 export.marker = registry.write_marker
-export.key_value_parser = luakeys.parse
+export.parse_options = parse_options
 
 return export

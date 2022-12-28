@@ -476,6 +476,15 @@
 \RequirePackage{transparent}
 %    \end{macrocode}
 %
+%    \begin{macrocode}
+\DeclareOption*{} % suppresses the error message: ! LaTeX Error: Unknown option
+\ProcessOptions\relax
+\RequirePackage{luakeys}
+\directlua{
+  cloze.parse_options('\LuakeysPackageOptions', true)
+}
+%    \end{macrocode}
+%
 % Load the cloze lua module and put all return values in the variable
 % |cloze|.
 %
@@ -498,8 +507,9 @@
 % arguments.
 %    \begin{macrocode}
 \def\ClozeSetLocalOptions#1{%
-  \ClozeSetToLocal%
-  % TODO insert parse
+  \directlua{
+    cloze.parse_options('#1', false)
+  }%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -522,8 +532,9 @@
 % section \TmpSecRef{sec:command-clozeset}.
 %    \begin{macrocode}
 \newcommand{\clozeset}[1]{%
-  \ClozeSetToGlobal%
-  \kvsetkeys{CLZ}{#1}%
+  \directlua{
+    cloze.parse_options('#1', true)
+  }%
 }
 %    \end{macrocode}
 % \end{macro}
