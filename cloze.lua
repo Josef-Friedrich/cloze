@@ -10,45 +10,39 @@
 --   `_length`, for example `width`.
 --
 -- @module cloze
-
 -- luacheck: globals node tex modules luatexbase callback
-
 -- __cloze.lua__
-
 -- __Initialisation of the function tables__
-
 -- It is good form to provide some background informations about this Lua
 -- module.
-
 ---@class Node
 ---@field next Node|nil # the next node in a list, or nil
 ---@field prev Node|nil
 ---@field id number # the node’s type (id) number
 ---@field subtype number # the node subtype identifier
 ---@field head? Node
-
 ---@class WhatsitNode: Node
 ---@field type number
 ---@field user_id number
 ---@field value number
-
 ---@class ColorstackWhatsitNode: WhatsitNode
 ---@field stack number
 ---@field data string
-
 ---@class HlistNode: Node
 ---@field head Node
 ---@field glue_set number
 ---@field glue_sign number
 ---@field glue_order number
 ---@field width number
-
-if not modules then modules = { } end modules ['cloze'] = {
-  version   = '1.6',
-  comment   = 'cloze',
-  author    = 'Josef Friedrich, R.-M. Huber',
+if not modules then
+  modules = {}
+end
+modules['cloze'] = {
+  version = '1.6',
+  comment = 'cloze',
+  author = 'Josef Friedrich, R.-M. Huber',
   copyright = 'Josef Friedrich, R.-M. Huber',
-  license   = 'The LaTeX Project Public License Version 1.3c 2008-05-04'
+  license = 'The LaTeX Project Public License Version 1.3c 2008-05-04',
 }
 
 local luakeys = require('luakeys').get_private_instance()
@@ -171,7 +165,7 @@ function nodex.create_line(width)
   local thickness = tex.sp(registry.get_value('thickness'))
   local distance = tex.sp(registry.get_value('distance'))
   rule.depth = distance + thickness
-  rule.height = - distance
+  rule.height = -distance
   rule.width = width
   return rule
 end
@@ -194,7 +188,8 @@ function nodex.insert_list(position, current, list, head_node)
     if position == 'after' then
       head_node, current = node.insert_after(head_node, current, insert)
     elseif position == 'before' then
-      head_node, current = node.insert_before(head_node, current, insert)
+      head_node, current =
+        node.insert_before(head_node, current, insert)
     end
   end
   return current
@@ -236,15 +231,11 @@ end
 ---
 ---@return Node
 function nodex.insert_line(current, width)
-  return nodex.insert_list(
-    'after',
-    current,
-    {
-      nodex.create_color('line'),
-      nodex.create_line(width),
-      nodex.create_color('reset')
-    }
-  )
+  return nodex.insert_list('after', current, {
+    nodex.create_color('line'),
+    nodex.create_line(width),
+    nodex.create_color('reset'),
+  })
 end
 
 --- This function enclozes a rule node with color nodes as it the
@@ -336,7 +327,8 @@ end
 local function insert_strut_into_hlist(hlist_node)
   local prev_head_node = hlist_node.head
   local kern_node = create_kern_node(0)
-  local strut_node = node.insert_before(hlist_node.head, prev_head_node, kern_node)
+  local strut_node = node.insert_before(hlist_node.head, prev_head_node,
+    kern_node)
   hlist_node.head = prev_head_node.prev
   return hlist_node, strut_node, prev_head_node
 end
@@ -415,9 +407,8 @@ end
 ---
 ---@return boolean
 function registry.is_marker(item)
-  if item.id == node.id('whatsit')
-    and item.subtype == node.subtype('user_defined')
-    and item.user_id == registry.user_id then
+  if item.id == node.id('whatsit') and item.subtype ==
+    node.subtype('user_defined') and item.user_id == registry.user_id then
     return true
   end
   return false
@@ -463,9 +454,8 @@ end
 --
 ---@return table|false # The marker data.
 function registry.get_marker_data(item)
-  if item.id == node.id('whatsit') and
-     item.subtype == node.subtype('user_defined') and
-     item.user_id == registry.user_id then
+  if item.id == node.id('whatsit') and item.subtype ==
+    node.subtype('user_defined') and item.user_id == registry.user_id then
     return registry.get_storage(item.value)
   else
     return false
@@ -521,10 +511,7 @@ end
 --   `registry.storage`.
 function registry.set_storage(mode, position)
   local index = registry.get_index()
-  local data = {
-    ['mode'] = mode,
-    ['position'] = position
-  }
+  local data = { ['mode'] = mode, ['position'] = position }
   if position == 'start' then
     data.values = {}
     for key, value in pairs(registry.local_options) do
@@ -606,11 +593,8 @@ end
 ---
 ---@return boolean
 function registry.get_value_show()
-  if
-    registry.get_value('show') == true
-  or
-    registry.get_value('show') == 'true'
-  then
+  if registry.get_value('show') == true or registry.get_value('show') ==
+    'true' then
     return true
   else
     return false
@@ -644,20 +628,34 @@ function parse_options(kv_string)
   local defs = {
     align = { description = 'Align the text of a fixed size cloze.' },
     boxheight = { description = 'The height of a cloze box.' },
-    boxrule = { description = 'The thickness of the rule around a cloze box.' },
-    boxwidth = { description = 'The width of a cloze box.'},
-    distance = { description = 'The distance between the cloze text and the cloze line.'},
+    boxrule = {
+      description = 'The thickness of the rule around a cloze box.',
+    },
+    boxwidth = { description = 'The width of a cloze box.' },
+    distance = {
+      description = 'The distance between the cloze text and the cloze line.',
+    },
     visibility = {
       description = 'Show or hide the cloze text.',
-      opposite_values = { [true] = 'show', [false] = 'hide' }
+      opposite_values = { [true] = 'show', [false] = 'hide' },
     },
-    linecolor = { description = 'A color name to colorize the cloze line.' },
-    margin = { description = 'Indicates how far the cloze line sticks up horizontally from the text.'},
-    minlines = { description = 'How many lines a clozepar at least must have.'},
-    spacing = { description = 'The spacing between lines (environment clozespace).' },
+    linecolor = {
+      description = 'A color name to colorize the cloze line.',
+    },
+    margin = {
+      description = 'Indicates how far the cloze line sticks up horizontally from the text.',
+    },
+    minlines = {
+      description = 'How many lines a clozepar at least must have.',
+    },
+    spacing = {
+      description = 'The spacing between lines (environment clozespace).',
+    },
     textcolor = { description = 'The color (name) of the cloze text.' },
     thickness = { description = 'The thickness of the cloze line.' },
-    width = { description = 'The width of the cloze line of the command \\clozefix.' }
+    width = {
+      description = 'The width of the cloze line of the command \\clozefix.',
+    },
   }
 
   luakeys.parse(kv_string)
@@ -692,18 +690,18 @@ local function make_basic(head_node_input)
   ---@return HlistNode parent_node # The parent node (hlist) of the stop node.
   local function make_single(start_node, stop_node, parent_node)
     local node_head = start_node
-    local line_width = node.dimensions(
-      parent_node.glue_set,
-      parent_node.glue_sign,
-      parent_node.glue_order,
-      start_node,
-      stop_node
-    )
+    local line_width = node.dimensions(parent_node.glue_set,
+      parent_node.glue_sign, parent_node.glue_order, start_node,
+      stop_node)
     local line_node = nodex.insert_line(start_node, line_width)
-    local color_text_node = nodex.insert_list('after', line_node, {nodex.create_color('text')})
+    local color_text_node = nodex.insert_list('after', line_node, {
+      nodex.create_color('text'),
+    })
     if registry.get_value_show() then
-      nodex.insert_list('after', color_text_node, {create_kern_node(-line_width)})
-      nodex.insert_list('before', stop_node, {nodex.create_color('reset')}, node_head)
+      nodex.insert_list('after', color_text_node,
+        { create_kern_node(-line_width) })
+      nodex.insert_list('before', stop_node,
+        { nodex.create_color('reset') }, node_head)
     else
       line_node.next = stop_node.next
       stop_node.prev = line_node -- not line_node.prev -> line color leaks out
@@ -768,8 +766,7 @@ local function make_basic(head_node_input)
         ---@cast head_node HlistNode
         search_start(head_node.head, head_node)
       elseif registry.check_marker(head_node, 'basic', 'start') and
-             parent_node and
-             parent_node.id == node.id('hlist') then
+        parent_node and parent_node.id == node.id('hlist') then
         -- Adds also a strut at the first position. It prepars the
         -- hlist and makes it ready to build a cloze.
         search_hlist(parent_node)
@@ -802,19 +799,20 @@ local function make_fix(head_node_input)
   ---@return number kern_start_length
   ---@return number kern_stop_length
   local function calculate_length(start, stop)
-    local width, kern_start_length, kern_stop_length, text_width, half_length, align
+    local width, kern_start_length, kern_stop_length, text_width,
+      half_length, align
     width = tex.sp(registry.get_value('width'))
     text_width = node.dimensions(start, stop)
     align = registry.get_value('align')
     if align == 'right' then
-      kern_start_length = - text_width
+      kern_start_length = -text_width
       kern_stop_length = 0
     elseif align == 'center' then
       half_length = (width - text_width) / 2
-      kern_start_length = - half_length - text_width
+      kern_start_length = -half_length - text_width
       kern_stop_length = half_length
     else
-      kern_start_length = - width
+      kern_start_length = -width
       kern_stop_length = width - text_width
     end
     return width, kern_start_length, kern_stop_length
@@ -912,26 +910,18 @@ local function make_fix(head_node_input)
   ---@param stop Node # The node, where the gap ends
   local function make_single(start, stop)
     local width, kern_start_length, kern_stop_length, line_node
-    width, kern_start_length, kern_stop_length = calculate_length(start, stop)
+    width, kern_start_length, kern_stop_length =
+      calculate_length(start, stop)
     line_node = nodex.insert_line(start, width)
     if registry.get_value_show() then
-      nodex.insert_list(
-        'after',
-        line_node,
-        {
-          create_kern_node(kern_start_length),
-          nodex.create_color('text')
-        }
-      )
-      nodex.insert_list(
-        'before',
-        stop,
-        {
-          nodex.create_color('reset'),
-          create_kern_node(kern_stop_length)
-        },
-        start
-      )
+      nodex.insert_list('after', line_node, {
+        create_kern_node(kern_start_length),
+        nodex.create_color('text'),
+      })
+      nodex.insert_list('before', stop, {
+        nodex.create_color('reset'),
+        create_kern_node(kern_stop_length),
+      }, start)
     else
       line_node.next = stop.next
     end
@@ -1067,7 +1057,7 @@ local function make_par(head_node)
       'glue_order',
       'glue_set',
       'glue_sign',
-      'dir'
+      'dir',
     }
     for _, field in ipairs(fields) do
       if last_hlist_node[field] then
@@ -1088,7 +1078,8 @@ local function make_par(head_node)
   --
   ---@param last_hlist_node HlistNode # The last hlist node of a paragraph.
   ---@param count number # Count of the lines to add at the end.
-  local function add_additional_lines(last_hlist_node, count)
+  local function add_additional_lines(last_hlist_node,
+    count)
     local i = 0
     while i < count do
       last_hlist_node = add_additional_line(last_hlist_node)
@@ -1119,19 +1110,12 @@ local function make_par(head_node)
       hlist_node, strut_node, _ = insert_strut_into_hlist(hlist_node)
       line_node = nodex.insert_line(strut_node, width)
       if registry.get_value_show() then
-        nodex.insert_list(
-          'after',
-          line_node,
-          {
-            create_kern_node(-width),
-            nodex.create_color('text')
-          }
-        )
-        nodex.insert_list(
-          'after',
-          node.tail(head_node),
-          {nodex.create_color('reset')}
-        )
+        nodex.insert_list('after', line_node, {
+          create_kern_node(-width),
+          nodex.create_color('text'),
+        })
+        nodex.insert_list('after', node.tail(head_node),
+          { nodex.create_color('reset') })
       else
         line_node.next = nil
       end
@@ -1153,13 +1137,11 @@ end
 ---@param callback_name string # The name of a callback
 ---@param func function # A function to register for the callback
 ---@param description string # Only used in LuaLatex
-local function register_callback(callback_name, func, description)
+local function register_callback(callback_name,
+  func,
+  description)
   if luatexbase then
-    luatexbase.add_to_callback(
-      callback_name,
-      func,
-      description
-    )
+    luatexbase.add_to_callback(callback_name, func, description)
   else
     callback.register(callback_name, func)
   end
@@ -1168,12 +1150,10 @@ end
 ---
 ---@param callback_name string # The name of a callback
 ---@param description string # Only used in LuaLatex
-local function unregister_callback(callback_name, description)
+local function unregister_callback(callback_name,
+  description)
   if luatexbase then
-    luatexbase.remove_from_callback(
-      callback_name,
-      description
-    )
+    luatexbase.remove_from_callback(callback_name, description)
   else
     callback.register(callback_name, nil)
   end
@@ -1214,31 +1194,15 @@ export.is_registered = {}
 -- right choice to capture the display math formulas.
 function export.register_callback(mode)
   if mode == 'par' then
-    register_callback(
-      'post_linebreak_filter',
-      make_par,
-      mode
-    )
+    register_callback('post_linebreak_filter', make_par, mode)
     return true
   end
   if not export.is_registered[mode] then
     if mode == 'basic' then
-      register_callback(
-        'post_linebreak_filter',
-        make_basic,
-        mode
-      )
-      register_callback(
-        'pre_output_filter',
-        make_basic,
-        mode
-      )
+      register_callback('post_linebreak_filter', make_basic, mode)
+      register_callback('pre_output_filter', make_basic, mode)
     elseif mode == 'fix' then
-      register_callback(
-        'pre_linebreak_filter',
-        make_fix,
-        mode
-      )
+      register_callback('pre_linebreak_filter', make_fix, mode)
     else
       return false
     end
