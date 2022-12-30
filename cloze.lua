@@ -45,7 +45,7 @@ modules['cloze'] = {
   license = 'The LaTeX Project Public License Version 1.3c 2008-05-04',
 }
 
-local luakeys = require('luakeys').get_private_instance()
+local luakeys = require('luakeys')()
 
 --- `nodex` is a abbreviation for __node eXtended__.
 local nodex = {}
