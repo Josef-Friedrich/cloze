@@ -24,8 +24,7 @@ doc_pdf:
 	makeindex -s gind.ist -o documentation.ind documentation.idx
 	lualatex --shell-escape documentation.tex
 	mkdir -p $(texmf)/doc
-	mv documentation.pdf cloze.pdf
-	cp $(jobname).pdf $(texmf)/doc
+	cp documentation.pdf $(texmf)/doc/$(jobname).pdf
 
 doc_lua:
 	# vs code lua server annotations (Emmy) and ldocs are not compatible
