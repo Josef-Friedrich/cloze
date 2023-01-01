@@ -1,20 +1,20 @@
---- Cloze uses [LDoc](https://github.com/stevedonovan/ldoc) for the
---  source code documentation. The supported tags are described on in
---  the [wiki](https://github.com/stevedonovan/LDoc/wiki).
---
--- <h3>Naming conventions</h3>
---
--- * _Variable_ names for _nodes_ are suffixed with `_node`, for example
---   `head_node`.
--- * _Variable_ names for _lengths_ (dimensions) are suffixed with
---   `_length`, for example `width`.
---
--- @module cloze
--- luacheck: globals node tex modules luatexbase callback
--- __cloze.lua__
--- __Initialisation of the function tables__
--- It is good form to provide some background informations about this Lua
--- module.
+---Cloze uses [LDoc](https://github.com/stevedonovan/ldoc) for the
+---source code documentation. The supported tags are described on in
+---the [wiki](https://github.com/stevedonovan/LDoc/wiki).
+---
+---<h3>Naming conventions</h3>
+---
+---* _Variable_ names for _nodes_ are suffixed with `_node`, for example
+---  `head_node`.
+---* _Variable_ names for _lengths_ (dimensions) are suffixed with
+---  `_length`, for example `width`.
+---
+---@module cloze
+---luacheck: globals node tex modules luatexbase callback
+---__cloze.lua__
+---__Initialisation of the function tables__
+---It is good form to provide some background informations about this Lua
+---module.
 
 if not modules then
   modules = {}
@@ -29,36 +29,36 @@ modules['cloze'] = {
 
 local luakeys = require('luakeys')()
 
---- `nodex` is a abbreviation for __node eXtended__.
+---`nodex` is a abbreviation for __node eXtended__.
 local nodex = {}
 
---- All values and functions, which are related to the option
---  management, are stored in a table called `registry`.
+---All values and functions, which are related to the option
+---management, are stored in a table called `registry`.
 local registry = {}
 
---- I didn’t know what value I should take as `user_id`. Therefore I
--- took my birthday and transformed it into a large number.
+---I didn’t know what value I should take as `user_id`. Therefore I
+---took my birthday and transformed it into a large number.
 registry.user_id = 3121978
 
---- Store all local options of the markers.
---
--- <code><pre>
--- registry.storage = {
---   {
---     mode = "basic",
---     position = "start",
---     values = {
---       distance = "3mm"
---     }
---   },
---   {
---     mode = "basic",
---     position = "stop"
---   }
--- }</pre></code>
+---Store all local options of the markers.
+---
+---<code><pre>
+---registry.storage = {
+---  {
+---    mode = "basic",
+---    position = "start",
+---    values = {
+---      distance = "3mm"
+---    }
+---  },
+---  {
+---    mode = "basic",
+---    position = "stop"
+---  }
+---}</pre></code>
 registry.storage = {}
 
---- The default options.
+---The default options.
 registry.defaults = {
   ['align'] = 'l',
   ['boxheight'] = false,
@@ -81,20 +81,20 @@ registry.defaults = {
   ['width'] = '2cm',
 }
 
---- The global options set by the user.
+---The global options set by the user.
 registry.global_options = {}
 
---- The local options.
+---The local options.
 registry.local_options = {}
 
---- Node precessing (nodex)
--- @section nodex
+---Node precessing (nodex)
+---@section nodex
 
--- All functions in this section are stored in a table called `nodex`.
--- `nodex` is a abbreviation for __node eXtended__. The `nodex` table
--- bundles all functions, which extend the built-in `node` library.
+---All functions in this section are stored in a table called `nodex`.
+---`nodex` is a abbreviation for __node eXtended__. The `nodex` table
+---bundles all functions, which extend the built-in `node` library.
 
--- __Color handling (color)__
+---__Color handling (color)__
 
 ---Create a whatsit node of the subtype `pdf_colorstack`.
 ---
@@ -112,9 +112,9 @@ function nodex.create_colorstack(data)
 end
 
 ---
--- `nodex.create_color()` is a wrapper for the function
--- `nodex.create_colorstack()`. It queries the current values of the
--- options `linecolor` and `textcolor`.
+---`nodex.create_color()` is a wrapper for the function
+---`nodex.create_colorstack()`. It queries the current values of the
+---options `linecolor` and `textcolor`.
 ---
 ---@param option 'line'|'text'|'reset' # The argument `option` accepts the strings `line`, `text` and `reset`.
 ---
@@ -133,11 +133,11 @@ function nodex.create_color(option)
   return nodex.create_colorstack(data)
 end
 
--- __Line handling (line)__
+---__Line handling (line)__
 
---- Create a rule node, which is used as a line for the cloze texts. The
--- `depth` and the `height` of the rule are calculated form the options
--- `thickness` and `distance`.
+---Create a rule node, which is used as a line for the cloze texts. The
+---`depth` and the `height` of the rule are calculated form the options
+---`thickness` and `distance`.
 ---
 ---@param width number # The argument `width` must have the length unit __scaled points__.
 ---
@@ -152,9 +152,9 @@ function nodex.create_line(width)
   return rule
 end
 
---- Insert a `list` of nodes after or before the `current`. The `head`
--- argument is optional. In some edge cases it is unfortately necessary.
--- if `head` is omitted the `current` node is used.
+---Insert a `list` of nodes after or before the `current`. The `head`
+---argument is optional. In some edge cases it is unfortately necessary.
+---if `head` is omitted the `current` node is used.
 ---
 ---@param position 'before'|'after' # The argument `position` can take the values `'after'` or `'before'`.
 ---@param current Node
@@ -177,36 +177,36 @@ function nodex.insert_list(position, current, list, head_node)
   return current
 end
 
---- Enclose a rule node (cloze line) with two PDF colorstack whatsits.
---  The first colorstack node colors the line, the second resets the
---  color.
---
--- __Node list__
---
--- <table>
--- <thead>
---   <tr>
---     <th>`color_line_node`</th>
---     <th>`whatsit`</th>
---     <th>`pdf_colorstack`</th>
---     <th>Line color</th>
---   </tr>
--- </thead>
--- <tbody>
---   <tr>
---     <td>`line_node`</td>
---     <td>`rule`</td>
---     <td></td>
---     <td>`width`</td>
---   </tr>
---   <tr>
---     <td>`color_reset_node`</td>
---     <td>`whatsit`</td>
---     <td>`pdf_colorstack`</td>
---     <td>Reset color</td>
---   </tr>
--- </tbody>
--- </table>
+---Enclose a rule node (cloze line) with two PDF colorstack whatsits.
+---The first colorstack node colors the line, the second resets the
+---color.
+---
+---__Node list__
+---
+---<table>
+---<thead>
+---  <tr>
+---    <th>`color_line_node`</th>
+---    <th>`whatsit`</th>
+---    <th>`pdf_colorstack`</th>
+---    <th>Line color</th>
+---  </tr>
+---</thead>
+---<tbody>
+---  <tr>
+---    <td>`line_node`</td>
+---    <td>`rule`</td>
+---    <td></td>
+---    <td>`width`</td>
+---  </tr>
+---  <tr>
+---    <td>`color_reset_node`</td>
+---    <td>`whatsit`</td>
+---    <td>`pdf_colorstack`</td>
+---    <td>Reset color</td>
+---  </tr>
+---</tbody>
+---</table>
 ---
 ---@param current Node
 ---@param width number
@@ -220,48 +220,48 @@ function nodex.insert_line(current, width)
   })
 end
 
---- This function enclozes a rule node with color nodes as it the
---  function `nodex.insert_line` does. In contrast to
---  `nodex.insert_line` the three nodes are appended to TeX’s ‘current
---  list’. They are not inserted in a node list, which is accessed by a
---  Lua callback.
---
--- __Node list__
---
--- <table>
--- <thead>
---   <tr>
---     <th>-</th>
---     <th>`whatsit`</th>
---     <th>`pdf_colorstack`</th>
---     <th>Line color</th>
---   </tr>
--- </thead>
--- <tbody>
---   <tr>
---     <td>-</td>
---     <td>`rule`</td>
---     <td></td>
---     <td>`width`</td>
---   </tr>
---   <tr>
---     <td>-</td>
---     <td>`whatsit`</td>
---     <td>`pdf_colorstack`</td>
---     <td>Reset color</td>
---   </tr>
--- </tbody>
--- </table>
+---This function enclozes a rule node with color nodes as it the
+---function `nodex.insert_line` does. In contrast to
+---`nodex.insert_line` the three nodes are appended to TeX’s ‘current
+---list’. They are not inserted in a node list, which is accessed by a
+---Lua callback.
+---
+---__Node list__
+---
+---<table>
+---<thead>
+---  <tr>
+---    <th>-</th>
+---    <th>`whatsit`</th>
+---    <th>`pdf_colorstack`</th>
+---    <th>Line color</th>
+---  </tr>
+---</thead>
+---<tbody>
+---  <tr>
+---    <td>-</td>
+---    <td>`rule`</td>
+---    <td></td>
+---    <td>`width`</td>
+---  </tr>
+---  <tr>
+---    <td>-</td>
+---    <td>`whatsit`</td>
+---    <td>`pdf_colorstack`</td>
+---    <td>Reset color</td>
+---  </tr>
+---</tbody>
+---</table>
 local function write_line_nodes()
   node.write(nodex.create_color('line'))
   node.write(nodex.create_line(tex.sp(registry.get_value('width'))))
   node.write(nodex.create_color('reset'))
 end
 
--- __Handling of extendable lines (linefil)__
+---__Handling of extendable lines (linefil)__
 
---- This function creates a line which stretchs indefinitely in the
--- horizontal direction.
+---This function creates a line which stretchs indefinitely in the
+---horizontal direction.
 ---@return Node
 function nodex.create_linefil()
   local glue = node.new('glue')
@@ -274,17 +274,17 @@ function nodex.create_linefil()
   return glue
 end
 
---- Surround a indefinitely strechable line with color whatsits and puts
---  it to TeX’s ‘current (node) list’ (write).
+---Surround a indefinitely strechable line with color whatsits and puts
+---it to TeX’s ‘current (node) list’ (write).
 local function write_linefil_nodes()
   node.write(nodex.create_color('line'))
   node.write(nodex.create_linefil())
   node.write(nodex.create_color('reset'))
 end
 
--- __Kern handling (kern)__
+---__Kern handling (kern)__
 
---- This function creates a kern node with a given width.
+---This function creates a kern node with a given width.
 ---
 ---@param width number # The argument `width` had to be specified in scaled points.
 ---
@@ -295,14 +295,14 @@ local function create_kern_node(width)
   return kern_node
 end
 
---- Add at the beginning of each `hlist` node list a strut (a invisible
---  character).
---
--- Now we can add line, color etc. nodes after the first node of a hlist
--- not before - after is much more easier.
---
+---Add at the beginning of each `hlist` node list a strut (a invisible
+---character).
+---
+---Now we can add line, color etc. nodes after the first node of a hlist
+---not before - after is much more easier.
+---
 ---@param hlist_node HlistNode
---
+---
 ---@return HlistNode hlist_node
 ---@return Node strut_node
 ---@return Node prev_head_node
@@ -315,17 +315,17 @@ local function insert_strut_into_hlist(hlist_node)
   return hlist_node, strut_node, prev_head_node
 end
 
---- Write a kern node to the current node list. This kern node can be
---  used to build a margin.
+---Write a kern node to the current node list. This kern node can be
+---used to build a margin.
 local function write_margin_node()
   node.write(create_kern_node(tex.sp(registry.get_value('margin'))))
 end
 
---- Search for a `hlist` (subtype `line`) and nsert a strut node into
--- the list if a hlist is found.
---
+---Search for a `hlist` (subtype `line`) and nsert a strut node into
+---the list if a hlist is found.
+---
 ---@param head_node Node # The head of a node list.
---
+---
 ---@return HlistNode|nil hlist_node
 ---@return Node|nil strut_node
 ---@return Node|nil prev_head_node
@@ -339,28 +339,28 @@ local function search_hlist(head_node)
   end
 end
 
---- Option handling.
---
--- The table `registry` bundles functions that deal with the option
--- handling.
---
--- <h2>Marker processing (marker)</h2>
---
--- A marker is a whatsit node of the subtype `user_defined`. A marker
--- has two purposes:
---
--- * Mark the begin and the end of a gap.
--- * Store a index number, that points to a Lua table, which holds some
---   additional data like the local options.
---
--- @section registry
+---Option handling.
+---
+---The table `registry` bundles functions that deal with the option
+---handling.
+---
+---<h2>Marker processing (marker)</h2>
+---
+---A marker is a whatsit node of the subtype `user_defined`. A marker
+---has two purposes:
+---
+---* Mark the begin and the end of a gap.
+---* Store a index number, that points to a Lua table, which holds some
+---  additional data like the local options.
+---
+---@section registry
 
---- We create a user defined whatsit node that can store a number (type
---  = 100).
---
--- In order to distinguish this node from other user defined whatsit
--- nodes we set the `user_id` to a large number. We call this whatsit
--- node a marker.
+---We create a user defined whatsit node that can store a number (type
+--- = 100).
+---
+---In order to distinguish this node from other user defined whatsit
+---nodes we set the `user_id` to a large number. We call this whatsit
+---node a marker.
 ---
 ---@param index number The argument `index` is a number, which is associated to values in the `registry.storage` table.
 ---
@@ -373,8 +373,8 @@ function registry.create_marker(index)
   return marker
 end
 
---- Write a marker node to TeX's current node list.
---
+---Write a marker node to TeX's current node list.
+---
 ---@param mode 'basic'|'fix'|'par' # The argument `mode` accepts the string values `basic`, `fix` and `par`. The argument `position`.
 ---@param position 'start'|'stop' # The argument `position` is either set to `start` or to `stop`.
 function registry.write_marker(mode, position)
@@ -383,7 +383,7 @@ function registry.write_marker(mode, position)
   node.write(marker)
 end
 
---- This functions checks if the given node `item` is a marker.
+---This functions checks if the given node `item` is a marker.
 ---
 ---@param item WhatsitNode
 ---
@@ -396,8 +396,8 @@ function registry.is_marker(item)
   return false
 end
 
---- This functions tests, whether the given node `item` is a marker.
---
+---This functions tests, whether the given node `item` is a marker.
+---
 ---@param head_node Node # The current node.
 ---@param mode 'basic'|'fix'|'par' # The argument `mode` accepts the string values `basic`, `fix` and `par`.
 ---@param position 'start'|'stop' # The argument `position` is either set to `start` or to `stop`.
@@ -409,12 +409,12 @@ function registry.check_marker(head_node, mode, position)
   return false
 end
 
---- `registry.get_marker` returns the given marker.
---
+---`registry.get_marker` returns the given marker.
+---
 ---@param head_node Node # The current node.
 ---@param mode 'basic'|'fix'|'par' # The argument `mode` accepts the string values `basic`, `fix` and `par`.
 ---@param position 'start'|'stop' # The argument `position` is either set to `start` or to `stop`.
---
+---
 ---@return false|Node # The node if `head_node` is a marker node.
 function registry.get_marker(head_node, mode, position)
   local out
@@ -429,11 +429,11 @@ function registry.get_marker(head_node, mode, position)
   return out
 end
 
---- Test whether the node `item` is a marker and retrieve the
--- the corresponding registry data.
---
+---Test whether the node `item` is a marker and retrieve the
+---the corresponding registry data.
+---
 ---@param item WhatsitNode # The argument `item` is a node of unspecified type.
---
+---
 ---@return table|false # The marker data.
 function registry.get_marker_data(item)
   if item.id == node.id('whatsit') and item.subtype ==
@@ -444,19 +444,19 @@ function registry.get_marker_data(item)
   end
 end
 
---- First this function saves the associatied values of a marker to the
--- local options table. Second it returns this values. The argument
--- `marker` is a whatsit node.
+---First this function saves the associatied values of a marker to the
+---local options table. Second it returns this values. The argument
+---`marker` is a whatsit node.
 function registry.get_marker_values(marker)
   local data = registry.get_marker_data(marker)
   registry.local_options = data.values
   return data.values
 end
 
---- This function removes a given whatsit marker.
---
--- It only deletes a node, if a marker is given.
---
+---This function removes a given whatsit marker.
+---
+---It only deletes a node, if a marker is given.
+---
 ---@return Node|nil head
 ---@return Node|nil current
 function registry.remove_marker(marker)
@@ -465,13 +465,13 @@ function registry.remove_marker(marker)
   end
 end
 
--- __Storage functions (storage)__
+---__Storage functions (storage)__
 
---- `registry.index` is a counter. The functions `registry.get_index()`
--- increases the counter by one and then returns it.
---
+---`registry.index` is a counter. The functions `registry.get_index()`
+---increases the counter by one and then returns it.
+---
 ---@return integer # The index number of the corresponding table in
---   `registry.storage`.
+---  `registry.storage`.
 function registry.get_index()
   if not registry.index then
     registry.index = 0
@@ -480,17 +480,17 @@ function registry.get_index()
   return registry.index
 end
 
---- `registry.set_storage()` stores the local options in the Lua table
---  `registry.storage`.
---
--- It returns a numeric index number. This index number is the key,
--- where the local options in the Lua table are stored.
---
+---`registry.set_storage()` stores the local options in the Lua table
+--- `registry.storage`.
+---
+---It returns a numeric index number. This index number is the key,
+---where the local options in the Lua table are stored.
+---
 ---@param mode 'basic'|'fix'|'par' # The argument `mode` accepts the string values `basic`, `fix` and `par`.
 ---@param position 'start'|'stop' # The argument `position` is either set to `start` or to `stop`.
---
+---
 ---@return number # The index number of the corresponding table in
---   `registry.storage`.
+---  `registry.storage`.
 function registry.set_storage(mode, position)
   local index = registry.get_index()
   local data = { ['mode'] = mode, ['position'] = position }
@@ -504,23 +504,23 @@ function registry.set_storage(mode, position)
   return index
 end
 
---- The function `registry.get_storage()` retrieves values which belong
---  to a whatsit marker.
---
--- The argument `index` is a numeric value.
+---The function `registry.get_storage()` retrieves values which belong
+--- to a whatsit marker.
+---
+---The argument `index` is a numeric value.
 function registry.get_storage(index)
   return registry.storage[index]
 end
 
--- __Option processing (option)__
+---__Option processing (option)__
 
---- This function stores a value `value` and his associated key `key`
---  either to the global (`registry.global_options`) or to the local
---  (`registry.local_options`) option table.
---
--- The global boolean variable `registry.local_options` controls in
--- which table the values are stored.
---
+---This function stores a value `value` and his associated key `key`
+--- either to the global (`registry.global_options`) or to the local
+--- (`registry.local_options`) option table.
+---
+---The global boolean variable `registry.local_options` controls in
+---which table the values are stored.
+---
 ---@param key string # The option key.
 ---@param value any # The value that is stored under the options key.
 function registry.set_option(key, value)
@@ -534,29 +534,29 @@ function registry.set_option(key, value)
   end
 end
 
---- Set the variable `registry.is_global`.
---
+---Set the variable `registry.is_global`.
+---
 ---@param is_global boolean
 function registry.set_is_global(is_global)
   registry.is_global = is_global
 end
 
---- This function unsets the local options.
+---This function unsets the local options.
 function registry.unset_local_options()
   registry.local_options = {}
 end
 
---- `registry.unset_global_options` empties the global options storage.
+---`registry.unset_global_options` empties the global options storage.
 function registry.unset_global_options()
   registry.global_options = {}
 end
 
---- Retrieve a value from a given key. First search for the value in the
--- local options, then in the global options. If both option storages are
--- empty, the default value will be returned.
---
+---Retrieve a value from a given key. First search for the value in the
+---local options, then in the global options. If both option storages are
+---empty, the default value will be returned.
+---
 ---@param key string # The name of the options key.
---
+---
 ---@return any # The value of the corresponding option key.
 function registry.get_value(key)
   if registry.has_value(registry.local_options[key]) then
@@ -568,10 +568,10 @@ function registry.get_value(key)
   return registry.defaults[key]
 end
 
---- The function `registry.get_value_show()` returns the boolean value
--- `true` if the option `show` is true. In contrast to the function
--- `registry.get_value()` it converts the string value `true' to a
--- boolean value.
+---The function `registry.get_value_show()` returns the boolean value
+---`true` if the option `show` is true. In contrast to the function
+---`registry.get_value()` it converts the string value `true' to a
+---boolean value.
 ---
 ---@return boolean
 function registry.get_value_show()
@@ -583,11 +583,11 @@ function registry.get_value_show()
   end
 end
 
---- This function tests whether the value `value` is not empty and has a
--- value.
---
+---This function tests whether the value `value` is not empty and has a
+---value.
+---
 ---@param value any # A value of different types.
---
+---
 ---@return boolean # True is the value is set otherwise false.
 function registry.has_value(value)
   if value == nil or value == '' or value == '\\color@ ' then
@@ -597,10 +597,10 @@ function registry.has_value(value)
   end
 end
 
---- Return the default value of the given option.
---
+---Return the default value of the given option.
+---
 ---@param key any # The name of the options key.
---
+---
 ---@return any # The corresponding value of the options key.
 function registry.get_defaults(key)
   return registry.defaults[key]
@@ -719,31 +719,31 @@ local function parse_options(kv_string, to_global)
   luakeys.parse(kv_string, { defs = defs })
 end
 
---- Assembly to cloze texts.
--- @section cloze_functions
+---Assembly to cloze texts.
+---@section cloze_functions
 
---- Assemble a possibly multiline cloze.
---
--- The corresponding LaTeX command to this Lua function is `\cloze`.
---  This function is used by other cloze TeX macros too: `\clozenol`,
--- `\clozefil`
---
+---Assemble a possibly multiline cloze.
+---
+---The corresponding LaTeX command to this Lua function is `\cloze`.
+---This function is used by other cloze TeX macros too: `\clozenol`,
+---`\clozefil`
+---
 ---@param head_node_input Node # The head of a node list.
---
+---
 ---@return Node # The head of the node list.
 local function make_basic(head_node_input)
   -- This local variables are overloaded by function who
   -- call each other.
   local continue_cloze, search_stop
 
-  --- The function `make_single()` makes one gap. The argument
-  --  `start_node` is the node where the gap begins. The argument
-  --  `stop_node` is the node where the gap ends.
+  ---The function `make_single()` makes one gap. The argument
+  --`start_node` is the node where the gap begins. The argument
+  --`stop_node` is the node where the gap ends.
   --
   ---@param start_node Node # The node to start / begin a new cloze.
   ---@param stop_node Node # The node to stop / end a new cloze.
   ---@param parent_node HlistNode # The parent node (hlist) of the start and the stop node.
-  --
+  ---
   ---@return Node stop_node # The stop node.
   ---@return HlistNode parent_node # The parent node (hlist) of the stop node.
   local function make_single(start_node, stop_node, parent_node)
@@ -771,12 +771,12 @@ local function make_basic(head_node_input)
     return registry.remove_marker(stop_node), parent_node
   end
 
-  --- Search for a stop marker or make a cloze up to the end of the node
-  -- list.
-  --
+  ---Search for a stop marker or make a cloze up to the end of the node
+  ---list.
+  ---
   ---@param start_node Node # The node to start a new cloze.
   ---@param parent_node HlistNode # The parent node (hlist) of the start node.
-  --
+  ---
   ---@return Node|nil head_node # The fast forwarded new head of the node list.
   ---@return Node|nil parent_node # The parent node (hlist) of the head node.
   function search_stop(start_node, parent_node)
@@ -798,10 +798,10 @@ local function make_basic(head_node_input)
     end
   end
 
-  --- Continue a multiline cloze.
-  --
+  ---Continue a multiline cloze.
+  ---
   ---@param parent_node Node # A parent node to search for a hlist node.
-  --
+  ---
   ---@return Node|nil head_node # The fast forwarded new head of the node list.
   ---@return Node|nil parent_node # The parent node (hlist) of the head node.
   function continue_cloze(parent_node)
@@ -812,8 +812,8 @@ local function make_basic(head_node_input)
     end
   end
 
-  --- Search for a start marker.
-  --
+  ---Search for a start marker.
+  ---
   ---@param head_node Node # The head of a node list.
   ---@param parent_node HlistNode # The parent node (hlist) of the head node.
   ---
@@ -842,13 +842,13 @@ local function make_basic(head_node_input)
   return head_node_input
 end
 
---- The corresponding LaTeX command to this Lua function is `\clozefix`.
---
+---The corresponding LaTeX command to this Lua function is `\clozefix`.
+---
 ---@param head_node_input Node # The head of a node list.
 local function make_fix(head_node_input)
 
-  --- Calculate the length of the whitespace before (`kern_start_length`) and
-  -- after (`kern_stop_length`) the text.
+  ---Calculate the length of the whitespace before (`kern_start_length`) and
+  ---after (`kern_stop_length`) the text.
   ---
   ---@param start Node
   ---@param stop Node
@@ -876,94 +876,94 @@ local function make_fix(head_node_input)
     return width, kern_start_length, kern_stop_length
   end
 
-  --- The function `make_single` generates a gap of fixed width.
-  --
-  -- __Node lists__
-  --
-  -- __Show text:__
-  --
-  -- <table>
-  -- <tbody>
-  --   <tr>
-  --     <td>`start_node`</td>
-  --     <td>`whatsit`</td>
-  --     <td>`user_definded`</td>
-  --     <td>`index`</td>
-  --   </tr>
-  --   <tr>
-  --     <td>`line_node`</td>
-  --     <td>`rule`</td>
-  --     <td></td>
-  --     <td>`width`</td>
-  --   </tr>
-  --   <tr>
-  --     <td>`kern_start_node`</td>
-  --     <td>`kern`</td>
-  --     <td>&amp; Depends on `align`</td>
-  --     <td></td>
-  --   </tr>
-  --   <tr>
-  --     <td>`color_text_node`</td>
-  --     <td>`whatsit`</td>
-  --     <td>`pdf_colorstack`</td>
-  --     <td>Text color</td>
-  --   </tr>
-  --   <tr>
-  --     <td></td>
-  --     <td>`glyphs`</td>
-  --     <td>&amp; Text to show</td>
-  --     <td></td>
-  --   </tr>
-  --   <tr>
-  --     <td>`color_reset_node`</td>
-  --     <td>`whatsit`</td>
-  --     <td>`pdf_colorstack`</td>
-  --     <td>Reset color</td>
-  --   </tr>
-  --   <tr>
-  --     <td>`kern_stop_node`</td>
-  --     <td>`kern`</td>
-  --     <td>&amp; Depends on `align`</td>
-  --     <td></td>
-  --   </tr>
-  --   <tr>
-  --     <td>`stop_node`</td>
-  --     <td>`whatsit`</td>
-  --     <td>`user_definded`</td>
-  --     <td>`index`</td>
-  --   </tr>
-  -- </tbody>
-  -- </table>
-  --
-  -- __Hide text:__
-  --
-  -- <table>
-  -- <thead>
-  --   <tr>
-  --     <th>`start_node`</th>
-  --     <th>`whatsit`</th>
-  --     <th>`user_definded`</th>
-  --     <th>`index`</th>
-  --   </tr>
-  -- </thead>
-  -- <tbody>
-  --   <tr>
-  --     <td>`line_node`</td>
-  --     <td>`rule`</td>
-  --     <td></td>
-  --     <td>`width`</td>
-  --   </tr>
-  --   <tr>
-  --     <td>`stop_node`</td>
-  --     <td>`whatsit`</td>
-  --     <td>`user_definded`</td>
-  --     <td>`index`</td>
-  --   </tr>
-  -- </tbody>
-  -- </table>
-  --
-  -- Make fixed size cloze.
-  --
+  ---The function `make_single` generates a gap of fixed width.
+  ---
+  ---__Node lists__
+  ---
+  ---__Show text:__
+  ---
+  ---<table>
+  ---<tbody>
+  ---  <tr>
+  ---    <td>`start_node`</td>
+  ---    <td>`whatsit`</td>
+  ---    <td>`user_definded`</td>
+  ---    <td>`index`</td>
+  ---  </tr>
+  ---  <tr>
+  ---    <td>`line_node`</td>
+  ---    <td>`rule`</td>
+  ---    <td></td>
+  ---    <td>`width`</td>
+  ---  </tr>
+  ---  <tr>
+  ---    <td>`kern_start_node`</td>
+  ---    <td>`kern`</td>
+  ---    <td>&amp; Depends on `align`</td>
+  ---    <td></td>
+  ---  </tr>
+  ---  <tr>
+  ---    <td>`color_text_node`</td>
+  ---    <td>`whatsit`</td>
+  ---    <td>`pdf_colorstack`</td>
+  ---    <td>Text color</td>
+  ---  </tr>
+  ---  <tr>
+  ---    <td></td>
+  ---    <td>`glyphs`</td>
+  ---    <td>&amp; Text to show</td>
+  ---    <td></td>
+  ---  </tr>
+  ---  <tr>
+  ---    <td>`color_reset_node`</td>
+  ---    <td>`whatsit`</td>
+  ---    <td>`pdf_colorstack`</td>
+  ---    <td>Reset color</td>
+  ---  </tr>
+  ---  <tr>
+  ---    <td>`kern_stop_node`</td>
+  ---    <td>`kern`</td>
+  ---    <td>&amp; Depends on `align`</td>
+  ---    <td></td>
+  ---  </tr>
+  ---  <tr>
+  ---    <td>`stop_node`</td>
+  ---    <td>`whatsit`</td>
+  ---    <td>`user_definded`</td>
+  ---    <td>`index`</td>
+  ---  </tr>
+  ---</tbody>
+  ---</table>
+  ---
+  ---__Hide text:__
+  ---
+  ---<table>
+  ---<thead>
+  ---  <tr>
+  ---    <th>`start_node`</th>
+  ---    <th>`whatsit`</th>
+  ---    <th>`user_definded`</th>
+  ---    <th>`index`</th>
+  ---  </tr>
+  ---</thead>
+  ---<tbody>
+  ---  <tr>
+  ---    <td>`line_node`</td>
+  ---    <td>`rule`</td>
+  ---    <td></td>
+  ---    <td>`width`</td>
+  ---  </tr>
+  ---  <tr>
+  ---    <td>`stop_node`</td>
+  ---    <td>`whatsit`</td>
+  ---    <td>`user_definded`</td>
+  ---    <td>`index`</td>
+  ---  </tr>
+  ---</tbody>
+  ---</table>
+  ---
+  ---Make a fixed sized cloze.
+  ---
   ---@param start Node # The node, where the gap begins
   ---@param stop Node # The node, where the gap ends
   local function make_single(start, stop)
@@ -987,8 +987,8 @@ local function make_fix(head_node_input)
     registry.remove_marker(stop)
   end
 
-  --- Function to recurse the node list and search after marker.
-  --
+  ---Function to recurse the node list and search after marker.
+  ---
   ---@param head_node Node # The head of a node list.
   local function make_fix_recursion(head_node)
     local start_node, stop_node = false, false
@@ -1015,93 +1015,93 @@ local function make_fix(head_node_input)
   return head_node_input
 end
 
---- The corresponding LaTeX environment to this lua function is
--- `clozepar`.
---
--- __Node lists__
---
--- __Show text:__
---
--- <table>
--- <thead>
---   <tr>
---     <th>`strut_node`</th>
---     <th>`kern`</th>
---     <th></th>
---     <th>width = 0</th>
---   </tr>
--- </thead>
--- <tbody>
---   <tr>
---     <td>`line_node`</td>
---     <td>`rule`</td>
---     <td></td>
---     <td>`width` (Width from hlist)</td>
---   </tr>
---   <tr>
---     <td>`kern_node`</td>
---     <td>`kern`</td>
---     <td></td>
---     <td>`-width`</td>
---   </tr>
---   <tr>
---     <td>`color_text_node`</td>
---     <td>`whatsit`</td>
---     <td>`pdf_colorstack`</td>
---     <td>Text color</td>
---   </tr>
---   <tr>
---     <td></td>
---     <td>`glyphs`</td>
---     <td></td>
---     <td>Text to show</td>
---   </tr>
---   <tr>
---     <td>`tail_node`</td>
---     <td>`glyph`</td>
---     <td></td>
---     <td>Last glyph in hlist</td>
---   </tr>
---   <tr>
---     <td>`color_reset_node`</td>
---     <td>`whatsit`</td>
---     <td>`pdf_colorstack`</td>
---     <td>Reset color</td>
---   </tr>
--- </tbody>
--- </table>
---
--- __Hide text:__
---
--- <table>
--- <thead>
---   <tr>
---     <th>`strut_node`</th>
---     <th>`kern`</th>
---     <th></th>
---     <th>width = 0</th>
---   </tr>
--- </thead>
--- <tbody>
---   <tr>
---     <td>`line_node`</td>
---     <td>`rule`</td>
---     <td></td>
---     <td>`width` (Width from hlist)</td>
---   </tr>
--- </tbody>
--- </table>
---
+---The corresponding LaTeX environment to this lua function is
+---`clozepar`.
+---
+---__Node lists__
+---
+---__Show text:__
+---
+---<table>
+---<thead>
+---  <tr>
+---    <th>`strut_node`</th>
+---    <th>`kern`</th>
+---    <th></th>
+---    <th>width = 0</th>
+---  </tr>
+---</thead>
+---<tbody>
+---  <tr>
+---    <td>`line_node`</td>
+---    <td>`rule`</td>
+---    <td></td>
+---    <td>`width` (Width from hlist)</td>
+---  </tr>
+---  <tr>
+---    <td>`kern_node`</td>
+---    <td>`kern`</td>
+---    <td></td>
+---    <td>`-width`</td>
+---  </tr>
+---  <tr>
+---    <td>`color_text_node`</td>
+---    <td>`whatsit`</td>
+---    <td>`pdf_colorstack`</td>
+---    <td>Text color</td>
+---  </tr>
+---  <tr>
+---    <td></td>
+---    <td>`glyphs`</td>
+---    <td></td>
+---    <td>Text to show</td>
+---  </tr>
+---  <tr>
+---    <td>`tail_node`</td>
+---    <td>`glyph`</td>
+---    <td></td>
+---    <td>Last glyph in hlist</td>
+---  </tr>
+---  <tr>
+---    <td>`color_reset_node`</td>
+---    <td>`whatsit`</td>
+---    <td>`pdf_colorstack`</td>
+---    <td>Reset color</td>
+---  </tr>
+---</tbody>
+---</table>
+---
+---__Hide text:__
+---
+---<table>
+---<thead>
+---  <tr>
+---    <th>`strut_node`</th>
+---    <th>`kern`</th>
+---    <th></th>
+---    <th>width = 0</th>
+---  </tr>
+---</thead>
+---<tbody>
+---  <tr>
+---    <td>`line_node`</td>
+---    <td>`rule`</td>
+---    <td></td>
+---    <td>`width` (Width from hlist)</td>
+---  </tr>
+---</tbody>
+---</table>
+---
 ---@param head_node Node # The head of a node list.
 local function make_par(head_node)
 
-  --- Add one additional empty line at the end of a paragraph.
-  --
-  -- All fields from the last hlist node are copied to the created
-  -- hlist.
-  --
+  ---Add one additional empty line at the end of a paragraph.
+  ---
+  ---All fields from the last hlist node are copied to the created
+  ---hlist.
+  ---
   ---@param last_hlist_node HlistNode # The last hlist node of a paragraph.
-  --
+  ---
   ---@return HlistNode # The created new hlist node containing the line.
   local function add_additional_line(last_hlist_node)
     local hlist_node = node.new(node.id('hlist'))
@@ -1132,8 +1132,8 @@ local function make_par(head_node)
     return hlist_node
   end
 
-  --- Add multiple empty lines at the end of a paragraph.
-  --
+  ---Add multiple empty lines at the end of a paragraph.
+  ---
   ---@param last_hlist_node HlistNode # The last hlist node of a paragraph.
   ---@param count number # Count of the lines to add at the end.
   local function add_additional_lines(last_hlist_node,
@@ -1217,39 +1217,39 @@ local function unregister_callback(callback_name,
   end
 end
 
---- Exported functions.
---
--- The `export` table contains functions which are published to the
--- `cloze.lua` and `cloze.sty` file.
---
--- @section export
+---Exported functions.
+---
+---The `export` table contains functions which are published to the
+---`cloze.lua` and `cloze.sty` file.
+---
+---@section export
 
---- The `export` table contains some basic functions. `export` is the
--- only table of this Lua module that will be exported.
+---The `export` table contains some basic functions. `export` is the
+---only table of this Lua module that will be exported.
 local export = {}
 
---- Store informations if the callbacks are already registered for
--- a certain mode (`basic`, `fix`, `par`).
---
--- <code><pre>
--- is_registered = {
---   fix = true,
---   basic = false,
---   par = false,
--- }</pre></code>
---
+---Store informations if the callbacks are already registered for
+---a certain mode (`basic`, `fix`, `par`).
+---
+---<code><pre>
+---is_registered = {
+---  fix = true,
+---  basic = false,
+---  par = false,
+---}</pre></code>
+---
 export.is_registered = {}
 
---- This function registers the functions `make_par`, `make_basic` and
---  `make_fix` the Lua callbacks.
---
--- `make_par` and `make_basic` are registered to the callback
--- `post_linebreak_filter` and `make_fix` to the callback
--- `pre_linebreak_filter`. The argument `mode` accepts the string values
--- `basic`, `fix` and `par`. A special treatment is needed for clozes in
--- display math mode. The `post_linebreak_filter` is not called on
--- display math formulas. I’m not sure if the `pre_output_filter` is the
--- right choice to capture the display math formulas.
+---This function registers the functions `make_par`, `make_basic` and
+---`make_fix` the Lua callbacks.
+---
+---`make_par` and `make_basic` are registered to the callback
+---`post_linebreak_filter` and `make_fix` to the callback
+---`pre_linebreak_filter`. The argument `mode` accepts the string values
+---`basic`, `fix` and `par`. A special treatment is needed for clozes in
+---display math mode. The `post_linebreak_filter` is not called on
+---display math formulas. I’m not sure if the `pre_output_filter` is the
+---right choice to capture the display math formulas.
 function export.register_callback(mode)
   if mode == 'par' then
     register_callback('post_linebreak_filter', make_par, mode)
@@ -1268,10 +1268,10 @@ function export.register_callback(mode)
   end
 end
 
---- Delete the registered functions from the Lua callbacks.
---
+---Delete the registered functions from the Lua callbacks.
+---
 ---@param mode string # The argument `mode` accepts the string values
--- `basic`, `fix` and `par`.
+---`basic`, `fix` and `par`.
 function export.unregister_callback(mode)
   if mode == 'basic' then
     unregister_callback('post_linebreak_filter', mode)
@@ -1283,10 +1283,10 @@ function export.unregister_callback(mode)
   end
 end
 
--- Export some functions and values.
+---Export some functions and values.
 
---- Variable that can be used to store the previous fbox rule thickness
---  to be able to restore the previous thickness.
+---Variable that can be used to store the previous fbox rule thickness
+--- to be able to restore the previous thickness.
 export.fboxrule_restore = nil
 export.write_linefil_nodes = write_linefil_nodes
 export.write_line_nodes = write_line_nodes
