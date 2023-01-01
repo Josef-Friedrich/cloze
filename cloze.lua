@@ -15,25 +15,7 @@
 -- __Initialisation of the function tables__
 -- It is good form to provide some background informations about this Lua
 -- module.
----@class Node
----@field next Node|nil # the next node in a list, or nil
----@field prev Node|nil
----@field id number # the node’s type (id) number
----@field subtype number # the node subtype identifier
----@field head? Node
----@class WhatsitNode: Node
----@field type number
----@field user_id number
----@field value number
----@class ColorstackWhatsitNode: WhatsitNode
----@field stack number
----@field data string
----@class HlistNode: Node
----@field head Node
----@field glue_set number
----@field glue_sign number
----@field glue_order number
----@field width number
+
 if not modules then
   modules = {}
 end
