@@ -105,7 +105,7 @@ function nodex.create_colorstack(data)
   if not data then
     data = '0 0 0 rg 0 0 0 RG' -- black
   end
-  local whatsit = node.new('whatsit', 'pdf_colorstack')
+  local whatsit = node.new('whatsit', 'pdf_colorstack') --[[@as PdfColorstackWhatsitNode]]
   whatsit.stack = 0
   whatsit.data = data
   return whatsit
