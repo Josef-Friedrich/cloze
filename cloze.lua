@@ -100,7 +100,7 @@ registry.local_options = {}
 ---
 ---@param data? string # `data` is a PDF colorstack string like `0 0 0 rg 0 0 0 RG`.
 ---
----@return ColorstackWhatsitNode
+---@return PdfColorstackWhatsitNode
 function nodex.create_colorstack(data)
   if not data then
     data = '0 0 0 rg 0 0 0 RG' -- black
@@ -118,7 +118,7 @@ end
 ---
 ---@param option 'line'|'text'|'reset' # The argument `option` accepts the strings `line`, `text` and `reset`.
 ---
----@return ColorstackWhatsitNode
+---@return PdfColorstackWhatsitNode
 function nodex.create_color(option)
   local data
   if option == 'line' then
@@ -364,9 +364,9 @@ end
 ---
 ---@param index number The argument `index` is a number, which is associated to values in the `registry.storage` table.
 ---
----@return WhatsitNode
+---@return UserDefinedWhatsitNode
 function registry.create_marker(index)
-  local marker = node.new('whatsit', 'user_defined')
+  local marker = node.new('whatsit', 'user_defined') --[[@as UserDefinedWhatsitNode]]
   marker.type = 100 -- number
   marker.user_id = registry.user_id
   marker.value = index
@@ -385,7 +385,7 @@ end
 
 ---This functions checks if the given node `item` is a marker.
 ---
----@param item WhatsitNode
+---@param item UserDefinedWhatsitNode
 ---
 ---@return boolean
 function registry.is_marker(item)
@@ -402,7 +402,7 @@ end
 ---@param mode 'basic'|'fix'|'par' # The argument `mode` accepts the string values `basic`, `fix` and `par`.
 ---@param position 'start'|'stop' # The argument `position` is either set to `start` or to `stop`.
 function registry.check_marker(head_node, mode, position)
-  local data = registry.get_marker_data(head_node)
+  local data = registry.get_marker_data(head_node --[[@as UserDefinedWhatsitNode]])
   if data and data.mode == mode and data.position == position then
     return true
   end
@@ -432,7 +432,7 @@ end
 ---Test whether the node `item` is a marker and retrieve the
 ---the corresponding registry data.
 ---
----@param item WhatsitNode # The argument `item` is a node of unspecified type.
+---@param item UserDefinedWhatsitNode # The argument `item` is a node of unspecified type.
 ---
 ---@return table|false # The marker data.
 function registry.get_marker_data(item)
@@ -1104,7 +1104,7 @@ local function make_par(head_node)
   ---
   ---@return HlistNode # The created new hlist node containing the line.
   local function add_additional_line(last_hlist_node)
-    local hlist_node = node.new(node.id('hlist'))
+    local hlist_node = node.new('hlist') --[[@as HlistNode]]
     hlist_node.subtype = 1
 
     local fields = {
