@@ -50,12 +50,14 @@
 
 <h1>Module <code>cloze</code></h1>
 <p>Cloze uses <a href="https://github.com/stevedonovan/ldoc">LDoc</a> for the
-  source code documentation.</p>
+source code documentation.</p>
 <p>
 <p> The supported tags are described on in
-  the <a href="https://github.com/stevedonovan/LDoc/wiki">wiki</a>.</p>
+the <a href="https://github.com/stevedonovan/LDoc/wiki">wiki</a>.</p>
 
-<p> <h3>Naming conventions</h3></p>
+
+<h3>Naming conventions</h3>
+
 
 <ul>
     <li><em>Variable</em> names for <em>nodes</em> are suffixed with <code>_node</code>, for example
@@ -75,7 +77,7 @@
 	<tr>
 	<td class="name" nowrap><a href="#registry">registry</a></td>
 	<td class="summary">All values and functions, which are related to the option
-  management, are stored in a table called <a href="index.html#registry">registry</a>.</td>
+management, are stored in a table called <a href="index.html#registry">registry</a>.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#registry.storage">registry.storage</a></td>
@@ -110,7 +112,7 @@
 	<tr>
 	<td class="name" nowrap><a href="#nodex.create_color">nodex.create_color (option)</a></td>
 	<td class="summary"><code>nodex.create_color()</code> is a wrapper for the function
- <code>nodex.create_colorstack()</code>.</td>
+<code>nodex.create_colorstack()</code>.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#nodex.create_line">nodex.create_line (width)</a></td>
@@ -127,17 +129,17 @@
 	<tr>
 	<td class="name" nowrap><a href="#write_line_nodes">write_line_nodes ()</a></td>
 	<td class="summary">This function enclozes a rule node with color nodes as it the
-  function <a href="index.html#nodex.insert_line">nodex.insert_line</a> does.</td>
+function <a href="index.html#nodex.insert_line">nodex.insert_line</a> does.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#nodex.create_linefil">nodex.create_linefil ()</a></td>
 	<td class="summary">This function creates a line which stretchs indefinitely in the
- horizontal direction.</td>
+horizontal direction.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#write_linefil_nodes">write_linefil_nodes ()</a></td>
 	<td class="summary">Surround a indefinitely strechable line with color whatsits and puts
-  it to TeX’s ‘current (node) list’ (write).</td>
+it to TeX’s ‘current (node) list’ (write).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#create_kern_node">create_kern_node (width)</a></td>
@@ -146,7 +148,7 @@
 	<tr>
 	<td class="name" nowrap><a href="#insert_strut_into_hlist">insert_strut_into_hlist (hlist_node)</a></td>
 	<td class="summary">Add at the beginning of each <code>hlist</code> node list a strut (a invisible
-  character).</td>
+character).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#write_margin_node">write_margin_node ()</a></td>
@@ -155,7 +157,7 @@
 	<tr>
 	<td class="name" nowrap><a href="#search_hlist">search_hlist (head_node)</a></td>
 	<td class="summary">Search for a <code>hlist</code> (subtype <code>line</code>) and nsert a strut node into
- the list if a hlist is found.</td>
+the list if a hlist is found.</td>
 	</tr>
 </table>
 <h2><a href="#Option_handling">Option handling </a></h2>
@@ -163,7 +165,7 @@
 	<tr>
 	<td class="name" nowrap><a href="#registry.create_marker">registry.create_marker (index)</a></td>
 	<td class="summary">We create a user defined whatsit node that can store a number (type
-  = 100).</td>
+ = 100).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#registry.write_marker">registry.write_marker (mode, position)</a></td>
@@ -171,7 +173,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#registry.is_marker">registry.is_marker (item)</a></td>
-	<td class="summary">This functions checks if the given node <code>item</code> is a marker.</td>
+	<td class="summary">Check if the given node is a marker.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#registry.check_marker">registry.check_marker (head_node, mode, position)</a></td>
@@ -184,12 +186,12 @@
 	<tr>
 	<td class="name" nowrap><a href="#registry.get_marker_data">registry.get_marker_data (item)</a></td>
 	<td class="summary">Test whether the node <code>item</code> is a marker and retrieve the
- the corresponding registry data.</td>
+the corresponding registry data.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#registry.get_marker_values">registry.get_marker_values (marker)</a></td>
 	<td class="summary">First this function saves the associatied values of a marker to the
- local options table.</td>
+local options table.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#registry.remove_marker">registry.remove_marker (marker)</a></td>
@@ -202,18 +204,18 @@
 	<tr>
 	<td class="name" nowrap><a href="#registry.set_storage">registry.set_storage (mode, position)</a></td>
 	<td class="summary"><code>registry.set_storage()</code> stores the local options in the Lua table
-  <a href="index.html#registry.storage">registry.storage</a>.</td>
+ <a href="index.html#registry.storage">registry.storage</a>.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#registry.get_storage">registry.get_storage (index)</a></td>
 	<td class="summary">The function <code>registry.get_storage()</code> retrieves values which belong
-  to a whatsit marker.</td>
+ to a whatsit marker.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#registry.set_option">registry.set_option (key, value)</a></td>
 	<td class="summary">This function stores a value <code>value</code> and his associated key <code>key</code>
-  either to the global (<a href="index.html#registry.global_options">registry.global_options</a>) or to the local
-  (<a href="index.html#registry.local_options">registry.local_options</a>) option table.</td>
+ either to the global (<a href="index.html#registry.global_options">registry.global_options</a>) or to the local
+ (<a href="index.html#registry.local_options">registry.local_options</a>) option table.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#registry.set_is_global">registry.set_is_global (is_global)</a></td>
@@ -234,16 +236,22 @@
 	<tr>
 	<td class="name" nowrap><a href="#registry.get_value_show">registry.get_value_show ()</a></td>
 	<td class="summary">The function <code>registry.get_value_show()</code> returns the boolean value
- <code>true</code> if the option <code>show</code> is true.</td>
+<code>true</code> if the option <code>show</code> is true.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#registry.has_value">registry.has_value (value)</a></td>
 	<td class="summary">This function tests whether the value <code>value</code> is not empty and has a
- value.</td>
+value.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#registry.get_defaults">registry.get_defaults (key)</a></td>
 	<td class="summary">Return the default value of the given option.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#parse_options">parse_options (kv_string, to_global)</a></td>
+	<td class="summary">
+
+</td>
 	</tr>
 </table>
 <h2><a href="#Assembly_to_cloze_texts">Assembly to cloze texts </a></h2>
@@ -259,7 +267,7 @@
 	<tr>
 	<td class="name" nowrap><a href="#search_stop">search_stop (start_node, parent_node)</a></td>
 	<td class="summary">Search for a stop marker or make a cloze up to the end of the node
- list.</td>
+list.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#continue_cloze">continue_cloze (parent_node)</a></td>
@@ -284,7 +292,7 @@
 	<tr>
 	<td class="name" nowrap><a href="#make_par">make_par (head_node)</a></td>
 	<td class="summary">The corresponding LaTeX environment to this lua function is
- <code>clozepar</code>.</td>
+<code>clozepar</code>.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#add_additional_lines">add_additional_lines (last_hlist_node, count)</a></td>
@@ -321,12 +329,12 @@
 	<tr>
 	<td class="name" nowrap><a href="#export.is_registered">export.is_registered</a></td>
 	<td class="summary">Store informations if the callbacks are already registered for
- a certain mode (<code>basic</code>, <code>fix</code>, <code>par</code>).</td>
+a certain mode (<code>basic</code>, <code>fix</code>, <code>par</code>).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#export.register_callback">export.register_callback (mode)</a></td>
 	<td class="summary">This function registers the functions <a href="index.html#make_par">make_par</a>, <a href="index.html#make_basic">make_basic</a> and
-  <a href="index.html#make_fix">make_fix</a> the Lua callbacks.</td>
+<a href="index.html#make_fix">make_fix</a> the Lua callbacks.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#export.unregister_callback">export.unregister_callback (mode)</a></td>
@@ -335,7 +343,7 @@
 	<tr>
 	<td class="name" nowrap><a href="#export.fboxrule_restore">export.fboxrule_restore</a></td>
 	<td class="summary">Variable that can be used to store the previous fbox rule thickness
-  to be able to restore the previous thickness.</td>
+ to be able to restore the previous thickness.</td>
 	</tr>
 </table>
 
@@ -366,7 +374,7 @@
     </dt>
     <dd>
     All values and functions, which are related to the option
-  management, are stored in a table called <a href="index.html#registry">registry</a>.
+management, are stored in a table called <a href="index.html#registry">registry</a>.
 
 
 
@@ -382,22 +390,22 @@
     <dd>
     Store all local options of the markers. </p>
 
-<p> <code><pre>
- registry.storage = {
-   {</p>
-<pre><code> mode = "basic",
- position = "start",
- values = {
-   distance = "3mm"
- }
+<p><code><pre>
+registry.storage = {
+  {</p>
+<pre><code>mode = "basic",
+position = "start",
+values = {
+  distance = "3mm"
+}
 </code></pre>
-<p>   },
-   {</p>
-<pre><code> mode = "basic",
- position = "stop"
+<p>  },
+  {</p>
+<pre><code>mode = "basic",
+position = "stop"
 </code></pre>
-<p>   }
- }</pre></code>
+<p>  }
+}</pre></code>
 
 
 
@@ -548,7 +556,7 @@
     </dt>
     <dd>
     I didn’t know what value I should take as <a href="index.html#registry.user_id">user_id</a>.  Therefore I
- took my birthday and transformed it into a large number.
+took my birthday and transformed it into a large number.
 
 
 
@@ -579,7 +587,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        ColorstackWhatsitNode
+        PdfColorstackWhatsitNode
     </ol>
 
 
@@ -592,8 +600,8 @@
     </dt>
     <dd>
     <code>nodex.create_color()</code> is a wrapper for the function
- <code>nodex.create_colorstack()</code>.  It queries the current values of the
- options <code>linecolor</code> and <code>textcolor</code>.
+<code>nodex.create_colorstack()</code>.  It queries the current values of the
+options <code>linecolor</code> and <code>textcolor</code>.
 
 
     <h3>Parameters:</h3>
@@ -606,7 +614,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        ColorstackWhatsitNode
+        PdfColorstackWhatsitNode
     </ol>
 
 
@@ -619,8 +627,8 @@
     </dt>
     <dd>
     Create a rule node, which is used as a line for the cloze texts.  The
- <code>depth</code> and the <code>height</code> of the rule are calculated form the options
- <code>thickness</code> and <code>distance</code>.
+<code>depth</code> and the <code>height</code> of the rule are calculated form the options
+<code>thickness</code> and <code>distance</code>.
 
 
     <h3>Parameters:</h3>
@@ -633,7 +641,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        Node
+        RuleNode
     </ol>
 
 
@@ -646,8 +654,8 @@
     </dt>
     <dd>
     Insert a <code>list</code> of nodes after or before the <code>current</code>.  The <code>head</code>
- argument is optional. In some edge cases it is unfortately necessary.
- if <code>head</code> is omitted the <code>current</code> node is used.
+argument is optional. In some edge cases it is unfortately necessary.
+if <code>head</code> is omitted the <code>current</code> node is used.
 
 
     <h3>Parameters:</h3>
@@ -681,39 +689,41 @@
     <strong>nodex.insert_line (current, width)</strong>
     </dt>
     <dd>
-    Enclose a rule node (cloze line) with two PDF colorstack whatsits.
-  The first colorstack node colors the line, the second resets the
-  color.</p>
 
-<p> <strong>Node list</strong></p>
+<p>Enclose a rule node (cloze line) with two PDF colorstack whatsits.
+The first colorstack node colors the line, the second resets the
+color.</p>
 
-<p> <table>
- <thead>
-   <tr></p>
-<pre><code> &lt;th&gt;&lt;code&gt;color\_line\_node&lt;/code&gt;&lt;/th&gt;
- &lt;th&gt;&lt;code&gt;whatsit&lt;/code&gt;&lt;/th&gt;
- &lt;th&gt;&lt;code&gt;pdf\_colorstack&lt;/code&gt;&lt;/th&gt;
- &lt;th&gt;Line color&lt;/th&gt;
-</code></pre>
-<p>   </tr>
- </thead>
- <tbody>
-   <tr></p>
-<pre><code> &lt;td&gt;&lt;code&gt;line\_node&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;rule&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;width&lt;/code&gt;&lt;/td&gt;
-</code></pre>
-<p>   </tr>
-   <tr></p>
-<pre><code> &lt;td&gt;&lt;code&gt;color\_reset\_node&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;whatsit&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;pdf\_colorstack&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;Reset color&lt;/td&gt;
-</code></pre>
-<p>   </tr>
- </tbody>
- </table>
+<p><strong>Node list</strong></p>
+
+
+<table>
+<thead>
+  <tr>
+    <th><code>color\_line\_node</code></th>
+    <th><code>whatsit</code></th>
+    <th><code>pdf\_colorstack</code></th>
+    <th>Line color</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><code>line\_node</code></td>
+    <td><code>rule</code></td>
+    <td></td>
+    <td><code>width</code></td>
+  </tr>
+  <tr>
+    <td><code>color\_reset\_node</code></td>
+    <td><code>whatsit</code></td>
+    <td><code>pdf\_colorstack</code></td>
+    <td>Reset color</td>
+  </tr>
+</tbody>
+</table>
+
+
+
 
 
     <h3>Parameters:</h3>
@@ -741,41 +751,42 @@
     <strong>write_line_nodes ()</strong>
     </dt>
     <dd>
-    This function enclozes a rule node with color nodes as it the
-  function <a href="index.html#nodex.insert_line">nodex.insert_line</a> does.  In contrast to
-  <a href="index.html#nodex.insert_line">nodex.insert_line</a> the three nodes are appended to TeX’s ‘current
-  list’. They are not inserted in a node list, which is accessed by a
-  Lua callback.</p>
 
-<p> <strong>Node list</strong></p>
+<p>This function enclozes a rule node with color nodes as it the
+function <a href="index.html#nodex.insert_line">nodex.insert_line</a> does.  In contrast to
+<a href="index.html#nodex.insert_line">nodex.insert_line</a> the three nodes are appended to TeX’s ‘current
+list’. They are not inserted in a node list, which is accessed by a
+Lua callback.</p>
 
-<p> <table>
- <thead>
-   <tr></p>
-<pre><code> &lt;th&gt;-&lt;/th&gt;
- &lt;th&gt;&lt;code&gt;whatsit&lt;/code&gt;&lt;/th&gt;
- &lt;th&gt;&lt;code&gt;pdf\_colorstack&lt;/code&gt;&lt;/th&gt;
- &lt;th&gt;Line color&lt;/th&gt;
-</code></pre>
-<p>   </tr>
- </thead>
- <tbody>
-   <tr></p>
-<pre><code> &lt;td&gt;-&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;rule&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;width&lt;/code&gt;&lt;/td&gt;
-</code></pre>
-<p>   </tr>
-   <tr></p>
-<pre><code> &lt;td&gt;-&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;whatsit&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;pdf\_colorstack&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;Reset color&lt;/td&gt;
-</code></pre>
-<p>   </tr>
- </tbody>
- </table>
+<p><strong>Node list</strong></p>
+
+
+<table>
+<thead>
+  <tr>
+    <th>-</th>
+    <th><code>whatsit</code></th>
+    <th><code>pdf\_colorstack</code></th>
+    <th>Line color</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>-</td>
+    <td><code>rule</code></td>
+    <td></td>
+    <td><code>width</code></td>
+  </tr>
+  <tr>
+    <td>-</td>
+    <td><code>whatsit</code></td>
+    <td><code>pdf\_colorstack</code></td>
+    <td>Reset color</td>
+  </tr>
+</tbody>
+</table>
+
+
 
 
 
@@ -790,14 +801,14 @@
     </dt>
     <dd>
     This function creates a line which stretchs indefinitely in the
- horizontal direction.
+horizontal direction.
 
 
 
     <h3>Returns:</h3>
     <ol>
 
-        Node
+        GlueNode
     </ol>
 
 
@@ -810,7 +821,7 @@
     </dt>
     <dd>
     Surround a indefinitely strechable line with color whatsits and puts
-  it to TeX’s ‘current (node) list’ (write).
+it to TeX’s ‘current (node) list’ (write).
 
 
 
@@ -837,7 +848,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        Node
+        KernNode
     </ol>
 
 
@@ -850,10 +861,10 @@
     </dt>
     <dd>
     Add at the beginning of each <code>hlist</code> node list a strut (a invisible
-  character). </p>
+character). </p>
 
-<p> Now we can add line, color etc. nodes after the first node of a hlist
- not before - after is much more easier.
+<p>Now we can add line, color etc. nodes after the first node of a hlist
+not before - after is much more easier.
 
 
     <h3>Parameters:</h3>
@@ -883,7 +894,7 @@
     </dt>
     <dd>
     Write a kern node to the current node list.  This kern node can be
-  used to build a margin.
+used to build a margin.
 
 
 
@@ -898,7 +909,7 @@
     </dt>
     <dd>
     Search for a <code>hlist</code> (subtype <code>line</code>) and nsert a strut node into
- the list if a hlist is found.
+the list if a hlist is found.
 
 
     <h3>Parameters:</h3>
@@ -929,13 +940,15 @@
 
 
 
-<p> The table <a href="index.html#registry">registry</a> bundles functions that deal with the option
- handling.</p>
+<p>The table <a href="index.html#registry">registry</a> bundles functions that deal with the option
+handling.</p>
 
-<p> <h2>Marker processing (marker)</h2></p>
 
-<p> A marker is a whatsit node of the subtype <code>user_defined</code>. A marker
- has two purposes:</p>
+<h2>Marker processing (marker)</h2>
+
+
+<p>A marker is a whatsit node of the subtype <code>user_defined</code>. A marker
+has two purposes:</p>
 
 <ul>
     <li>Mark the begin and the end of a gap.</li>
@@ -952,11 +965,11 @@
     </dt>
     <dd>
     We create a user defined whatsit node that can store a number (type
-  = 100). </p>
+ = 100). </p>
 
-<p> In order to distinguish this node from other user defined whatsit
- nodes we set the <a href="index.html#registry.user_id">user_id</a> to a large number. We call this whatsit
- node a marker.
+<p>In order to distinguish this node from other user defined whatsit
+nodes we set the <a href="index.html#registry.user_id">user_id</a> to a large number. We call this whatsit
+node a marker.
 
 
     <h3>Parameters:</h3>
@@ -969,7 +982,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        WhatsitNode
+        UserDefinedWhatsitNode
     </ol>
 
 
@@ -987,10 +1000,10 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">mode</span>
-         'basic'|'fix'|'par' # The argument <code>mode</code> accepts the string values <code>basic</code>, <code>fix</code> and <code>par</code>. The argument <code>position</code>.
+         MarkerMode
         </li>
         <li><span class="parameter">position</span>
-         'start'|'stop' # The argument <code>position</code> is either set to <code>start</code> or to <code>stop</code>.
+         MarkerPosition
         </li>
     </ul>
 
@@ -1004,13 +1017,13 @@
     <strong>registry.is_marker (item)</strong>
     </dt>
     <dd>
-    This functions checks if the given node <code>item</code> is a marker.
+    Check if the given node is a marker.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">item</span>
-         WhatsitNode
+         Node
         </li>
     </ul>
 
@@ -1038,13 +1051,18 @@
          Node # The current node.
         </li>
         <li><span class="parameter">mode</span>
-         'basic'|'fix'|'par' # The argument <code>mode</code> accepts the string values <code>basic</code>, <code>fix</code> and <code>par</code>.
+         MarkerMode
         </li>
         <li><span class="parameter">position</span>
-         'start'|'stop' # The argument <code>position</code> is either set to <code>start</code> or to <code>stop</code>.
+         MarkerPosition
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
 
 
 
@@ -1064,10 +1082,10 @@
          Node # The current node.
         </li>
         <li><span class="parameter">mode</span>
-         'basic'|'fix'|'par' # The argument <code>mode</code> accepts the string values <code>basic</code>, <code>fix</code> and <code>par</code>.
+         MarkerMode
         </li>
         <li><span class="parameter">position</span>
-         'start'|'stop' # The argument <code>position</code> is either set to <code>start</code> or to <code>stop</code>.
+         MarkerPosition
         </li>
     </ul>
 
@@ -1087,13 +1105,13 @@
     </dt>
     <dd>
     Test whether the node <code>item</code> is a marker and retrieve the
- the corresponding registry data.
+the corresponding registry data.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">item</span>
-         WhatsitNode # The argument <code>item</code> is a node of unspecified type.
+         UserDefinedWhatsitNode # The argument <code>item</code> is a node of unspecified type.
         </li>
     </ul>
 
@@ -1113,19 +1131,22 @@
     </dt>
     <dd>
     First this function saves the associatied values of a marker to the
- local options table.  Second it returns this values. The argument
- <code>marker</code> is a whatsit node.
+local options table.  Second it returns this values. The argument
+<code>marker</code> is a whatsit node.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">marker</span>
-
-
-
+         UserDefinedWhatsitNode
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+        unknown
+    </ol>
 
 
 
@@ -1138,15 +1159,13 @@
     <dd>
     This function removes a given whatsit marker. </p>
 
-<p> It only deletes a node, if a marker is given.
+<p>It only deletes a node, if a marker is given.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">marker</span>
-
-
-
+         Node
         </li>
     </ul>
 
@@ -1168,15 +1187,14 @@
     </dt>
     <dd>
     <code>registry.index</code> is a counter.  The functions <code>registry.get_index()</code>
- increases the counter by one and then returns it.
+increases the counter by one and then returns it.
 
 
 
     <h3>Returns:</h3>
     <ol>
 
-        integer # The index number of the corresponding table in
-   <a href="index.html#registry.storage">registry.storage</a>.
+        integer # The index number of the corresponding table in <a href="index.html#registry.storage">registry.storage</a>.
     </ol>
 
 
@@ -1189,19 +1207,19 @@
     </dt>
     <dd>
     <code>registry.set_storage()</code> stores the local options in the Lua table
-  <a href="index.html#registry.storage">registry.storage</a>. </p>
+ <a href="index.html#registry.storage">registry.storage</a>. </p>
 
-<p> It returns a numeric index number. This index number is the key,
- where the local options in the Lua table are stored.
+<p>It returns a numeric index number. This index number is the key,
+where the local options in the Lua table are stored.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">mode</span>
-         'basic'|'fix'|'par' # The argument <code>mode</code> accepts the string values <code>basic</code>, <code>fix</code> and <code>par</code>.
+         MarkerMode
         </li>
         <li><span class="parameter">position</span>
-         'start'|'stop' # The argument <code>position</code> is either set to <code>start</code> or to <code>stop</code>.
+         MarkerPosition
         </li>
     </ul>
 
@@ -1209,7 +1227,7 @@
     <ol>
 
         number # The index number of the corresponding table in
-   <a href="index.html#registry.storage">registry.storage</a>.
+  <a href="index.html#registry.storage">registry.storage</a>.
     </ol>
 
 
@@ -1222,20 +1240,21 @@
     </dt>
     <dd>
     The function <code>registry.get_storage()</code> retrieves values which belong
-  to a whatsit marker. </p>
-
-<p> The argument <code>index</code> is a numeric value.
+ to a whatsit marker.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">index</span>
-
-
-
+         integer # The argument <code>index</code> is a numeric value.
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+        Marker value
+    </ol>
 
 
 
@@ -1247,11 +1266,11 @@
     </dt>
     <dd>
     This function stores a value <code>value</code> and his associated key <code>key</code>
-  either to the global (<a href="index.html#registry.global_options">registry.global_options</a>) or to the local
-  (<a href="index.html#registry.local_options">registry.local_options</a>) option table. </p>
+ either to the global (<a href="index.html#registry.global_options">registry.global_options</a>) or to the local
+ (<a href="index.html#registry.local_options">registry.local_options</a>) option table. </p>
 
-<p> The global boolean variable <a href="index.html#registry.local_options">registry.local_options</a> controls in
- which table the values are stored.
+<p>The global boolean variable <a href="index.html#registry.local_options">registry.local_options</a> controls in
+which table the values are stored.
 
 
     <h3>Parameters:</h3>
@@ -1323,8 +1342,8 @@
     </dt>
     <dd>
     Retrieve a value from a given key.  First search for the value in the
- local options, then in the global options. If both option storages are
- empty, the default value will be returned.
+local options, then in the global options. If both option storages are
+empty, the default value will be returned.
 
 
     <h3>Parameters:</h3>
@@ -1350,9 +1369,9 @@
     </dt>
     <dd>
     The function <code>registry.get_value_show()</code> returns the boolean value
- <code>true</code> if the option <code>show</code> is true.  In contrast to the function
- <code>registry.get_value()</code> it converts the string value `true' to a
- boolean value.
+<code>true</code> if the option <code>show</code> is true.  In contrast to the function
+<code>registry.get_value()</code> it converts the string value `true' to a
+boolean value.
 
 
 
@@ -1372,7 +1391,7 @@
     </dt>
     <dd>
     This function tests whether the value <code>value</code> is not empty and has a
- value.
+value.
 
 
     <h3>Parameters:</h3>
@@ -1417,6 +1436,31 @@
 
 
 </dd>
+    <dt>
+    <a name = "parse_options"></a>
+    <strong>parse_options (kv_string, to_global)</strong>
+    </dt>
+    <dd>
+
+
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">kv_string</span>
+         string
+        </li>
+        <li><span class="parameter">to_global</span>
+        ? boolean
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
 </dl>
     <h2 class="section-header "><a name="Assembly_to_cloze_texts"></a>Assembly to cloze texts </h2>
 
@@ -1428,9 +1472,9 @@
     <dd>
     Assemble a possibly multiline cloze. </p>
 
-<p> The corresponding LaTeX command to this Lua function is <code>\cloze</code>.
-  This function is used by other cloze TeX macros too: <code>\clozenol</code>,
- <code>\clozefil</code>
+<p>The corresponding LaTeX command to this Lua function is <code>\cloze</code>.
+This function is used by other cloze TeX macros too: <code>\clozenol</code>,
+<code>\clozefil</code>
 
 
     <h3>Parameters:</h3>
@@ -1456,8 +1500,8 @@
     </dt>
     <dd>
     The function <code>make_single()</code> makes one gap.  The argument
-  <code>start_node</code> is the node where the gap begins. The argument
-  <code>stop_node</code> is the node where the gap ends.
+<code>start_node</code> is the node where the gap begins. The argument
+<code>stop_node</code> is the node where the gap ends.
 
 
     <h3>Parameters:</h3>
@@ -1476,7 +1520,7 @@
     <h3>Returns:</h3>
     <ol>
         <li>
-        Node stop_node # The stop node.</li>
+        Node|nil stop_node # The stop node.</li>
         <li>
         HlistNode parent_node # The parent node (hlist) of the stop node.</li>
     </ol>
@@ -1491,7 +1535,7 @@
     </dt>
     <dd>
     Search for a stop marker or make a cloze up to the end of the node
- list.
+list.
 
 
     <h3>Parameters:</h3>
@@ -1598,102 +1642,95 @@
     <dd>
     The function <a href="index.html#make_single">make_single</a> generates a gap of fixed width. </p>
 
-<p> <strong>Node lists</strong></p>
+<p><strong>Node lists</strong></p>
 
-<p> <strong>Show text:</strong></p>
+<p><strong>Show text:</strong></p>
 
-<p> <table>
- <tbody>
-   <tr></p>
-<pre><code> &lt;td&gt;&lt;code&gt;start\_node&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;whatsit&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;user\_definded&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;index&lt;/code&gt;&lt;/td&gt;
-</code></pre>
-<p>   </tr>
-   <tr></p>
-<pre><code> &lt;td&gt;&lt;code&gt;line\_node&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;rule&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;width&lt;/code&gt;&lt;/td&gt;
-</code></pre>
-<p>   </tr>
-   <tr></p>
-<pre><code> &lt;td&gt;&lt;code&gt;kern\_start\_node&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;kern&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&amp;amp; Depends on &lt;code&gt;align&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;/td&gt;
-</code></pre>
-<p>   </tr>
-   <tr></p>
-<pre><code> &lt;td&gt;&lt;code&gt;color\_text\_node&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;whatsit&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;pdf\_colorstack&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;Text color&lt;/td&gt;
-</code></pre>
-<p>   </tr>
-   <tr></p>
-<pre><code> &lt;td&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;glyphs&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&amp;amp; Text to show&lt;/td&gt;
- &lt;td&gt;&lt;/td&gt;
-</code></pre>
-<p>   </tr>
-   <tr></p>
-<pre><code> &lt;td&gt;&lt;code&gt;color\_reset\_node&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;whatsit&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;pdf\_colorstack&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;Reset color&lt;/td&gt;
-</code></pre>
-<p>   </tr>
-   <tr></p>
-<pre><code> &lt;td&gt;&lt;code&gt;kern\_stop\_node&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;kern&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&amp;amp; Depends on &lt;code&gt;align&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;/td&gt;
-</code></pre>
-<p>   </tr>
-   <tr></p>
-<pre><code> &lt;td&gt;&lt;code&gt;stop\_node&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;whatsit&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;user\_definded&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;index&lt;/code&gt;&lt;/td&gt;
-</code></pre>
-<p>   </tr>
- </tbody>
- </table></p>
 
-<p> <strong>Hide text:</strong></p>
+<table>
+<tbody>
+  <tr>
+    <td><code>start\_node</code></td>
+    <td><code>whatsit</code></td>
+    <td><code>user\_definded</code></td>
+    <td><code>index</code></td>
+  </tr>
+  <tr>
+    <td><code>line\_node</code></td>
+    <td><code>rule</code></td>
+    <td></td>
+    <td><code>width</code></td>
+  </tr>
+  <tr>
+    <td><code>kern\_start\_node</code></td>
+    <td><code>kern</code></td>
+    <td>&amp; Depends on <code>align</code></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><code>color\_text\_node</code></td>
+    <td><code>whatsit</code></td>
+    <td><code>pdf\_colorstack</code></td>
+    <td>Text color</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><code>glyphs</code></td>
+    <td>&amp; Text to show</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><code>color\_reset\_node</code></td>
+    <td><code>whatsit</code></td>
+    <td><code>pdf\_colorstack</code></td>
+    <td>Reset color</td>
+  </tr>
+  <tr>
+    <td><code>kern\_stop\_node</code></td>
+    <td><code>kern</code></td>
+    <td>&amp; Depends on <code>align</code></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><code>stop\_node</code></td>
+    <td><code>whatsit</code></td>
+    <td><code>user\_definded</code></td>
+    <td><code>index</code></td>
+  </tr>
+</tbody>
+</table>
 
-<p> <table>
- <thead>
-   <tr></p>
-<pre><code> &lt;th&gt;&lt;code&gt;start\_node&lt;/code&gt;&lt;/th&gt;
- &lt;th&gt;&lt;code&gt;whatsit&lt;/code&gt;&lt;/th&gt;
- &lt;th&gt;&lt;code&gt;user\_definded&lt;/code&gt;&lt;/th&gt;
- &lt;th&gt;&lt;code&gt;index&lt;/code&gt;&lt;/th&gt;
-</code></pre>
-<p>   </tr>
- </thead>
- <tbody>
-   <tr></p>
-<pre><code> &lt;td&gt;&lt;code&gt;line\_node&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;rule&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;width&lt;/code&gt;&lt;/td&gt;
-</code></pre>
-<p>   </tr>
-   <tr></p>
-<pre><code> &lt;td&gt;&lt;code&gt;stop\_node&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;whatsit&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;user\_definded&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;index&lt;/code&gt;&lt;/td&gt;
-</code></pre>
-<p>   </tr>
- </tbody>
- </table></p>
 
-<p> Make fixed size cloze.
+<p><strong>Hide text:</strong></p>
+
+
+<table>
+<thead>
+  <tr>
+    <th><code>start\_node</code></th>
+    <th><code>whatsit</code></th>
+    <th><code>user\_definded</code></th>
+    <th><code>index</code></th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><code>line\_node</code></td>
+    <td><code>rule</code></td>
+    <td></td>
+    <td><code>width</code></td>
+  </tr>
+  <tr>
+    <td><code>stop\_node</code></td>
+    <td><code>whatsit</code></td>
+    <td><code>user\_definded</code></td>
+    <td><code>index</code></td>
+  </tr>
+</tbody>
+</table>
+
+
+<p>Make a fixed sized cloze.
 
 
     <h3>Parameters:</h3>
@@ -1736,91 +1773,89 @@
     <strong>make_par (head_node)</strong>
     </dt>
     <dd>
-    The corresponding LaTeX environment to this lua function is
- <code>clozepar</code>. </p>
 
-<p> <strong>Node lists</strong></p>
+<p>The corresponding LaTeX environment to this lua function is
+<code>clozepar</code>. </p>
 
-<p> <strong>Show text:</strong></p>
+<p><strong>Node lists</strong></p>
 
-<p> <table>
- <thead>
-   <tr></p>
-<pre><code> &lt;th&gt;&lt;code&gt;strut\_node&lt;/code&gt;&lt;/th&gt;
- &lt;th&gt;&lt;code&gt;kern&lt;/code&gt;&lt;/th&gt;
- &lt;th&gt;&lt;/th&gt;
- &lt;th&gt;width = 0&lt;/th&gt;
-</code></pre>
-<p>   </tr>
- </thead>
- <tbody>
-   <tr></p>
-<pre><code> &lt;td&gt;&lt;code&gt;line\_node&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;rule&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;width&lt;/code&gt; (Width from hlist)&lt;/td&gt;
-</code></pre>
-<p>   </tr>
-   <tr></p>
-<pre><code> &lt;td&gt;&lt;code&gt;kern\_node&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;kern&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;-width&lt;/code&gt;&lt;/td&gt;
-</code></pre>
-<p>   </tr>
-   <tr></p>
-<pre><code> &lt;td&gt;&lt;code&gt;color\_text\_node&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;whatsit&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;pdf\_colorstack&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;Text color&lt;/td&gt;
-</code></pre>
-<p>   </tr>
-   <tr></p>
-<pre><code> &lt;td&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;glyphs&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;/td&gt;
- &lt;td&gt;Text to show&lt;/td&gt;
-</code></pre>
-<p>   </tr>
-   <tr></p>
-<pre><code> &lt;td&gt;&lt;code&gt;tail\_node&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;glyph&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;/td&gt;
- &lt;td&gt;Last glyph in hlist&lt;/td&gt;
-</code></pre>
-<p>   </tr>
-   <tr></p>
-<pre><code> &lt;td&gt;&lt;code&gt;color\_reset\_node&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;whatsit&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;pdf\_colorstack&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;Reset color&lt;/td&gt;
-</code></pre>
-<p>   </tr>
- </tbody>
- </table></p>
+<p><strong>Show text:</strong></p>
 
-<p> <strong>Hide text:</strong></p>
 
-<p> <table>
- <thead>
-   <tr></p>
-<pre><code> &lt;th&gt;&lt;code&gt;strut\_node&lt;/code&gt;&lt;/th&gt;
- &lt;th&gt;&lt;code&gt;kern&lt;/code&gt;&lt;/th&gt;
- &lt;th&gt;&lt;/th&gt;
- &lt;th&gt;width = 0&lt;/th&gt;
-</code></pre>
-<p>   </tr>
- </thead>
- <tbody>
-   <tr></p>
-<pre><code> &lt;td&gt;&lt;code&gt;line\_node&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;rule&lt;/code&gt;&lt;/td&gt;
- &lt;td&gt;&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;width&lt;/code&gt; (Width from hlist)&lt;/td&gt;
-</code></pre>
-<p>   </tr>
- </tbody>
- </table>
+<table>
+<thead>
+  <tr>
+    <th><code>strut\_node</code></th>
+    <th><code>kern</code></th>
+    <th></th>
+    <th>width = 0</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><code>line\_node</code></td>
+    <td><code>rule</code></td>
+    <td></td>
+    <td><code>width</code> (Width from hlist)</td>
+  </tr>
+  <tr>
+    <td><code>kern\_node</code></td>
+    <td><code>kern</code></td>
+    <td></td>
+    <td><code>-width</code></td>
+  </tr>
+  <tr>
+    <td><code>color\_text\_node</code></td>
+    <td><code>whatsit</code></td>
+    <td><code>pdf\_colorstack</code></td>
+    <td>Text color</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><code>glyphs</code></td>
+    <td></td>
+    <td>Text to show</td>
+  </tr>
+  <tr>
+    <td><code>tail\_node</code></td>
+    <td><code>glyph</code></td>
+    <td></td>
+    <td>Last glyph in hlist</td>
+  </tr>
+  <tr>
+    <td><code>color\_reset\_node</code></td>
+    <td><code>whatsit</code></td>
+    <td><code>pdf\_colorstack</code></td>
+    <td>Reset color</td>
+  </tr>
+</tbody>
+</table>
+
+
+<p><strong>Hide text:</strong></p>
+
+
+<table>
+<thead>
+  <tr>
+    <th><code>strut\_node</code></th>
+    <th><code>kern</code></th>
+    <th></th>
+    <th>width = 0</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><code>line\_node</code></td>
+    <td><code>rule</code></td>
+    <td></td>
+    <td><code>width</code> (Width from hlist)</td>
+  </tr>
+</tbody>
+</table>
+
+
+
 
 
     <h3>Parameters:</h3>
@@ -1891,7 +1926,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">callback_name</span>
-         string # The name of a callback
+         CallbackName # The name of a callback
         </li>
         <li><span class="parameter">func</span>
          function # A function to register for the callback
@@ -1919,7 +1954,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">callback_name</span>
-         string # The name of a callback
+         CallbackName # The name of a callback
         </li>
         <li><span class="parameter">description</span>
          string # Only used in LuaLatex
@@ -1935,8 +1970,8 @@
     <h2 class="section-header has-description"><a name="Exported_functions"></a>Exported functions </h2>
 
           <div class="section-description">
-           The <a href="index.html#export">export</a> table contains functions which are published to the
- <code>cloze.lua</code> and <code>cloze.sty</code> file.
+          The <a href="index.html#export">export</a> table contains functions which are published to the
+<code>cloze.lua</code> and <code>cloze.sty</code> file.
           </div>
     <dl class="function">
     <dt>
@@ -1945,7 +1980,7 @@
     </dt>
     <dd>
     The <a href="index.html#export">export</a> table contains some basic functions.  <a href="index.html#export">export</a> is the
- only table of this Lua module that will be exported.
+only table of this Lua module that will be exported.
 
 
 
@@ -1960,14 +1995,14 @@
     </dt>
     <dd>
     Store informations if the callbacks are already registered for
- a certain mode (<code>basic</code>, <code>fix</code>, <code>par</code>). </p>
+a certain mode (<code>basic</code>, <code>fix</code>, <code>par</code>). </p>
 
-<p> <code><pre>
- is_registered = {
-   fix = true,
-   basic = false,
-   par = false,
- }</pre></code>
+<p><code><pre>
+is_registered = {
+  fix = true,
+  basic = false,
+  par = false,
+}</pre></code>
 
 
 
@@ -1982,26 +2017,29 @@
     </dt>
     <dd>
     This function registers the functions <a href="index.html#make_par">make_par</a>, <a href="index.html#make_basic">make_basic</a> and
-  <a href="index.html#make_fix">make_fix</a> the Lua callbacks. </p>
+<a href="index.html#make_fix">make_fix</a> the Lua callbacks. </p>
 
-<p> <a href="index.html#make_par">make_par</a> and <a href="index.html#make_basic">make_basic</a> are registered to the callback
- <code>post_linebreak_filter</code> and <a href="index.html#make_fix">make_fix</a> to the callback
- <code>pre_linebreak_filter</code>. The argument <code>mode</code> accepts the string values
- <code>basic</code>, <code>fix</code> and <code>par</code>. A special treatment is needed for clozes in
- display math mode. The <code>post_linebreak_filter</code> is not called on
- display math formulas. I’m not sure if the <code>pre_output_filter</code> is the
- right choice to capture the display math formulas.
+<p><a href="index.html#make_par">make_par</a> and <a href="index.html#make_basic">make_basic</a> are registered to the callback
+<code>post_linebreak_filter</code> and <a href="index.html#make_fix">make_fix</a> to the callback
+<code>pre_linebreak_filter</code>. The argument <code>mode</code> accepts the string values
+<code>basic</code>, <code>fix</code> and <code>par</code>. A special treatment is needed for clozes in
+display math mode. The <code>post_linebreak_filter</code> is not called on
+display math formulas. I’m not sure if the <code>pre_output_filter</code> is the
+right choice to capture the display math formulas.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">mode</span>
-
-
-
+         MarkerMode
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean|nil
+    </ol>
 
 
 
@@ -2018,8 +2056,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">mode</span>
-         string # The argument <code>mode</code> accepts the string values
- <code>basic</code>, <code>fix</code> and <code>par</code>.
+         MarkerMode
         </li>
     </ul>
 
@@ -2034,7 +2071,7 @@
     </dt>
     <dd>
     Variable that can be used to store the previous fbox rule thickness
-  to be able to restore the previous thickness.
+ to be able to restore the previous thickness.
 
 
 
@@ -2050,7 +2087,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-12-27 12:05:26 </i>
+<i style="float:right;">Last updated 2023-01-02 17:46:49 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
