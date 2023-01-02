@@ -28,8 +28,7 @@ modules['cloze'] = {
 
 local luakeys = require('luakeys')()
 
----`nodex` is a abbreviation for __node eXtended__.
-local nodex = {}
+local farbe = require('farbe')
 
 ---All values and functions, which are related to the option
 ---management, are stored in a table called `registry`.
@@ -64,16 +63,13 @@ registry.storage = {}
 ---@field boxwidth? string
 ---@field distance? string
 ---@field hide? boolean
----@field linecolor_name? string
 ---@field linecolor? string
 ---@field margin? string
 ---@field minlines? integer
----@field resetcolor_name? string
 ---@field resetcolor? string
 ---@field show_text? boolean
 ---@field show? boolean
 ---@field spacing? number
----@field textcolor_name? string
 ---@field textcolor? string
 ---@field thickness? string
 ---@field width? string
@@ -86,17 +82,13 @@ registry.defaults = {
   ['boxwidth'] = '\\linewidth',
   ['distance'] = '1.5pt',
   ['hide'] = false,
-  ['linecolor_name'] = 'black',
-  ['linecolor'] = '0 0 0 rg 0 0 0 RG', -- black
+  ['linecolor'] = farbe.Color('black'),
   ['margin'] = '3pt',
   ['minlines'] = 0,
-  ['resetcolor_name'] = 'black',
-  ['resetcolor'] = '0 0 0 rg 0 0 0 RG', -- black
   ['show_text'] = true,
   ['show'] = true,
   ['spacing'] = '1.6',
-  ['textcolor_name'] = 'blue', -- blue
-  ['textcolor'] = '0 0 1 rg 0 0 1 RG', -- blue
+  ['textcolor'] = farbe.Color('blue'),
   ['thickness'] = '0.4pt',
   ['width'] = '2cm',
 }
@@ -115,41 +107,23 @@ local utils = (function()
 
   ---__Color handling (color)__
 
-  ---Create a whatsit node of the subtype `pdf_colorstack`.
-  ---
-  ---@param data? string # `data` is a PDF colorstack string like `0 0 0 rg 0 0 0 RG`.
-  ---
-  ---@return PdfColorstackWhatsitNode
-  local function create_colorstack(data)
-    if not data then
-      data = '0 0 0 rg 0 0 0 RG' -- black
-    end
-    local whatsit = node.new('whatsit', 'pdf_colorstack') --[[@as PdfColorstackWhatsitNode]]
-    whatsit.stack = 0
-    whatsit.data = data
-    return whatsit
-  end
-
   ---
   ---`utils.create_color()` is a wrapper for the function
   ---`utils.create_colorstack()`. It queries the current values of the
   ---options `linecolor` and `textcolor`.
   ---
-  ---@param option 'line'|'text'|'reset' # The argument `option` accepts the strings `line`, `text` and `reset`.
+  ---@param kind 'line'|'text'
+  ---@param command 'push'|'pop'
   ---
   ---@return PdfColorstackWhatsitNode
-  local function create_color(option)
-    local data
-    if option == 'line' then
-      data = registry.get_value('linecolor')
-    elseif option == 'text' then
-      data = registry.get_value('textcolor')
-    elseif option == 'reset' then
-      data = nil
+  local function create_color(kind, command)
+    local color
+    if kind == 'line' then
+      color = registry.get_value('linecolor')
     else
-      data = nil
+      color = registry.get_value('textcolor')
     end
-    return create_colorstack(data)
+    return color:create_pdf_colorstack_node(command)
   end
 
   ---__Line handling (line)__
@@ -209,9 +183,9 @@ local utils = (function()
   ---@return Node
   local function insert_line(current, width)
     return insert_list('after', current, {
-      create_color('line'),
+      create_color('line', 'push'),
       create_line(width),
-      create_color('reset'),
+      create_color('line', 'pop'),
     })
   end
 
@@ -225,9 +199,9 @@ local utils = (function()
   ---__Node list__: `whatsit:pdf_colorstack` (line_color) - `rule` (width) - `whatsit:pdf_colorstack` (reset_color)
   ---
   local function write_line_nodes()
-    node.write(create_color('line'))
+    node.write(create_color('line', 'push'))
     node.write(create_line(tex.sp(registry.get_value('width'))))
-    node.write(create_color('reset'))
+    node.write(create_color('line', 'pop'))
   end
 
   ---__Handling of extendable lines (linefil)__
@@ -251,9 +225,9 @@ local utils = (function()
   ---Surround a indefinitely strechable line with color whatsits and puts
   ---it to TeX’s ‘current (node) list’ (write).
   local function write_linefil_nodes()
-    node.write(create_color('line'))
+    node.write(create_color('line', 'push'))
     node.write(create_linefil())
-    node.write(create_color('reset'))
+    node.write(create_color('line', 'pop'))
   end
 
   ---
@@ -688,9 +662,7 @@ local function parse_options(kv_string, to_global)
     linecolor = {
       description = 'A color name to colorize the cloze line.',
       process = function(value)
-        -- TODO
-        -- registry.set_option('linecolor', '???')
-        registry.set_option('linecolor_name', value)
+        registry.set_option('linecolor', farbe.Color(value))
       end,
     },
     margin = {
@@ -714,9 +686,7 @@ local function parse_options(kv_string, to_global)
     textcolor = {
       description = 'The color (name) of the cloze text.',
       process = function(value)
-        -- TODO
-        -- registry.set_option('textcolor', '???')
-        registry.set_option('textcolor_name', value)
+        registry.set_option('textcolor', farbe.Color(value))
       end,
     },
     thickness = {
@@ -770,13 +740,13 @@ local function make_basic(head_node_input)
       stop_node)
     local line_node = utils.insert_line(start_node, line_width)
     local color_text_node = utils.insert_list('after', line_node, {
-      utils.create_color('text'),
+      utils.create_color('text', 'push'),
     })
     if registry.get_value_show() then
       utils.insert_list('after', color_text_node,
         { utils.create_kern_node(-line_width) })
       utils.insert_list('before', stop_node,
-        { utils.create_color('reset') }, node_head)
+        { utils.create_color('text', 'pop') }, node_head)
     else
       line_node.next = stop_node.next
       stop_node.prev = line_node -- not line_node.prev -> line color leaks out
@@ -992,10 +962,10 @@ local function make_fix(head_node_input)
       utils.insert_list('after', line_node,
         {
           utils.create_kern_node(kern_start_length),
-          utils.create_color('text'),
+          utils.create_color('text', 'push'),
         })
       utils.insert_list('before', stop, {
-        utils.create_color('reset'),
+        utils.create_color('text', 'pop'),
         utils.create_kern_node(kern_stop_length),
       }, start)
     else
@@ -1189,10 +1159,10 @@ local function make_par(head_node)
       if registry.get_value_show() then
         utils.insert_list('after', line_node, {
           utils.create_kern_node(-width),
-          utils.create_color('text'),
+          utils.create_color('text', 'push'),
         })
         utils.insert_list('after', node.tail(head_node),
-          { utils.create_color('reset') })
+          { utils.create_color('text', 'pop') })
       else
         line_node.next = nil
       end
