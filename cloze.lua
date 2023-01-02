@@ -201,32 +201,7 @@ local utils = (function()
   ---The first colorstack node colors the line, the second resets the
   ---color.
   ---
-  ---__Node list__
-  ---
-  ---<table>
-  ---<thead>
-  ---  <tr>
-  ---    <th>`color_line_node`</th>
-  ---    <th>`whatsit`</th>
-  ---    <th>`pdf_colorstack`</th>
-  ---    <th>Line color</th>
-  ---  </tr>
-  ---</thead>
-  ---<tbody>
-  ---  <tr>
-  ---    <td>`line_node`</td>
-  ---    <td>`rule`</td>
-  ---    <td></td>
-  ---    <td>`width`</td>
-  ---  </tr>
-  ---  <tr>
-  ---    <td>`color_reset_node`</td>
-  ---    <td>`whatsit`</td>
-  ---    <td>`pdf_colorstack`</td>
-  ---    <td>Reset color</td>
-  ---  </tr>
-  ---</tbody>
-  ---</table>
+  ---__Node list__: `whatsit:pdf_colorstack` (line_color) - `rule` (width) - `whatsit:pdf_colorstack` (reset_color)
   ---
   ---@param current Node
   ---@param width number
@@ -240,38 +215,15 @@ local utils = (function()
     })
   end
 
-  ---This function enclozes a rule node with color nodes as it the
-  ---function `utils.insert_line` does. In contrast to
-  ---`utils.insert_line` the three nodes are appended to TeX’s ‘current
-  ---list’. They are not inserted in a node list, which is accessed by a
-  ---Lua callback.
+  ---Encloze a rule node with color nodes as the function
+  --`utils.insert_line` does.
   ---
-  ---__Node list__
+  ---In contrast to -`utils.insert_line` the three nodes are appended to
+  ---TeX’s ‘current-list’. They are not inserted in a node list, which
+  ---is accessed by a Lua callback.
   ---
-  ---<table>
-  ---<thead>
-  ---  <tr>
-  ---    <th>-</th>
-  ---    <th>`whatsit`</th>
-  ---    <th>`pdf_colorstack`</th>
-  ---    <th>Line color</th>
-  ---  </tr>
-  ---</thead>
-  ---<tbody>
-  ---  <tr>
-  ---    <td>-</td>
-  ---    <td>`rule`</td>
-  ---    <td></td>
-  ---    <td>`width`</td>
-  ---  </tr>
-  ---  <tr>
-  ---    <td>-</td>
-  ---    <td>`whatsit`</td>
-  ---    <td>`pdf_colorstack`</td>
-  ---    <td>Reset color</td>
-  ---  </tr>
-  ---</tbody>
-  ---</table>
+  ---__Node list__: `whatsit:pdf_colorstack` (line_color) - `rule` (width) - `whatsit:pdf_colorstack` (reset_color)
+  ---
   local function write_line_nodes()
     node.write(create_color('line'))
     node.write(create_line(tex.sp(registry.get_value('width'))))
@@ -316,6 +268,7 @@ local utils = (function()
     return kern_node
   end
 
+  ---
   ---Add at the beginning of each `hlist` node list a strut (a invisible
   ---character).
   ---
