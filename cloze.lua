@@ -15,7 +15,6 @@
 ---__Initialisation of the function tables__
 ---It is good form to provide some background informations about this Lua
 ---module.
-
 if not modules then
   modules = {}
 end
@@ -57,6 +56,27 @@ registry.user_id = 3121978
 ---  }
 ---}</pre></code>
 registry.storage = {}
+
+---@class Options
+---@field align? 'l'|'r'
+---@field boxheigh? string
+---@field boxrule? string
+---@field boxwidth? string
+---@field distance? string
+---@field hide? boolean
+---@field linecolor_name? string
+---@field linecolor? string
+---@field margin? string
+---@field minlines? integer
+---@field resetcolor_name? string
+---@field resetcolor? string
+---@field show_text? boolean
+---@field show? boolean
+---@field spacing? number
+---@field textcolor_name? string
+---@field textcolor? string
+---@field thickness? string
+---@field width? string
 
 ---The default options.
 registry.defaults = {
@@ -371,51 +391,57 @@ function registry.create_marker(index)
   marker.type = 100 -- number
   marker.user_id = registry.user_id
   marker.value = index
-  node.setproperty(marker, { cloze = 'test' })
+  node.setproperty(marker, { cloze = registry.get_storage(index) })
   return marker
 end
 
 ---Write a marker node to TeX's current node list.
 ---
----@param mode 'basic'|'fix'|'par' # The argument `mode` accepts the string values `basic`, `fix` and `par`. The argument `position`.
----@param position 'start'|'stop' # The argument `position` is either set to `start` or to `stop`.
+---@param mode MarkerMode
+---@param position MarkerPosition
 function registry.write_marker(mode, position)
   local index = registry.set_storage(mode, position)
   local marker = registry.create_marker(index)
   node.write(marker)
 end
 
----This functions checks if the given node `item` is a marker.
+---Check if the given node is a marker.
 ---
----@param item UserDefinedWhatsitNode
+---@param item Node
 ---
 ---@return boolean
 function registry.is_marker(item)
-  if item.id == node.id('whatsit') and item.subtype ==
-    node.subtype('user_defined') and item.user_id == registry.user_id then
+  local n = item --[[@as UserDefinedWhatsitNode]]
+  if n.id == node.id('whatsit') and n.subtype ==
+    node.subtype('user_defined') and n.user_id == registry.user_id then
     return true
   end
   return false
 end
 
+---
 ---This functions tests, whether the given node `item` is a marker.
 ---
 ---@param head_node Node # The current node.
----@param mode 'basic'|'fix'|'par' # The argument `mode` accepts the string values `basic`, `fix` and `par`.
----@param position 'start'|'stop' # The argument `position` is either set to `start` or to `stop`.
+---@param mode MarkerMode
+---@param position MarkerPosition
+---
+---@return boolean
 function registry.check_marker(head_node, mode, position)
-  local data = registry.get_marker_data(head_node --[[@as UserDefinedWhatsitNode]])
+  local data =
+    registry.get_marker_data(head_node --[[@as UserDefinedWhatsitNode]] )
   if data and data.mode == mode and data.position == position then
     return true
   end
   return false
 end
 
+---
 ---`registry.get_marker` returns the given marker.
 ---
 ---@param head_node Node # The current node.
----@param mode 'basic'|'fix'|'par' # The argument `mode` accepts the string values `basic`, `fix` and `par`.
----@param position 'start'|'stop' # The argument `position` is either set to `start` or to `stop`.
+---@param mode MarkerMode
+---@param position MarkerPosition
 ---
 ---@return false|Node # The node if `head_node` is a marker node.
 function registry.get_marker(head_node, mode, position)
@@ -431,6 +457,7 @@ function registry.get_marker(head_node, mode, position)
   return out
 end
 
+---
 ---Test whether the node `item` is a marker and retrieve the
 ---the corresponding registry data.
 ---
@@ -440,24 +467,33 @@ end
 function registry.get_marker_data(item)
   if item.id == node.id('whatsit') and item.subtype ==
     node.subtype('user_defined') and item.user_id == registry.user_id then
-    return registry.get_storage(item.value)
+    return registry.get_storage(item.value --[[@as integer]] )
   else
     return false
   end
 end
 
+---
 ---First this function saves the associatied values of a marker to the
 ---local options table. Second it returns this values. The argument
 ---`marker` is a whatsit node.
+---
+---@param marker UserDefinedWhatsitNode
+---
+---@return unknown
 function registry.get_marker_values(marker)
   local data = registry.get_marker_data(marker)
-  registry.local_options = data.values
-  return data.values
+  if data then
+    registry.local_options = data.local_opts
+    return data.local_opts
+  end
 end
 
 ---This function removes a given whatsit marker.
 ---
 ---It only deletes a node, if a marker is given.
+---
+---@param marker Node
 ---
 ---@return Node|nil head
 ---@return Node|nil current
@@ -472,8 +508,7 @@ end
 ---`registry.index` is a counter. The functions `registry.get_index()`
 ---increases the counter by one and then returns it.
 ---
----@return integer # The index number of the corresponding table in
----  `registry.storage`.
+---@return integer # The index number of the corresponding table in `registry.storage`.
 function registry.get_index()
   if not registry.index then
     registry.index = 0
@@ -482,24 +517,34 @@ function registry.get_index()
   return registry.index
 end
 
+---@alias MarkerMode 'basic'|'fix'|'par' # The argument `mode` accepts the string values `basic`, `fix` and `par`.
+---@alias MarkerPosition 'start'|'stop' # The argument `position` is either set to `start` or to `stop`.
+
+---
+---@class Marker
+---@field mode MarkerMode
+---@field position MarkerPosition
+---@field local_opts any
+
+---
 ---`registry.set_storage()` stores the local options in the Lua table
 --- `registry.storage`.
 ---
 ---It returns a numeric index number. This index number is the key,
 ---where the local options in the Lua table are stored.
 ---
----@param mode 'basic'|'fix'|'par' # The argument `mode` accepts the string values `basic`, `fix` and `par`.
----@param position 'start'|'stop' # The argument `position` is either set to `start` or to `stop`.
+---@param mode MarkerMode
+---@param position MarkerPosition
 ---
 ---@return number # The index number of the corresponding table in
 ---  `registry.storage`.
 function registry.set_storage(mode, position)
   local index = registry.get_index()
-  local data = { ['mode'] = mode, ['position'] = position }
+  local data = { mode = mode, position = position }
   if position == 'start' then
-    data.values = {}
+    data.local_opts = {}
     for key, value in pairs(registry.local_options) do
-      data.values[key] = value
+      data.local_opts[key] = value
     end
   end
   registry.storage[index] = data
@@ -509,7 +554,9 @@ end
 ---The function `registry.get_storage()` retrieves values which belong
 --- to a whatsit marker.
 ---
----The argument `index` is a numeric value.
+---@param index integer # The argument `index` is a numeric value.
+---
+---@return Marker value
 function registry.get_storage(index)
   return registry.storage[index]
 end
@@ -739,8 +786,8 @@ local function make_basic(head_node_input)
   local continue_cloze, search_stop
 
   ---The function `make_single()` makes one gap. The argument
-  --`start_node` is the node where the gap begins. The argument
-  --`stop_node` is the node where the gap ends.
+  ---`start_node` is the node where the gap begins. The argument
+  ---`stop_node` is the node where the gap ends.
   --
   ---@param start_node Node # The node to start / begin a new cloze.
   ---@param stop_node Node # The node to stop / end a new cloze.
@@ -1194,7 +1241,7 @@ local function make_par(head_node)
 end
 
 ---
----@param callback_name string # The name of a callback
+---@param callback_name CallbackName # The name of a callback
 ---@param func function # A function to register for the callback
 ---@param description string # Only used in LuaLatex
 local function register_callback(callback_name,
@@ -1208,7 +1255,7 @@ local function register_callback(callback_name,
 end
 
 ---
----@param callback_name string # The name of a callback
+---@param callback_name CallbackName # The name of a callback
 ---@param description string # Only used in LuaLatex
 local function unregister_callback(callback_name,
   description)
@@ -1242,6 +1289,7 @@ local export = {}
 ---
 export.is_registered = {}
 
+---
 ---This function registers the functions `make_par`, `make_basic` and
 ---`make_fix` the Lua callbacks.
 ---
@@ -1252,6 +1300,10 @@ export.is_registered = {}
 ---display math mode. The `post_linebreak_filter` is not called on
 ---display math formulas. I’m not sure if the `pre_output_filter` is the
 ---right choice to capture the display math formulas.
+---
+---@param mode MarkerMode
+---
+---@return boolean|nil
 function export.register_callback(mode)
   if mode == 'par' then
     register_callback('post_linebreak_filter', make_par, mode)
@@ -1270,10 +1322,10 @@ function export.register_callback(mode)
   end
 end
 
+---
 ---Delete the registered functions from the Lua callbacks.
 ---
----@param mode string # The argument `mode` accepts the string values
----`basic`, `fix` and `par`.
+---@param mode MarkerMode
 function export.unregister_callback(mode)
   if mode == 'basic' then
     unregister_callback('post_linebreak_filter', mode)
