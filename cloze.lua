@@ -141,9 +141,9 @@ end
 ---
 ---@param width number # The argument `width` must have the length unit __scaled points__.
 ---
----@return Node
+---@return RuleNode
 function nodex.create_line(width)
-  local rule = node.new(node.id('rule'))
+  local rule = node.new('rule') --[[@as RuleNode]]
   local thickness = tex.sp(registry.get_value('thickness'))
   local distance = tex.sp(registry.get_value('distance'))
   rule.depth = distance + thickness
@@ -262,9 +262,10 @@ end
 
 ---This function creates a line which stretchs indefinitely in the
 ---horizontal direction.
----@return Node
+---
+---@return GlueNode
 function nodex.create_linefil()
-  local glue = node.new('glue')
+  local glue = node.new('glue') --[[@as GlueNode]]
   glue.subtype = 100
   glue.stretch = 65536
   glue.stretch_order = 3
@@ -288,9 +289,9 @@ end
 ---
 ---@param width number # The argument `width` had to be specified in scaled points.
 ---
----@return Node
+---@return KernNode
 local function create_kern_node(width)
-  local kern_node = node.new(node.id('kern'))
+  local kern_node = node.new('kern') --[[@as KernNode]]
   kern_node.kern = width
   return kern_node
 end
@@ -370,6 +371,7 @@ function registry.create_marker(index)
   marker.type = 100 -- number
   marker.user_id = registry.user_id
   marker.value = index
+  node.setproperty(marker, { cloze = 'test' })
   return marker
 end
 
@@ -744,7 +746,7 @@ local function make_basic(head_node_input)
   ---@param stop_node Node # The node to stop / end a new cloze.
   ---@param parent_node HlistNode # The parent node (hlist) of the start and the stop node.
   ---
-  ---@return Node stop_node # The stop node.
+  ---@return Node|nil stop_node # The stop node.
   ---@return HlistNode parent_node # The parent node (hlist) of the stop node.
   local function make_single(start_node, stop_node, parent_node)
     local node_head = start_node

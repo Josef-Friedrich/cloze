@@ -1,9 +1,12 @@
 {
   "Lua.diagnostics.globals": ["callback", "luatexbase"],
   "files.exclude": {
-    "**/*.DS_Store": true,
+    "**/_minted*": true,
+    "**/*.hd": true,
     "**/*.aux": true,
+    "**/*.DS_Store": true,
     "**/*.fdb_latexmk": true,
+    "**/*.fls": true,
     "**/*.glo": true,
     "**/*.gls": true,
     "**/*.idx": true,
@@ -13,13 +16,11 @@
     "**/*.out": true,
     "**/*.pdf": true,
     "**/*.synctex.gz": true,
-    "**/*.toc": true,
     "**/*.tar.gz": true,
-    "**/cloze/": true,
-    "**/*.fls": true,
-    "build/*": true,
+    "**/*.toc": true,
     "**/build.lua": false,
-    "**/_minted*": true
+    "**/cloze/": true,
+    "build/*": true,
   },
   // https://github.com/sumneko/lua-language-server/wiki/Libraries
   "Lua.workspace.library": [

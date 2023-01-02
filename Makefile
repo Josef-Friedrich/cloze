@@ -54,7 +54,7 @@ test_lualatex: test_lualatex_without_open
 	xdg-open tests-lualatex.pdf > /dev/null 2>&1 &
 
 clean:
-	./clean.sh
+	git clean -d -x --force
 
 ctan:
 	rm -rf $(jobname)

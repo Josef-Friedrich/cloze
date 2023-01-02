@@ -1,8 +1,12 @@
-*.DS_Store
+_minted*
+!build.lua
 *.aux
+*.DS_Store
 *.fdb_latexmk
+*.fls
 *.glo
 *.gls
+*.hd
 *.idx
 *.ilg
 *.ind
@@ -10,11 +14,7 @@
 *.out
 *.pdf
 *.synctex*
-*.toc
 *.tar.gz
-cloze/
-*.fls
+*.toc
 build/*
-!build.lua
-_minted*
-*.hd
+cloze/
