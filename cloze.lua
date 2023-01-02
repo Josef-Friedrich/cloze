@@ -107,258 +107,273 @@ registry.global_options = {}
 ---The local options.
 registry.local_options = {}
 
----Node precessing (nodex)
----@section nodex
+local utils = (function()
 
----All functions in this section are stored in a table called `nodex`.
----`nodex` is a abbreviation for __node eXtended__. The `nodex` table
----bundles all functions, which extend the built-in `node` library.
+  ---All functions in this section are stored in a table called `nodex`.
+  ---`nodex` is a abbreviation for __node eXtended__. The `nodex` table
+  ---bundles all functions, which extend the built-in `node` library.
 
----__Color handling (color)__
+  ---__Color handling (color)__
 
----Create a whatsit node of the subtype `pdf_colorstack`.
----
----@param data? string # `data` is a PDF colorstack string like `0 0 0 rg 0 0 0 RG`.
----
----@return PdfColorstackWhatsitNode
-function nodex.create_colorstack(data)
-  if not data then
-    data = '0 0 0 rg 0 0 0 RG' -- black
+  ---Create a whatsit node of the subtype `pdf_colorstack`.
+  ---
+  ---@param data? string # `data` is a PDF colorstack string like `0 0 0 rg 0 0 0 RG`.
+  ---
+  ---@return PdfColorstackWhatsitNode
+  local function create_colorstack(data)
+    if not data then
+      data = '0 0 0 rg 0 0 0 RG' -- black
+    end
+    local whatsit = node.new('whatsit', 'pdf_colorstack') --[[@as PdfColorstackWhatsitNode]]
+    whatsit.stack = 0
+    whatsit.data = data
+    return whatsit
   end
-  local whatsit = node.new('whatsit', 'pdf_colorstack') --[[@as PdfColorstackWhatsitNode]]
-  whatsit.stack = 0
-  whatsit.data = data
-  return whatsit
-end
 
----
----`nodex.create_color()` is a wrapper for the function
----`nodex.create_colorstack()`. It queries the current values of the
----options `linecolor` and `textcolor`.
----
----@param option 'line'|'text'|'reset' # The argument `option` accepts the strings `line`, `text` and `reset`.
----
----@return PdfColorstackWhatsitNode
-function nodex.create_color(option)
-  local data
-  if option == 'line' then
-    data = registry.get_value('linecolor')
-  elseif option == 'text' then
-    data = registry.get_value('textcolor')
-  elseif option == 'reset' then
-    data = nil
-  else
-    data = nil
+  ---
+  ---`utils.create_color()` is a wrapper for the function
+  ---`utils.create_colorstack()`. It queries the current values of the
+  ---options `linecolor` and `textcolor`.
+  ---
+  ---@param option 'line'|'text'|'reset' # The argument `option` accepts the strings `line`, `text` and `reset`.
+  ---
+  ---@return PdfColorstackWhatsitNode
+  local function create_color(option)
+    local data
+    if option == 'line' then
+      data = registry.get_value('linecolor')
+    elseif option == 'text' then
+      data = registry.get_value('textcolor')
+    elseif option == 'reset' then
+      data = nil
+    else
+      data = nil
+    end
+    return create_colorstack(data)
   end
-  return nodex.create_colorstack(data)
-end
 
----__Line handling (line)__
+  ---__Line handling (line)__
 
----Create a rule node, which is used as a line for the cloze texts. The
----`depth` and the `height` of the rule are calculated form the options
----`thickness` and `distance`.
----
----@param width number # The argument `width` must have the length unit __scaled points__.
----
----@return RuleNode
-function nodex.create_line(width)
-  local rule = node.new('rule') --[[@as RuleNode]]
-  local thickness = tex.sp(registry.get_value('thickness'))
-  local distance = tex.sp(registry.get_value('distance'))
-  rule.depth = distance + thickness
-  rule.height = -distance
-  rule.width = width
-  return rule
-end
-
----Insert a `list` of nodes after or before the `current`. The `head`
----argument is optional. In some edge cases it is unfortately necessary.
----if `head` is omitted the `current` node is used.
----
----@param position 'before'|'after' # The argument `position` can take the values `'after'` or `'before'`.
----@param current Node
----@param list table
----@param head_node? Node
----
----@return Node
-function nodex.insert_list(position, current, list, head_node)
-  if not head_node then
-    head_node = current
+  ---Create a rule node, which is used as a line for the cloze texts. The
+  ---`depth` and the `height` of the rule are calculated form the options
+  ---`thickness` and `distance`.
+  ---
+  ---@param width number # The argument `width` must have the length unit __scaled points__.
+  ---
+  ---@return RuleNode
+  local function create_line(width)
+    local rule = node.new('rule') --[[@as RuleNode]]
+    local thickness = tex.sp(registry.get_value('thickness'))
+    local distance = tex.sp(registry.get_value('distance'))
+    rule.depth = distance + thickness
+    rule.height = -distance
+    rule.width = width
+    return rule
   end
-  for _, insert in ipairs(list) do
-    if position == 'after' then
-      head_node, current = node.insert_after(head_node, current, insert)
-    elseif position == 'before' then
-      head_node, current =
-        node.insert_before(head_node, current, insert)
+
+  ---Insert a `list` of nodes after or before the `current`. The `head`
+  ---argument is optional. In some edge cases it is unfortately necessary.
+  ---if `head` is omitted the `current` node is used.
+  ---
+  ---@param position 'before'|'after' # The argument `position` can take the values `'after'` or `'before'`.
+  ---@param current Node
+  ---@param list table
+  ---@param head_node? Node
+  ---
+  ---@return Node
+  local function insert_list(position, current, list, head_node)
+    if not head_node then
+      head_node = current
+    end
+    for _, insert in ipairs(list) do
+      if position == 'after' then
+        head_node, current = node.insert_after(head_node, current,
+          insert)
+      elseif position == 'before' then
+        head_node, current = node.insert_before(head_node, current,
+          insert)
+      end
+    end
+    return current
+  end
+
+  ---Enclose a rule node (cloze line) with two PDF colorstack whatsits.
+  ---The first colorstack node colors the line, the second resets the
+  ---color.
+  ---
+  ---__Node list__
+  ---
+  ---<table>
+  ---<thead>
+  ---  <tr>
+  ---    <th>`color_line_node`</th>
+  ---    <th>`whatsit`</th>
+  ---    <th>`pdf_colorstack`</th>
+  ---    <th>Line color</th>
+  ---  </tr>
+  ---</thead>
+  ---<tbody>
+  ---  <tr>
+  ---    <td>`line_node`</td>
+  ---    <td>`rule`</td>
+  ---    <td></td>
+  ---    <td>`width`</td>
+  ---  </tr>
+  ---  <tr>
+  ---    <td>`color_reset_node`</td>
+  ---    <td>`whatsit`</td>
+  ---    <td>`pdf_colorstack`</td>
+  ---    <td>Reset color</td>
+  ---  </tr>
+  ---</tbody>
+  ---</table>
+  ---
+  ---@param current Node
+  ---@param width number
+  ---
+  ---@return Node
+  local function insert_line(current, width)
+    return insert_list('after', current, {
+      create_color('line'),
+      create_line(width),
+      create_color('reset'),
+    })
+  end
+
+  ---This function enclozes a rule node with color nodes as it the
+  ---function `utils.insert_line` does. In contrast to
+  ---`utils.insert_line` the three nodes are appended to TeX’s ‘current
+  ---list’. They are not inserted in a node list, which is accessed by a
+  ---Lua callback.
+  ---
+  ---__Node list__
+  ---
+  ---<table>
+  ---<thead>
+  ---  <tr>
+  ---    <th>-</th>
+  ---    <th>`whatsit`</th>
+  ---    <th>`pdf_colorstack`</th>
+  ---    <th>Line color</th>
+  ---  </tr>
+  ---</thead>
+  ---<tbody>
+  ---  <tr>
+  ---    <td>-</td>
+  ---    <td>`rule`</td>
+  ---    <td></td>
+  ---    <td>`width`</td>
+  ---  </tr>
+  ---  <tr>
+  ---    <td>-</td>
+  ---    <td>`whatsit`</td>
+  ---    <td>`pdf_colorstack`</td>
+  ---    <td>Reset color</td>
+  ---  </tr>
+  ---</tbody>
+  ---</table>
+  local function write_line_nodes()
+    node.write(create_color('line'))
+    node.write(create_line(tex.sp(registry.get_value('width'))))
+    node.write(create_color('reset'))
+  end
+
+  ---__Handling of extendable lines (linefil)__
+
+  ---Create a line which stretches indefinitely in the
+  ---horizontal direction.
+  ---
+  ---@return GlueNode
+  local function create_linefil()
+    local glue = node.new('glue') --[[@as GlueNode]]
+    glue.subtype = 100
+    glue.stretch = 65536
+    glue.stretch_order = 3
+    local rule = create_line(0)
+    rule.dir = 'TLT'
+    glue.leader = rule
+    return glue
+  end
+
+  ---
+  ---Surround a indefinitely strechable line with color whatsits and puts
+  ---it to TeX’s ‘current (node) list’ (write).
+  local function write_linefil_nodes()
+    node.write(create_color('line'))
+    node.write(create_linefil())
+    node.write(create_color('reset'))
+  end
+
+  ---
+  ---Create a kern node with a given width.
+  ---
+  ---@param width number # The argument `width` had to be specified in scaled points.
+  ---
+  ---@return KernNode
+  local function create_kern_node(width)
+    local kern_node = node.new('kern') --[[@as KernNode]]
+    kern_node.kern = width
+    return kern_node
+  end
+
+  ---Add at the beginning of each `hlist` node list a strut (a invisible
+  ---character).
+  ---
+  ---Now we can add line, color etc. nodes after the first node of a hlist
+  ---not before - after is much more easier.
+  ---
+  ---@param hlist_node HlistNode
+  ---
+  ---@return HlistNode hlist_node
+  ---@return Node strut_node
+  ---@return Node prev_head_node
+  local function insert_strut_into_hlist(hlist_node)
+    local prev_head_node = hlist_node.head
+    local kern_node = create_kern_node(0)
+    local strut_node = node.insert_before(hlist_node.head,
+      prev_head_node, kern_node)
+    hlist_node.head = prev_head_node.prev
+    return hlist_node, strut_node, prev_head_node
+  end
+
+  ---
+  ---Write a kern node to the current node list. This kern node can be
+  ---used to build a margin.
+  local function write_margin_node()
+    node.write(create_kern_node(tex.sp(registry.get_value('margin'))))
+  end
+
+  ---
+  ---Search for a `hlist` (subtype `line`) and insert a strut node into
+  ---the list if a hlist is found.
+  ---
+  ---@param head_node Node # The head of a node list.
+  ---
+  ---@return HlistNode|nil hlist_node
+  ---@return Node|nil strut_node
+  ---@return Node|nil prev_head_node
+  local function search_hlist(head_node)
+    while head_node do
+      if head_node.id == node.id('hlist') and head_node.subtype == 1 then
+        ---@cast head_node HlistNode
+        return insert_strut_into_hlist(head_node)
+      end
+      head_node = head_node.next
     end
   end
-  return current
-end
 
----Enclose a rule node (cloze line) with two PDF colorstack whatsits.
----The first colorstack node colors the line, the second resets the
----color.
----
----__Node list__
----
----<table>
----<thead>
----  <tr>
----    <th>`color_line_node`</th>
----    <th>`whatsit`</th>
----    <th>`pdf_colorstack`</th>
----    <th>Line color</th>
----  </tr>
----</thead>
----<tbody>
----  <tr>
----    <td>`line_node`</td>
----    <td>`rule`</td>
----    <td></td>
----    <td>`width`</td>
----  </tr>
----  <tr>
----    <td>`color_reset_node`</td>
----    <td>`whatsit`</td>
----    <td>`pdf_colorstack`</td>
----    <td>Reset color</td>
----  </tr>
----</tbody>
----</table>
----
----@param current Node
----@param width number
----
----@return Node
-function nodex.insert_line(current, width)
-  return nodex.insert_list('after', current, {
-    nodex.create_color('line'),
-    nodex.create_line(width),
-    nodex.create_color('reset'),
-  })
-end
-
----This function enclozes a rule node with color nodes as it the
----function `nodex.insert_line` does. In contrast to
----`nodex.insert_line` the three nodes are appended to TeX’s ‘current
----list’. They are not inserted in a node list, which is accessed by a
----Lua callback.
----
----__Node list__
----
----<table>
----<thead>
----  <tr>
----    <th>-</th>
----    <th>`whatsit`</th>
----    <th>`pdf_colorstack`</th>
----    <th>Line color</th>
----  </tr>
----</thead>
----<tbody>
----  <tr>
----    <td>-</td>
----    <td>`rule`</td>
----    <td></td>
----    <td>`width`</td>
----  </tr>
----  <tr>
----    <td>-</td>
----    <td>`whatsit`</td>
----    <td>`pdf_colorstack`</td>
----    <td>Reset color</td>
----  </tr>
----</tbody>
----</table>
-local function write_line_nodes()
-  node.write(nodex.create_color('line'))
-  node.write(nodex.create_line(tex.sp(registry.get_value('width'))))
-  node.write(nodex.create_color('reset'))
-end
-
----__Handling of extendable lines (linefil)__
-
----This function creates a line which stretchs indefinitely in the
----horizontal direction.
----
----@return GlueNode
-function nodex.create_linefil()
-  local glue = node.new('glue') --[[@as GlueNode]]
-  glue.subtype = 100
-  glue.stretch = 65536
-  glue.stretch_order = 3
-  local rule = nodex.create_line(0)
-  rule.dir = 'TLT'
-  glue.leader = rule
-  return glue
-end
-
----Surround a indefinitely strechable line with color whatsits and puts
----it to TeX’s ‘current (node) list’ (write).
-local function write_linefil_nodes()
-  node.write(nodex.create_color('line'))
-  node.write(nodex.create_linefil())
-  node.write(nodex.create_color('reset'))
-end
-
----__Kern handling (kern)__
-
----This function creates a kern node with a given width.
----
----@param width number # The argument `width` had to be specified in scaled points.
----
----@return KernNode
-local function create_kern_node(width)
-  local kern_node = node.new('kern') --[[@as KernNode]]
-  kern_node.kern = width
-  return kern_node
-end
-
----Add at the beginning of each `hlist` node list a strut (a invisible
----character).
----
----Now we can add line, color etc. nodes after the first node of a hlist
----not before - after is much more easier.
----
----@param hlist_node HlistNode
----
----@return HlistNode hlist_node
----@return Node strut_node
----@return Node prev_head_node
-local function insert_strut_into_hlist(hlist_node)
-  local prev_head_node = hlist_node.head
-  local kern_node = create_kern_node(0)
-  local strut_node = node.insert_before(hlist_node.head, prev_head_node,
-    kern_node)
-  hlist_node.head = prev_head_node.prev
-  return hlist_node, strut_node, prev_head_node
-end
-
----Write a kern node to the current node list. This kern node can be
----used to build a margin.
-local function write_margin_node()
-  node.write(create_kern_node(tex.sp(registry.get_value('margin'))))
-end
-
----Search for a `hlist` (subtype `line`) and nsert a strut node into
----the list if a hlist is found.
----
----@param head_node Node # The head of a node list.
----
----@return HlistNode|nil hlist_node
----@return Node|nil strut_node
----@return Node|nil prev_head_node
-local function search_hlist(head_node)
-  while head_node do
-    if head_node.id == node.id('hlist') and head_node.subtype == 1 then
-      ---@cast head_node HlistNode
-      return insert_strut_into_hlist(head_node)
-    end
-    head_node = head_node.next
-  end
-end
+  return {
+    insert_list = insert_list,
+    create_color = create_color,
+    insert_line = insert_line,
+    write_line_nodes = write_line_nodes,
+    write_linefil_nodes = write_linefil_nodes,
+    create_kern_node = create_kern_node,
+    insert_strut_into_hlist = insert_strut_into_hlist,
+    write_margin_node = write_margin_node,
+    search_hlist = search_hlist,
+  }
+end)()
 
 ---Option handling.
 ---
@@ -800,15 +815,15 @@ local function make_basic(head_node_input)
     local line_width = node.dimensions(parent_node.glue_set,
       parent_node.glue_sign, parent_node.glue_order, start_node,
       stop_node)
-    local line_node = nodex.insert_line(start_node, line_width)
-    local color_text_node = nodex.insert_list('after', line_node, {
-      nodex.create_color('text'),
+    local line_node = utils.insert_line(start_node, line_width)
+    local color_text_node = utils.insert_list('after', line_node, {
+      utils.create_color('text'),
     })
     if registry.get_value_show() then
-      nodex.insert_list('after', color_text_node,
-        { create_kern_node(-line_width) })
-      nodex.insert_list('before', stop_node,
-        { nodex.create_color('reset') }, node_head)
+      utils.insert_list('after', color_text_node,
+        { utils.create_kern_node(-line_width) })
+      utils.insert_list('before', stop_node,
+        { utils.create_color('reset') }, node_head)
     else
       line_node.next = stop_node.next
       stop_node.prev = line_node -- not line_node.prev -> line color leaks out
@@ -854,7 +869,7 @@ local function make_basic(head_node_input)
   ---@return Node|nil head_node # The fast forwarded new head of the node list.
   ---@return Node|nil parent_node # The parent node (hlist) of the head node.
   function continue_cloze(parent_node)
-    local hlist_node = search_hlist(parent_node)
+    local hlist_node = utils.search_hlist(parent_node)
     if hlist_node then
       local start_node = hlist_node.head
       return search_stop(start_node, hlist_node)
@@ -876,7 +891,7 @@ local function make_basic(head_node_input)
         parent_node and parent_node.id == node.id('hlist') then
         -- Adds also a strut at the first position. It prepars the
         -- hlist and makes it ready to build a cloze.
-        search_hlist(parent_node)
+        utils.search_hlist(parent_node)
         head_node, parent_node = search_stop(head_node, parent_node)
       end
       if head_node then
@@ -1019,15 +1034,16 @@ local function make_fix(head_node_input)
     local width, kern_start_length, kern_stop_length, line_node
     width, kern_start_length, kern_stop_length =
       calculate_length(start, stop)
-    line_node = nodex.insert_line(start, width)
+    line_node = utils.insert_line(start, width)
     if registry.get_value_show() then
-      nodex.insert_list('after', line_node, {
-        create_kern_node(kern_start_length),
-        nodex.create_color('text'),
-      })
-      nodex.insert_list('before', stop, {
-        nodex.create_color('reset'),
-        create_kern_node(kern_stop_length),
+      utils.insert_list('after', line_node,
+        {
+          utils.create_kern_node(kern_start_length),
+          utils.create_color('text'),
+        })
+      utils.insert_list('before', stop, {
+        utils.create_color('reset'),
+        utils.create_kern_node(kern_stop_length),
       }, start)
     else
       line_node.next = stop.next
@@ -1172,9 +1188,9 @@ local function make_par(head_node)
       end
     end
 
-    local kern_node = create_kern_node(0)
+    local kern_node = utils.create_kern_node(0)
     hlist_node.head = kern_node
-    nodex.insert_line(kern_node, last_hlist_node.width)
+    utils.insert_line(kern_node, last_hlist_node.width)
     last_hlist_node.next = hlist_node
     hlist_node.prev = last_hlist_node
     hlist_node.next = nil
@@ -1214,15 +1230,16 @@ local function make_par(head_node)
       line_count = line_count + 1
       last_hlist_node = hlist_node
       width = hlist_node.width
-      hlist_node, strut_node, _ = insert_strut_into_hlist(hlist_node)
-      line_node = nodex.insert_line(strut_node, width)
+      hlist_node, strut_node, _ = utils.insert_strut_into_hlist(
+        hlist_node)
+      line_node = utils.insert_line(strut_node, width)
       if registry.get_value_show() then
-        nodex.insert_list('after', line_node, {
-          create_kern_node(-width),
-          nodex.create_color('text'),
+        utils.insert_list('after', line_node, {
+          utils.create_kern_node(-width),
+          utils.create_color('text'),
         })
-        nodex.insert_list('after', node.tail(head_node),
-          { nodex.create_color('reset') })
+        utils.insert_list('after', node.tail(head_node),
+          { utils.create_color('reset') })
       else
         line_node.next = nil
       end
@@ -1266,17 +1283,7 @@ local function unregister_callback(callback_name,
   end
 end
 
----Exported functions.
 ---
----The `export` table contains functions which are published to the
----`cloze.lua` and `cloze.sty` file.
----
----@section export
-
----The `export` table contains some basic functions. `export` is the
----only table of this Lua module that will be exported.
-local export = {}
-
 ---Store informations if the callbacks are already registered for
 ---a certain mode (`basic`, `fix`, `par`).
 ---
@@ -1287,71 +1294,72 @@ local export = {}
 ---  par = false,
 ---}</pre></code>
 ---
-export.is_registered = {}
+local is_registered = {}
 
 ---
----This function registers the functions `make_par`, `make_basic` and
----`make_fix` the Lua callbacks.
----
----`make_par` and `make_basic` are registered to the callback
----`post_linebreak_filter` and `make_fix` to the callback
----`pre_linebreak_filter`. The argument `mode` accepts the string values
----`basic`, `fix` and `par`. A special treatment is needed for clozes in
----display math mode. The `post_linebreak_filter` is not called on
----display math formulas. I’m not sure if the `pre_output_filter` is the
----right choice to capture the display math formulas.
----
----@param mode MarkerMode
----
----@return boolean|nil
-function export.register_callback(mode)
-  if mode == 'par' then
-    register_callback('post_linebreak_filter', make_par, mode)
-    return true
-  end
-  if not export.is_registered[mode] then
-    if mode == 'basic' then
-      register_callback('post_linebreak_filter', make_basic, mode)
-      register_callback('pre_output_filter', make_basic, mode)
-    elseif mode == 'fix' then
-      register_callback('pre_linebreak_filter', make_fix, mode)
-    else
-      return false
+---This table contains some basic functions which are published to the
+---`cloze.tex` and `cloze.sty` file.
+return {
+  ---
+  ---This function registers the functions `make_par`, `make_basic` and
+  ---`make_fix` the Lua callbacks.
+  ---
+  ---`make_par` and `make_basic` are registered to the callback
+  ---`post_linebreak_filter` and `make_fix` to the callback
+  ---`pre_linebreak_filter`. The argument `mode` accepts the string values
+  ---`basic`, `fix` and `par`. A special treatment is needed for clozes in
+  ---display math mode. The `post_linebreak_filter` is not called on
+  ---display math formulas. I’m not sure if the `pre_output_filter` is the
+  ---right choice to capture the display math formulas.
+  ---
+  ---@param mode MarkerMode
+  ---
+  ---@return boolean|nil
+  register_callback = function(mode)
+    if mode == 'par' then
+      register_callback('post_linebreak_filter', make_par, mode)
+      return true
     end
-    export.is_registered[mode] = true
-  end
-end
+    if not is_registered[mode] then
+      if mode == 'basic' then
+        register_callback('post_linebreak_filter', make_basic, mode)
+        register_callback('pre_output_filter', make_basic, mode)
+      elseif mode == 'fix' then
+        register_callback('pre_linebreak_filter', make_fix, mode)
+      else
+        return false
+      end
+      is_registered[mode] = true
+    end
+  end,
 
----
----Delete the registered functions from the Lua callbacks.
----
----@param mode MarkerMode
-function export.unregister_callback(mode)
-  if mode == 'basic' then
-    unregister_callback('post_linebreak_filter', mode)
-    unregister_callback('pre_output_filter', mode)
-  elseif mode == 'fix' then
-    unregister_callback('pre_linebreak_filter', mode)
-  else
-    unregister_callback('post_linebreak_filter', mode)
-  end
-end
+  ---
+  ---Delete the registered functions from the Lua callbacks.
+  ---
+  ---@param mode MarkerMode
+  unregister_callback = function(mode)
+    if mode == 'basic' then
+      unregister_callback('post_linebreak_filter', mode)
+      unregister_callback('pre_output_filter', mode)
+    elseif mode == 'fix' then
+      unregister_callback('pre_linebreak_filter', mode)
+    else
+      unregister_callback('post_linebreak_filter', mode)
+    end
+  end,
 
----Export some functions and values.
-
----Variable that can be used to store the previous fbox rule thickness
---- to be able to restore the previous thickness.
-export.fboxrule_restore = nil
-export.write_linefil_nodes = write_linefil_nodes
-export.write_line_nodes = write_line_nodes
-export.write_margin_node = write_margin_node
-export.set_option = registry.set_option
-export.set_is_global = registry.set_is_global
-export.unset_local_options = registry.unset_local_options
-export.reset = registry.unset_global_options
-export.get_defaults = registry.get_defaults
-export.get_value = registry.get_value
-export.marker = registry.write_marker
-export.parse_options = parse_options
-
-return export
+  ---Variable that can be used to store the previous fbox rule thickness
+  --- to be able to restore the previous thickness.
+  fboxrule_restore = nil,
+  write_linefil_nodes = utils.write_linefil_nodes,
+  write_line_nodes = utils.write_line_nodes,
+  write_margin_node = utils.write_margin_node,
+  set_option = registry.set_option,
+  set_is_global = registry.set_is_global,
+  unset_local_options = registry.unset_local_options,
+  reset = registry.unset_global_options,
+  get_defaults = registry.get_defaults,
+  get_value = registry.get_value,
+  marker = registry.write_marker,
+  parse_options = parse_options,
+}
