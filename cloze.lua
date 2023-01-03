@@ -30,74 +30,380 @@ local luakeys = require('luakeys')()
 
 local farbe = require('farbe')
 
+---Option handling.
+---
+---The table `config` bundles functions that deal with the option
+---handling.
+---
+---<h2>Marker processing (marker)</h2>
+---
+---A marker is a whatsit node of the subtype `user_defined`. A marker
+---has two purposes:
+---
+---* Mark the begin and the end of a gap.
+---* Store a index number, that points to a Lua table, which holds some
+---  additional data like the local options.
+---
+---@section config
+
 ---All values and functions, which are related to the option
 ---management, are stored in a table called `config`.
-local config = {}
+local config = (function()
 
----I didn’t know what value I should take as `user_id`. Therefore I
----took my birthday and transformed it into a large number.
-config.user_id = 3121978
+  ---I didn’t know what value I should take as `user_id`. Therefore I
+  ---took my birthday and transformed it into a large number.
+  local user_id = 3121978
 
----Store all local options of the markers.
----
----<code><pre>
----config.storage = {
----  {
----    mode = "basic",
----    position = "start",
----    values = {
----      distance = "3mm"
----    }
----  },
----  {
----    mode = "basic",
----    position = "stop"
----  }
----}</pre></code>
-config.storage = {}
+  ---Store all local options of the markers.
+  ---
+  ---<code><pre>
+  ---storage = {
+  ---  {
+  ---    mode = "basic",
+  ---    position = "start",
+  ---    values = {
+  ---      distance = "3mm"
+  ---    }
+  ---  },
+  ---  {
+  ---    mode = "basic",
+  ---    position = "stop"
+  ---  }
+  ---}</pre></code>
+  local storage = {}
 
----@class Options
----@field align? 'l'|'r'
----@field boxheigh? string
----@field boxrule? string
----@field boxwidth? string
----@field distance? string
----@field hide? boolean
----@field linecolor? string
----@field margin? string
----@field minlines? integer
----@field resetcolor? string
----@field show_text? boolean
----@field show? boolean
----@field spacing? number
----@field textcolor? string
----@field thickness? string
----@field width? string
+  ---@class Options
+  ---@field align? 'l'|'r'
+  ---@field boxheigh? string
+  ---@field boxrule? string
+  ---@field boxwidth? string
+  ---@field distance? string
+  ---@field hide? boolean
+  ---@field linecolor? string
+  ---@field margin? string
+  ---@field minlines? integer
+  ---@field resetcolor? string
+  ---@field show_text? boolean
+  ---@field show? boolean
+  ---@field spacing? number
+  ---@field textcolor? string
+  ---@field thickness? string
+  ---@field width? string
 
----The default options.
-config.defaults = {
-  ['align'] = 'l',
-  ['boxheight'] = false,
-  ['boxrule'] = '0.4pt',
-  ['boxwidth'] = '\\linewidth',
-  ['distance'] = '1.5pt',
-  ['hide'] = false,
-  ['linecolor'] = farbe.Color('black'),
-  ['margin'] = '3pt',
-  ['minlines'] = 0,
-  ['show_text'] = true,
-  ['show'] = true,
-  ['spacing'] = '1.6',
-  ['textcolor'] = farbe.Color('blue'),
-  ['thickness'] = '0.4pt',
-  ['width'] = '2cm',
-}
+  ---The default options.
+  local defaults = {
+    ['align'] = 'l',
+    ['boxheight'] = false,
+    ['boxrule'] = '0.4pt',
+    ['boxwidth'] = '\\linewidth',
+    ['distance'] = '1.5pt',
+    ['hide'] = false,
+    ['linecolor'] = farbe.Color('black'),
+    ['margin'] = '3pt',
+    ['minlines'] = 0,
+    ['show_text'] = true,
+    ['show'] = true,
+    ['spacing'] = '1.6',
+    ['textcolor'] = farbe.Color('blue'),
+    ['thickness'] = '0.4pt',
+    ['width'] = '2cm',
+  }
 
----The global options set by the user.
-config.global_options = {}
+  ---The global options set by the user.
+  local global_options = {}
 
----The local options.
-config.local_options = {}
+  ---The local options.
+  local local_options = {}
+
+  local index
+
+  ---__Storage functions (storage)__
+
+  ---`index` is a counter. The functions `get_index()`
+  ---increases the counter by one and then returns it.
+  ---
+  ---@return integer # The index number of the corresponding table in `storage`.
+  local function get_index()
+    if not index then
+      index = 0
+    end
+    index = index + 1
+    return index
+  end
+
+  ---The function `get_storage()` retrieves values which belong
+  --- to a whatsit marker.
+  ---
+  ---@param index integer # The argument `index` is a numeric value.
+  ---
+  ---@return Marker value
+  local function get_storage(index)
+    return storage[index]
+  end
+
+  ---
+  ---`set_storage()` stores the local options in the Lua table
+  --- `storage`.
+  ---
+  ---It returns a numeric index number. This index number is the key,
+  ---where the local options in the Lua table are stored.
+  ---
+  ---@param mode MarkerMode
+  ---@param position MarkerPosition
+  ---
+  ---@return number # The index number of the corresponding table in
+  ---  `storage`.
+  local function set_storage(mode, position)
+    local index = get_index()
+    local data = { mode = mode, position = position }
+    if position == 'start' then
+      data.local_opts = {}
+      for key, value in pairs(local_options) do
+        data.local_opts[key] = value
+      end
+    end
+    storage[index] = data
+    return index
+  end
+
+  ---We create a user defined whatsit node that can store a number (type
+  --- = 100).
+  ---
+  ---In order to distinguish this node from other user defined whatsit
+  ---nodes we set the `user_id` to a large number. We call this whatsit
+  ---node a marker.
+  ---
+  ---@param index number The argument `index` is a number, which is associated to values in the `storage` table.
+  ---
+  ---@return UserDefinedWhatsitNode
+  local function create_marker(index)
+    local marker = node.new('whatsit', 'user_defined') --[[@as UserDefinedWhatsitNode]]
+    marker.type = 100 -- number
+    marker.user_id = user_id
+    marker.value = index
+    node.setproperty(marker, { cloze = get_storage(index) })
+    return marker
+  end
+
+  ---Write a marker node to TeX's current node list.
+  ---
+  ---@param mode MarkerMode
+  ---@param position MarkerPosition
+  local function write_marker(mode, position)
+    local index = set_storage(mode, position)
+    local marker = create_marker(index)
+    node.write(marker)
+  end
+
+  ---Check if the given node is a marker.
+  ---
+  ---@param item Node
+  ---
+  ---@return boolean
+  local function is_marker(item)
+    local n = item --[[@as UserDefinedWhatsitNode]]
+    if n.id == node.id('whatsit') and n.subtype ==
+      node.subtype('user_defined') and n.user_id == user_id then
+      return true
+    end
+    return false
+  end
+
+  ---
+  ---Test whether the node `item` is a marker and retrieve the
+  ---the corresponding config data.
+  ---
+  ---@param item UserDefinedWhatsitNode # The argument `item` is a node of unspecified type.
+  ---
+  ---@return table|false # The marker data.
+  local function get_marker_data(item)
+    if item.id == node.id('whatsit') and item.subtype ==
+      node.subtype('user_defined') and item.user_id == user_id then
+      return get_storage(item.value --[[@as integer]] )
+    else
+      return false
+    end
+  end
+
+  ---
+  ---This functions tests, whether the given node `item` is a marker.
+  ---
+  ---@param head_node Node # The current node.
+  ---@param mode MarkerMode
+  ---@param position MarkerPosition
+  ---
+  ---@return boolean
+  local function check_marker(head_node, mode, position)
+    local data =
+      get_marker_data(head_node --[[@as UserDefinedWhatsitNode]] )
+    if data and data.mode == mode and data.position == position then
+      return true
+    end
+    return false
+  end
+
+  ---
+  ---First this function saves the associatied values of a marker to the
+  ---local options table. Second it returns this values. The argument
+  ---`marker` is a whatsit node.
+  ---
+  ---@param marker UserDefinedWhatsitNode
+  ---
+  ---@return unknown
+  local function get_marker_values(marker)
+    local data = get_marker_data(marker)
+    if data then
+      local_options = data.local_opts
+      return data.local_opts
+    end
+  end
+
+  ---
+  ---`get_marker` returns the given marker.
+  ---
+  ---@param head_node Node # The current node.
+  ---@param mode MarkerMode
+  ---@param position MarkerPosition
+  ---
+  ---@return false|Node # The node if `head_node` is a marker node.
+  local function get_marker(head_node, mode, position)
+    local out
+    if check_marker(head_node, mode, position) then
+      out = head_node
+    else
+      out = false
+    end
+    if out and position == 'start' then
+      get_marker_values(head_node)
+    end
+    return out
+  end
+
+  ---This function removes a given whatsit marker.
+  ---
+  ---It only deletes a node, if a marker is given.
+  ---
+  ---@param marker Node
+  ---
+  ---@return Node|nil head
+  ---@return Node|nil current
+  local function remove_marker(marker)
+    if is_marker(marker) then
+      return node.remove(marker, marker)
+    end
+  end
+
+  local is_global
+
+  ---__Option processing (option)__
+
+  ---This function stores a value `value` and his associated key `key`
+  --- either to the global (`global_options`) or to the local
+  --- (`local_options`) option table.
+  ---
+  ---The global boolean variable `local_options` controls in
+  ---which table the values are stored.
+  ---
+  ---@param key string # The option key.
+  ---@param value any # The value that is stored under the options key.
+  local function set_option(key, value)
+    if value == '' or value == '\\color@ ' then
+      return false
+    end
+    if is_global == true then
+      global_options[key] = value
+    else
+      local_options[key] = value
+    end
+  end
+
+  ---Set the variable `is_global`.
+  ---
+  ---@param is_global boolean
+  local function set_is_global(is_global)
+    is_global = is_global
+  end
+
+  ---This function unsets the local options.
+  local function unset_local_options()
+    local_options = {}
+  end
+
+  ---`unset_global_options` empties the global options storage.
+  local function unset_global_options()
+    global_options = {}
+  end
+
+  ---This function tests whether the value `value` is not empty and has a
+  ---value.
+  ---
+  ---@param value any # A value of different types.
+  ---
+  ---@return boolean # True is the value is set otherwise false.
+  local function has_value(value)
+    if value == nil or value == '' or value == '\\color@ ' then
+      return false
+    else
+      return true
+    end
+  end
+
+  ---Retrieve a value from a given key. First search for the value in the
+  ---local options, then in the global options. If both option storages are
+  ---empty, the default value will be returned.
+  ---
+  ---@param key string # The name of the options key.
+  ---
+  ---@return any # The value of the corresponding option key.
+  local function get_value(key)
+    if has_value(local_options[key]) then
+      return local_options[key]
+    end
+    if has_value(global_options[key]) then
+      return global_options[key]
+    end
+    return defaults[key]
+  end
+
+  ---The function `get_value_show()` returns the boolean value
+  ---`true` if the option `show` is true. In contrast to the function
+  ---`get_value()` it converts the string value `true' to a
+  ---boolean value.
+  ---
+  ---@return boolean
+  local function get_value_show()
+    if get_value('show') == true or get_value('show') == 'true' then
+      return true
+    else
+      return false
+    end
+  end
+
+  ---Return the default value of the given option.
+  ---
+  ---@param key any # The name of the options key.
+  ---
+  ---@return any # The corresponding value of the options key.
+  local function get_defaults(key)
+    return defaults[key]
+  end
+
+  return {
+    get_value = get_value,
+    get_defaults = get_defaults,
+    unset_global_options = unset_global_options,
+    unset_local_options = unset_local_options,
+    set_is_global = set_is_global,
+    set_option,
+    get_value_show = get_value_show,
+    remove_marker = remove_marker,
+    check_marker = check_marker,
+    set_option = set_option,
+    write_marker = write_marker,
+    get_marker = get_marker,
+  }
+
+end)()
 
 local log = (function()
   local opts = { verbosity = 0 }
@@ -120,12 +426,7 @@ local log = (function()
     end
   end
 
-  return {
-    opts = opts,
-    info = info,
-    debug = debug,
-    verbose = verbose,
-  }
+  return { opts = opts, info = info, debug = debug, verbose = verbose }
 end)()
 
 log.opts.verbosity = 3
@@ -333,163 +634,6 @@ local utils = (function()
   }
 end)()
 
----Option handling.
----
----The table `config` bundles functions that deal with the option
----handling.
----
----<h2>Marker processing (marker)</h2>
----
----A marker is a whatsit node of the subtype `user_defined`. A marker
----has two purposes:
----
----* Mark the begin and the end of a gap.
----* Store a index number, that points to a Lua table, which holds some
----  additional data like the local options.
----
----@section config
-
----We create a user defined whatsit node that can store a number (type
---- = 100).
----
----In order to distinguish this node from other user defined whatsit
----nodes we set the `user_id` to a large number. We call this whatsit
----node a marker.
----
----@param index number The argument `index` is a number, which is associated to values in the `config.storage` table.
----
----@return UserDefinedWhatsitNode
-function config.create_marker(index)
-  local marker = node.new('whatsit', 'user_defined') --[[@as UserDefinedWhatsitNode]]
-  marker.type = 100 -- number
-  marker.user_id = config.user_id
-  marker.value = index
-  node.setproperty(marker, { cloze = config.get_storage(index) })
-  return marker
-end
-
----Write a marker node to TeX's current node list.
----
----@param mode MarkerMode
----@param position MarkerPosition
-function config.write_marker(mode, position)
-  local index = config.set_storage(mode, position)
-  local marker = config.create_marker(index)
-  node.write(marker)
-end
-
----Check if the given node is a marker.
----
----@param item Node
----
----@return boolean
-function config.is_marker(item)
-  local n = item --[[@as UserDefinedWhatsitNode]]
-  if n.id == node.id('whatsit') and n.subtype ==
-    node.subtype('user_defined') and n.user_id == config.user_id then
-    return true
-  end
-  return false
-end
-
----
----This functions tests, whether the given node `item` is a marker.
----
----@param head_node Node # The current node.
----@param mode MarkerMode
----@param position MarkerPosition
----
----@return boolean
-function config.check_marker(head_node, mode, position)
-  local data =
-    config.get_marker_data(head_node --[[@as UserDefinedWhatsitNode]] )
-  if data and data.mode == mode and data.position == position then
-    return true
-  end
-  return false
-end
-
----
----`config.get_marker` returns the given marker.
----
----@param head_node Node # The current node.
----@param mode MarkerMode
----@param position MarkerPosition
----
----@return false|Node # The node if `head_node` is a marker node.
-function config.get_marker(head_node, mode, position)
-  local out
-  if config.check_marker(head_node, mode, position) then
-    out = head_node
-  else
-    out = false
-  end
-  if out and position == 'start' then
-    config.get_marker_values(head_node)
-  end
-  return out
-end
-
----
----Test whether the node `item` is a marker and retrieve the
----the corresponding config data.
----
----@param item UserDefinedWhatsitNode # The argument `item` is a node of unspecified type.
----
----@return table|false # The marker data.
-function config.get_marker_data(item)
-  if item.id == node.id('whatsit') and item.subtype ==
-    node.subtype('user_defined') and item.user_id == config.user_id then
-    return config.get_storage(item.value --[[@as integer]] )
-  else
-    return false
-  end
-end
-
----
----First this function saves the associatied values of a marker to the
----local options table. Second it returns this values. The argument
----`marker` is a whatsit node.
----
----@param marker UserDefinedWhatsitNode
----
----@return unknown
-function config.get_marker_values(marker)
-  local data = config.get_marker_data(marker)
-  if data then
-    config.local_options = data.local_opts
-    return data.local_opts
-  end
-end
-
----This function removes a given whatsit marker.
----
----It only deletes a node, if a marker is given.
----
----@param marker Node
----
----@return Node|nil head
----@return Node|nil current
-function config.remove_marker(marker)
-  if config.is_marker(marker) then
-    return node.remove(marker, marker)
-  end
-end
-
----__Storage functions (storage)__
-
----`config.index` is a counter. The functions `config.get_index()`
----increases the counter by one and then returns it.
----
----@return integer # The index number of the corresponding table in `config.storage`.
-function config.get_index()
-  if not config.index then
-    config.index = 0
-  end
-  config.index = config.index + 1
-  return config.index
-end
-
 ---@alias MarkerMode 'basic'|'fix'|'par' # The argument `mode` accepts the string values `basic`, `fix` and `par`.
 ---@alias MarkerPosition 'start'|'stop' # The argument `position` is either set to `start` or to `stop`.
 
@@ -500,134 +644,6 @@ end
 ---@field local_opts any
 
 ---
----`config.set_storage()` stores the local options in the Lua table
---- `config.storage`.
----
----It returns a numeric index number. This index number is the key,
----where the local options in the Lua table are stored.
----
----@param mode MarkerMode
----@param position MarkerPosition
----
----@return number # The index number of the corresponding table in
----  `config.storage`.
-function config.set_storage(mode, position)
-  local index = config.get_index()
-  local data = { mode = mode, position = position }
-  if position == 'start' then
-    data.local_opts = {}
-    for key, value in pairs(config.local_options) do
-      data.local_opts[key] = value
-    end
-  end
-  config.storage[index] = data
-  return index
-end
-
----The function `config.get_storage()` retrieves values which belong
---- to a whatsit marker.
----
----@param index integer # The argument `index` is a numeric value.
----
----@return Marker value
-function config.get_storage(index)
-  return config.storage[index]
-end
-
----__Option processing (option)__
-
----This function stores a value `value` and his associated key `key`
---- either to the global (`config.global_options`) or to the local
---- (`config.local_options`) option table.
----
----The global boolean variable `config.local_options` controls in
----which table the values are stored.
----
----@param key string # The option key.
----@param value any # The value that is stored under the options key.
-function config.set_option(key, value)
-  if value == '' or value == '\\color@ ' then
-    return false
-  end
-  if config.is_global == true then
-    config.global_options[key] = value
-  else
-    config.local_options[key] = value
-  end
-end
-
----Set the variable `config.is_global`.
----
----@param is_global boolean
-function config.set_is_global(is_global)
-  config.is_global = is_global
-end
-
----This function unsets the local options.
-function config.unset_local_options()
-  config.local_options = {}
-end
-
----`config.unset_global_options` empties the global options storage.
-function config.unset_global_options()
-  config.global_options = {}
-end
-
----Retrieve a value from a given key. First search for the value in the
----local options, then in the global options. If both option storages are
----empty, the default value will be returned.
----
----@param key string # The name of the options key.
----
----@return any # The value of the corresponding option key.
-function config.get_value(key)
-  if config.has_value(config.local_options[key]) then
-    return config.local_options[key]
-  end
-  if config.has_value(config.global_options[key]) then
-    return config.global_options[key]
-  end
-  return config.defaults[key]
-end
-
----The function `config.get_value_show()` returns the boolean value
----`true` if the option `show` is true. In contrast to the function
----`config.get_value()` it converts the string value `true' to a
----boolean value.
----
----@return boolean
-function config.get_value_show()
-  if config.get_value('show') == true or config.get_value('show') ==
-    'true' then
-    return true
-  else
-    return false
-  end
-end
-
----This function tests whether the value `value` is not empty and has a
----value.
----
----@param value any # A value of different types.
----
----@return boolean # True is the value is set otherwise false.
-function config.has_value(value)
-  if value == nil or value == '' or value == '\\color@ ' then
-    return false
-  else
-    return true
-  end
-end
-
----Return the default value of the given option.
----
----@param key any # The name of the options key.
----
----@return any # The corresponding value of the options key.
-function config.get_defaults(key)
-  return config.defaults[key]
-end
-
 ---@param kv_string string
 ---@param to_global? boolean
 local function parse_options(kv_string, to_global)

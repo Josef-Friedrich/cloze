@@ -30,5 +30,8 @@
     "~/repos/tex/lua-api/library",
     "~/texmf/tex",
     "${3rd}/lfs/library"
+  ],
+  "Lua.diagnostics.disable": [
+    "redefined-local"
   ]
 }
