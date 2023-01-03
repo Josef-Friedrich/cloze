@@ -29,13 +29,10 @@
 
 <h2>Contents</h2>
 <ul>
-<li><a href="#Tables">Tables</a></li>
-<li><a href="#Fields">Fields</a></li>
-<li><a href="#Node_precessing__nodex_">Node precessing (nodex) </a></li>
+<li><a href="#Local_Functions">Local Functions</a></li>
 <li><a href="#Option_handling">Option handling </a></li>
 <li><a href="#Assembly_to_cloze_texts">Assembly to cloze texts </a></li>
 <li><a href="#Class_HlistNode">Class HlistNode </a></li>
-<li><a href="#Exported_functions">Exported functions </a></li>
 </ul>
 
 
@@ -49,12 +46,7 @@
 <div id="content">
 
 <h1>Module <code>cloze</code></h1>
-<p>Cloze uses <a href="https://github.com/stevedonovan/ldoc">LDoc</a> for the
-source code documentation.</p>
 <p>
-<p> The supported tags are described on in
-the <a href="https://github.com/stevedonovan/LDoc/wiki">wiki</a>.</p>
-
 
 <h3>Naming conventions</h3>
 
@@ -62,78 +54,169 @@ the <a href="https://github.com/stevedonovan/LDoc/wiki">wiki</a>.</p>
 <ul>
     <li><em>Variable</em> names for <em>nodes</em> are suffixed with <code>_node</code>, for example
     <code>head_node</code>.</li>
+</ul>
+</p>
+<p>
+
+<ul>
     <li><em>Variable</em> names for <em>lengths</em> (dimensions) are suffixed with
     <code>_length</code>, for example <code>width</code>.</li>
 </ul>
 </p>
 
 
-<h2><a href="#Tables">Tables</a></h2>
+<h2><a href="#Local_Functions">Local Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#nodex">nodex</a></td>
-	<td class="summary"><a href="index.html#nodex">nodex</a> is a abbreviation for <strong>node eXtended</strong>.</td>
+	<td class="name" nowrap><a href="#tex_printf">tex_printf (s, ...)</a></td>
+	<td class="summary">
+
+</td>
 	</tr>
+</table>
+<h2><a href="#Option_handling">Option handling </a></h2>
+<table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#registry">registry</a></td>
+	<td class="name" nowrap><a href="#config">config</a></td>
 	<td class="summary">All values and functions, which are related to the option
-management, are stored in a table called <a href="index.html#registry">registry</a>.</td>
+management, are stored in a table called <a href="index.html#config">config</a>.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#registry.storage">registry.storage</a></td>
+	<td class="name" nowrap><a href="#user_id">user_id</a></td>
+	<td class="summary">I didn’t know what value I should take as <a href="index.html#user_id">user_id</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#storage">storage</a></td>
 	<td class="summary">Store all local options of the markers.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#registry.defaults">registry.defaults</a></td>
+	<td class="name" nowrap><a href="#defaults">defaults</a></td>
 	<td class="summary">The default options.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#registry.global_options">registry.global_options</a></td>
+	<td class="name" nowrap><a href="#global_options">global_options</a></td>
 	<td class="summary">The global options set by the user.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#registry.local_options">registry.local_options</a></td>
+	<td class="name" nowrap><a href="#local_options">local_options</a></td>
 	<td class="summary">The local options.</td>
 	</tr>
-</table>
-<h2><a href="#Fields">Fields</a></h2>
-<table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#registry.user_id">registry.user_id</a></td>
-	<td class="summary">I didn’t know what value I should take as <a href="index.html#registry.user_id">user_id</a>.</td>
-	</tr>
-</table>
-<h2><a href="#Node_precessing__nodex_">Node precessing (nodex) </a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#nodex.create_colorstack">nodex.create_colorstack (data)</a></td>
-	<td class="summary">Create a whatsit node of the subtype <code>pdf_colorstack</code>.</td>
+	<td class="name" nowrap><a href="#get_index">get_index ()</a></td>
+	<td class="summary"><code>index</code> is a counter.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#nodex.create_color">nodex.create_color (option)</a></td>
-	<td class="summary"><code>nodex.create_color()</code> is a wrapper for the function
-<code>nodex.create_colorstack()</code>.</td>
+	<td class="name" nowrap><a href="#get_storage">get_storage (index)</a></td>
+	<td class="summary">The function <code>get_storage()</code> retrieves values which belong
+ to a whatsit marker.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#nodex.create_line">nodex.create_line (width)</a></td>
+	<td class="name" nowrap><a href="#set_storage">set_storage (mode, position)</a></td>
+	<td class="summary"><code>set_storage()</code> stores the local options in the Lua table
+ <a href="index.html#storage">storage</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#create_marker">create_marker (index)</a></td>
+	<td class="summary">We create a user defined whatsit node that can store a number (type
+ = 100).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#write_marker">write_marker (mode, position)</a></td>
+	<td class="summary">Write a marker node to TeX's current node list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#is_marker">is_marker (item)</a></td>
+	<td class="summary">Check if the given node is a marker.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#get_marker_data">get_marker_data (item)</a></td>
+	<td class="summary">Test whether the node <code>item</code> is a marker and retrieve the
+the corresponding config data.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#check_marker">check_marker (head_node, mode, position)</a></td>
+	<td class="summary">This functions tests, whether the given node <code>item</code> is a marker.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#get_marker_values">get_marker_values (marker)</a></td>
+	<td class="summary">First this function saves the associatied values of a marker to the
+local options table.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#get_marker">get_marker (head_node, mode, position)</a></td>
+	<td class="summary"><a href="index.html#get_marker">get_marker</a> returns the given marker.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#remove_marker">remove_marker (marker)</a></td>
+	<td class="summary">This function removes a given whatsit marker.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#set_option">set_option (key, value)</a></td>
+	<td class="summary">This function stores a value <code>value</code> and his associated key <code>key</code>
+ either to the global (<a href="index.html#global_options">global_options</a>) or to the local
+ (<a href="index.html#local_options">local_options</a>) option table.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#set_is_global">set_is_global (is_global)</a></td>
+	<td class="summary">Set the variable <code>is_global</code>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#unset_local_options">unset_local_options ()</a></td>
+	<td class="summary">This function unsets the local options.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#unset_global_options">unset_global_options ()</a></td>
+	<td class="summary"><a href="index.html#unset_global_options">unset_global_options</a> empties the global options storage.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#has_value">has_value (value)</a></td>
+	<td class="summary">This function tests whether the value <code>value</code> is not empty and has a
+value.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#get_value">get_value (key)</a></td>
+	<td class="summary">Retrieve a value from a given key.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#get_value_show">get_value_show ()</a></td>
+	<td class="summary">The function <code>get_value_show()</code> returns the boolean value
+<code>true</code> if the option <code>show</code> is true.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#get_defaults">get_defaults (key)</a></td>
+	<td class="summary">Return the default value of the given option.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#parse_options">parse_options (kv_string, to_global)</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#create_color">create_color (kind, command)</a></td>
+	<td class="summary"><code>utils.create_color()</code> is a wrapper for the function
+<code>utils.create_colorstack()</code>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#create_line">create_line (width)</a></td>
 	<td class="summary">Create a rule node, which is used as a line for the cloze texts.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#nodex.insert_list">nodex.insert_list (position, current, list, head_node)</a></td>
+	<td class="name" nowrap><a href="#insert_list">insert_list (position, current, list, head_node)</a></td>
 	<td class="summary">Insert a <code>list</code> of nodes after or before the <code>current</code>.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#nodex.insert_line">nodex.insert_line (current, width)</a></td>
+	<td class="name" nowrap><a href="#insert_line">insert_line (current, width)</a></td>
 	<td class="summary">Enclose a rule node (cloze line) with two PDF colorstack whatsits.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#write_line_nodes">write_line_nodes ()</a></td>
-	<td class="summary">This function enclozes a rule node with color nodes as it the
-function <a href="index.html#nodex.insert_line">nodex.insert_line</a> does.</td>
+	<td class="summary">Encloze a rule node with color nodes as the function
+ <code>utils.insert_line</code> does.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#nodex.create_linefil">nodex.create_linefil ()</a></td>
-	<td class="summary">This function creates a line which stretchs indefinitely in the
+	<td class="name" nowrap><a href="#create_linefil">create_linefil ()</a></td>
+	<td class="summary">Create a line which stretches indefinitely in the
 horizontal direction.</td>
 	</tr>
 	<tr>
@@ -143,7 +226,7 @@ it to TeX’s ‘current (node) list’ (write).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#create_kern_node">create_kern_node (width)</a></td>
-	<td class="summary">This function creates a kern node with a given width.</td>
+	<td class="summary">Create a kern node with a given width.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#insert_strut_into_hlist">insert_strut_into_hlist (hlist_node)</a></td>
@@ -156,102 +239,8 @@ character).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#search_hlist">search_hlist (head_node)</a></td>
-	<td class="summary">Search for a <code>hlist</code> (subtype <code>line</code>) and nsert a strut node into
+	<td class="summary">Search for a <code>hlist</code> (subtype <code>line</code>) and insert a strut node into
 the list if a hlist is found.</td>
-	</tr>
-</table>
-<h2><a href="#Option_handling">Option handling </a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#registry.create_marker">registry.create_marker (index)</a></td>
-	<td class="summary">We create a user defined whatsit node that can store a number (type
- = 100).</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#registry.write_marker">registry.write_marker (mode, position)</a></td>
-	<td class="summary">Write a marker node to TeX's current node list.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#registry.is_marker">registry.is_marker (item)</a></td>
-	<td class="summary">Check if the given node is a marker.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#registry.check_marker">registry.check_marker (head_node, mode, position)</a></td>
-	<td class="summary">This functions tests, whether the given node <code>item</code> is a marker.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#registry.get_marker">registry.get_marker (head_node, mode, position)</a></td>
-	<td class="summary"><a href="index.html#registry.get_marker">registry.get_marker</a> returns the given marker.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#registry.get_marker_data">registry.get_marker_data (item)</a></td>
-	<td class="summary">Test whether the node <code>item</code> is a marker and retrieve the
-the corresponding registry data.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#registry.get_marker_values">registry.get_marker_values (marker)</a></td>
-	<td class="summary">First this function saves the associatied values of a marker to the
-local options table.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#registry.remove_marker">registry.remove_marker (marker)</a></td>
-	<td class="summary">This function removes a given whatsit marker.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#registry.get_index">registry.get_index ()</a></td>
-	<td class="summary"><code>registry.index</code> is a counter.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#registry.set_storage">registry.set_storage (mode, position)</a></td>
-	<td class="summary"><code>registry.set_storage()</code> stores the local options in the Lua table
- <a href="index.html#registry.storage">registry.storage</a>.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#registry.get_storage">registry.get_storage (index)</a></td>
-	<td class="summary">The function <code>registry.get_storage()</code> retrieves values which belong
- to a whatsit marker.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#registry.set_option">registry.set_option (key, value)</a></td>
-	<td class="summary">This function stores a value <code>value</code> and his associated key <code>key</code>
- either to the global (<a href="index.html#registry.global_options">registry.global_options</a>) or to the local
- (<a href="index.html#registry.local_options">registry.local_options</a>) option table.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#registry.set_is_global">registry.set_is_global (is_global)</a></td>
-	<td class="summary">Set the variable <code>registry.is_global</code>.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#registry.unset_local_options">registry.unset_local_options ()</a></td>
-	<td class="summary">This function unsets the local options.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#registry.unset_global_options">registry.unset_global_options ()</a></td>
-	<td class="summary"><a href="index.html#registry.unset_global_options">registry.unset_global_options</a> empties the global options storage.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#registry.get_value">registry.get_value (key)</a></td>
-	<td class="summary">Retrieve a value from a given key.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#registry.get_value_show">registry.get_value_show ()</a></td>
-	<td class="summary">The function <code>registry.get_value_show()</code> returns the boolean value
-<code>true</code> if the option <code>show</code> is true.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#registry.has_value">registry.has_value (value)</a></td>
-	<td class="summary">This function tests whether the value <code>value</code> is not empty and has a
-value.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#registry.get_defaults">registry.get_defaults (key)</a></td>
-	<td class="summary">Return the default value of the given option.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#parse_options">parse_options (kv_string, to_global)</a></td>
-	<td class="summary">
-
-</td>
 	</tr>
 </table>
 <h2><a href="#Assembly_to_cloze_texts">Assembly to cloze texts </a></h2>
@@ -262,7 +251,7 @@ value.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#make_single">make_single (start_node, stop_node, parent_node)</a></td>
-	<td class="summary">The function <code>make_single()</code> makes one gap.</td>
+	<td class="summary">Make a single gap.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#search_stop">search_stop (start_node, parent_node)</a></td>
@@ -308,42 +297,30 @@ list.</td>
 </td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#HlistNode.register_callback">HlistNode.register_callback (callback_name, func, description)</a></td>
+	<td class="name" nowrap><a href="#HlistNode.register">HlistNode.register (callback_name, func, description)</a></td>
 	<td class="summary">
 
 </td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#HlistNode.unregister_callback">HlistNode.unregister_callback (callback_name, description)</a></td>
+	<td class="name" nowrap><a href="#HlistNode.unregister">HlistNode.unregister (callback_name, description)</a></td>
 	<td class="summary">
 
 </td>
 	</tr>
-</table>
-<h2><a href="#Exported_functions">Exported functions </a></h2>
-<table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#export">export</a></td>
-	<td class="summary">The <a href="index.html#export">export</a> table contains some basic functions.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#export.is_registered">export.is_registered</a></td>
+	<td class="name" nowrap><a href="#HlistNode.is_registered">HlistNode.is_registered</a></td>
 	<td class="summary">Store informations if the callbacks are already registered for
 a certain mode (<code>basic</code>, <code>fix</code>, <code>par</code>).</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#export.register_callback">export.register_callback (mode)</a></td>
-	<td class="summary">This function registers the functions <a href="index.html#make_par">make_par</a>, <a href="index.html#make_basic">make_basic</a> and
-<a href="index.html#make_fix">make_fix</a> the Lua callbacks.</td>
+	<td class="name" nowrap><a href="#HlistNode:register_callbacks">HlistNode:register_callbacks (mode)</a></td>
+	<td class="summary">Register the functions <a href="index.html#make_par">make_par</a>, <a href="index.html#make_basic">make_basic</a> and
+<a href="index.html#make_fix">make_fix</a> as callbacks.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#export.unregister_callback">export.unregister_callback (mode)</a></td>
+	<td class="name" nowrap><a href="#HlistNode:unregister_callbacks">HlistNode:unregister_callbacks (mode)</a></td>
 	<td class="summary">Delete the registered functions from the Lua callbacks.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#export.fboxrule_restore">export.fboxrule_restore</a></td>
-	<td class="summary">Variable that can be used to store the previous fbox rule thickness
- to be able to restore the previous thickness.</td>
 	</tr>
 </table>
 
@@ -351,30 +328,67 @@ a certain mode (<code>basic</code>, <code>fix</code>, <code>par</code>).</td>
 <br/>
 
 
-    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+    <h2 class="section-header "><a name="Local_Functions"></a>Local Functions</h2>
 
     <dl class="function">
     <dt>
-    <a name = "nodex"></a>
-    <strong>nodex</strong>
+    <a name = "tex_printf"></a>
+    <strong>tex_printf (s, ...)</strong>
     </dt>
     <dd>
-    <a href="index.html#nodex">nodex</a> is a abbreviation for <strong>node eXtended</strong>.
 
 
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">s</span>
+         string
+        </li>
+        <li><span class="parameter">...</span>
+         any
+        </li>
+    </ul>
 
 
 
 
 
 </dd>
+</dl>
+    <h2 class="section-header has-description"><a name="Option_handling"></a>Option handling </h2>
+
+          <div class="section-description">
+
+
+
+<p>The table <a href="index.html#config">config</a> bundles functions that deal with the option
+handling.</p>
+
+
+<h2>Marker processing (marker)</h2>
+
+
+<p>A marker is a whatsit node of the subtype <code>user_defined</code>. A marker
+has two purposes:</p>
+
+<ul>
+    <li>Mark the begin and the end of a gap.</li>
+    <li>Store a index number, that points to a Lua table, which holds some
+    additional data like the local options.</li>
+</ul>
+
+
+          </div>
+    <dl class="function">
     <dt>
-    <a name = "registry"></a>
-    <strong>registry</strong>
+    <a name = "config"></a>
+    <strong>config</strong>
     </dt>
     <dd>
     All values and functions, which are related to the option
-management, are stored in a table called <a href="index.html#registry">registry</a>.
+management, are stored in a table called <a href="index.html#config">config</a>.
 
 
 
@@ -384,14 +398,29 @@ management, are stored in a table called <a href="index.html#registry">registry<
 
 </dd>
     <dt>
-    <a name = "registry.storage"></a>
-    <strong>registry.storage</strong>
+    <a name = "user_id"></a>
+    <strong>user_id</strong>
+    </dt>
+    <dd>
+    I didn’t know what value I should take as <a href="index.html#user_id">user_id</a>.  Therefore I
+took my birthday and transformed it into a large number.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "storage"></a>
+    <strong>storage</strong>
     </dt>
     <dd>
     Store all local options of the markers. </p>
 
 <p><code><pre>
-registry.storage = {
+storage = {
   {</p>
 <pre><code>mode = "basic",
 position = "start",
@@ -415,8 +444,8 @@ position = "stop"
 
 </dd>
     <dt>
-    <a name = "registry.defaults"></a>
-    <strong>registry.defaults</strong>
+    <a name = "defaults"></a>
+    <strong>defaults</strong>
     </dt>
     <dd>
     The default options.
@@ -454,13 +483,10 @@ position = "stop"
 
 
         </li>
-        <li><span class="parameter">[linecolor_name]</span>
-
-
-
-        </li>
         <li><span class="parameter">[linecolor]</span>
-        black
+
+
+
         </li>
         <li><span class="parameter">[margin]</span>
 
@@ -471,14 +497,6 @@ position = "stop"
 
 
 
-        </li>
-        <li><span class="parameter">[resetcolor_name]</span>
-
-
-
-        </li>
-        <li><span class="parameter">[resetcolor]</span>
-        black
         </li>
         <li><span class="parameter">[show_text]</span>
 
@@ -495,11 +513,10 @@ position = "stop"
 
 
         </li>
-        <li><span class="parameter">[textcolor_name]</span>
-        blue
-        </li>
         <li><span class="parameter">[textcolor]</span>
-        blue
+
+
+
         </li>
         <li><span class="parameter">[thickness]</span>
 
@@ -519,8 +536,8 @@ position = "stop"
 
 </dd>
     <dt>
-    <a name = "registry.global_options"></a>
-    <strong>registry.global_options</strong>
+    <a name = "global_options"></a>
+    <strong>global_options</strong>
     </dt>
     <dd>
     The global options set by the user.
@@ -533,8 +550,8 @@ position = "stop"
 
 </dd>
     <dt>
-    <a name = "registry.local_options"></a>
-    <strong>registry.local_options</strong>
+    <a name = "local_options"></a>
+    <strong>local_options</strong>
     </dt>
     <dd>
     The local options.
@@ -546,48 +563,20 @@ position = "stop"
 
 
 </dd>
-</dl>
-    <h2 class="section-header "><a name="Fields"></a>Fields</h2>
-
-    <dl class="function">
     <dt>
-    <a name = "registry.user_id"></a>
-    <strong>registry.user_id</strong>
+    <a name = "get_index"></a>
+    <strong>get_index ()</strong>
     </dt>
     <dd>
-    I didn’t know what value I should take as <a href="index.html#registry.user_id">user_id</a>.  Therefore I
-took my birthday and transformed it into a large number.
+    <code>index</code> is a counter.  The functions <code>get_index()</code>
+increases the counter by one and then returns it.
 
 
-
-
-
-
-
-</dd>
-</dl>
-    <h2 class="section-header "><a name="Node_precessing__nodex_"></a>Node precessing (nodex) </h2>
-
-    <dl class="function">
-    <dt>
-    <a name = "nodex.create_colorstack"></a>
-    <strong>nodex.create_colorstack (data)</strong>
-    </dt>
-    <dd>
-    Create a whatsit node of the subtype <code>pdf_colorstack</code>.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">data</span>
-        ? string # <code>data</code> is a PDF colorstack string like <code>0 0 0 rg 0 0 0 RG</code>.
-        </li>
-    </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        PdfColorstackWhatsitNode
+        integer # The index number of the corresponding table in <a href="index.html#storage">storage</a>.
     </ol>
 
 
@@ -595,19 +584,504 @@ took my birthday and transformed it into a large number.
 
 </dd>
     <dt>
-    <a name = "nodex.create_color"></a>
-    <strong>nodex.create_color (option)</strong>
+    <a name = "get_storage"></a>
+    <strong>get_storage (index)</strong>
     </dt>
     <dd>
-    <code>nodex.create_color()</code> is a wrapper for the function
-<code>nodex.create_colorstack()</code>.  It queries the current values of the
+    The function <code>get_storage()</code> retrieves values which belong
+ to a whatsit marker.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">index</span>
+         integer # The argument <code>index</code> is a numeric value.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Marker value
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "set_storage"></a>
+    <strong>set_storage (mode, position)</strong>
+    </dt>
+    <dd>
+    <code>set_storage()</code> stores the local options in the Lua table
+ <a href="index.html#storage">storage</a>. </p>
+
+<p>It returns a numeric index number. This index number is the key,
+where the local options in the Lua table are stored.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">mode</span>
+         MarkerMode
+        </li>
+        <li><span class="parameter">position</span>
+         MarkerPosition
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        number # The index number of the corresponding table in
+  <a href="index.html#storage">storage</a>.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "create_marker"></a>
+    <strong>create_marker (index)</strong>
+    </dt>
+    <dd>
+    We create a user defined whatsit node that can store a number (type
+ = 100). </p>
+
+<p>In order to distinguish this node from other user defined whatsit
+nodes we set the <a href="index.html#user_id">user_id</a> to a large number. We call this whatsit
+node a marker.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">index</span>
+         number The argument <code>index</code> is a number, which is associated to values in the <a href="index.html#storage">storage</a> table.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        UserDefinedWhatsitNode
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "write_marker"></a>
+    <strong>write_marker (mode, position)</strong>
+    </dt>
+    <dd>
+    Write a marker node to TeX's current node list.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">mode</span>
+         MarkerMode
+        </li>
+        <li><span class="parameter">position</span>
+         MarkerPosition
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "is_marker"></a>
+    <strong>is_marker (item)</strong>
+    </dt>
+    <dd>
+    Check if the given node is a marker.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">item</span>
+         Node
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "get_marker_data"></a>
+    <strong>get_marker_data (item)</strong>
+    </dt>
+    <dd>
+    Test whether the node <code>item</code> is a marker and retrieve the
+the corresponding config data.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">item</span>
+         UserDefinedWhatsitNode # The argument <code>item</code> is a node of unspecified type.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        table|false # The marker data.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "check_marker"></a>
+    <strong>check_marker (head_node, mode, position)</strong>
+    </dt>
+    <dd>
+    This functions tests, whether the given node <code>item</code> is a marker.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">head_node</span>
+         Node # The current node.
+        </li>
+        <li><span class="parameter">mode</span>
+         MarkerMode
+        </li>
+        <li><span class="parameter">position</span>
+         MarkerPosition
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "get_marker_values"></a>
+    <strong>get_marker_values (marker)</strong>
+    </dt>
+    <dd>
+    First this function saves the associatied values of a marker to the
+local options table.  Second it returns this values. The argument
+<code>marker</code> is a whatsit node.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">marker</span>
+         UserDefinedWhatsitNode
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        unknown
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "get_marker"></a>
+    <strong>get_marker (head_node, mode, position)</strong>
+    </dt>
+    <dd>
+    <a href="index.html#get_marker">get_marker</a> returns the given marker.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">head_node</span>
+         Node # The current node.
+        </li>
+        <li><span class="parameter">mode</span>
+         MarkerMode
+        </li>
+        <li><span class="parameter">position</span>
+         MarkerPosition
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        false|Node # The node if <code>head_node</code> is a marker node.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "remove_marker"></a>
+    <strong>remove_marker (marker)</strong>
+    </dt>
+    <dd>
+    This function removes a given whatsit marker. </p>
+
+<p>It only deletes a node, if a marker is given.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">marker</span>
+         Node
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        Node|nil head</li>
+        <li>
+        Node|nil current</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "set_option"></a>
+    <strong>set_option (key, value)</strong>
+    </dt>
+    <dd>
+    This function stores a value <code>value</code> and his associated key <code>key</code>
+ either to the global (<a href="index.html#global_options">global_options</a>) or to the local
+ (<a href="index.html#local_options">local_options</a>) option table. </p>
+
+<p>The global boolean variable <a href="index.html#local_options">local_options</a> controls in
+which table the values are stored.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+         string # The option key.
+        </li>
+        <li><span class="parameter">value</span>
+         any # The value that is stored under the options key.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "set_is_global"></a>
+    <strong>set_is_global (is_global)</strong>
+    </dt>
+    <dd>
+    Set the variable <code>is_global</code>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">is_global</span>
+         boolean
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "unset_local_options"></a>
+    <strong>unset_local_options ()</strong>
+    </dt>
+    <dd>
+    This function unsets the local options.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "unset_global_options"></a>
+    <strong>unset_global_options ()</strong>
+    </dt>
+    <dd>
+    <a href="index.html#unset_global_options">unset_global_options</a> empties the global options storage.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "has_value"></a>
+    <strong>has_value (value)</strong>
+    </dt>
+    <dd>
+    This function tests whether the value <code>value</code> is not empty and has a
+value.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+         any # A value of different types.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean # True is the value is set otherwise false.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "get_value"></a>
+    <strong>get_value (key)</strong>
+    </dt>
+    <dd>
+    Retrieve a value from a given key.  First search for the value in the
+local options, then in the global options. If both option storages are
+empty, the default value will be returned.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+         string # The name of the options key.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        any # The value of the corresponding option key.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "get_value_show"></a>
+    <strong>get_value_show ()</strong>
+    </dt>
+    <dd>
+    The function <code>get_value_show()</code> returns the boolean value
+<code>true</code> if the option <code>show</code> is true.  In contrast to the function
+<code>get_value()</code> it converts the string value `true' to a
+boolean value.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "get_defaults"></a>
+    <strong>get_defaults (key)</strong>
+    </dt>
+    <dd>
+    Return the default value of the given option.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+         any # The name of the options key.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        any # The corresponding value of the options key.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "parse_options"></a>
+    <strong>parse_options (kv_string, to_global)</strong>
+    </dt>
+    <dd>
+
+
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">kv_string</span>
+         string
+        </li>
+        <li><span class="parameter">to_global</span>
+        ? boolean
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "create_color"></a>
+    <strong>create_color (kind, command)</strong>
+    </dt>
+    <dd>
+    <code>utils.create_color()</code> is a wrapper for the function
+<code>utils.create_colorstack()</code>.  It queries the current values of the
 options <code>linecolor</code> and <code>textcolor</code>.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">option</span>
-         'line'|'text'|'reset' # The argument <code>option</code> accepts the strings <code>line</code>, <code>text</code> and <code>reset</code>.
+        <li><span class="parameter">kind</span>
+         'line'|'text'
+        </li>
+        <li><span class="parameter">command</span>
+         'push'|'pop'
         </li>
     </ul>
 
@@ -622,8 +1096,8 @@ options <code>linecolor</code> and <code>textcolor</code>.
 
 </dd>
     <dt>
-    <a name = "nodex.create_line"></a>
-    <strong>nodex.create_line (width)</strong>
+    <a name = "create_line"></a>
+    <strong>create_line (width)</strong>
     </dt>
     <dd>
     Create a rule node, which is used as a line for the cloze texts.  The
@@ -649,8 +1123,8 @@ options <code>linecolor</code> and <code>textcolor</code>.
 
 </dd>
     <dt>
-    <a name = "nodex.insert_list"></a>
-    <strong>nodex.insert_list (position, current, list, head_node)</strong>
+    <a name = "insert_list"></a>
+    <strong>insert_list (position, current, list, head_node)</strong>
     </dt>
     <dd>
     Insert a <code>list</code> of nodes after or before the <code>current</code>.  The <code>head</code>
@@ -685,45 +1159,15 @@ if <code>head</code> is omitted the <code>current</code> node is used.
 
 </dd>
     <dt>
-    <a name = "nodex.insert_line"></a>
-    <strong>nodex.insert_line (current, width)</strong>
+    <a name = "insert_line"></a>
+    <strong>insert_line (current, width)</strong>
     </dt>
     <dd>
-
-<p>Enclose a rule node (cloze line) with two PDF colorstack whatsits.
+    Enclose a rule node (cloze line) with two PDF colorstack whatsits.
 The first colorstack node colors the line, the second resets the
 color.</p>
 
-<p><strong>Node list</strong></p>
-
-
-<table>
-<thead>
-  <tr>
-    <th><code>color\_line\_node</code></th>
-    <th><code>whatsit</code></th>
-    <th><code>pdf\_colorstack</code></th>
-    <th>Line color</th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td><code>line\_node</code></td>
-    <td><code>rule</code></td>
-    <td></td>
-    <td><code>width</code></td>
-  </tr>
-  <tr>
-    <td><code>color\_reset\_node</code></td>
-    <td><code>whatsit</code></td>
-    <td><code>pdf\_colorstack</code></td>
-    <td>Reset color</td>
-  </tr>
-</tbody>
-</table>
-
-
-
+<p><strong>Node list</strong>: <code>whatsit:pdf_colorstack</code> (line_color) - <code>rule</code> (width) - <code>whatsit:pdf_colorstack</code> (reset_color)
 
 
     <h3>Parameters:</h3>
@@ -751,42 +1195,14 @@ color.</p>
     <strong>write_line_nodes ()</strong>
     </dt>
     <dd>
+    Encloze a rule node with color nodes as the function
+ <code>utils.insert_line</code> does. </p>
 
-<p>This function enclozes a rule node with color nodes as it the
-function <a href="index.html#nodex.insert_line">nodex.insert_line</a> does.  In contrast to
-<a href="index.html#nodex.insert_line">nodex.insert_line</a> the three nodes are appended to TeX’s ‘current
-list’. They are not inserted in a node list, which is accessed by a
-Lua callback.</p>
+<p>In contrast to -<code>utils.insert_line</code> the three nodes are appended to
+TeX’s ‘current-list’. They are not inserted in a node list, which
+is accessed by a Lua callback.</p>
 
-<p><strong>Node list</strong></p>
-
-
-<table>
-<thead>
-  <tr>
-    <th>-</th>
-    <th><code>whatsit</code></th>
-    <th><code>pdf\_colorstack</code></th>
-    <th>Line color</th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td>-</td>
-    <td><code>rule</code></td>
-    <td></td>
-    <td><code>width</code></td>
-  </tr>
-  <tr>
-    <td>-</td>
-    <td><code>whatsit</code></td>
-    <td><code>pdf\_colorstack</code></td>
-    <td>Reset color</td>
-  </tr>
-</tbody>
-</table>
-
-
+<p><strong>Node list</strong>: <code>whatsit:pdf_colorstack</code> (line_color) - <code>rule</code> (width) - <code>whatsit:pdf_colorstack</code> (reset_color)
 
 
 
@@ -796,11 +1212,11 @@ Lua callback.</p>
 
 </dd>
     <dt>
-    <a name = "nodex.create_linefil"></a>
-    <strong>nodex.create_linefil ()</strong>
+    <a name = "create_linefil"></a>
+    <strong>create_linefil ()</strong>
     </dt>
     <dd>
-    This function creates a line which stretchs indefinitely in the
+    Create a line which stretches indefinitely in the
 horizontal direction.
 
 
@@ -835,7 +1251,7 @@ it to TeX’s ‘current (node) list’ (write).
     <strong>create_kern_node (width)</strong>
     </dt>
     <dd>
-    This function creates a kern node with a given width.
+    Create a kern node with a given width.
 
 
     <h3>Parameters:</h3>
@@ -908,7 +1324,7 @@ used to build a margin.
     <strong>search_hlist (head_node)</strong>
     </dt>
     <dd>
-    Search for a <code>hlist</code> (subtype <code>line</code>) and nsert a strut node into
+    Search for a <code>hlist</code> (subtype <code>line</code>) and insert a strut node into
 the list if a hlist is found.
 
 
@@ -928,534 +1344,6 @@ the list if a hlist is found.
         <li>
         Node|nil prev<em>head</em>node</li>
     </ol>
-
-
-
-
-</dd>
-</dl>
-    <h2 class="section-header has-description"><a name="Option_handling"></a>Option handling </h2>
-
-          <div class="section-description">
-
-
-
-<p>The table <a href="index.html#registry">registry</a> bundles functions that deal with the option
-handling.</p>
-
-
-<h2>Marker processing (marker)</h2>
-
-
-<p>A marker is a whatsit node of the subtype <code>user_defined</code>. A marker
-has two purposes:</p>
-
-<ul>
-    <li>Mark the begin and the end of a gap.</li>
-    <li>Store a index number, that points to a Lua table, which holds some
-    additional data like the local options.</li>
-</ul>
-
-
-          </div>
-    <dl class="function">
-    <dt>
-    <a name = "registry.create_marker"></a>
-    <strong>registry.create_marker (index)</strong>
-    </dt>
-    <dd>
-    We create a user defined whatsit node that can store a number (type
- = 100). </p>
-
-<p>In order to distinguish this node from other user defined whatsit
-nodes we set the <a href="index.html#registry.user_id">user_id</a> to a large number. We call this whatsit
-node a marker.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">index</span>
-         number The argument <code>index</code> is a number, which is associated to values in the <a href="index.html#registry.storage">registry.storage</a> table.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        UserDefinedWhatsitNode
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "registry.write_marker"></a>
-    <strong>registry.write_marker (mode, position)</strong>
-    </dt>
-    <dd>
-    Write a marker node to TeX's current node list.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">mode</span>
-         MarkerMode
-        </li>
-        <li><span class="parameter">position</span>
-         MarkerPosition
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "registry.is_marker"></a>
-    <strong>registry.is_marker (item)</strong>
-    </dt>
-    <dd>
-    Check if the given node is a marker.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">item</span>
-         Node
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        boolean
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "registry.check_marker"></a>
-    <strong>registry.check_marker (head_node, mode, position)</strong>
-    </dt>
-    <dd>
-    This functions tests, whether the given node <code>item</code> is a marker.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">head_node</span>
-         Node # The current node.
-        </li>
-        <li><span class="parameter">mode</span>
-         MarkerMode
-        </li>
-        <li><span class="parameter">position</span>
-         MarkerPosition
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        boolean
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "registry.get_marker"></a>
-    <strong>registry.get_marker (head_node, mode, position)</strong>
-    </dt>
-    <dd>
-    <a href="index.html#registry.get_marker">registry.get_marker</a> returns the given marker.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">head_node</span>
-         Node # The current node.
-        </li>
-        <li><span class="parameter">mode</span>
-         MarkerMode
-        </li>
-        <li><span class="parameter">position</span>
-         MarkerPosition
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        false|Node # The node if <code>head_node</code> is a marker node.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "registry.get_marker_data"></a>
-    <strong>registry.get_marker_data (item)</strong>
-    </dt>
-    <dd>
-    Test whether the node <code>item</code> is a marker and retrieve the
-the corresponding registry data.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">item</span>
-         UserDefinedWhatsitNode # The argument <code>item</code> is a node of unspecified type.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        table|false # The marker data.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "registry.get_marker_values"></a>
-    <strong>registry.get_marker_values (marker)</strong>
-    </dt>
-    <dd>
-    First this function saves the associatied values of a marker to the
-local options table.  Second it returns this values. The argument
-<code>marker</code> is a whatsit node.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">marker</span>
-         UserDefinedWhatsitNode
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        unknown
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "registry.remove_marker"></a>
-    <strong>registry.remove_marker (marker)</strong>
-    </dt>
-    <dd>
-    This function removes a given whatsit marker. </p>
-
-<p>It only deletes a node, if a marker is given.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">marker</span>
-         Node
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-        <li>
-        Node|nil head</li>
-        <li>
-        Node|nil current</li>
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "registry.get_index"></a>
-    <strong>registry.get_index ()</strong>
-    </dt>
-    <dd>
-    <code>registry.index</code> is a counter.  The functions <code>registry.get_index()</code>
-increases the counter by one and then returns it.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        integer # The index number of the corresponding table in <a href="index.html#registry.storage">registry.storage</a>.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "registry.set_storage"></a>
-    <strong>registry.set_storage (mode, position)</strong>
-    </dt>
-    <dd>
-    <code>registry.set_storage()</code> stores the local options in the Lua table
- <a href="index.html#registry.storage">registry.storage</a>. </p>
-
-<p>It returns a numeric index number. This index number is the key,
-where the local options in the Lua table are stored.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">mode</span>
-         MarkerMode
-        </li>
-        <li><span class="parameter">position</span>
-         MarkerPosition
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        number # The index number of the corresponding table in
-  <a href="index.html#registry.storage">registry.storage</a>.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "registry.get_storage"></a>
-    <strong>registry.get_storage (index)</strong>
-    </dt>
-    <dd>
-    The function <code>registry.get_storage()</code> retrieves values which belong
- to a whatsit marker.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">index</span>
-         integer # The argument <code>index</code> is a numeric value.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        Marker value
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "registry.set_option"></a>
-    <strong>registry.set_option (key, value)</strong>
-    </dt>
-    <dd>
-    This function stores a value <code>value</code> and his associated key <code>key</code>
- either to the global (<a href="index.html#registry.global_options">registry.global_options</a>) or to the local
- (<a href="index.html#registry.local_options">registry.local_options</a>) option table. </p>
-
-<p>The global boolean variable <a href="index.html#registry.local_options">registry.local_options</a> controls in
-which table the values are stored.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">key</span>
-         string # The option key.
-        </li>
-        <li><span class="parameter">value</span>
-         any # The value that is stored under the options key.
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "registry.set_is_global"></a>
-    <strong>registry.set_is_global (is_global)</strong>
-    </dt>
-    <dd>
-    Set the variable <code>registry.is_global</code>.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">is_global</span>
-         boolean
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "registry.unset_local_options"></a>
-    <strong>registry.unset_local_options ()</strong>
-    </dt>
-    <dd>
-    This function unsets the local options.
-
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "registry.unset_global_options"></a>
-    <strong>registry.unset_global_options ()</strong>
-    </dt>
-    <dd>
-    <a href="index.html#registry.unset_global_options">registry.unset_global_options</a> empties the global options storage.
-
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "registry.get_value"></a>
-    <strong>registry.get_value (key)</strong>
-    </dt>
-    <dd>
-    Retrieve a value from a given key.  First search for the value in the
-local options, then in the global options. If both option storages are
-empty, the default value will be returned.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">key</span>
-         string # The name of the options key.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        any # The value of the corresponding option key.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "registry.get_value_show"></a>
-    <strong>registry.get_value_show ()</strong>
-    </dt>
-    <dd>
-    The function <code>registry.get_value_show()</code> returns the boolean value
-<code>true</code> if the option <code>show</code> is true.  In contrast to the function
-<code>registry.get_value()</code> it converts the string value `true' to a
-boolean value.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        boolean
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "registry.has_value"></a>
-    <strong>registry.has_value (value)</strong>
-    </dt>
-    <dd>
-    This function tests whether the value <code>value</code> is not empty and has a
-value.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">value</span>
-         any # A value of different types.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        boolean # True is the value is set otherwise false.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "registry.get_defaults"></a>
-    <strong>registry.get_defaults (key)</strong>
-    </dt>
-    <dd>
-    Return the default value of the given option.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">key</span>
-         any # The name of the options key.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        any # The corresponding value of the options key.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "parse_options"></a>
-    <strong>parse_options (kv_string, to_global)</strong>
-    </dt>
-    <dd>
-
-
-
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">kv_string</span>
-         string
-        </li>
-        <li><span class="parameter">to_global</span>
-        ? boolean
-        </li>
-    </ul>
-
 
 
 
@@ -1499,9 +1387,7 @@ This function is used by other cloze TeX macros too: <code>\clozenol</code>,
     <strong>make_single (start_node, stop_node, parent_node)</strong>
     </dt>
     <dd>
-    The function <code>make_single()</code> makes one gap.  The argument
-<code>start_node</code> is the node where the gap begins. The argument
-<code>stop_node</code> is the node where the gap ends.
+    Make a single gap.
 
 
     <h3>Parameters:</h3>
@@ -1914,8 +1800,8 @@ list.
 
 </dd>
     <dt>
-    <a name = "HlistNode.register_callback"></a>
-    <strong>HlistNode.register_callback (callback_name, func, description)</strong>
+    <a name = "HlistNode.register"></a>
+    <strong>HlistNode.register (callback_name, func, description)</strong>
     </dt>
     <dd>
 
@@ -1942,8 +1828,8 @@ list.
 
 </dd>
     <dt>
-    <a name = "HlistNode.unregister_callback"></a>
-    <strong>HlistNode.unregister_callback (callback_name, description)</strong>
+    <a name = "HlistNode.unregister"></a>
+    <strong>HlistNode.unregister (callback_name, description)</strong>
     </dt>
     <dd>
 
@@ -1966,32 +1852,9 @@ list.
 
 
 </dd>
-</dl>
-    <h2 class="section-header has-description"><a name="Exported_functions"></a>Exported functions </h2>
-
-          <div class="section-description">
-          The <a href="index.html#export">export</a> table contains functions which are published to the
-<code>cloze.lua</code> and <code>cloze.sty</code> file.
-          </div>
-    <dl class="function">
     <dt>
-    <a name = "export"></a>
-    <strong>export</strong>
-    </dt>
-    <dd>
-    The <a href="index.html#export">export</a> table contains some basic functions.  <a href="index.html#export">export</a> is the
-only table of this Lua module that will be exported.
-
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "export.is_registered"></a>
-    <strong>export.is_registered</strong>
+    <a name = "HlistNode.is_registered"></a>
+    <strong>HlistNode.is_registered</strong>
     </dt>
     <dd>
     Store informations if the callbacks are already registered for
@@ -2012,12 +1875,12 @@ is_registered = {
 
 </dd>
     <dt>
-    <a name = "export.register_callback"></a>
-    <strong>export.register_callback (mode)</strong>
+    <a name = "HlistNode:register_callbacks"></a>
+    <strong>HlistNode:register_callbacks (mode)</strong>
     </dt>
     <dd>
-    This function registers the functions <a href="index.html#make_par">make_par</a>, <a href="index.html#make_basic">make_basic</a> and
-<a href="index.html#make_fix">make_fix</a> the Lua callbacks. </p>
+    Register the functions <a href="index.html#make_par">make_par</a>, <a href="index.html#make_basic">make_basic</a> and
+<a href="index.html#make_fix">make_fix</a> as callbacks. </p>
 
 <p><a href="index.html#make_par">make_par</a> and <a href="index.html#make_basic">make_basic</a> are registered to the callback
 <code>post_linebreak_filter</code> and <a href="index.html#make_fix">make_fix</a> to the callback
@@ -2046,8 +1909,8 @@ right choice to capture the display math formulas.
 
 </dd>
     <dt>
-    <a name = "export.unregister_callback"></a>
-    <strong>export.unregister_callback (mode)</strong>
+    <a name = "HlistNode:unregister_callbacks"></a>
+    <strong>HlistNode:unregister_callbacks (mode)</strong>
     </dt>
     <dd>
     Delete the registered functions from the Lua callbacks.
@@ -2065,21 +1928,6 @@ right choice to capture the display math formulas.
 
 
 </dd>
-    <dt>
-    <a name = "export.fboxrule_restore"></a>
-    <strong>export.fboxrule_restore</strong>
-    </dt>
-    <dd>
-    Variable that can be used to store the previous fbox rule thickness
- to be able to restore the previous thickness.
-
-
-
-
-
-
-
-</dd>
 </dl>
 
 
@@ -2087,7 +1935,7 @@ right choice to capture the display math formulas.
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2023-01-02 17:46:49 </i>
+<i style="float:right;">Last updated 2023-01-03 23:34:09 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

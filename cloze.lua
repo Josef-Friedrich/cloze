@@ -43,6 +43,13 @@ modules['cloze'] = {
 
 local farbe = require('farbe')
 
+---
+---@param s string
+---@param ... any
+local function tex_printf(s, ...)
+  tex.print(string.format(s, ...))
+end
+
 ---Option handling.
 ---
 ---The table `config` bundles functions that deal with the option
@@ -468,7 +475,8 @@ local config = (function()
       linecolor = {
         description = 'A color name to colorize the cloze line.',
         process = function(value)
-          set_option('linecolor', farbe.Color(value))
+          tex_printf('\\FarbeImport{%s}', value)
+          set_option('linecolor', value)
         end,
       },
       margin = {
@@ -491,8 +499,10 @@ local config = (function()
       },
       textcolor = {
         description = 'The color (name) of the cloze text.',
+        data_type = 'string',
         process = function(value)
-          set_option('textcolor', farbe.Color(value))
+          tex_printf('\\FarbeImport{%s}', value)
+          set_option('textcolor', value)
         end,
       },
       thickness = {
@@ -578,12 +588,13 @@ local utils = (function()
   ---
   ---@return PdfColorstackWhatsitNode
   local function create_color(kind, command)
-    local color
+    local color_spec
     if kind == 'line' then
-      color = config.get_value('linecolor')
+      color_spec = config.get_value('linecolor')
     else
-      color = config.get_value('textcolor')
+      color_spec = config.get_value('textcolor')
     end
+    local color = farbe.Color(color_spec)
     return color:create_pdf_colorstack_node(command)
   end
 
