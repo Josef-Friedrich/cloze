@@ -1227,96 +1227,100 @@ local function make_par(head_node)
   return true
 end
 
----
----@param callback_name CallbackName # The name of a callback
----@param func function # A function to register for the callback
----@param description string # Only used in LuaLatex
-local function register_callback(callback_name,
-  func,
-  description)
-  if luatexbase then
-    luatexbase.add_to_callback(callback_name, func, description)
-  else
-    callback.register(callback_name, func)
+local cb = (function()
+  ---
+  ---@param callback_name CallbackName # The name of a callback
+  ---@param func function # A function to register for the callback
+  ---@param description string # Only used in LuaLatex
+  local function register(callback_name,
+    func,
+    description)
+    if luatexbase then
+      luatexbase.add_to_callback(callback_name, func, description)
+    else
+      callback.register(callback_name, func)
+    end
   end
-end
 
----
----@param callback_name CallbackName # The name of a callback
----@param description string # Only used in LuaLatex
-local function unregister_callback(callback_name,
-  description)
-  if luatexbase then
-    luatexbase.remove_from_callback(callback_name, description)
-  else
-    callback.register(callback_name, nil)
+  ---
+  ---@param callback_name CallbackName # The name of a callback
+  ---@param description string # Only used in LuaLatex
+  local function unregister(callback_name,
+    description)
+    if luatexbase then
+      luatexbase.remove_from_callback(callback_name, description)
+    else
+      callback.register(callback_name, nil)
+    end
   end
-end
 
----
----Store informations if the callbacks are already registered for
----a certain mode (`basic`, `fix`, `par`).
----
----<code><pre>
----is_registered = {
----  fix = true,
----  basic = false,
----  par = false,
----}</pre></code>
----
-local is_registered = {}
+  ---
+  ---Store informations if the callbacks are already registered for
+  ---a certain mode (`basic`, `fix`, `par`).
+  ---
+  ---<code><pre>
+  ---is_registered = {
+  ---  fix = true,
+  ---  basic = false,
+  ---  par = false,
+  ---}</pre></code>
+  ---
+  local is_registered = {}
+
+  return { ---
+    ---Register the functions `make_par`, `make_basic` and
+    ---`make_fix` as callbacks.
+    ---
+    ---`make_par` and `make_basic` are registered to the callback
+    ---`post_linebreak_filter` and `make_fix` to the callback
+    ---`pre_linebreak_filter`. The argument `mode` accepts the string values
+    ---`basic`, `fix` and `par`. A special treatment is needed for clozes in
+    ---display math mode. The `post_linebreak_filter` is not called on
+    ---display math formulas. I’m not sure if the `pre_output_filter` is the
+    ---right choice to capture the display math formulas.
+    ---
+    ---@param mode MarkerMode
+    ---
+    ---@return boolean|nil
+    register_callback = function(mode)
+      if mode == 'par' then
+        register('post_linebreak_filter', make_par, mode)
+        return true
+      end
+      if not is_registered[mode] then
+        if mode == 'basic' then
+          register('post_linebreak_filter', make_basic, mode)
+          register('pre_output_filter', make_basic, mode)
+        elseif mode == 'fix' then
+          register('pre_linebreak_filter', make_fix, mode)
+        else
+          return false
+        end
+        is_registered[mode] = true
+      end
+    end,
+
+    ---
+    ---Delete the registered functions from the Lua callbacks.
+    ---
+    ---@param mode MarkerMode
+    unregister_callback = function(mode)
+      if mode == 'basic' then
+        unregister('post_linebreak_filter', mode)
+        unregister('pre_output_filter', mode)
+      elseif mode == 'fix' then
+        unregister('pre_linebreak_filter', mode)
+      else
+        unregister('post_linebreak_filter', mode)
+      end
+    end,
+  }
+end)()
 
 ---
 ---This table contains some basic functions which are published to the
 ---`cloze.tex` and `cloze.sty` file.
 return {
-  ---
-  ---This function registers the functions `make_par`, `make_basic` and
-  ---`make_fix` the Lua callbacks.
-  ---
-  ---`make_par` and `make_basic` are registered to the callback
-  ---`post_linebreak_filter` and `make_fix` to the callback
-  ---`pre_linebreak_filter`. The argument `mode` accepts the string values
-  ---`basic`, `fix` and `par`. A special treatment is needed for clozes in
-  ---display math mode. The `post_linebreak_filter` is not called on
-  ---display math formulas. I’m not sure if the `pre_output_filter` is the
-  ---right choice to capture the display math formulas.
-  ---
-  ---@param mode MarkerMode
-  ---
-  ---@return boolean|nil
-  register_callback = function(mode)
-    if mode == 'par' then
-      register_callback('post_linebreak_filter', make_par, mode)
-      return true
-    end
-    if not is_registered[mode] then
-      if mode == 'basic' then
-        register_callback('post_linebreak_filter', make_basic, mode)
-        register_callback('pre_output_filter', make_basic, mode)
-      elseif mode == 'fix' then
-        register_callback('pre_linebreak_filter', make_fix, mode)
-      else
-        return false
-      end
-      is_registered[mode] = true
-    end
-  end,
-
-  ---
-  ---Delete the registered functions from the Lua callbacks.
-  ---
-  ---@param mode MarkerMode
-  unregister_callback = function(mode)
-    if mode == 'basic' then
-      unregister_callback('post_linebreak_filter', mode)
-      unregister_callback('pre_output_filter', mode)
-    elseif mode == 'fix' then
-      unregister_callback('pre_linebreak_filter', mode)
-    else
-      unregister_callback('post_linebreak_filter', mode)
-    end
-  end,
 
   ---Variable that can be used to store the previous fbox rule thickness
   --- to be able to restore the previous thickness.
@@ -1332,4 +1336,7 @@ return {
   get_value = config.get_value,
   marker = config.write_marker,
   parse_options = parse_options,
+  register_callback = cb.register_callback,
+  unregister_callback = cb.unregister_callback,
+
 }
