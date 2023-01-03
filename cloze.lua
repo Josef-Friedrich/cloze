@@ -518,21 +518,25 @@ end)()
 local log = (function()
   local opts = { verbosity = 0 }
 
-  local function info(message)
+  local function print_message(message, ...)
+    print(string.format(message, ...))
+  end
+
+  local function info(message, ...)
     if opts.verbosity > 0 then
-      print(message)
+      print_message(message, ...)
     end
   end
 
-  local function debug(message)
+  local function debug(message, ...)
     if opts.verbosity > 1 then
-      print(message)
+      print_message(message, ...)
     end
   end
 
-  local function verbose(message)
+  local function verbose(message, ...)
     if opts.verbosity > 2 then
-      print(message)
+      print_message(message, ...)
     end
   end
 
@@ -785,7 +789,7 @@ local function make_basic(head_node_input)
       parent_node.glue_sign, parent_node.glue_order, start_node,
       stop_node)
 
-    log.info('Make a line of the width of: ' .. line_width .. 'sp')
+    log.info('Make a line of the width of: %dsp', line_width)
 
     local line_node = utils.insert_line(start_node, line_width)
     local color_text_node = utils.insert_list('after', line_node, {
