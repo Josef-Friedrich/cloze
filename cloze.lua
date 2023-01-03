@@ -26,8 +26,6 @@ modules['cloze'] = {
   license = 'The LaTeX Project Public License Version 1.3c 2008-05-04',
 }
 
-local luakeys = require('luakeys')()
-
 local farbe = require('farbe')
 
 ---Option handling.
@@ -49,6 +47,7 @@ local farbe = require('farbe')
 ---All values and functions, which are related to the option
 ---management, are stored in a table called `config`.
 local config = (function()
+  local luakeys = require('luakeys')()
 
   ---I didn’t know what value I should take as `user_id`. Therefore I
   ---took my birthday and transformed it into a large number.
@@ -388,6 +387,116 @@ local config = (function()
     return defaults[key]
   end
 
+  ---
+  ---@param kv_string string
+  ---@param to_global? boolean
+  local function parse_options(kv_string, to_global)
+    if to_global == nil then
+      to_global = false
+    end
+
+    set_is_global(to_global)
+    local defs = {
+      align = {
+        description = 'Align the text of a fixed size cloze.',
+        process = function(value)
+          set_option('align', value)
+        end,
+      },
+      boxheight = {
+        description = 'The height of a cloze box.',
+        process = function(value)
+          set_option('boxheight', value)
+        end,
+      },
+      boxrule = {
+        description = 'The thickness of the rule around a cloze box.',
+        process = function(value)
+          set_option('boxrule', value)
+        end,
+      },
+      boxwidth = {
+        description = 'The width of a cloze box.',
+        process = function(value)
+          set_option('boxwidth', value)
+        end,
+      },
+      distance = {
+        description = 'The distance between the cloze text and the cloze line.',
+        process = function(value)
+          set_option('distance', value)
+        end,
+      },
+      hide = {
+        description = 'Hide the cloze text.',
+        process = function(value)
+          tex.print('\\clozeshowfalse')
+          set_option('show', false)
+          set_option('hide', true)
+        end,
+      },
+      show = {
+        description = 'Show the cloze text.',
+        process = function(value)
+          tex.print('\\clozeshowfalse')
+          set_option('show', true)
+          set_option('hide', false)
+        end,
+      },
+      visibility = {
+        description = 'Show or hide the cloze text.',
+        opposite_keys = { [true] = 'show', [false] = 'hide' },
+        process = function(value)
+          set_option('visibility', value)
+        end,
+      },
+      linecolor = {
+        description = 'A color name to colorize the cloze line.',
+        process = function(value)
+          set_option('linecolor', farbe.Color(value))
+        end,
+      },
+      margin = {
+        description = 'Indicates how far the cloze line sticks up horizontally from the text.',
+        process = function(value)
+          set_option('margin', value)
+        end,
+      },
+      minlines = {
+        description = 'How many lines a clozepar at least must have.',
+        process = function(value)
+          set_option('minlines', value)
+        end,
+      },
+      spacing = {
+        description = 'The spacing between lines (environment clozespace).',
+        process = function(value)
+          set_option('spacing', value)
+        end,
+      },
+      textcolor = {
+        description = 'The color (name) of the cloze text.',
+        process = function(value)
+          set_option('textcolor', farbe.Color(value))
+        end,
+      },
+      thickness = {
+        description = 'The thickness of the cloze line.',
+        process = function(value)
+          set_option('thickness', value)
+        end,
+      },
+      width = {
+        description = 'The width of the cloze line of the command \\clozefix.',
+        process = function(value)
+          set_option('width', value)
+        end,
+      },
+    }
+
+    luakeys.parse(kv_string, { defs = defs })
+  end
+
   return {
     get_value = get_value,
     get_defaults = get_defaults,
@@ -401,6 +510,7 @@ local config = (function()
     set_option = set_option,
     write_marker = write_marker,
     get_marker = get_marker,
+    parse_options = parse_options,
   }
 
 end)()
@@ -642,116 +752,6 @@ end)()
 ---@field mode MarkerMode
 ---@field position MarkerPosition
 ---@field local_opts any
-
----
----@param kv_string string
----@param to_global? boolean
-local function parse_options(kv_string, to_global)
-  if to_global == nil then
-    to_global = false
-  end
-
-  config.set_is_global(to_global)
-  local defs = {
-    align = {
-      description = 'Align the text of a fixed size cloze.',
-      process = function(value)
-        config.set_option('align', value)
-      end,
-    },
-    boxheight = {
-      description = 'The height of a cloze box.',
-      process = function(value)
-        config.set_option('boxheight', value)
-      end,
-    },
-    boxrule = {
-      description = 'The thickness of the rule around a cloze box.',
-      process = function(value)
-        config.set_option('boxrule', value)
-      end,
-    },
-    boxwidth = {
-      description = 'The width of a cloze box.',
-      process = function(value)
-        config.set_option('boxwidth', value)
-      end,
-    },
-    distance = {
-      description = 'The distance between the cloze text and the cloze line.',
-      process = function(value)
-        config.set_option('distance', value)
-      end,
-    },
-    hide = {
-      description = 'Hide the cloze text.',
-      process = function(value)
-        tex.print('\\clozeshowfalse')
-        config.set_option('show', false)
-        config.set_option('hide', true)
-      end,
-    },
-    show = {
-      description = 'Show the cloze text.',
-      process = function(value)
-        tex.print('\\clozeshowfalse')
-        config.set_option('show', true)
-        config.set_option('hide', false)
-      end,
-    },
-    visibility = {
-      description = 'Show or hide the cloze text.',
-      opposite_keys = { [true] = 'show', [false] = 'hide' },
-      process = function(value)
-        config.set_option('visibility', value)
-      end,
-    },
-    linecolor = {
-      description = 'A color name to colorize the cloze line.',
-      process = function(value)
-        config.set_option('linecolor', farbe.Color(value))
-      end,
-    },
-    margin = {
-      description = 'Indicates how far the cloze line sticks up horizontally from the text.',
-      process = function(value)
-        config.set_option('margin', value)
-      end,
-    },
-    minlines = {
-      description = 'How many lines a clozepar at least must have.',
-      process = function(value)
-        config.set_option('minlines', value)
-      end,
-    },
-    spacing = {
-      description = 'The spacing between lines (environment clozespace).',
-      process = function(value)
-        config.set_option('spacing', value)
-      end,
-    },
-    textcolor = {
-      description = 'The color (name) of the cloze text.',
-      process = function(value)
-        config.set_option('textcolor', farbe.Color(value))
-      end,
-    },
-    thickness = {
-      description = 'The thickness of the cloze line.',
-      process = function(value)
-        config.set_option('thickness', value)
-      end,
-    },
-    width = {
-      description = 'The width of the cloze line of the command \\clozefix.',
-      process = function(value)
-        config.set_option('width', value)
-      end,
-    },
-  }
-
-  luakeys.parse(kv_string, { defs = defs })
-end
 
 ---Assembly to cloze texts.
 ---@section cloze_functions
@@ -1232,9 +1232,7 @@ local cb = (function()
   ---@param callback_name CallbackName # The name of a callback
   ---@param func function # A function to register for the callback
   ---@param description string # Only used in LuaLatex
-  local function register(callback_name,
-    func,
-    description)
+  local function register(callback_name, func, description)
     if luatexbase then
       luatexbase.add_to_callback(callback_name, func, description)
     else
@@ -1245,8 +1243,7 @@ local cb = (function()
   ---
   ---@param callback_name CallbackName # The name of a callback
   ---@param description string # Only used in LuaLatex
-  local function unregister(callback_name,
-    description)
+  local function unregister(callback_name, description)
     if luatexbase then
       luatexbase.remove_from_callback(callback_name, description)
     else
@@ -1282,7 +1279,7 @@ local cb = (function()
     ---@param mode MarkerMode
     ---
     ---@return boolean|nil
-    register_callback = function(mode)
+    register_callbacks = function(mode)
       if mode == 'par' then
         register('post_linebreak_filter', make_par, mode)
         return true
@@ -1304,7 +1301,7 @@ local cb = (function()
     ---Delete the registered functions from the Lua callbacks.
     ---
     ---@param mode MarkerMode
-    unregister_callback = function(mode)
+    unregister_callbacks = function(mode)
       if mode == 'basic' then
         unregister('post_linebreak_filter', mode)
         unregister('pre_output_filter', mode)
@@ -1335,8 +1332,7 @@ return {
   get_defaults = config.get_defaults,
   get_value = config.get_value,
   marker = config.write_marker,
-  parse_options = parse_options,
-  register_callback = cb.register_callback,
-  unregister_callback = cb.unregister_callback,
-
+  parse_options = config.parse_options,
+  register_callback = cb.register_callbacks,
+  unregister_callback = cb.unregister_callbacks,
 }
