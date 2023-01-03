@@ -99,6 +99,37 @@ registry.global_options = {}
 ---The local options.
 registry.local_options = {}
 
+local log = (function()
+  local opts = { verbosity = 0 }
+
+  local function info(message)
+    if opts.verbosity > 0 then
+      print(message)
+    end
+  end
+
+  local function debug(message)
+    if opts.verbosity > 1 then
+      print(message)
+    end
+  end
+
+  local function verbose(message)
+    if opts.verbosity > 2 then
+      print(message)
+    end
+  end
+
+  return {
+    opts = opts,
+    info = info,
+    debug = debug,
+    verbose = verbose,
+  }
+end)()
+
+log.opts.verbosity = 3
+
 local utils = (function()
 
   ---All functions in this section are stored in a table called `nodex`.
@@ -190,7 +221,7 @@ local utils = (function()
   end
 
   ---Encloze a rule node with color nodes as the function
-  --`utils.insert_line` does.
+  -- `utils.insert_line` does.
   ---
   ---In contrast to -`utils.insert_line` the three nodes are appended to
   ---TeX’s ‘current-list’. They are not inserted in a node list, which
@@ -719,14 +750,13 @@ end
 ---
 ---@return Node # The head of the node list.
 local function make_basic(head_node_input)
-  -- This local variables are overloaded by function who
-  -- call each other.
+  -- This local variables are overloaded by functions
+  -- calling each other.
   local continue_cloze, search_stop
 
-  ---The function `make_single()` makes one gap. The argument
-  ---`start_node` is the node where the gap begins. The argument
-  ---`stop_node` is the node where the gap ends.
-  --
+  ---
+  ---Make a single gap.
+  ---
   ---@param start_node Node # The node to start / begin a new cloze.
   ---@param stop_node Node # The node to stop / end a new cloze.
   ---@param parent_node HlistNode # The parent node (hlist) of the start and the stop node.
@@ -738,6 +768,9 @@ local function make_basic(head_node_input)
     local line_width = node.dimensions(parent_node.glue_set,
       parent_node.glue_sign, parent_node.glue_order, start_node,
       stop_node)
+
+    log.info('Make a line of the width of: ' .. line_width .. 'sp')
+
     local line_node = utils.insert_line(start_node, line_width)
     local color_text_node = utils.insert_list('after', line_node, {
       utils.create_color('text', 'push'),
@@ -834,33 +867,33 @@ end
 ---@param head_node_input Node # The head of a node list.
 local function make_fix(head_node_input)
 
-  ---Calculate the length of the whitespace before (`kern_start_length`) and
-  ---after (`kern_stop_length`) the text.
+  ---
+  ---Calculate the widths of the whitespace before (`start_width`) and
+  ---after (`stop_width`) the cloze text.
   ---
   ---@param start Node
   ---@param stop Node
   ---
-  ---@return number width
-  ---@return number kern_start_length
-  ---@return number kern_stop_length
-  local function calculate_length(start, stop)
-    local width, kern_start_length, kern_stop_length, text_width,
-      half_length, align
-    width = tex.sp(registry.get_value('width'))
-    text_width = node.dimensions(start, stop)
-    align = registry.get_value('align')
+  ---@return integer width
+  ---@return integer start_width # The width of the whitespace before the cloze text.
+  ---@return integer stop_width # The width of the whitespace after the cloze text.
+  local function calculate_widths(start, stop)
+    local start_width, stop_width
+    local width = tex.sp(registry.get_value('width'))
+    local text_width = node.dimensions(start, stop)
+    local align = registry.get_value('align')
     if align == 'right' then
-      kern_start_length = -text_width
-      kern_stop_length = 0
+      start_width = -text_width
+      stop_width = 0
     elseif align == 'center' then
-      half_length = (width - text_width) / 2
-      kern_start_length = -half_length - text_width
-      kern_stop_length = half_length
+      local half = (width - text_width) / 2
+      start_width = -half - text_width
+      stop_width = half
     else
-      kern_start_length = -width
-      kern_stop_length = width - text_width
+      start_width = -width
+      stop_width = width - text_width
     end
-    return width, kern_start_length, kern_stop_length
+    return width, start_width, stop_width
   end
 
   ---The function `make_single` generates a gap of fixed width.
@@ -954,16 +987,14 @@ local function make_fix(head_node_input)
   ---@param start Node # The node, where the gap begins
   ---@param stop Node # The node, where the gap ends
   local function make_single(start, stop)
-    local width, kern_start_length, kern_stop_length, line_node
-    width, kern_start_length, kern_stop_length =
-      calculate_length(start, stop)
-    line_node = utils.insert_line(start, width)
+    local width, kern_start_length, kern_stop_length = calculate_widths(
+      start, stop)
+    local line_node = utils.insert_line(start, width)
     if registry.get_value_show() then
-      utils.insert_list('after', line_node,
-        {
-          utils.create_kern_node(kern_start_length),
-          utils.create_color('text', 'push'),
-        })
+      utils.insert_list('after', line_node, {
+        utils.create_kern_node(kern_start_length),
+        utils.create_color('text', 'push'),
+      })
       utils.insert_list('before', stop, {
         utils.create_color('text', 'pop'),
         utils.create_kern_node(kern_stop_length),
