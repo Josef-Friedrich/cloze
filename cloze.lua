@@ -31,17 +31,17 @@ local luakeys = require('luakeys')()
 local farbe = require('farbe')
 
 ---All values and functions, which are related to the option
----management, are stored in a table called `registry`.
-local registry = {}
+---management, are stored in a table called `config`.
+local config = {}
 
 ---I didn’t know what value I should take as `user_id`. Therefore I
 ---took my birthday and transformed it into a large number.
-registry.user_id = 3121978
+config.user_id = 3121978
 
 ---Store all local options of the markers.
 ---
 ---<code><pre>
----registry.storage = {
+---config.storage = {
 ---  {
 ---    mode = "basic",
 ---    position = "start",
@@ -54,7 +54,7 @@ registry.user_id = 3121978
 ---    position = "stop"
 ---  }
 ---}</pre></code>
-registry.storage = {}
+config.storage = {}
 
 ---@class Options
 ---@field align? 'l'|'r'
@@ -75,7 +75,7 @@ registry.storage = {}
 ---@field width? string
 
 ---The default options.
-registry.defaults = {
+config.defaults = {
   ['align'] = 'l',
   ['boxheight'] = false,
   ['boxrule'] = '0.4pt',
@@ -94,10 +94,10 @@ registry.defaults = {
 }
 
 ---The global options set by the user.
-registry.global_options = {}
+config.global_options = {}
 
 ---The local options.
-registry.local_options = {}
+config.local_options = {}
 
 local log = (function()
   local opts = { verbosity = 0 }
@@ -150,9 +150,9 @@ local utils = (function()
   local function create_color(kind, command)
     local color
     if kind == 'line' then
-      color = registry.get_value('linecolor')
+      color = config.get_value('linecolor')
     else
-      color = registry.get_value('textcolor')
+      color = config.get_value('textcolor')
     end
     return color:create_pdf_colorstack_node(command)
   end
@@ -168,8 +168,8 @@ local utils = (function()
   ---@return RuleNode
   local function create_line(width)
     local rule = node.new('rule') --[[@as RuleNode]]
-    local thickness = tex.sp(registry.get_value('thickness'))
-    local distance = tex.sp(registry.get_value('distance'))
+    local thickness = tex.sp(config.get_value('thickness'))
+    local distance = tex.sp(config.get_value('distance'))
     rule.depth = distance + thickness
     rule.height = -distance
     rule.width = width
@@ -231,7 +231,7 @@ local utils = (function()
   ---
   local function write_line_nodes()
     node.write(create_color('line', 'push'))
-    node.write(create_line(tex.sp(registry.get_value('width'))))
+    node.write(create_line(tex.sp(config.get_value('width'))))
     node.write(create_color('line', 'pop'))
   end
 
@@ -298,7 +298,7 @@ local utils = (function()
   ---Write a kern node to the current node list. This kern node can be
   ---used to build a margin.
   local function write_margin_node()
-    node.write(create_kern_node(tex.sp(registry.get_value('margin'))))
+    node.write(create_kern_node(tex.sp(config.get_value('margin'))))
   end
 
   ---
@@ -335,7 +335,7 @@ end)()
 
 ---Option handling.
 ---
----The table `registry` bundles functions that deal with the option
+---The table `config` bundles functions that deal with the option
 ---handling.
 ---
 ---<h2>Marker processing (marker)</h2>
@@ -347,7 +347,7 @@ end)()
 ---* Store a index number, that points to a Lua table, which holds some
 ---  additional data like the local options.
 ---
----@section registry
+---@section config
 
 ---We create a user defined whatsit node that can store a number (type
 --- = 100).
@@ -356,15 +356,15 @@ end)()
 ---nodes we set the `user_id` to a large number. We call this whatsit
 ---node a marker.
 ---
----@param index number The argument `index` is a number, which is associated to values in the `registry.storage` table.
+---@param index number The argument `index` is a number, which is associated to values in the `config.storage` table.
 ---
 ---@return UserDefinedWhatsitNode
-function registry.create_marker(index)
+function config.create_marker(index)
   local marker = node.new('whatsit', 'user_defined') --[[@as UserDefinedWhatsitNode]]
   marker.type = 100 -- number
-  marker.user_id = registry.user_id
+  marker.user_id = config.user_id
   marker.value = index
-  node.setproperty(marker, { cloze = registry.get_storage(index) })
+  node.setproperty(marker, { cloze = config.get_storage(index) })
   return marker
 end
 
@@ -372,9 +372,9 @@ end
 ---
 ---@param mode MarkerMode
 ---@param position MarkerPosition
-function registry.write_marker(mode, position)
-  local index = registry.set_storage(mode, position)
-  local marker = registry.create_marker(index)
+function config.write_marker(mode, position)
+  local index = config.set_storage(mode, position)
+  local marker = config.create_marker(index)
   node.write(marker)
 end
 
@@ -383,10 +383,10 @@ end
 ---@param item Node
 ---
 ---@return boolean
-function registry.is_marker(item)
+function config.is_marker(item)
   local n = item --[[@as UserDefinedWhatsitNode]]
   if n.id == node.id('whatsit') and n.subtype ==
-    node.subtype('user_defined') and n.user_id == registry.user_id then
+    node.subtype('user_defined') and n.user_id == config.user_id then
     return true
   end
   return false
@@ -400,9 +400,9 @@ end
 ---@param position MarkerPosition
 ---
 ---@return boolean
-function registry.check_marker(head_node, mode, position)
+function config.check_marker(head_node, mode, position)
   local data =
-    registry.get_marker_data(head_node --[[@as UserDefinedWhatsitNode]] )
+    config.get_marker_data(head_node --[[@as UserDefinedWhatsitNode]] )
   if data and data.mode == mode and data.position == position then
     return true
   end
@@ -410,37 +410,37 @@ function registry.check_marker(head_node, mode, position)
 end
 
 ---
----`registry.get_marker` returns the given marker.
+---`config.get_marker` returns the given marker.
 ---
 ---@param head_node Node # The current node.
 ---@param mode MarkerMode
 ---@param position MarkerPosition
 ---
 ---@return false|Node # The node if `head_node` is a marker node.
-function registry.get_marker(head_node, mode, position)
+function config.get_marker(head_node, mode, position)
   local out
-  if registry.check_marker(head_node, mode, position) then
+  if config.check_marker(head_node, mode, position) then
     out = head_node
   else
     out = false
   end
   if out and position == 'start' then
-    registry.get_marker_values(head_node)
+    config.get_marker_values(head_node)
   end
   return out
 end
 
 ---
 ---Test whether the node `item` is a marker and retrieve the
----the corresponding registry data.
+---the corresponding config data.
 ---
 ---@param item UserDefinedWhatsitNode # The argument `item` is a node of unspecified type.
 ---
 ---@return table|false # The marker data.
-function registry.get_marker_data(item)
+function config.get_marker_data(item)
   if item.id == node.id('whatsit') and item.subtype ==
-    node.subtype('user_defined') and item.user_id == registry.user_id then
-    return registry.get_storage(item.value --[[@as integer]] )
+    node.subtype('user_defined') and item.user_id == config.user_id then
+    return config.get_storage(item.value --[[@as integer]] )
   else
     return false
   end
@@ -454,10 +454,10 @@ end
 ---@param marker UserDefinedWhatsitNode
 ---
 ---@return unknown
-function registry.get_marker_values(marker)
-  local data = registry.get_marker_data(marker)
+function config.get_marker_values(marker)
+  local data = config.get_marker_data(marker)
   if data then
-    registry.local_options = data.local_opts
+    config.local_options = data.local_opts
     return data.local_opts
   end
 end
@@ -470,24 +470,24 @@ end
 ---
 ---@return Node|nil head
 ---@return Node|nil current
-function registry.remove_marker(marker)
-  if registry.is_marker(marker) then
+function config.remove_marker(marker)
+  if config.is_marker(marker) then
     return node.remove(marker, marker)
   end
 end
 
 ---__Storage functions (storage)__
 
----`registry.index` is a counter. The functions `registry.get_index()`
+---`config.index` is a counter. The functions `config.get_index()`
 ---increases the counter by one and then returns it.
 ---
----@return integer # The index number of the corresponding table in `registry.storage`.
-function registry.get_index()
-  if not registry.index then
-    registry.index = 0
+---@return integer # The index number of the corresponding table in `config.storage`.
+function config.get_index()
+  if not config.index then
+    config.index = 0
   end
-  registry.index = registry.index + 1
-  return registry.index
+  config.index = config.index + 1
+  return config.index
 end
 
 ---@alias MarkerMode 'basic'|'fix'|'par' # The argument `mode` accepts the string values `basic`, `fix` and `par`.
@@ -500,8 +500,8 @@ end
 ---@field local_opts any
 
 ---
----`registry.set_storage()` stores the local options in the Lua table
---- `registry.storage`.
+---`config.set_storage()` stores the local options in the Lua table
+--- `config.storage`.
 ---
 ---It returns a numeric index number. This index number is the key,
 ---where the local options in the Lua table are stored.
@@ -510,67 +510,67 @@ end
 ---@param position MarkerPosition
 ---
 ---@return number # The index number of the corresponding table in
----  `registry.storage`.
-function registry.set_storage(mode, position)
-  local index = registry.get_index()
+---  `config.storage`.
+function config.set_storage(mode, position)
+  local index = config.get_index()
   local data = { mode = mode, position = position }
   if position == 'start' then
     data.local_opts = {}
-    for key, value in pairs(registry.local_options) do
+    for key, value in pairs(config.local_options) do
       data.local_opts[key] = value
     end
   end
-  registry.storage[index] = data
+  config.storage[index] = data
   return index
 end
 
----The function `registry.get_storage()` retrieves values which belong
+---The function `config.get_storage()` retrieves values which belong
 --- to a whatsit marker.
 ---
 ---@param index integer # The argument `index` is a numeric value.
 ---
 ---@return Marker value
-function registry.get_storage(index)
-  return registry.storage[index]
+function config.get_storage(index)
+  return config.storage[index]
 end
 
 ---__Option processing (option)__
 
 ---This function stores a value `value` and his associated key `key`
---- either to the global (`registry.global_options`) or to the local
---- (`registry.local_options`) option table.
+--- either to the global (`config.global_options`) or to the local
+--- (`config.local_options`) option table.
 ---
----The global boolean variable `registry.local_options` controls in
+---The global boolean variable `config.local_options` controls in
 ---which table the values are stored.
 ---
 ---@param key string # The option key.
 ---@param value any # The value that is stored under the options key.
-function registry.set_option(key, value)
+function config.set_option(key, value)
   if value == '' or value == '\\color@ ' then
     return false
   end
-  if registry.is_global == true then
-    registry.global_options[key] = value
+  if config.is_global == true then
+    config.global_options[key] = value
   else
-    registry.local_options[key] = value
+    config.local_options[key] = value
   end
 end
 
----Set the variable `registry.is_global`.
+---Set the variable `config.is_global`.
 ---
 ---@param is_global boolean
-function registry.set_is_global(is_global)
-  registry.is_global = is_global
+function config.set_is_global(is_global)
+  config.is_global = is_global
 end
 
 ---This function unsets the local options.
-function registry.unset_local_options()
-  registry.local_options = {}
+function config.unset_local_options()
+  config.local_options = {}
 end
 
----`registry.unset_global_options` empties the global options storage.
-function registry.unset_global_options()
-  registry.global_options = {}
+---`config.unset_global_options` empties the global options storage.
+function config.unset_global_options()
+  config.global_options = {}
 end
 
 ---Retrieve a value from a given key. First search for the value in the
@@ -580,24 +580,24 @@ end
 ---@param key string # The name of the options key.
 ---
 ---@return any # The value of the corresponding option key.
-function registry.get_value(key)
-  if registry.has_value(registry.local_options[key]) then
-    return registry.local_options[key]
+function config.get_value(key)
+  if config.has_value(config.local_options[key]) then
+    return config.local_options[key]
   end
-  if registry.has_value(registry.global_options[key]) then
-    return registry.global_options[key]
+  if config.has_value(config.global_options[key]) then
+    return config.global_options[key]
   end
-  return registry.defaults[key]
+  return config.defaults[key]
 end
 
----The function `registry.get_value_show()` returns the boolean value
+---The function `config.get_value_show()` returns the boolean value
 ---`true` if the option `show` is true. In contrast to the function
----`registry.get_value()` it converts the string value `true' to a
+---`config.get_value()` it converts the string value `true' to a
 ---boolean value.
 ---
 ---@return boolean
-function registry.get_value_show()
-  if registry.get_value('show') == true or registry.get_value('show') ==
+function config.get_value_show()
+  if config.get_value('show') == true or config.get_value('show') ==
     'true' then
     return true
   else
@@ -611,7 +611,7 @@ end
 ---@param value any # A value of different types.
 ---
 ---@return boolean # True is the value is set otherwise false.
-function registry.has_value(value)
+function config.has_value(value)
   if value == nil or value == '' or value == '\\color@ ' then
     return false
   else
@@ -624,8 +624,8 @@ end
 ---@param key any # The name of the options key.
 ---
 ---@return any # The corresponding value of the options key.
-function registry.get_defaults(key)
-  return registry.defaults[key]
+function config.get_defaults(key)
+  return config.defaults[key]
 end
 
 ---@param kv_string string
@@ -635,101 +635,101 @@ local function parse_options(kv_string, to_global)
     to_global = false
   end
 
-  registry.set_is_global(to_global)
+  config.set_is_global(to_global)
   local defs = {
     align = {
       description = 'Align the text of a fixed size cloze.',
       process = function(value)
-        registry.set_option('align', value)
+        config.set_option('align', value)
       end,
     },
     boxheight = {
       description = 'The height of a cloze box.',
       process = function(value)
-        registry.set_option('boxheight', value)
+        config.set_option('boxheight', value)
       end,
     },
     boxrule = {
       description = 'The thickness of the rule around a cloze box.',
       process = function(value)
-        registry.set_option('boxrule', value)
+        config.set_option('boxrule', value)
       end,
     },
     boxwidth = {
       description = 'The width of a cloze box.',
       process = function(value)
-        registry.set_option('boxwidth', value)
+        config.set_option('boxwidth', value)
       end,
     },
     distance = {
       description = 'The distance between the cloze text and the cloze line.',
       process = function(value)
-        registry.set_option('distance', value)
+        config.set_option('distance', value)
       end,
     },
     hide = {
       description = 'Hide the cloze text.',
       process = function(value)
         tex.print('\\clozeshowfalse')
-        registry.set_option('show', false)
-        registry.set_option('hide', true)
+        config.set_option('show', false)
+        config.set_option('hide', true)
       end,
     },
     show = {
       description = 'Show the cloze text.',
       process = function(value)
         tex.print('\\clozeshowfalse')
-        registry.set_option('show', true)
-        registry.set_option('hide', false)
+        config.set_option('show', true)
+        config.set_option('hide', false)
       end,
     },
     visibility = {
       description = 'Show or hide the cloze text.',
       opposite_keys = { [true] = 'show', [false] = 'hide' },
       process = function(value)
-        registry.set_option('visibility', value)
+        config.set_option('visibility', value)
       end,
     },
     linecolor = {
       description = 'A color name to colorize the cloze line.',
       process = function(value)
-        registry.set_option('linecolor', farbe.Color(value))
+        config.set_option('linecolor', farbe.Color(value))
       end,
     },
     margin = {
       description = 'Indicates how far the cloze line sticks up horizontally from the text.',
       process = function(value)
-        registry.set_option('margin', value)
+        config.set_option('margin', value)
       end,
     },
     minlines = {
       description = 'How many lines a clozepar at least must have.',
       process = function(value)
-        registry.set_option('minlines', value)
+        config.set_option('minlines', value)
       end,
     },
     spacing = {
       description = 'The spacing between lines (environment clozespace).',
       process = function(value)
-        registry.set_option('spacing', value)
+        config.set_option('spacing', value)
       end,
     },
     textcolor = {
       description = 'The color (name) of the cloze text.',
       process = function(value)
-        registry.set_option('textcolor', farbe.Color(value))
+        config.set_option('textcolor', farbe.Color(value))
       end,
     },
     thickness = {
       description = 'The thickness of the cloze line.',
       process = function(value)
-        registry.set_option('thickness', value)
+        config.set_option('thickness', value)
       end,
     },
     width = {
       description = 'The width of the cloze line of the command \\clozefix.',
       process = function(value)
-        registry.set_option('width', value)
+        config.set_option('width', value)
       end,
     },
   }
@@ -775,7 +775,7 @@ local function make_basic(head_node_input)
     local color_text_node = utils.insert_list('after', line_node, {
       utils.create_color('text', 'push'),
     })
-    if registry.get_value_show() then
+    if config.get_value_show() then
       utils.insert_list('after', color_text_node,
         { utils.create_kern_node(-line_width) })
       utils.insert_list('before', stop_node,
@@ -787,8 +787,8 @@ local function make_basic(head_node_input)
     -- In some edge cases the lua callbacks get fired up twice. After the
     -- cloze has been created, the start and stop whatsit markers can be
     -- deleted.
-    registry.remove_marker(start_node)
-    return registry.remove_marker(stop_node), parent_node
+    config.remove_marker(start_node)
+    return config.remove_marker(stop_node), parent_node
   end
 
   ---Search for a stop marker or make a cloze up to the end of the node
@@ -803,7 +803,7 @@ local function make_basic(head_node_input)
     local head_node = start_node
     local last_node
     while head_node do
-      if registry.check_marker(head_node, 'basic', 'stop') then
+      if config.check_marker(head_node, 'basic', 'stop') then
         return make_single(start_node, head_node, parent_node)
       end
       last_node = head_node
@@ -843,7 +843,7 @@ local function make_basic(head_node_input)
       if head_node.head then
         ---@cast head_node HlistNode
         search_start(head_node.head, head_node)
-      elseif registry.check_marker(head_node, 'basic', 'start') and
+      elseif config.check_marker(head_node, 'basic', 'start') and
         parent_node and parent_node.id == node.id('hlist') then
         -- Adds also a strut at the first position. It prepars the
         -- hlist and makes it ready to build a cloze.
@@ -879,9 +879,9 @@ local function make_fix(head_node_input)
   ---@return integer stop_width # The width of the whitespace after the cloze text.
   local function calculate_widths(start, stop)
     local start_width, stop_width
-    local width = tex.sp(registry.get_value('width'))
+    local width = tex.sp(config.get_value('width'))
     local text_width = node.dimensions(start, stop)
-    local align = registry.get_value('align')
+    local align = config.get_value('align')
     if align == 'right' then
       start_width = -text_width
       stop_width = 0
@@ -990,7 +990,7 @@ local function make_fix(head_node_input)
     local width, kern_start_length, kern_stop_length = calculate_widths(
       start, stop)
     local line_node = utils.insert_line(start, width)
-    if registry.get_value_show() then
+    if config.get_value_show() then
       utils.insert_list('after', line_node, {
         utils.create_kern_node(kern_start_length),
         utils.create_color('text', 'push'),
@@ -1002,8 +1002,8 @@ local function make_fix(head_node_input)
     else
       line_node.next = stop.next
     end
-    registry.remove_marker(start)
-    registry.remove_marker(stop)
+    config.remove_marker(start)
+    config.remove_marker(stop)
   end
 
   ---Function to recurse the node list and search after marker.
@@ -1016,10 +1016,10 @@ local function make_fix(head_node_input)
         make_fix_recursion(head_node.head)
       else
         if not start_node then
-          start_node = registry.get_marker(head_node, 'fix', 'start')
+          start_node = config.get_marker(head_node, 'fix', 'start')
         end
         if not stop_node then
-          stop_node = registry.get_marker(head_node, 'fix', 'stop')
+          stop_node = config.get_marker(head_node, 'fix', 'stop')
         end
         if start_node and stop_node then
           make_single(start_node, stop_node)
@@ -1187,7 +1187,7 @@ local function make_par(head_node)
       hlist_node, strut_node, _ = utils.insert_strut_into_hlist(
         hlist_node)
       line_node = utils.insert_line(strut_node, width)
-      if registry.get_value_show() then
+      if config.get_value_show() then
         utils.insert_list('after', line_node, {
           utils.create_kern_node(-width),
           utils.create_color('text', 'push'),
@@ -1201,7 +1201,7 @@ local function make_par(head_node)
     head_node = head_node.next
   end
 
-  local minlines = registry.get_value('minlines')
+  local minlines = config.get_value('minlines')
   local additional_lines = minlines - line_count
 
   if additional_lines > 0 then
@@ -1308,12 +1308,12 @@ return {
   write_linefil_nodes = utils.write_linefil_nodes,
   write_line_nodes = utils.write_line_nodes,
   write_margin_node = utils.write_margin_node,
-  set_option = registry.set_option,
-  set_is_global = registry.set_is_global,
-  unset_local_options = registry.unset_local_options,
-  reset = registry.unset_global_options,
-  get_defaults = registry.get_defaults,
-  get_value = registry.get_value,
-  marker = registry.write_marker,
+  set_option = config.set_option,
+  set_is_global = config.set_is_global,
+  unset_local_options = config.unset_local_options,
+  reset = config.unset_global_options,
+  get_defaults = config.get_defaults,
+  get_value = config.get_value,
+  marker = config.write_marker,
   parse_options = parse_options,
 }
