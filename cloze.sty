@@ -5,81 +5,206 @@
 %% The original source files were:
 %%
 %% cloze.dtx  (with options: `latex')
-%% 
+%%
 %% This is a generated file.
-%% 
+%%
 %% Copyright (C) 2015-2020 by Josef Friedrich <josef@friedrich.rocks>
 %% ----------------------------------------------------------------------
 %% This work may be distributed and/or modified under the conditions of
 %% the LaTeX Project Public License, either version 1.3c of this license
 %% or (at your option) any later version. The latest version of this
 %% license is in:
-%% 
+%%
 %%   http://www.latex-project.org/lppl.txt
-%% 
+%%
 %% and version 1.3c or later is part of all distributions of LaTeX
 %% version 2008/05/05 or later.
-%% 
+%%
 \NeedsTeXFormat{LaTeX2e}[1999/12/01]
 \ProvidesPackage{cloze}
     [2020/06/30 v1.6 Package to typeset cloze worksheets or cloze tests]
+%
+% \subsection{The file \tt{cloze.sty}}
+%
+%    \begin{macrocode}
 \input{cloze.tex}
+%    \end{macrocode}
+%
+% This packages are used to build \emph{cloze}:
+%
+% \subsubsection{Dependencies}
+%
+% The package \href{https://www.ctan.org/pkg/fontspec}{fontspec} is not
+% necessarily required. When using Lua\LaTeX{} it is good form to load
+% it. Apart from this the package supplies helpful messages, when you
+% compile a Lua\LaTeX{} document with pdf\LaTeX{}.
+%    \begin{macrocode}
 \RequirePackage{fontspec}
+%    \end{macrocode}
+% The package \href{https://www.ctan.org/pkg/luatexbase}{luatexbase}
+% allows to register multiple Lua callbacks.
+%    \begin{macrocode}
 \RequirePackage{luatexbase-mcb}
+%    \end{macrocode}
+% The package \href{https://www.ctan.org/pkg/setspace}{setspace} is used
+% by the environment |clozespace|.
+%    \begin{macrocode}
 \RequirePackage{setspace}
+%    \end{macrocode}
+% The package \href{https://www.ctan.org/pkg/xcolor}{xcolor} is required
+% to colorize the text and the line of a gap.
+%    \begin{macrocode}
 \RequirePackage{xcolor}
+%    \end{macrocode}
+% The package \href{https://www.ctan.org/pkg/xcolor}{xparse} is used by
+% the environment |clozebox|.
+%    \begin{macrocode}
 \RequirePackage{xparse}
+%    \end{macrocode}
+% The package \href{https://www.ctan.org/pkg/stackengine}{stackengine}
+% is required by the command |\clozestrike{}{}|.
+%    \begin{macrocode}
 \RequirePackage{stackengine}
+%    \end{macrocode}
+% The package \href{https://www.ctan.org/pkg/ulem}{ulem} is required by
+% the command |\clozestrike{}{}|.
+%    \begin{macrocode}
 \RequirePackage{ulem}
 \normalem
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \RequirePackage{transparent}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \DeclareOption*{} % suppresses the error message: ! LaTeX Error: Unknown option
 \ProcessOptions\relax
 \RequirePackage{luakeys}
 \directlua{
   cloze.parse_options('\LuakeysPackageOptions', true)
 }
+%    \end{macrocode}
+%
+% Load the cloze lua module and put all return values in the variable
+% |cloze|.
+%
+% \begin{macro}{\clozesetoption}
+% \cmd{\clozesetoption} is a wrapper for the Lua function
+% |registry.set_option|. \cmd{\clozesetoption}\marg{key}\marg{value}
+% sets a key \meta{key} to the value \meta{value}. The plain Lua\TeX{}
+% version always sets to the global options. The Lua\LaTeX-version
+% can set values both to the local and the global options store.
+%    \begin{macrocode}
 \let\clozesetoption=\undefined
 \newcommand{\clozesetoption}[2]{%
   \directlua{cloze.set_option('#1', '#2')}%
 }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ClozeSetLocalOptions}
+% This macro is used in all cloze commands to handle the optional
+% arguments.
+%    \begin{macrocode}
 \def\ClozeSetLocalOptions#1{%
   \directlua{
     cloze.parse_options('#1', false)
   }%
 }
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsection{Options}
+%
+% At start all values are declared as global options. At the Lua side
+% all values are now stored in the |registry.global_options| table.
+%
+%    \begin{macrocode}
 \ClozeSetToGlobal
+%    \end{macrocode}
+%
+% \subsubsection{Public macros}
+%
+% All public macros are prefixed with |\cloze|.
+%
+% \begin{macro}{\clozeset}
+% The usage of the command \cmd{\clozeset} is described in detail in
+% section \TmpSecRef{sec:command-clozeset}.
+%    \begin{macrocode}
 \newcommand{\clozeset}[1]{%
   \directlua{
     cloze.parse_options('#1', true)
   }%
 }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozeshow}
+% The usage of the command \cmd{\clozeshow} is described in detail in
+% section \TmpSecRef{sec:command-clozeshow}.
+%    \begin{macrocode}
 \let\clozeshow=\undefined
 \newcommand{\clozeshow}{%
   \clozeset{show}
 }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozehide}
+% The usage of the command \cmd{\clozehide} is described in detail in
+% section \TmpSecRef{sec:command-clozehide}.
+%    \begin{macrocode}
 \let\clozehide=\undefined
 \newcommand{\clozehide}{%
   \clozeset{hide}
 }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\cloze}
+% The usage of the command \cmd{\cloze} is described in detail in
+% section \TmpSecRef{sec:command-cloze}.
+%    \begin{macrocode}
 \let\clozePLAIN=\cloze
 \let\cloze=\undefined
 \newcommand{\cloze}[2][]{%
   \ClozeSetLocalOptions{#1}%
   \clozePLAIN{#2}%
 }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozefix}
+% The usage of the command \cmd{\clozefix} is described in detail in
+% section \TmpSecRef{sec:command-clozefix}.
+%    \begin{macrocode}
 \let\clozefixPLAIN=\clozefix
 \let\clozefix=\undefined
 \newcommand{\clozefix}[2][]{%
   \ClozeSetLocalOptions{#1}%
   \clozefixPLAIN{#2}%
 }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozenol}
+% The usage of the command \cmd{\clozenol} is described in detail in
+% section \TmpSecRef{sec:command-clozenol}.
+%    \begin{macrocode}
 \let\clozenolPLAIN=\clozenol
 \let\clozenol=\undefined
 \newcommand{\clozenol}[2][]{%
   \ClozeSetLocalOptions{#1}%
   \clozenolPLAIN{#2}%
 }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{environment}{clozepar}
+% The usage of the environment |clozepar| is described in detail in
+% section \TmpSecRef{sec:command-clozepar}.
+%    \begin{macrocode}
 \newenvironment{clozepar}[1][]%
 {%
   \par%
@@ -92,12 +217,31 @@
   \par%
   \directlua{cloze.unregister_callback('par')}%
 }
+%    \end{macrocode}
+% \end{environment}
+%
+%
+% \begin{macro}{\clozeparplain}
+% The usage of the command \cmd{\clozeparplain} is described in detail in
+% section \TmpSecRef{sec:command-clozeparplain}.
+%    \begin{macrocode}
 \let\clozeparplainPLAIN=\clozeparplain
 \let\clozeparplain=\undefined
 \newcommand{\clozeparplain}[2][]{%
   \ClozeSetLocalOptions{#1}%
   \clozeparplainPLAIN{#2}%
 }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{environment}{clozebox}
+% The usage of the environment |clozebox| is described in detail in
+% section \TmpSecRef{sec:command-clozebox}.
+% For the box rule a \cmd{\fbox} is used. We store the original rule
+% thickness and restore the dimension after the clozebox is set.
+% The dimension |fboxrule| have to be set before the environment
+% |lrbox|.
+%    \begin{macrocode}
 \newsavebox{\ClozeBox}%
 \NewDocumentEnvironment{clozebox}{ s O{} +b}{%
   \ClozeSetLocalOptions{#2}%
@@ -129,27 +273,62 @@
     tex.dimen['fboxrule'] = cloze.fboxrule_restore
   }%
 }
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{clozespace}
+% The usage of the environment |clozespace| is described in detail in
+% section \TmpSecRef{sec:command-clozespace}.
+% TODO: Realization without setspace package.
+%    \begin{macrocode}
 \newenvironment{clozespace}[1][]%
 {%
   \ClozeSetLocalOptions{#1}%
   \begin{spacing}{\directlua{tex.print(cloze.get_value('spacing'))}}%
 }{\end{spacing}}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{macro}{\clozeline}
+% The usage of the command \cmd{\clozeline} is described in detail in
+% section \TmpSecRef{sec:command-clozeline}.
+%    \begin{macrocode}
 \let\clozelinePLAIN=\clozeline
 \let\clozeline=\undefined
 \newcommand{\clozeline}[1][]{%
   \ClozeSetLocalOptions{#1}%
   \clozelinePLAIN%
 }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozelinefil}
+% The usage of the command \cmd{\clozelinefil} is described in detail in
+% section \TmpSecRef{sec:command-clozelinefil}.
+%    \begin{macrocode}
 \let\clozelinefilPLAIN=\clozelinefil
 \let\clozelinefil=\undefined
 \newcommand{\clozelinefil}[1][]{%
   \ClozeSetLocalOptions{#1}%
   \clozelinefilPLAIN%
 }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozefil}
+% The usage of the command \cmd{\clozefil} is described in detail in
+% section \TmpSecRef{sec:command-clozefil}.
+%    \begin{macrocode}
 \let\clozefil=\undefined
 \newcommand{\clozefil}[2][]{%
   \cloze[#1]{#2}\clozelinefil[#1]%
 }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozeextend}
+% TODO: Use node library to create kern nodes.
+%    \begin{macrocode}
 \newcommand{\clozeextend}[1][1]{%
   \directlua{
     local loop = #1
@@ -158,11 +337,21 @@
     end
   }
 }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ClozeTextColor}
+%    \begin{macrocode}
 \newcommand{\ClozeTextColor}[1]{%
   \textcolor%
     {\directlua{tex.print(cloze.get_value('textcolor_name'))}}%
     {#1}%
 }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ClozeStrikeLine}
+%    \begin{macrocode}
 \newcommand\ClozeStrikeLine{%
   \bgroup%
   \markoverwith{%
@@ -172,6 +361,11 @@
   }%
   \ULon%
 }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozestrike}
+%    \begin{macrocode}
 \newcommand{\clozestrike}[3][]{%
   \ClozeSetLocalOptions{#1}%
   \ifclozeshow%
@@ -196,6 +390,5 @@
       {\stacktype}% \stacktype or S or L
   \fi%
 }
-\endinput
-%%
-%% End of file `cloze.sty'.
+%    \end{macrocode}
+% \end{macro}

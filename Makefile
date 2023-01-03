@@ -6,10 +6,8 @@ installdir = $(texmftex)/$(jobname)
 all: install doc
 
 install:
-	# Delete old location
 	-tlmgr remove --force cloze
 	rm -rf $(texmf)/tex/lualatex/$(jobname)
-	luatex $(jobname).ins
 	mkdir -p $(installdir)
 	cp -f $(jobname).tex $(installdir)
 	cp -f $(jobname).sty $(installdir)
