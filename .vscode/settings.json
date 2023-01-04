@@ -33,6 +33,9 @@
     "${3rd}/lfs/library"
   ],
   "Lua.diagnostics.disable": [
-    "redefined-local"
-  ]
+    "redefined-local",
+  ],
+  "Lua.diagnostics.severity": {
+    "undefined-global": "Error!"
+  }
 }

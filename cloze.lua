@@ -335,13 +335,12 @@ local config = (function()
   ---@field boxrule? string
   ---@field boxwidth? string
   ---@field distance? string
-  ---@field hide? boolean
+  ---@field visibility? boolean
   ---@field line_color? string
   ---@field margin? string
   ---@field minlines? integer
   ---@field resetcolor? string
   ---@field show_text? boolean
-  ---@field show? boolean
   ---@field spacing? number
   ---@field text_color? string
   ---@field thickness? string
@@ -354,15 +353,14 @@ local config = (function()
     ['boxrule'] = '0.4pt',
     ['boxwidth'] = '\\linewidth',
     ['distance'] = '1.5pt',
-    ['hide'] = false,
     ['line_color'] = farbe.Color('black'),
     ['margin'] = '3pt',
     ['minlines'] = 0,
     ['show_text'] = true,
-    ['show'] = true,
     ['spacing'] = '1.6',
     ['text_color'] = farbe.Color('blue'),
     ['thickness'] = '0.4pt',
+    ['visibility'] = true,
     ['width'] = '2cm',
   }
 
@@ -642,20 +640,6 @@ local config = (function()
     return value
   end
 
-  ---The function `get_value_show()` returns the boolean value
-  ---`true` if the option `show` is true. In contrast to the function
-  ---`get_value()` it converts the string value `true' to a
-  ---boolean value.
-  ---
-  ---@return boolean
-  local function get_value_show()
-    if get_value('show') == true or get_value('show') == 'true' then
-      return true
-    else
-      return false
-    end
-  end
-
   ---Return the default value of the given option.
   ---
   ---@param key any # The name of the options key.
@@ -700,22 +684,6 @@ local config = (function()
         description = 'The distance between the cloze text and the cloze line.',
         process = function(value)
           set_option('distance', value)
-        end,
-      },
-      hide = {
-        description = 'Hide the cloze text.',
-        process = function(value)
-          tex.print('\\clozeshowfalse')
-          set_option('show', false)
-          set_option('hide', true)
-        end,
-      },
-      show = {
-        description = 'Show the cloze text.',
-        process = function(value)
-          tex.print('\\clozeshowfalse')
-          set_option('show', true)
-          set_option('hide', false)
         end,
       },
       visibility = {
@@ -789,8 +757,6 @@ local config = (function()
     unset_global_options = unset_global_options,
     unset_local_options = unset_local_options,
     set_is_global = set_options_dest,
-    set_option,
-    get_value_show = get_value_show,
     remove_marker = remove_marker,
     check_marker = check_marker,
     set_option = set_option,
@@ -1166,7 +1132,7 @@ local function make_basic(head_node_input)
     local color_text_node = utils.insert_list('after', line_node, {
       utils.create_color('text', 'push'),
     })
-    if config.get_value_show() then
+    if config.get_value('visibility') then
       utils.insert_list('after', color_text_node,
         { utils.create_kern_node(-line_width) })
       utils.insert_list('before', stop_node,
@@ -1381,7 +1347,7 @@ local function make_fix(head_node_input)
     local width, kern_start_length, kern_stop_length = calculate_widths(
       start, stop)
     local line_node = utils.insert_line(start, width)
-    if config.get_value_show() then
+    if config.get_value('visibility') then
       utils.insert_list('after', line_node, {
         utils.create_kern_node(kern_start_length),
         utils.create_color('text', 'push'),
@@ -1579,7 +1545,7 @@ local function make_par(head_node)
       hlist_node, strut_node, _ = utils.insert_strut_into_hlist(
         hlist_node)
       line_node = utils.insert_line(strut_node, width)
-      if config.get_value_show() then
+      if config.get_value('visibility') then
         utils.insert_list('after', line_node, {
           utils.create_kern_node(-width),
           utils.create_color('text', 'push'),
