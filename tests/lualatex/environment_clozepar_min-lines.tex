@@ -2,16 +2,29 @@
 \documentclass{article}
 \input ../cloze-test-macros-lualatex.tex
 \usepackage{cloze}
-%\usepackage{nodetree}
 
 \begin{document}
 \TestTitleDesc{LuaLa\TeX: environment clozepar}
 {}
 
-\begin{clozepar}
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
 veniam
+
+\begin{clozepar}[minlines=7]
+minlines=7
 \end{clozepar}
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+veniam
+
+\begin{clozepar}
+default (without the setting)
+\end{clozepar}
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+veniam
 
 \end{document}
