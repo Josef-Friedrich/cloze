@@ -15,7 +15,6 @@
 --
 -- This work consists of the files cloze.lua, cloze.tex,
 -- and cloze.sty.
-
 ---
 ---<h3>Naming conventions</h3>
 ---
@@ -42,6 +41,244 @@ modules['cloze'] = {
 }
 
 local farbe = require('farbe')
+
+---Small library to surround strings with ANSI color codes.
+---
+---The upstream source is located at: [boilerplate.lua](https://github.com/Josef-Friedrich/tex-project-boilerplate/blob/main/boilerplate.lua)
+--
+---[SGR (Select Graphic Rendition) Parameters](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters)
+---
+---__attributes__
+---
+---| color      |code|
+---|------------|----|
+---| reset      |  0 |
+---| clear      |  0 |
+---| bright     |  1 |
+---| dim        |  2 |
+---| underscore |  4 |
+---| blink      |  5 |
+---| reverse    |  7 |
+---| hidden     |  8 |
+---
+---__foreground__
+---
+---| color      |code|
+---|------------|----|
+---| black      | 30 |
+---| red        | 31 |
+---| green      | 32 |
+---| yellow     | 33 |
+---| blue       | 34 |
+---| magenta    | 35 |
+---| cyan       | 36 |
+---| white      | 37 |
+---
+---__background__
+---
+---| color      |code|
+---|------------|----|
+---| onblack    | 40 |
+---| onred      | 41 |
+---| ongreen    | 42 |
+---| onyellow   | 43 |
+---| onblue     | 44 |
+---| onmagenta  | 45 |
+---| oncyan     | 46 |
+---| onwhite    | 47 |
+---
+---@alias ColorName `black'|'red'|'green'|'yellow'|'blue'|'magenta'|'cyan'|'white`
+---@alias ColorMode `bright'|'dim`
+local ansi_color = (function()
+
+  ---
+  ---@param code integer
+  ---
+  ---@return string
+  local function format_color_code(code)
+    return string.char(27) .. '[' .. tostring(code) .. 'm'
+  end
+
+  ---
+  ---@param color ColorName # A color name.
+  ---@param mode? ColorMode
+  ---@param background? boolean # Colorize the background not the text.
+  ---
+  ---@return string
+  local function get_color_code(color, mode, background)
+
+    local output = ''
+    local code
+
+    if mode == 'bright' then
+      output = format_color_code(1)
+    elseif mode == 'dim' then
+      output = format_color_code(2)
+    end
+
+    if not background then
+      if color == 'reset' then
+        code = 0
+      elseif color == 'red' then
+        code = 31
+      elseif color == 'green' then
+        code = 32
+      elseif color == 'yellow' then
+        code = 33
+      elseif color == 'blue' then
+        code = 34
+      elseif color == 'magenta' then
+        code = 35
+      elseif color == 'cyan' then
+        code = 36
+      else
+        code = 37
+      end
+    else
+      if color == 'black' then
+        code = 40
+      elseif color == 'red' then
+        code = 41
+      elseif color == 'green' then
+        code = 42
+      elseif color == 'yellow' then
+        code = 43
+      elseif color == 'blue' then
+        code = 44
+      elseif color == 'magenta' then
+        code = 45
+      elseif color == 'cyan' then
+        code = 46
+      elseif color == 'white' then
+        code = 47
+      else
+        code = 40
+      end
+    end
+    return output .. format_color_code(code)
+  end
+
+  ---@param text any
+  ---@param color ColorName # A color name.
+  ---@param mode? ColorMode
+  ---@param background? boolean # Colorize the background not the text.
+  ---
+  ---@return string
+  local function surround_text(text, color, mode, background)
+    return string.format('%s%s%s',
+      get_color_code(color, mode, background), text,
+      get_color_code('reset'))
+  end
+
+  return {
+    ---
+    ---@param text any
+    ---
+    ---@return string
+    red = function(text)
+      return surround_text(text, 'red')
+    end,
+
+    ---
+    ---@param text any
+    ---
+    ---@return string
+    green = function(text)
+      return surround_text(text, 'green')
+    end,
+
+    ---
+    ---@param text any
+    ---
+    ---@return string
+    white = function(text)
+      return surround_text(text, 'white')
+    end,
+    ---@return string
+    yellow = function(text)
+      return surround_text(text, 'yellow')
+    end,
+
+    ---
+    ---@param text any
+    ---
+    ---@return string
+    blue = function(text)
+      return surround_text(text, 'blue')
+    end,
+
+    ---
+    ---@param text any
+    ---
+    ---@return string
+    cyan = function(text)
+      return surround_text(text, 'cyan')
+    end,
+  }
+end)()
+
+---
+---Small logging library.
+---
+---The upstream source is located at: [boilerplate.lua](https://github.com/Josef-Friedrich/tex-project-boilerplate/blob/main/boilerplate.lua)
+---
+---Log levels:
+---
+---* 0: silent
+---* 1: error (red)
+---* 2: warn (yellow)
+---* 3: info (green)
+---* 4: verbose (blue)
+---* 5: debug (magenta)
+---
+local log = (function()
+  local opts = { verbosity = 0 }
+
+  local function print_message(message, ...)
+    print(string.format(message, ...))
+  end
+
+  local function error(message, ...)
+    if opts.verbosity >= 1 then
+      print_message(message, ...)
+    end
+  end
+
+  local function warn(message, ...)
+    if opts.verbosity >= 2 then
+      print_message(message, ...)
+    end
+  end
+
+  local function info(message, ...)
+    if opts.verbosity >= 3 then
+      print_message(message, ...)
+    end
+  end
+
+  local function verbose(message, ...)
+    if opts.verbosity >= 4 then
+      print_message(message, ...)
+    end
+  end
+
+  local function debug(message, ...)
+    if opts.verbosity >= 5 then
+      print_message(message, ...)
+    end
+  end
+
+  return {
+    opts = opts,
+    error = error,
+    warn = warn,
+    info = info,
+    verbose = verbose,
+    debug = debug,
+  }
+end)()
+
+log.opts.verbosity = 5
 
 ---
 ---@param s string
@@ -314,13 +551,14 @@ local config = (function()
     end
   end
 
-  local is_global
+  ---@type 'local'|'global'
+  local options_dest
 
   ---__Option processing (option)__
 
-  ---This function stores a value `value` and his associated key `key`
-  --- either to the global (`global_options`) or to the local
-  --- (`local_options`) option table.
+  ---Store a value `value` and his associated key `key`
+  ---either to the global (`global_options`) or to the local
+  ---(`local_options`) option table.
   ---
   ---The global boolean variable `local_options` controls in
   ---which table the values are stored.
@@ -328,41 +566,48 @@ local config = (function()
   ---@param key string # The option key.
   ---@param value any # The value that is stored under the options key.
   local function set_option(key, value)
-    if value == '' or value == '\\color@ ' then
+    if value == '' then
       return false
     end
-    if is_global == true then
+    print('set option')
+    if options_dest == 'global' then
       global_options[key] = value
     else
+      print('to local')
       local_options[key] = value
     end
   end
 
-  ---Set the variable `is_global`.
   ---
-  ---@param is_global boolean
-  local function set_is_global(is_global)
-    is_global = is_global
+  ---Set the variable `options_dest`.
+  ---
+  ---@param dest 'local'|'global'
+  local function set_options_dest(dest)
+    options_dest = dest
   end
 
-  ---This function unsets the local options.
+  ---
+  ---Clear the local options storage.
   local function unset_local_options()
     local_options = {}
   end
 
-  ---`unset_global_options` empties the global options storage.
+  ---
+  ---Clear the global options storage.
   local function unset_global_options()
+    -- unset_local_options()
     global_options = {}
   end
 
-  ---This function tests whether the value `value` is not empty and has a
+  ---
+  ---Test whether the value `value` is not empty and has a
   ---value.
   ---
   ---@param value any # A value of different types.
   ---
   ---@return boolean # True is the value is set otherwise false.
   local function has_value(value)
-    if value == nil or value == '' or value == '\\color@ ' then
+    if value == nil or value == '' then
       return false
     else
       return true
@@ -377,13 +622,28 @@ local config = (function()
   ---
   ---@return any # The value of the corresponding option key.
   local function get_value(key)
-    if has_value(local_options[key]) then
-      return local_options[key]
+    local value_local = local_options[key]
+    local value_global = global_options[key]
+
+    local value, source
+    if has_value(value_local) then
+      source = 'local'
+      value = local_options[key]
+    elseif has_value(value_global) then
+      source = 'global'
+      value = value_global
+    else
+      source = 'default'
+      value = defaults[key]
     end
-    if has_value(global_options[key]) then
-      return global_options[key]
-    end
-    return defaults[key]
+
+    local g =  ansi_color.green
+
+    log.debug(
+      'Get value “%s” from the key “%s” the %s options storage',
+      g(value), g(key), g(source))
+
+    return value
   end
 
   ---The function `get_value_show()` returns the boolean value
@@ -411,13 +671,10 @@ local config = (function()
 
   ---
   ---@param kv_string string
-  ---@param to_global? boolean
-  local function parse_options(kv_string, to_global)
-    if to_global == nil then
-      to_global = false
-    end
-
-    set_is_global(to_global)
+  ---@param options_dest 'local'|'global'
+  local function parse_options(kv_string, options_dest)
+    unset_local_options()
+    set_options_dest(options_dest)
     local defs = {
       align = {
         description = 'Align the text of a fixed size cloze.',
@@ -474,7 +731,7 @@ local config = (function()
       },
       linecolor = {
         description = 'A color name to colorize the cloze line.',
-        process = function(value)
+        process = function(value, input)
           tex_printf('\\FarbeImport{%s}', value)
           set_option('linecolor', value)
         end,
@@ -527,7 +784,7 @@ local config = (function()
     get_defaults = get_defaults,
     unset_global_options = unset_global_options,
     unset_local_options = unset_local_options,
-    set_is_global = set_is_global,
+    set_is_global = set_options_dest,
     set_option,
     get_value_show = get_value_show,
     remove_marker = remove_marker,
@@ -539,36 +796,6 @@ local config = (function()
   }
 
 end)()
-
-local log = (function()
-  local opts = { verbosity = 0 }
-
-  local function print_message(message, ...)
-    print(string.format(message, ...))
-  end
-
-  local function info(message, ...)
-    if opts.verbosity > 0 then
-      print_message(message, ...)
-    end
-  end
-
-  local function debug(message, ...)
-    if opts.verbosity > 1 then
-      print_message(message, ...)
-    end
-  end
-
-  local function verbose(message, ...)
-    if opts.verbosity > 2 then
-      print_message(message, ...)
-    end
-  end
-
-  return { opts = opts, info = info, debug = debug, verbose = verbose }
-end)()
-
-log.opts.verbosity = 3
 
 local utils = (function()
 

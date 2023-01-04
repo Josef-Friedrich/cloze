@@ -29,7 +29,6 @@
 
 <h2>Contents</h2>
 <ul>
-<li><a href="#Local_Functions">Local Functions</a></li>
 <li><a href="#Option_handling">Option handling </a></li>
 <li><a href="#Assembly_to_cloze_texts">Assembly to cloze texts </a></li>
 <li><a href="#Class_HlistNode">Class HlistNode </a></li>
@@ -48,32 +47,12 @@
 <h1>Module <code>cloze</code></h1>
 <p>
 
-<h3>Naming conventions</h3>
-
-
-<ul>
-    <li><em>Variable</em> names for <em>nodes</em> are suffixed with <code>_node</code>, for example
-    <code>head_node</code>.</li>
-</ul>
 </p>
 <p>
 
-<ul>
-    <li><em>Variable</em> names for <em>lengths</em> (dimensions) are suffixed with
-    <code>_length</code>, for example <code>width</code>.</li>
-</ul>
 </p>
 
 
-<h2><a href="#Local_Functions">Local Functions</a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#tex_printf">tex_printf (s, ...)</a></td>
-	<td class="summary">
-
-</td>
-	</tr>
-</table>
 <h2><a href="#Option_handling">Option handling </a></h2>
 <table class="function_list">
 	<tr>
@@ -152,25 +131,25 @@ local options table.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#set_option">set_option (key, value)</a></td>
-	<td class="summary">This function stores a value <code>value</code> and his associated key <code>key</code>
- either to the global (<a href="index.html#global_options">global_options</a>) or to the local
- (<a href="index.html#local_options">local_options</a>) option table.</td>
+	<td class="summary">Store a value <code>value</code> and his associated key <code>key</code>
+either to the global (<a href="index.html#global_options">global_options</a>) or to the local
+(<a href="index.html#local_options">local_options</a>) option table.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#set_is_global">set_is_global (is_global)</a></td>
+	<td class="name" nowrap><a href="#set_is_global">set_is_global (g)</a></td>
 	<td class="summary">Set the variable <code>is_global</code>.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#unset_local_options">unset_local_options ()</a></td>
-	<td class="summary">This function unsets the local options.</td>
+	<td class="summary">Clear the local options storage.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#unset_global_options">unset_global_options ()</a></td>
-	<td class="summary"><a href="index.html#unset_global_options">unset_global_options</a> empties the global options storage.</td>
+	<td class="summary">Clear the global options storage.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#has_value">has_value (value)</a></td>
-	<td class="summary">This function tests whether the value <code>value</code> is not empty and has a
+	<td class="summary">Test whether the value <code>value</code> is not empty and has a
 value.</td>
 	</tr>
 	<tr>
@@ -328,35 +307,6 @@ a certain mode (<code>basic</code>, <code>fix</code>, <code>par</code>).</td>
 <br/>
 
 
-    <h2 class="section-header "><a name="Local_Functions"></a>Local Functions</h2>
-
-    <dl class="function">
-    <dt>
-    <a name = "tex_printf"></a>
-    <strong>tex_printf (s, ...)</strong>
-    </dt>
-    <dd>
-
-
-
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">s</span>
-         string
-        </li>
-        <li><span class="parameter">...</span>
-         any
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-</dl>
     <h2 class="section-header has-description"><a name="Option_handling"></a>Option handling </h2>
 
           <div class="section-description">
@@ -869,9 +819,9 @@ local options table.  Second it returns this values. The argument
     <strong>set_option (key, value)</strong>
     </dt>
     <dd>
-    This function stores a value <code>value</code> and his associated key <code>key</code>
- either to the global (<a href="index.html#global_options">global_options</a>) or to the local
- (<a href="index.html#local_options">local_options</a>) option table. </p>
+    Store a value <code>value</code> and his associated key <code>key</code>
+either to the global (<a href="index.html#global_options">global_options</a>) or to the local
+(<a href="index.html#local_options">local_options</a>) option table. </p>
 
 <p>The global boolean variable <a href="index.html#local_options">local_options</a> controls in
 which table the values are stored.
@@ -894,7 +844,7 @@ which table the values are stored.
 </dd>
     <dt>
     <a name = "set_is_global"></a>
-    <strong>set_is_global (is_global)</strong>
+    <strong>set_is_global (g)</strong>
     </dt>
     <dd>
     Set the variable <code>is_global</code>.
@@ -902,7 +852,7 @@ which table the values are stored.
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">is_global</span>
+        <li><span class="parameter">g</span>
          boolean
         </li>
     </ul>
@@ -917,7 +867,7 @@ which table the values are stored.
     <strong>unset_local_options ()</strong>
     </dt>
     <dd>
-    This function unsets the local options.
+    Clear the local options storage.
 
 
 
@@ -931,7 +881,7 @@ which table the values are stored.
     <strong>unset_global_options ()</strong>
     </dt>
     <dd>
-    <a href="index.html#unset_global_options">unset_global_options</a> empties the global options storage.
+    Clear the global options storage.
 
 
 
@@ -945,7 +895,7 @@ which table the values are stored.
     <strong>has_value (value)</strong>
     </dt>
     <dd>
-    This function tests whether the value <code>value</code> is not empty and has a
+    Test whether the value <code>value</code> is not empty and has a
 value.
 
 
@@ -1935,7 +1885,7 @@ right choice to capture the display math formulas.
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2023-01-03 23:34:09 </i>
+<i style="float:right;">Last updated 2023-01-04 10:39:56 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
