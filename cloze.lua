@@ -187,13 +187,6 @@ local ansi_color = (function()
       return surround_text(text, 'green')
     end,
 
-    ---
-    ---@param text any
-    ---
-    ---@return string
-    white = function(text)
-      return surround_text(text, 'white')
-    end,
     ---@return string
     yellow = function(text)
       return surround_text(text, 'yellow')
@@ -205,6 +198,14 @@ local ansi_color = (function()
     ---@return string
     blue = function(text)
       return surround_text(text, 'blue')
+    end,
+
+    ---
+    ---@param text any
+    ---
+    ---@return string
+    magenta = function(text)
+      return surround_text(text, 'magenta')
     end,
 
     ---
@@ -392,7 +393,7 @@ local config = (function()
   ---
   ---@param index integer # The argument `index` is a numeric value.
   ---
-  ---@return Marker value
+  ---@return MarkerData value
   local function get_storage(index)
     return storage[index]
   end
@@ -451,6 +452,7 @@ local config = (function()
     node.write(marker)
   end
 
+  ---
   ---Check if the given node is a marker.
   ---
   ---@param item Node
@@ -466,18 +468,16 @@ local config = (function()
   end
 
   ---
-  ---Test whether the node `item` is a marker and retrieve the
-  ---the corresponding config data.
+  ---Test whether the node `n` is a marker and retrieve the
+  ---the corresponding marker data.
   ---
-  ---@param item UserDefinedWhatsitNode # The argument `item` is a node of unspecified type.
+  ---@param n UserDefinedWhatsitNode # The argument `n` is a node of unspecified type.
   ---
-  ---@return table|false # The marker data.
-  local function get_marker_data(item)
-    if item.id == node.id('whatsit') and item.subtype ==
-      node.subtype('user_defined') and item.user_id == user_id then
-      return get_storage(item.value --[[@as integer]] )
-    else
-      return false
+  ---@return MarkerData|nil # The marker data or nothing if given node is not a marker.
+  local function get_marker_data(n)
+    if n.id == node.id('whatsit') and n.subtype ==
+      node.subtype('user_defined') and n.user_id == user_id then
+      return get_storage(n.value --[[@as integer]] )
     end
   end
 
@@ -530,7 +530,7 @@ local config = (function()
       out = false
     end
     if out and position == 'start' then
-      get_marker_values(head_node)
+      get_marker_values(head_node --[[@as UserDefinedWhatsitNode]] )
     end
     return out
   end
@@ -796,6 +796,7 @@ local config = (function()
     set_option = set_option,
     write_marker = write_marker,
     get_marker = get_marker,
+    get_marker_data = get_marker_data,
     parse_options = parse_options,
   }
 
@@ -993,8 +994,13 @@ local utils = (function()
   end
 
   --- See nodetree
-  ---@param head_node Node
-  local function convert_nodes_to_text(head_node)
+  ---@param n Node
+  local function debug_node_list(n)
+    if log.opts.level < 5 then
+      return
+    end
+
+    local is_cloze = false
 
     ---@param head_node Node
     local function get_textual_from_glyph(head_node)
@@ -1021,31 +1027,83 @@ local utils = (function()
 
     local output = {}
 
-    while head_node do
-      if head_node.id == node.id('glyph') then
-        table.insert(output, ansi_color.yellow(
-          get_textual_from_glyph(head_node)))
-      elseif head_node.id == node.id('glue') then
-        table.insert(output, ' ')
-      elseif head_node.id == node.id('disc') then
-        table.insert(output, ansi_color.cyan('|'))
-      elseif head_node.id == node.id('kern') then
-        table.insert(output, ansi_color.blue('<'))
-      elseif head_node.id == node.id('whatsit') then
-        table.insert(output, ansi_color.green('[W]'))
-      elseif head_node.id == node.id('rule') then
-        table.insert(output, ansi_color.red('___'))
-      end
-
-      head_node = head_node.next
+    ---
+    ---@param value string
+    local add = function(value)
+      table.insert(output, value)
     end
 
-    print('\n' .. table.concat(output, ''))
+    local red = ansi_color.red
+    local green = ansi_color.green
+    local yellow = ansi_color.yellow
+    local blue = ansi_color.blue
+    local magenta = ansi_color.magenta
+    local cyan = ansi_color.cyan
 
+    while n do
+      local marker_data =
+        config.get_marker_data(n --[[@as UserDefinedWhatsitNode]] )
+
+      if marker_data then
+        if marker_data.position == 'start' then
+          is_cloze = true
+        else
+          is_cloze = false
+        end
+      end
+      if n.id == node.id('glyph') then
+        if is_cloze then
+          add(yellow(get_textual_from_glyph(n)))
+        else
+          add(get_textual_from_glyph(n))
+        end
+
+      elseif n.id == node.id('glue') then
+        add(' ')
+
+      elseif n.id == node.id('disc') then
+        add(cyan('|'))
+
+      elseif n.id == node.id('kern') then
+        add(blue('<'))
+
+      elseif marker_data then
+        local char
+        if marker_data.position == 'start' then
+          char = 'START'
+        else
+          char = 'STOP'
+        end
+        add(magenta('[' .. char .. ']'))
+
+      elseif n.id == node.id('whatsit') and n.subtype ==
+        node.subtype('pdf_colorstack') then
+        local c = n --[[@as PdfColorstackWhatsitNode]]
+        local command
+        if c.command == 1 then
+          command = 'push'
+        elseif c.command == 2 then
+          command = 'pop'
+        end
+        add(green('[' .. command .. ']'))
+
+      elseif n.id == node.id('rule') then
+        add(red('_'))
+
+      elseif n.id == node.id('hlist') then
+
+        debug_node_list(n.head)
+        add(red('└'))
+      end
+
+      n = n.next
+    end
+
+    print(table.concat(output, ''))
   end
 
   return {
-    convert_nodes_to_text = convert_nodes_to_text,
+    debug_node_list = debug_node_list,
     insert_list = insert_list,
     create_color = create_color,
     insert_line = insert_line,
@@ -1062,10 +1120,10 @@ end)()
 ---@alias MarkerPosition 'start'|'stop' # The argument `position` is either set to `start` or to `stop`.
 
 ---
----@class Marker
+---@class MarkerData
 ---@field mode MarkerMode
 ---@field position MarkerPosition
----@field local_opts any
+---@field local_opts Options
 
 ---Assembly to cloze texts.
 ---@section cloze_functions
@@ -1080,6 +1138,9 @@ end)()
 ---
 ---@return Node # The head of the node list.
 local function make_basic(head_node_input)
+
+  utils.debug_node_list(head_node_input)
+
   -- This local variables are overloaded by functions
   -- calling each other.
   local continue_cloze, search_stop
@@ -1443,6 +1504,7 @@ end
 ---
 ---@param head_node Node # The head of a node list.
 local function make_par(head_node)
+  utils.debug_node_list(head_node)
 
   ---Add one additional empty line at the end of a paragraph.
   ---
@@ -1511,8 +1573,6 @@ local function make_par(head_node)
       ---@cast head_node HlistNode
       hlist_node = head_node
 
-      utils.convert_nodes_to_text(hlist_node.head)
-
       line_count = line_count + 1
       last_hlist_node = hlist_node
       width = hlist_node.width
@@ -1524,7 +1584,7 @@ local function make_par(head_node)
           utils.create_kern_node(-width),
           utils.create_color('text', 'push'),
         })
-        utils.insert_list('after', node.tail(head_node),
+        utils.insert_list('after', node.tail(line_node),
           { utils.create_color('text', 'pop') })
       else
         line_node.next = nil

@@ -28,7 +28,8 @@
     "${3rd}/busted/library",
     // https://github.com/Josef-Friedrich/LuaTeX_Lua-API
     "~/repos/tex/lua-api/library",
-    "~/texmf/tex",
+    "~/repos/tex/farbe/farbe.lua",
+    "~/repos/tex/luakeys/luakeys.lua",
     "${3rd}/lfs/library"
   ],
   "Lua.diagnostics.disable": [
