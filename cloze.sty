@@ -339,9 +339,7 @@
 % \begin{macro}{\ClozeTextColor}
 %    \begin{macrocode}
 \newcommand{\ClozeTextColor}[1]{%
-  \textcolor%
-    {\directlua{tex.print(cloze.get_value('textcolor_name'))}}%
-    {#1}%
+  \FarbeTextColor{blue}{#1}
 }
 %    \end{macrocode}
 % \end{macro}
