@@ -335,14 +335,14 @@ local config = (function()
   ---@field boxwidth? string
   ---@field distance? string
   ---@field hide? boolean
-  ---@field linecolor? string
+  ---@field line_color? string
   ---@field margin? string
   ---@field minlines? integer
   ---@field resetcolor? string
   ---@field show_text? boolean
   ---@field show? boolean
   ---@field spacing? number
-  ---@field textcolor? string
+  ---@field text_color? string
   ---@field thickness? string
   ---@field width? string
 
@@ -354,13 +354,13 @@ local config = (function()
     ['boxwidth'] = '\\linewidth',
     ['distance'] = '1.5pt',
     ['hide'] = false,
-    ['linecolor'] = farbe.Color('black'),
+    ['line_color'] = farbe.Color('black'),
     ['margin'] = '3pt',
     ['minlines'] = 0,
     ['show_text'] = true,
     ['show'] = true,
     ['spacing'] = '1.6',
-    ['textcolor'] = farbe.Color('blue'),
+    ['text_color'] = farbe.Color('blue'),
     ['thickness'] = '0.4pt',
     ['width'] = '2cm',
   }
@@ -725,11 +725,12 @@ local config = (function()
           set_option('visibility', value)
         end,
       },
-      linecolor = {
+      line_color = {
         description = 'A color name to colorize the cloze line.',
+        alias = 'linecolor',
         process = function(value, input)
           tex_printf('\\FarbeImport{%s}', value)
-          set_option('linecolor', value)
+          set_option('line_color', value)
         end,
       },
       margin = {
@@ -750,12 +751,13 @@ local config = (function()
           set_option('spacing', value)
         end,
       },
-      textcolor = {
+      text_color = {
         description = 'The color (name) of the cloze text.',
+        alias = 'textcolor',
         data_type = 'string',
         process = function(value)
           tex_printf('\\FarbeImport{%s}', value)
-          set_option('textcolor', value)
+          set_option('text_color', value)
         end,
       },
       thickness = {
@@ -810,7 +812,7 @@ local utils = (function()
   ---
   ---`utils.create_color()` is a wrapper for the function
   ---`utils.create_colorstack()`. It queries the current values of the
-  ---options `linecolor` and `textcolor`.
+  ---options `line_color` and `text_color`.
   ---
   ---@param kind 'line'|'text'
   ---@param command 'push'|'pop'
@@ -819,9 +821,9 @@ local utils = (function()
   local function create_color(kind, command)
     local color_spec
     if kind == 'line' then
-      color_spec = config.get_value('linecolor')
+      color_spec = config.get_value('line_color')
     else
-      color_spec = config.get_value('textcolor')
+      color_spec = config.get_value('text_color')
     end
     local color = farbe.Color(color_spec)
     return color:create_pdf_colorstack_node(command)
