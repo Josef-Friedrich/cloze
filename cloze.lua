@@ -992,7 +992,60 @@ local utils = (function()
     end
   end
 
+  --- See nodetree
+  ---@param head_node Node
+  local function convert_nodes_to_text(head_node)
+
+    ---@param head_node Node
+    local function get_textual_from_glyph(head_node)
+      local properties = node.direct.get_properties_table()
+      local node_id = node.direct.todirect(head_node) -- Convert to node id
+      local props = properties[node_id]
+      local info = props and props.glyph_info
+      local textual
+      local character_index = node.direct.getchar(node_id)
+      if info then
+        textual = info
+      elseif character_index == 0 then
+        textual = '^^@'
+      elseif character_index <= 31 or
+        (character_index >= 127 and character_index <= 159) then
+        textual = '???'
+      elseif character_index < 0x110000 then
+        textual = utf8.char(character_index)
+      else
+        textual = string.format('^^^^^^%06X', character_index)
+      end
+      return textual
+    end
+
+    local output = {}
+
+    while head_node do
+      if head_node.id == node.id('glyph') then
+        table.insert(output, ansi_color.yellow(
+          get_textual_from_glyph(head_node)))
+      elseif head_node.id == node.id('glue') then
+        table.insert(output, ' ')
+      elseif head_node.id == node.id('disc') then
+        table.insert(output, ansi_color.cyan('|'))
+      elseif head_node.id == node.id('kern') then
+        table.insert(output, ansi_color.blue('<'))
+      elseif head_node.id == node.id('whatsit') then
+        table.insert(output, ansi_color.green('[W]'))
+      elseif head_node.id == node.id('rule') then
+        table.insert(output, ansi_color.red('___'))
+      end
+
+      head_node = head_node.next
+    end
+
+    print('\n' .. table.concat(output, ''))
+
+  end
+
   return {
+    convert_nodes_to_text = convert_nodes_to_text,
     insert_list = insert_list,
     create_color = create_color,
     insert_line = insert_line,
@@ -1457,6 +1510,8 @@ local function make_par(head_node)
     if head_node.id == node.id('hlist') then
       ---@cast head_node HlistNode
       hlist_node = head_node
+
+      utils.convert_nodes_to_text(hlist_node.head)
 
       line_count = line_count + 1
       last_hlist_node = hlist_node

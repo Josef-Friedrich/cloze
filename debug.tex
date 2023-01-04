@@ -1,17 +1,32 @@
 \documentclass{article}
-\usepackage[debug=5]{cloze}
+\usepackage[debug=0]{cloze}
 % \usepackage[callback=preline]{nodetree}
 \begin{document}
 
-% \clozesetoption{margin}{2cm}
-% Lorem \cloze{ipsum} dolor.
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+veniam
 
-% \clozereset
+\begin{clozepar}[minlines=7]
+minlines=7
+\end{clozepar}
 
-% Lorem \cloze{ipsum} dolor.
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+veniam
 
-Lorem \cloze[textcolor=red]{ipsum} dolor.
+\begin{clozepar}
+default (without the setting)
+\end{clozepar}
 
-Lorem \cloze{ipsum} dolor.
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+veniam
+
+\begin{clozepar}[minlines=7]
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+veniam
+\end{clozepar}
 
 \end{document}
