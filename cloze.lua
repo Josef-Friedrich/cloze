@@ -232,38 +232,38 @@ end)()
 ---* 5: debug (magenta)
 ---
 local log = (function()
-  local opts = { verbosity = 0 }
+  local opts = { level = 0 }
 
   local function print_message(message, ...)
     print(string.format(message, ...))
   end
 
   local function error(message, ...)
-    if opts.verbosity >= 1 then
+    if opts.level >= 1 then
       print_message(message, ...)
     end
   end
 
   local function warn(message, ...)
-    if opts.verbosity >= 2 then
+    if opts.level >= 2 then
       print_message(message, ...)
     end
   end
 
   local function info(message, ...)
-    if opts.verbosity >= 3 then
+    if opts.level >= 3 then
       print_message(message, ...)
     end
   end
 
   local function verbose(message, ...)
-    if opts.verbosity >= 4 then
+    if opts.level >= 4 then
       print_message(message, ...)
     end
   end
 
   local function debug(message, ...)
-    if opts.verbosity >= 5 then
+    if opts.level >= 5 then
       print_message(message, ...)
     end
   end
@@ -277,8 +277,6 @@ local log = (function()
     debug = debug,
   }
 end)()
-
-log.opts.verbosity = 5
 
 ---
 ---@param s string
@@ -569,11 +567,9 @@ local config = (function()
     if value == '' then
       return false
     end
-    print('set option')
     if options_dest == 'global' then
       global_options[key] = value
     else
-      print('to local')
       local_options[key] = value
     end
   end
@@ -637,7 +633,7 @@ local config = (function()
       value = defaults[key]
     end
 
-    local g =  ansi_color.green
+    local g = ansi_color.green
 
     log.debug(
       'Get value “%s” from the key “%s” the %s options storage',
@@ -772,6 +768,12 @@ local config = (function()
         description = 'The width of the cloze line of the command \\clozefix.',
         process = function(value)
           set_option('width', value)
+        end,
+      },
+      debug = {
+        data_type = 'integer',
+        process = function(value)
+          log.opts.level = value
         end,
       },
     }
