@@ -41,244 +41,11 @@ modules['cloze'] = {
 }
 
 local farbe = require('farbe')
+local luakeys = require('luakeys')()
 
----Small library to surround strings with ANSI color codes.
----
----The upstream source is located at: [boilerplate.lua](https://github.com/Josef-Friedrich/tex-project-boilerplate/blob/main/boilerplate.lua)
---
----[SGR (Select Graphic Rendition) Parameters](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters)
----
----__attributes__
----
----| color      |code|
----|------------|----|
----| reset      |  0 |
----| clear      |  0 |
----| bright     |  1 |
----| dim        |  2 |
----| underscore |  4 |
----| blink      |  5 |
----| reverse    |  7 |
----| hidden     |  8 |
----
----__foreground__
----
----| color      |code|
----|------------|----|
----| black      | 30 |
----| red        | 31 |
----| green      | 32 |
----| yellow     | 33 |
----| blue       | 34 |
----| magenta    | 35 |
----| cyan       | 36 |
----| white      | 37 |
----
----__background__
----
----| color      |code|
----|------------|----|
----| onblack    | 40 |
----| onred      | 41 |
----| ongreen    | 42 |
----| onyellow   | 43 |
----| onblue     | 44 |
----| onmagenta  | 45 |
----| oncyan     | 46 |
----| onwhite    | 47 |
----
----@alias ColorName `black'|'red'|'green'|'yellow'|'blue'|'magenta'|'cyan'|'white`
----@alias ColorMode `bright'|'dim`
-local ansi_color = (function()
+local ansi_color = luakeys.utils.ansi_color
 
-  ---
-  ---@param code integer
-  ---
-  ---@return string
-  local function format_color_code(code)
-    return string.char(27) .. '[' .. tostring(code) .. 'm'
-  end
-
-  ---
-  ---@param color ColorName # A color name.
-  ---@param mode? ColorMode
-  ---@param background? boolean # Colorize the background not the text.
-  ---
-  ---@return string
-  local function get_color_code(color, mode, background)
-
-    local output = ''
-    local code
-
-    if mode == 'bright' then
-      output = format_color_code(1)
-    elseif mode == 'dim' then
-      output = format_color_code(2)
-    end
-
-    if not background then
-      if color == 'reset' then
-        code = 0
-      elseif color == 'red' then
-        code = 31
-      elseif color == 'green' then
-        code = 32
-      elseif color == 'yellow' then
-        code = 33
-      elseif color == 'blue' then
-        code = 34
-      elseif color == 'magenta' then
-        code = 35
-      elseif color == 'cyan' then
-        code = 36
-      else
-        code = 37
-      end
-    else
-      if color == 'black' then
-        code = 40
-      elseif color == 'red' then
-        code = 41
-      elseif color == 'green' then
-        code = 42
-      elseif color == 'yellow' then
-        code = 43
-      elseif color == 'blue' then
-        code = 44
-      elseif color == 'magenta' then
-        code = 45
-      elseif color == 'cyan' then
-        code = 46
-      elseif color == 'white' then
-        code = 47
-      else
-        code = 40
-      end
-    end
-    return output .. format_color_code(code)
-  end
-
-  ---@param text any
-  ---@param color ColorName # A color name.
-  ---@param mode? ColorMode
-  ---@param background? boolean # Colorize the background not the text.
-  ---
-  ---@return string
-  local function surround_text(text, color, mode, background)
-    return string.format('%s%s%s',
-      get_color_code(color, mode, background), text,
-      get_color_code('reset'))
-  end
-
-  return {
-    ---
-    ---@param text any
-    ---
-    ---@return string
-    red = function(text)
-      return surround_text(text, 'red')
-    end,
-
-    ---
-    ---@param text any
-    ---
-    ---@return string
-    green = function(text)
-      return surround_text(text, 'green')
-    end,
-
-    ---@return string
-    yellow = function(text)
-      return surround_text(text, 'yellow')
-    end,
-
-    ---
-    ---@param text any
-    ---
-    ---@return string
-    blue = function(text)
-      return surround_text(text, 'blue')
-    end,
-
-    ---
-    ---@param text any
-    ---
-    ---@return string
-    magenta = function(text)
-      return surround_text(text, 'magenta')
-    end,
-
-    ---
-    ---@param text any
-    ---
-    ---@return string
-    cyan = function(text)
-      return surround_text(text, 'cyan')
-    end,
-  }
-end)()
-
----
----Small logging library.
----
----The upstream source is located at: [boilerplate.lua](https://github.com/Josef-Friedrich/tex-project-boilerplate/blob/main/boilerplate.lua)
----
----Log levels:
----
----* 0: silent
----* 1: error (red)
----* 2: warn (yellow)
----* 3: info (green)
----* 4: verbose (blue)
----* 5: debug (magenta)
----
-local log = (function()
-  local opts = { level = 0 }
-
-  local function print_message(message, ...)
-    print(string.format(message, ...))
-  end
-
-  local function error(message, ...)
-    if opts.level >= 1 then
-      print_message(message, ...)
-    end
-  end
-
-  local function warn(message, ...)
-    if opts.level >= 2 then
-      print_message(message, ...)
-    end
-  end
-
-  local function info(message, ...)
-    if opts.level >= 3 then
-      print_message(message, ...)
-    end
-  end
-
-  local function verbose(message, ...)
-    if opts.level >= 4 then
-      print_message(message, ...)
-    end
-  end
-
-  local function debug(message, ...)
-    if opts.level >= 5 then
-      print_message(message, ...)
-    end
-  end
-
-  return {
-    opts = opts,
-    error = error,
-    warn = warn,
-    info = info,
-    verbose = verbose,
-    debug = debug,
-  }
-end)()
-
+local log = luakeys.utils.log
 ---
 ---@param s string
 ---@param ... any
@@ -305,7 +72,6 @@ end
 ---All values and functions, which are related to the option
 ---management, are stored in a table called `config`.
 local config = (function()
-  local luakeys = require('luakeys')()
 
   ---I didn’t know what value I should take as `user_id`. Therefore I
   ---took my birthday and transformed it into a large number.
@@ -565,6 +331,7 @@ local config = (function()
     if value == '' then
       return false
     end
+    log.info('Set %s option “%s” to “%s”', options_dest, key, value)
     if options_dest == 'global' then
       global_options[key] = value
     else
@@ -743,12 +510,12 @@ local config = (function()
       debug = {
         data_type = 'integer',
         process = function(value)
-          log.opts.level = value
+          log.set(value)
         end,
       },
     }
 
-    luakeys.parse(kv_string, { defs = defs })
+    luakeys.parse(kv_string, { defs = defs, debug = log.get() > 3 })
   end
 
   return {
@@ -962,7 +729,7 @@ local utils = (function()
   --- See nodetree
   ---@param n Node
   local function debug_node_list(n)
-    if log.opts.level < 5 then
+    if log.get() < 5 then
       return
     end
 
