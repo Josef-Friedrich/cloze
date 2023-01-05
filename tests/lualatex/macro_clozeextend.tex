@@ -1,7 +1,8 @@
 %!TEX program = lualatex
 \documentclass{article}
 \input ../cloze-test-macros-lualatex.tex
-\usepackage[show]{cloze}
+\usepackage{cloze}
+\usepackage[callback=postline]{nodetree}
 
 \begin{document}
 \TestTitleDesc{LuaLa\TeX: macro \string\clozeextend}
@@ -9,7 +10,7 @@
 
 \section{Without an option}
 
-Lorem ipsum \cloze{dolor sit \clozeextend}
+Lorem ipsum \cloze[hide]{dolor sit \clozeextend}
 
 \section{extend 10}
 
@@ -19,11 +20,16 @@ Lorem ipsum \cloze{dolor sit reprehenderit\clozeextend[10]}
 
 \section{Inside a squeezed environment}
 
-\begin{clozespace}[spacing=0.6]
-Lorem ipsum \cloze{dolor sit reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
-qui officia deserunt mollit anim id est laborum.reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
-qui officia deserunt mollit anim id est laborum.\clozeextend[100]}
+\begin{clozespace}[spacing=0.6,hide]
+Lorem ipsum \cloze{dolor sit reprehenderit in voluptate velit esse
+cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
+id est laborum.reprehenderit in voluptate velit esse cillum dolore eu
+fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+sunt in culpa qui officia deserunt mollit anim id est
+laborum.\clozeextend[100]}
+
+
+
 \end{clozespace}
 \end{document}

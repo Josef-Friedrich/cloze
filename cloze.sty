@@ -78,7 +78,7 @@
 \ProcessOptions\relax
 \RequirePackage{luakeys}
 \directlua{
-  cloze.parse_options('\LuakeysPackageOptions', 'global')
+  cloze.parse_options('\LuakeysGetPackageOptions', 'global')
 }
 %    \end{macrocode}
 %
@@ -327,11 +327,8 @@
 %    \begin{macrocode}
 \newcommand{\clozeextend}[1][1]{%
   \directlua{
-    local loop = #1
-    for variable = 1, loop do
-      tex.print(' \string\\hspace{1em} \string\\strut')
-    end
-  }
+    cloze.print_extend('#1')
+  }%
 }
 %    \end{macrocode}
 % \end{macro}

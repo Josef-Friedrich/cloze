@@ -1677,4 +1677,16 @@ return {
   parse_options = config.parse_options,
   register_callback = cb.register_callbacks,
   unregister_callback = cb.unregister_callbacks,
+  print_extend = function(count)
+    if count == '' then
+      count = 1
+    end
+    count = tonumber(count)
+
+    for _ = 1, count do
+      ---ex: vertical measure of x
+      ---px: x height current font
+      tex.print('\\hspace{1em}\\rule{0pt}{2ex}')
+    end
+  end,
 }
