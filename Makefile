@@ -13,7 +13,7 @@ install:
 	cp -f $(jobname).sty $(installdir)
 	cp -f $(jobname).lua $(installdir)
 
-doc: doc_pdf doc_lua
+doc: doc_pdf
 
 doc_pdf:
 	lualatex --shell-escape documentation.tex
@@ -22,15 +22,6 @@ doc_pdf:
 	lualatex --shell-escape documentation.tex
 	mkdir -p $(texmf)/doc
 	cp documentation.pdf $(texmf)/doc/$(jobname).pdf
-
-doc_lua:
-	# vs code lua server annotations (Emmy) and ldocs are not compatible
-	-ldoc .
-
-doc_lua_open:
-	# vs code lua server annotations (Emmy) and ldocs are not compatible
-	-ldoc .
-	xdg-open docs/index.html
 
 test: install test_luatex_without_open test_lualatex_without_open
 	pdftk tests-luatex.pdf tests-lualatex.pdf cat output tests.pdf

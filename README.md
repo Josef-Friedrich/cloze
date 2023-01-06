@@ -59,7 +59,6 @@ https://github.com/Josef-Friedrich/cloze
 # Documentation
 
 * [User documentation as a PDF](http://mirror.ctan.org/tex-archive/macros/luatex/generic/cloze/cloze.pdf)
-* [API documentation of the Lua code](https://josef-friedrich.github.io/cloze)
 
 # Installation
 
