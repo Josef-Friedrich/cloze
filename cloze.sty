@@ -243,14 +243,14 @@
   \ClozeSetLocalOptions{#2}%
   \directlua{
     cloze.fboxrule_restore = tex.dimen['fboxrule']
-    print(cloze.get_value('boxrule'))
-    tex.dimen['fboxrule'] = tex.sp(cloze.get_value('boxrule'))
+    print(cloze.get_option('boxrule'))
+    tex.dimen['fboxrule'] = tex.sp(cloze.get_option('boxrule'))
   }%
   \noindent%
   \begin{lrbox}{\ClozeBox}%
   \directlua{
-    local boxheight = cloze.get_value('boxheight')
-    local boxwidth = cloze.get_value('boxwidth')
+    local boxheight = cloze.get_option('boxheight')
+    local boxwidth = cloze.get_option('boxwidth')
     if boxheight then
       tex.print('\\begin{minipage}[t][' .. boxheight .. '][t]{' .. boxwidth .. '}')
     else
@@ -280,7 +280,7 @@
 \newenvironment{clozespace}[1][]%
 {%
   \ClozeSetLocalOptions{#1}%
-  \begin{spacing}{\directlua{tex.print(cloze.get_value('spacing'))}}%
+  \begin{spacing}{\directlua{tex.print(cloze.get_option('spacing'))}}%
 }{\end{spacing}}
 %    \end{macrocode}
 % \end{environment}

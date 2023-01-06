@@ -44,14 +44,8 @@ local farbe = require('farbe')
 local luakeys = require('luakeys')()
 
 local ansi_color = luakeys.utils.ansi_color
-
 local log = luakeys.utils.log
----
----@param s string
----@param ... any
-local function tex_printf(s, ...)
-  tex.print(string.format(s, ...))
-end
+local tex_printf = luakeys.utils.tex_printf
 
 ---Option handling.
 ---
@@ -376,6 +370,7 @@ local config = (function()
     end
   end
 
+  ---
   ---Retrieve a value from a given key. First search for the value in the
   ---local options, then in the global options. If both option storages are
   ---empty, the default value will be returned.
@@ -383,7 +378,7 @@ local config = (function()
   ---@param key string # The name of the options key.
   ---
   ---@return any # The value of the corresponding option key.
-  local function get_value(key)
+  local function get(key)
     local value_local = local_options[key]
     local value_global = global_options[key]
 
@@ -408,6 +403,7 @@ local config = (function()
     return value
   end
 
+  ---
   ---Return the default value of the given option.
   ---
   ---@param key any # The name of the options key.
@@ -520,7 +516,7 @@ local config = (function()
   end
 
   return {
-    get_value = get_value,
+    get = get,
     get_defaults = get_defaults,
     unset_global_options = unset_global_options,
     unset_local_options = unset_local_options,
@@ -556,9 +552,9 @@ local utils = (function()
   local function create_color(kind, command)
     local color_spec
     if kind == 'line' then
-      color_spec = config.get_value('line_color')
+      color_spec = config.get('line_color')
     else
-      color_spec = config.get_value('text_color')
+      color_spec = config.get('text_color')
     end
     local color = farbe.Color(color_spec)
     return color:create_pdf_colorstack_node(command)
@@ -575,8 +571,8 @@ local utils = (function()
   ---@return RuleNode
   local function create_line(width)
     local rule = node.new('rule') --[[@as RuleNode]]
-    local thickness = tex.sp(config.get_value('thickness'))
-    local distance = tex.sp(config.get_value('distance'))
+    local thickness = tex.sp(config.get('thickness'))
+    local distance = tex.sp(config.get('distance'))
     rule.depth = distance + thickness
     rule.height = -distance
     rule.width = width
@@ -638,7 +634,7 @@ local utils = (function()
   ---
   local function write_line_nodes()
     node.write(create_color('line', 'push'))
-    node.write(create_line(tex.sp(config.get_value('width'))))
+    node.write(create_line(tex.sp(config.get('width'))))
     node.write(create_color('line', 'pop'))
   end
 
@@ -705,7 +701,7 @@ local utils = (function()
   ---Write a kern node to the current node list. This kern node can be
   ---used to build a margin.
   local function write_margin_node()
-    node.write(create_kern_node(tex.sp(config.get_value('margin'))))
+    node.write(create_kern_node(tex.sp(config.get('margin'))))
   end
 
   ---
@@ -900,7 +896,7 @@ local function make_basic(head_node_input)
     local color_text_node = utils.insert_list('after', line_node, {
       utils.create_color('text', 'push'),
     })
-    if config.get_value('visibility') then
+    if config.get('visibility') then
       utils.insert_list('after', color_text_node,
         { utils.create_kern_node(-line_width) })
       utils.insert_list('before', stop_node,
@@ -1004,9 +1000,9 @@ local function make_fix(head_node_input)
   ---@return integer stop_width # The width of the whitespace after the cloze text.
   local function calculate_widths(start, stop)
     local start_width, stop_width
-    local width = tex.sp(config.get_value('width'))
+    local width = tex.sp(config.get('width'))
     local text_width = node.dimensions(start, stop)
-    local align = config.get_value('align')
+    local align = config.get('align')
     if align == 'right' then
       start_width = -text_width
       stop_width = 0
@@ -1115,7 +1111,7 @@ local function make_fix(head_node_input)
     local width, kern_start_length, kern_stop_length = calculate_widths(
       start, stop)
     local line_node = utils.insert_line(start, width)
-    if config.get_value('visibility') then
+    if config.get('visibility') then
       utils.insert_list('after', line_node, {
         utils.create_kern_node(kern_start_length),
         utils.create_color('text', 'push'),
@@ -1313,7 +1309,7 @@ local function make_par(head_node)
       hlist_node, strut_node, _ = utils.insert_strut_into_hlist(
         hlist_node)
       line_node = utils.insert_line(strut_node, width)
-      if config.get_value('visibility') then
+      if config.get('visibility') then
         utils.insert_list('after', line_node, {
           utils.create_kern_node(-width),
           utils.create_color('text', 'push'),
@@ -1327,7 +1323,7 @@ local function make_par(head_node)
     head_node = head_node.next
   end
 
-  local minlines = config.get_value('minlines')
+  local minlines = config.get('minlines')
   local additional_lines = minlines - line_count
 
   if additional_lines > 0 then
@@ -1442,7 +1438,7 @@ return {
   unset_local_options = config.unset_local_options,
   reset = config.unset_global_options,
   get_defaults = config.get_defaults,
-  get_value = config.get_value,
+  get_option = config.get,
   marker = config.write_marker,
   parse_options = config.parse_options,
   register_callback = cb.register_callbacks,
@@ -1472,20 +1468,18 @@ return {
   print_box = function()
     -- \\ClozeSetLocalOptions{#2}%
     fboxrule_restore = tex.dimen['fboxrule']
-    print(config.get_value('boxrule'))
-    tex.dimen['fboxrule'] = tex.sp(config.get_value('boxrule'))
+    tex.dimen['fboxrule'] = tex.sp(config.get('boxrule'))
 
     tex_printf('\\noindent')
 
     tex_printf('\\begin{lrbox}{\\ClozeBox}')
 
-    local boxheight = config.get_value('boxheight')
-    local boxwidth = config.get_value('boxwidth')
+    local boxheight = config.get('boxheight')
+    local boxwidth = config.get('boxwidth')
     if boxheight then
-      tex.print('\\begin{minipage}[t][' .. boxheight .. '][t]{' ..
-                  boxwidth .. '}')
+      tex_printf('\\begin{minipage}[t][%s][t]{%s}', boxheight, boxwidth)
     else
-      tex.print('\\begin{minipage}[t]{' .. boxwidth .. '}')
+      tex_printf('\\begin{minipage}[t]{%s}', boxwidth)
     end
 
     -- \\setlength{\\parindent}{0pt}%
