@@ -23,9 +23,6 @@
 ---* _Variable_ names for _lengths_ (dimensions) are suffixed with
 ---  `_length`, for example `width`.
 ---
----@module cloze
----luacheck: globals node tex modules luatexbase callback
----__cloze.lua__
 ---__Initialisation of the function tables__
 ---It is good form to provide some background informations about this Lua
 ---module.
@@ -60,33 +57,32 @@ local tex_printf = luakeys.utils.tex_printf
 ---* Mark the begin and the end of a gap.
 ---* Store a index number, that points to a Lua table, which holds some
 ---  additional data like the local options.
----
----@section config
 
+---
+---@alias MarkerMode 'basic'|'strike'|'fix'|'par' # The argument `mode` accepts the string values `basic`, `fix` and `par`.
+
+---
+---@alias MarkerPosition 'start'|'stop' # The argument `position` is either set to `start` or to `stop`.
+
+---
+---@class MarkerData
+---@field mode MarkerMode
+---@field position MarkerPosition
+---@field local_opts Options
+
+---
 ---All values and functions, which are related to the option
 ---management, are stored in a table called `config`.
 local config = (function()
 
+  ---
   ---I didn’t know what value I should take as `user_id`. Therefore I
   ---took my birthday and transformed it into a large number.
   local user_id = 3121978
 
-  ---Store all local options of the markers.
   ---
-  ---<code><pre>
-  ---storage = {
-  ---  {
-  ---    mode = "basic",
-  ---    position = "start",
-  ---    values = {
-  ---      distance = "3mm"
-  ---    }
-  ---  },
-  ---  {
-  ---    mode = "basic",
-  ---    position = "stop"
-  ---  }
-  ---}</pre></code>
+  ---Store all local options of the markers.
+  ---@type {[integer]: MarkerData }
   local storage = {}
 
   ---@class Options
@@ -108,32 +104,35 @@ local config = (function()
 
   ---The default options.
   local defaults = {
-    ['align'] = 'l',
-    ['box_height'] = false,
-    ['box_rule'] = '0.4pt',
-    ['box_width'] = '\\linewidth',
-    ['distance'] = '1.5pt',
-    ['line_color'] = 'black',
-    ['margin'] = '3pt',
-    ['minlines'] = 0,
-    ['show_text'] = true,
-    ['spacing'] = '1.6',
-    ['text_color'] = 'blue',
-    ['thickness'] = '0.4pt',
-    ['visibility'] = true,
-    ['width'] = '2cm',
+    align = 'l',
+    box_height = false,
+    box_rule = '0.4pt',
+    box_width = '\\linewidth',
+    distance = '1.5pt',
+    line_color = 'black',
+    margin = '3pt',
+    minlines = 0,
+    show_text = true,
+    spacing = '1.6',
+    text_color = 'blue',
+    thickness = '0.4pt',
+    visibility = true,
+    width = '2cm',
   }
 
+  ---
   ---The global options set by the user.
+  ---@type Options
   local global_options = {}
 
+  ---
   ---The local options.
+  ---@type Options
   local local_options = {}
 
   local index
 
-  ---__Storage functions (storage)__
-
+  ---
   ---`index` is a counter. The functions `get_index()`
   ---increases the counter by one and then returns it.
   ---
@@ -146,6 +145,7 @@ local config = (function()
     return index
   end
 
+  ---
   ---The function `get_storage()` retrieves values which belong
   --- to a whatsit marker.
   ---
@@ -181,6 +181,7 @@ local config = (function()
     return index
   end
 
+  ---
   ---We create a user defined whatsit node that can store a number (type
   --- = 100).
   ---
@@ -196,10 +197,10 @@ local config = (function()
     marker.type = 100 -- number
     marker.user_id = user_id
     marker.value = index
-    node.setproperty(marker, { cloze = get_storage(index) })
     return marker
   end
 
+  ---
   ---Write a marker node to TeX's current node list.
   ---
   ---@param mode MarkerMode
@@ -293,6 +294,7 @@ local config = (function()
     return out
   end
 
+  ---
   ---This function removes a given whatsit marker.
   ---
   ---It only deletes a node, if a marker is given.
@@ -310,8 +312,7 @@ local config = (function()
   ---@type 'local'|'global'
   local options_dest
 
-  ---__Option processing (option)__
-
+  ---
   ---Store a value `value` and his associated key `key`
   ---either to the global (`global_options`) or to the local
   ---(`local_options`) option table.
@@ -536,13 +537,6 @@ local config = (function()
 end)()
 
 local utils = (function()
-
-  ---All functions in this section are stored in a table called `nodex`.
-  ---`nodex` is a abbreviation for __node eXtended__. The `nodex` table
-  ---bundles all functions, which extend the built-in `node` library.
-
-  ---__Color handling (color)__
-
   ---
   ---`utils.create_color()` is a wrapper for the function
   ---`utils.create_colorstack()`. It queries the current values of the
@@ -563,8 +557,7 @@ local utils = (function()
     return color:create_pdf_colorstack_node(command)
   end
 
-  ---__Line handling (line)__
-
+  ---
   ---Create a rule node, which is used as a line for the cloze texts. The
   ---`depth` and the `height` of the rule are calculated form the options
   ---`thickness` and `distance`.
@@ -582,6 +575,7 @@ local utils = (function()
     return rule
   end
 
+  ---
   ---Insert a `list` of nodes after or before the `current`. The `head`
   ---argument is optional. In some edge cases it is unfortately necessary.
   ---if `head` is omitted the `current` node is used.
@@ -608,6 +602,7 @@ local utils = (function()
     return current
   end
 
+  ---
   ---Enclose a rule node (cloze line) with two PDF colorstack whatsits.
   ---The first colorstack node colors the line, the second resets the
   ---color.
@@ -626,6 +621,7 @@ local utils = (function()
     })
   end
 
+  ---
   ---Encloze a rule node with color nodes as the function
   -- `utils.insert_line` does.
   ---
@@ -641,8 +637,7 @@ local utils = (function()
     node.write(create_color('line', 'pop'))
   end
 
-  ---__Handling of extendable lines (linefil)__
-
+  ---
   ---Create a line which stretches indefinitely in the
   ---horizontal direction.
   ---
@@ -726,7 +721,8 @@ local utils = (function()
     end
   end
 
-  --- See nodetree
+  ---
+  ---See nodetree
   ---@param n Node
   local function debug_node_list(n)
     if log.get() < 5 then
@@ -849,18 +845,7 @@ local utils = (function()
   }
 end)()
 
----@alias MarkerMode 'basic'|'fix'|'par' # The argument `mode` accepts the string values `basic`, `fix` and `par`.
----@alias MarkerPosition 'start'|'stop' # The argument `position` is either set to `start` or to `stop`.
-
 ---
----@class MarkerData
----@field mode MarkerMode
----@field position MarkerPosition
----@field local_opts Options
-
----Assembly to cloze texts.
----@section cloze_functions
-
 ---Assemble a possibly multiline cloze.
 ---
 ---The corresponding LaTeX command to this Lua function is `\cloze`.
@@ -874,8 +859,8 @@ local function make_basic(head_node_input)
 
   utils.debug_node_list(head_node_input)
 
-  -- This local variables are overloaded by functions
-  -- calling each other.
+  ---This local variables are overloaded by functions
+  ---calling each other.
   local continue_cloze, search_stop
 
   ---
@@ -908,13 +893,14 @@ local function make_basic(head_node_input)
       line_node.next = stop_node.next
       stop_node.prev = line_node -- not line_node.prev -> line color leaks out
     end
-    -- In some edge cases the lua callbacks get fired up twice. After the
-    -- cloze has been created, the start and stop whatsit markers can be
-    -- deleted.
+    ---In some edge cases the lua callbacks get fired up twice. After the
+    ---cloze has been created, the start and stop whatsit markers can be
+    ---deleted.
     config.remove_marker(start_node)
     return config.remove_marker(stop_node), parent_node
   end
 
+  ---
   ---Search for a stop marker or make a cloze up to the end of the node
   ---list.
   ---
@@ -942,6 +928,7 @@ local function make_basic(head_node_input)
     end
   end
 
+  ---
   ---Continue a multiline cloze.
   ---
   ---@param parent_node Node # A parent node to search for a hlist node.
@@ -956,6 +943,7 @@ local function make_basic(head_node_input)
     end
   end
 
+  ---
   ---Search for a start marker.
   ---
   ---@param head_node Node # The head of a node list.
@@ -969,8 +957,8 @@ local function make_basic(head_node_input)
         search_start(head_node.head, head_node)
       elseif config.check_marker(head_node, 'basic', 'start') and
         parent_node and parent_node.id == node.id('hlist') then
-        -- Adds also a strut at the first position. It prepars the
-        -- hlist and makes it ready to build a cloze.
+        ---Adds also a strut at the first position. It prepars the
+        ---hlist and makes it ready to build a cloze.
         utils.search_hlist(parent_node)
         head_node, parent_node = search_stop(head_node, parent_node)
       end
@@ -986,6 +974,7 @@ local function make_basic(head_node_input)
   return head_node_input
 end
 
+---
 ---The corresponding LaTeX command to this Lua function is `\clozefix`.
 ---
 ---@param head_node_input Node # The head of a node list.
@@ -1130,6 +1119,7 @@ local function make_fix(head_node_input)
     config.remove_marker(stop)
   end
 
+  ---
   ---Function to recurse the node list and search after marker.
   ---
   ---@param head_node Node # The head of a node list.
@@ -1158,6 +1148,7 @@ local function make_fix(head_node_input)
   return head_node_input
 end
 
+---
 ---The corresponding LaTeX environment to this lua function is
 ---`clozepar`.
 ---
@@ -1239,6 +1230,7 @@ end
 local function make_par(head_node)
   utils.debug_node_list(head_node)
 
+  ---
   ---Add one additional empty line at the end of a paragraph.
   ---
   ---All fields from the last hlist node are copied to the created
@@ -1276,6 +1268,7 @@ local function make_par(head_node)
     return hlist_node
   end
 
+  ---
   ---Add multiple empty lines at the end of a paragraph.
   ---
   ---@param last_hlist_node HlistNode # The last hlist node of a paragraph.
@@ -1373,7 +1366,9 @@ local cb = (function()
   ---
   local is_registered = {}
 
-  return { ---
+  return {
+
+    ---
     ---Register the functions `make_par`, `make_basic` and
     ---`make_fix` as callbacks.
     ---
@@ -1423,9 +1418,9 @@ local cb = (function()
   }
 end)()
 
+---
 ---Variable that can be used to store the previous fbox rule thickness
 ---to be able to restore the previous thickness.
----@type
 local fboxrule_restore
 
 ---
