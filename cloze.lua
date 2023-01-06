@@ -91,9 +91,9 @@ local config = (function()
 
   ---@class Options
   ---@field align? 'l'|'r'
-  ---@field boxheigh? string
-  ---@field boxrule? string
-  ---@field boxwidth? string
+  ---@field box_height? string
+  ---@field box_rule? string
+  ---@field box_width? string
   ---@field distance? string
   ---@field visibility? boolean
   ---@field line_color? string
@@ -109,9 +109,9 @@ local config = (function()
   ---The default options.
   local defaults = {
     ['align'] = 'l',
-    ['boxheight'] = false,
-    ['boxrule'] = '0.4pt',
-    ['boxwidth'] = '\\linewidth',
+    ['box_height'] = false,
+    ['box_rule'] = '0.4pt',
+    ['box_width'] = '\\linewidth',
     ['distance'] = '1.5pt',
     ['line_color'] = 'black',
     ['margin'] = '3pt',
@@ -413,105 +413,108 @@ local config = (function()
     return defaults[key]
   end
 
+  local defs = {
+    align = {
+      description = 'Align the text of a fixed size cloze.',
+      process = function(value)
+        set_option('align', value)
+      end,
+    },
+    box_height = {
+      description = 'The height of a cloze box.',
+      alias = 'boxheight',
+      process = function(value)
+        set_option('boxheight', value)
+      end,
+    },
+    box_rule = {
+      description = 'The thickness of the rule around a cloze box.',
+      alias = 'boxrule',
+      process = function(value)
+        set_option('boxrule', value)
+      end,
+    },
+    box_width = {
+      description = 'The width of a cloze box.',
+      alias = 'boxwidth',
+      process = function(value)
+        set_option('boxwidth', value)
+      end,
+    },
+    distance = {
+      description = 'The distance between the cloze text and the cloze line.',
+      process = function(value)
+        set_option('distance', value)
+      end,
+    },
+    visibility = {
+      description = 'Show or hide the cloze text.',
+      opposite_keys = { [true] = 'show', [false] = 'hide' },
+      process = function(value)
+        set_option('visibility', value)
+      end,
+    },
+    line_color = {
+      description = 'A color name to colorize the cloze line.',
+      alias = 'linecolor',
+      process = function(value, input)
+        tex_printf('\\FarbeImport{%s}', value)
+        set_option('line_color', value)
+      end,
+    },
+    margin = {
+      description = 'Indicates how far the cloze line sticks up horizontally from the text.',
+      process = function(value)
+        set_option('margin', value)
+      end,
+    },
+    minlines = {
+      description = 'How many lines a clozepar at least must have.',
+      process = function(value)
+        set_option('minlines', value)
+      end,
+    },
+    spacing = {
+      description = 'The spacing between lines (environment clozespace).',
+      process = function(value)
+        set_option('spacing', value)
+      end,
+    },
+    text_color = {
+      description = 'The color (name) of the cloze text.',
+      alias = 'textcolor',
+      data_type = 'string',
+      process = function(value)
+        tex_printf('\\FarbeImport{%s}', value)
+        set_option('text_color', value)
+      end,
+    },
+    thickness = {
+      description = 'The thickness of the cloze line.',
+      process = function(value)
+        set_option('thickness', value)
+      end,
+    },
+    width = {
+      description = 'The width of the cloze line of the command \\clozefix.',
+      process = function(value)
+        set_option('width', value)
+      end,
+    },
+    debug = {
+      data_type = 'integer',
+      process = function(value)
+        log.set(value)
+      end,
+    },
+  }
+
   ---
   ---@param kv_string string
   ---@param options_dest 'local'|'global'
   local function parse_options(kv_string, options_dest)
     unset_local_options()
     set_options_dest(options_dest)
-    local defs = {
-      align = {
-        description = 'Align the text of a fixed size cloze.',
-        process = function(value)
-          set_option('align', value)
-        end,
-      },
-      boxheight = {
-        description = 'The height of a cloze box.',
-        process = function(value)
-          set_option('boxheight', value)
-        end,
-      },
-      boxrule = {
-        description = 'The thickness of the rule around a cloze box.',
-        process = function(value)
-          set_option('boxrule', value)
-        end,
-      },
-      boxwidth = {
-        description = 'The width of a cloze box.',
-        process = function(value)
-          set_option('boxwidth', value)
-        end,
-      },
-      distance = {
-        description = 'The distance between the cloze text and the cloze line.',
-        process = function(value)
-          set_option('distance', value)
-        end,
-      },
-      visibility = {
-        description = 'Show or hide the cloze text.',
-        opposite_keys = { [true] = 'show', [false] = 'hide' },
-        process = function(value)
-          set_option('visibility', value)
-        end,
-      },
-      line_color = {
-        description = 'A color name to colorize the cloze line.',
-        alias = 'linecolor',
-        process = function(value, input)
-          tex_printf('\\FarbeImport{%s}', value)
-          set_option('line_color', value)
-        end,
-      },
-      margin = {
-        description = 'Indicates how far the cloze line sticks up horizontally from the text.',
-        process = function(value)
-          set_option('margin', value)
-        end,
-      },
-      minlines = {
-        description = 'How many lines a clozepar at least must have.',
-        process = function(value)
-          set_option('minlines', value)
-        end,
-      },
-      spacing = {
-        description = 'The spacing between lines (environment clozespace).',
-        process = function(value)
-          set_option('spacing', value)
-        end,
-      },
-      text_color = {
-        description = 'The color (name) of the cloze text.',
-        alias = 'textcolor',
-        data_type = 'string',
-        process = function(value)
-          tex_printf('\\FarbeImport{%s}', value)
-          set_option('text_color', value)
-        end,
-      },
-      thickness = {
-        description = 'The thickness of the cloze line.',
-        process = function(value)
-          set_option('thickness', value)
-        end,
-      },
-      width = {
-        description = 'The width of the cloze line of the command \\clozefix.',
-        process = function(value)
-          set_option('width', value)
-        end,
-      },
-      debug = {
-        data_type = 'integer',
-        process = function(value)
-          log.set(value)
-        end,
-      },
-    }
-
     luakeys.parse(kv_string, { defs = defs, debug = log.get() > 3 })
   end
 
@@ -1465,29 +1468,42 @@ return {
     end
   end,
 
-  print_box = function()
-    -- \\ClozeSetLocalOptions{#2}%
+  ---
+  ---@param text string
+  ---@param kv_string string
+  ---@param starred '\\BooleanTrue'|'\\BooleanFalse'
+  print_box = function(text, kv_string, starred)
+    log.debug('text: %s kv_string: %s starred: %s', text, kv_string,
+      starred)
+    config.parse_options(kv_string, 'local')
     fboxrule_restore = tex.dimen['fboxrule']
-    tex.dimen['fboxrule'] = tex.sp(config.get('boxrule'))
-
-    tex_printf('\\noindent')
-
-    tex_printf('\\begin{lrbox}{\\ClozeBox}')
-
-    local boxheight = config.get('boxheight')
-    local boxwidth = config.get('boxwidth')
-    if boxheight then
-      tex_printf('\\begin{minipage}[t][%s][t]{%s}', boxheight, boxwidth)
-    else
-      tex_printf('\\begin{minipage}[t]{%s}', boxwidth)
+    local rule = config.get('box_rule')
+    if rule then
+      tex.dimen['fboxrule'] = tex.sp(rule)
     end
 
-    -- \\setlength{\\parindent}{0pt}%
-    -- \\clozenol[margin=0pt]{#3}%
+    tex.print('\\noindent')
+    tex.print('\\begin{lrbox}{\\ClozeBox}')
 
-    tex_printf('\\end{minipage}')
-    tex_printf('\\end{lrbox}')
-    tex_printf('\\usebox{\\ClozeBox}}')
-    tex_printf('\\fbox{\\usebox{\\ClozeBox}}')
+    local height = config.get('box_height')
+    local width = config.get('box_width')
+    if height then
+      tex_printf('\\begin{minipage}[t][%s][t]{%s}', height, width)
+    else
+      tex_printf('\\begin{minipage}[t]{%s}', width)
+    end
+    tex.print('\\setlength{\\parindent}{0pt}')
+    tex_printf('\\clozenol[margin=0pt]{%s}', text)
+    tex.print('\\end{minipage}')
+    tex.print('\\end{lrbox}')
+    if starred and starred == '\\BooleanTrue' then
+      tex.print('\\usebox{\\ClozeBox}}')
+    else
+      tex.print('\\fbox{\\usebox{\\ClozeBox}}')
+    end
+  end,
+
+  restore_fboxrule = function()
+    tex.dimen['fboxrule'] = fboxrule_restore
   end,
 }

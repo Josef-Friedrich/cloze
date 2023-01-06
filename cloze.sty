@@ -240,33 +240,12 @@
 %    \begin{macrocode}
 \newsavebox{\ClozeBox}%
 \NewDocumentEnvironment{clozebox}{ s O{} +b}{%
-  \ClozeSetLocalOptions{#2}%
   \directlua{
-    cloze.fboxrule_restore = tex.dimen['fboxrule']
-    print(cloze.get_option('boxrule'))
-    tex.dimen['fboxrule'] = tex.sp(cloze.get_option('boxrule'))
+    cloze.print_box('\luaescapestring{\unexpanded{#3}}','\luaescapestring{\unexpanded{#2}}','\luaescapestring{\unexpanded{#1}}')
   }%
-  \noindent%
-  \begin{lrbox}{\ClozeBox}%
-  \directlua{
-    local boxheight = cloze.get_option('boxheight')
-    local boxwidth = cloze.get_option('boxwidth')
-    if boxheight then
-      tex.print('\\begin{minipage}[t][' .. boxheight .. '][t]{' .. boxwidth .. '}')
-    else
-      tex.print('\\begin{minipage}[t]{' .. boxwidth .. '}')
-    end
-  }%
-  \setlength{\parindent}{0pt}%
-  \clozenol[margin=0pt]{#3}%
-  \end{minipage}%
-  \end{lrbox}%
-  \IfBooleanTF{#1}%
-    {\usebox{\ClozeBox}}%
-    {\fbox{\usebox{\ClozeBox}}}%
 }{%
   \directlua{
-    tex.dimen['fboxrule'] = cloze.fboxrule_restore
+    cloze.restore_fboxrule()
   }%
 }
 %    \end{macrocode}
