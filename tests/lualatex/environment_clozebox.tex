@@ -1,7 +1,7 @@
 %!TEX program = lualatex
 \documentclass{article}
 \input ../cloze-test-macros-lualatex.tex
-\usepackage{cloze}
+\usepackage[debug=3]{cloze}
 
 \begin{document}
 \TestTitleDesc{LuaLa\TeX: environment clozebox}
@@ -61,7 +61,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et.
 \end{clozebox}
 
-\TestSection{boxwidth}
+\TestSection{boxwidth=5cm}
 
 \clozereset
 
@@ -70,11 +70,20 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et.
 \end{clozebox}
 
-\TestSection{boxheight}
+\TestSection{boxwidth=5cm,boxheight=5cm}
 
 \clozereset
 
 \begin{clozebox}[boxwidth=5cm,boxheight=5cm]
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et.
+\end{clozebox}
+
+\TestSection{boxwidth=5cm}
+
+\clozereset
+
+\begin{clozebox}[box_rule=0.2cm,hide]
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et.
 \end{clozebox}

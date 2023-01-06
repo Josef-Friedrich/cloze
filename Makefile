@@ -53,6 +53,9 @@ test_lualatex: test_lualatex_without_open
 clean:
 	git clean -d -x --force
 
+debug: install
+	lualatex -cd tests/lualatex/environment_clozebox.tex
+
 ctan:
 	rm -rf $(jobname)
 	mkdir $(jobname)

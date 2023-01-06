@@ -424,21 +424,21 @@ local config = (function()
       description = 'The height of a cloze box.',
       alias = 'boxheight',
       process = function(value)
-        set_option('boxheight', value)
+        set_option('box_height', value)
       end,
     },
     box_rule = {
       description = 'The thickness of the rule around a cloze box.',
       alias = 'boxrule',
       process = function(value)
-        set_option('boxrule', value)
+        set_option('box_rule', value)
       end,
     },
     box_width = {
       description = 'The width of a cloze box.',
       alias = 'boxwidth',
       process = function(value)
-        set_option('boxwidth', value)
+        set_option('box_width', value)
       end,
     },
     distance = {
@@ -1471,7 +1471,7 @@ return {
   ---
   ---@param text string
   ---@param kv_string string
-  ---@param starred '\\BooleanTrue'|'\\BooleanFalse'
+  ---@param starred string # `\BooleanTrue` `\BooleanFalse`
   print_box = function(text, kv_string, starred)
     log.debug('text: %s kv_string: %s starred: %s', text, kv_string,
       starred)
@@ -1496,8 +1496,8 @@ return {
     tex_printf('\\clozenol[margin=0pt]{%s}', text)
     tex.print('\\end{minipage}')
     tex.print('\\end{lrbox}')
-    if starred and starred == '\\BooleanTrue' then
-      tex.print('\\usebox{\\ClozeBox}}')
+    if starred:match('True') then
+      tex.print('\\usebox{\\ClozeBox}')
     else
       tex.print('\\fbox{\\usebox{\\ClozeBox}}')
     end

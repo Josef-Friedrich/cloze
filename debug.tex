@@ -1,34 +1,14 @@
 \documentclass{article}
-\usepackage[show]{cloze}
+\usepackage[show,debug=3]{cloze}
 % \usepackage[callback=preline]{nodetree}
 \begin{document}
 
-Lorem ipsum dolor sit amet, consectetur \cloze{adipisicing} elit.
+\begin{clozebox}*
+Lorem ipsum dolor sit
+\end{clozebox}
 
-Lorem ipsum \cloze{dolor sit amet, consec}tetur \cloze{adipisicing}
-elit, sed do eiusmod tempor \cloze{incididunt} ut labore et dolore magna
-aliqua. Ut enim ad minim veniam
-
-\begin{clozepar}[minlines=3]
-minlines=3
-\end{clozepar}
-
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-veniam
-
-\begin{clozepar}
-default (without the setting)
-\end{clozepar}
-
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-veniam
-
-\begin{clozepar}[minlines=7]
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-veniam
-\end{clozepar}
+\begin{clozebox}
+Lorem ipsum dolor sit
+\end{clozebox}
 
 \end{document}

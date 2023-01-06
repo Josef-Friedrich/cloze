@@ -240,6 +240,7 @@
 %    \begin{macrocode}
 \newsavebox{\ClozeBox}%
 \NewDocumentEnvironment{clozebox}{ s O{} +b}{%
+
   \directlua{
     cloze.print_box('\luaescapestring{\unexpanded{#3}}','\luaescapestring{\unexpanded{#2}}','\luaescapestring{\unexpanded{#1}}')
   }%
