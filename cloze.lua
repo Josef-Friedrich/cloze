@@ -331,7 +331,8 @@ local config = (function()
     if value == '' then
       return false
     end
-    log.info('Set %s option “%s” to “%s”', options_dest, key, value)
+    log.info('Set %s option “%s” to “%s”', options_dest, key,
+      value)
     if options_dest == 'global' then
       global_options[key] = value
     else
@@ -1423,14 +1424,16 @@ local cb = (function()
   }
 end)()
 
+---Variable that can be used to store the previous fbox rule thickness
+---to be able to restore the previous thickness.
+---@type
+local fboxrule_restore
+
 ---
 ---This table contains some basic functions which are published to the
 ---`cloze.tex` and `cloze.sty` file.
 return {
 
-  ---Variable that can be used to store the previous fbox rule thickness
-  --- to be able to restore the previous thickness.
-  fboxrule_restore = nil,
   write_linefil_nodes = utils.write_linefil_nodes,
   write_line_nodes = utils.write_line_nodes,
   write_margin_node = utils.write_margin_node,
@@ -1444,16 +1447,53 @@ return {
   parse_options = config.parse_options,
   register_callback = cb.register_callbacks,
   unregister_callback = cb.unregister_callbacks,
-  print_extend = function(count)
-    if count == '' then
-      count = 1
-    end
-    count = tonumber(count)
 
-    for _ = 1, count do
+  ---@param count string|number
+  print_extend = function(count)
+    ---@type number|nil
+    local c
+    if count == '' then
+      c = 1
+    end
+    c = tonumber(count)
+
+    if not c then
+      luakeys.utils.throw_error_message(
+        'clozeextend count must be greater than 0.')
+    end
+
+    for _ = 1, c do
       ---ex: vertical measure of x
       ---px: x height current font
       tex.print('\\hspace{1em}\\rule{0pt}{2ex}')
     end
+  end,
+
+  print_box = function()
+    -- \\ClozeSetLocalOptions{#2}%
+    fboxrule_restore = tex.dimen['fboxrule']
+    print(config.get_value('boxrule'))
+    tex.dimen['fboxrule'] = tex.sp(config.get_value('boxrule'))
+
+    tex_printf('\\noindent')
+
+    tex_printf('\\begin{lrbox}{\\ClozeBox}')
+
+    local boxheight = config.get_value('boxheight')
+    local boxwidth = config.get_value('boxwidth')
+    if boxheight then
+      tex.print('\\begin{minipage}[t][' .. boxheight .. '][t]{' ..
+                  boxwidth .. '}')
+    else
+      tex.print('\\begin{minipage}[t]{' .. boxwidth .. '}')
+    end
+
+    -- \\setlength{\\parindent}{0pt}%
+    -- \\clozenol[margin=0pt]{#3}%
+
+    tex_printf('\\end{minipage}')
+    tex_printf('\\end{lrbox}')
+    tex_printf('\\usebox{\\ClozeBox}}')
+    tex_printf('\\fbox{\\usebox{\\ClozeBox}}')
   end,
 }
