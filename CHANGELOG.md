@@ -31,55 +31,75 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - ...
 
-## [v0.1] - 2015/06/16
+## [v1.6] - 2020-06-30
 
-Converted to DTX file}
+### Added
 
-## [v1.0] - 2015/07/08
+- Implement basic plain `TeX` respectively plain `LuaTeX` interface.
 
-Inital release}
+### Fixed
 
-## [v1.1] - 2016/06/13
+- Fix duplicate line generation on the second line in cloze.
+- Fix width of first line wrong in itemize, mdframed.
+- Fix `\clozenol` not transparent #4
+- Fix `clozebox` not transparent.
 
-Make cloze compatible to LuaTeX version
-0.95}
+## [v1.5] - 2020-05-27
 
-## [v1.2] - 2016/06/23
+### Changed
 
-The cloze makros are now working in
-tabular, tabbing and picture environments}
+- The Lua part of the package (cloze.lua) is now being developed in a
+  separate file.
+- The readme file is now a standalone mardown file and not embedded in
+  the dtx file any more.
+- [LDoc](https://github.com/stevedonovan/LDoc) is being used
+  to generate the
+  [source code documentation](https://josef-friedrich.github.io/cloze).
 
-## [v1.3] - 2017/03/13
+### Fixed
 
-Add the new macros \cmd{\clozenol} and
-\cmd{\clozeextend} and the environments \texttt{clozebox} and
-\texttt{clozespace} (This version was not published on CTAN.)}
+- Fix two bugs (cloze in display math, line color and
+  hide).
 
-## [v1.4] - 2020/05/20
+## [v1.4] - 2020-05-20
 
-Add the new macro \cmd{\clozestrike} and
-improve the documentation}
+### Added
 
-## [v1.5] - 2020/05/27
+- Add the new macro `\clozestrike`
 
+### Changed
 
-* The Lua part of the package (cloze.lua) is now being developed in a
-separate file.
-* The readme file is now a standalone mardown file and not embedded in
-the dtx file any more.
-* \href{https://github.com/stevedonovan/LDoc}{LDoc} is being used
-to generate
-\href{https://josef-friedrich.github.io/cloze}{source code documentation}.
-* This version fixes two bugs (cloze in display math, line color and
-hide).
-}
+- Improve the documentation
 
-## [v1.6] - 2020/06/30
+## [v1.3] - 2017-03-13
 
+### Added
 
-* Implement basic plain \TeX{} respectively plain Lua\TeX{} interface.
-* Fix issue: Duplicate line generation on the second line in cloze.
-* Fix issue: width of first line wrong in itemize, mdframed.
-* Fix issue \#4: \texttt{\string\clozenol} not transparent.
-* Fix issue: \texttt{clozebox} not transparent.
-}
+- Add the new macros `\clozenol` and `\clozeextend` and the
+  environments `clozebox` and `clozespace`
+  (This version was not published on CTAN.)
+
+## [v1.2] - 2016-06-23
+
+### Fixed
+
+- The cloze makros are now working in tabular, tabbing and picture
+  environments
+
+## [v1.1] - 2016-06-13
+
+### Fixed
+
+- Make cloze compatible to `LuaTeX` version 0.95
+
+## [v1.0] - 2015-07-08
+
+### Added
+
+- Inital release
+
+## [v0.1] - 2015-06-16
+
+### Changed
+
+- Converted to DTX file
