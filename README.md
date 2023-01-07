@@ -8,7 +8,7 @@ Es nutzt die Möglichkeiten der modernen TeX-Engine LuaTeX.
 
 # License
 
-Copyright (C) 2015-2020 by Josef Friedrich <josef@friedrich.rocks>
+Copyright (C) 2015-2023 by Josef Friedrich <josef@friedrich.rocks>
 ------------------------------------------------------------------------
 This work may be distributed and/or modified under the conditions of
 the LaTeX Project Public License, either version 1.3 of this license
@@ -133,8 +133,8 @@ if not modules then modules = { } end modules ['cloze'] = {
 ### Update the copyright year:
 
 ```
-sed -i 's/(C) 2015-2020/(C) 2015-2021/g' cloze.ins
-sed -i 's/(C) 2015-2020/(C) 2015-2021/g' cloze.dtx
+sed -i 's/(C) 2015-2023/(C) 2015-2021/g' cloze.ins
+sed -i 's/(C) 2015-2023/(C) 2015-2021/g' cloze.dtx
 ```
 
 ### Command line tasks:
