@@ -1009,91 +1009,31 @@ local function make_fix(head_node_input)
     return width, start_width, stop_width
   end
 
+  ---
   ---The function `make_single` generates a gap of fixed width.
   ---
-  ---__Node lists__
+  ---# Node lists
   ---
-  ---__Show text:__
+  ---## Show text:
   ---
-  ---<table>
-  ---<tbody>
-  ---  <tr>
-  ---    <td>`start_node`</td>
-  ---    <td>`whatsit`</td>
-  ---    <td>`user_definded`</td>
-  ---    <td>`index`</td>
-  ---  </tr>
-  ---  <tr>
-  ---    <td>`line_node`</td>
-  ---    <td>`rule`</td>
-  ---    <td></td>
-  ---    <td>`width`</td>
-  ---  </tr>
-  ---  <tr>
-  ---    <td>`kern_start_node`</td>
-  ---    <td>`kern`</td>
-  ---    <td>&amp; Depends on `align`</td>
-  ---    <td></td>
-  ---  </tr>
-  ---  <tr>
-  ---    <td>`color_text_node`</td>
-  ---    <td>`whatsit`</td>
-  ---    <td>`pdf_colorstack`</td>
-  ---    <td>Text color</td>
-  ---  </tr>
-  ---  <tr>
-  ---    <td></td>
-  ---    <td>`glyphs`</td>
-  ---    <td>&amp; Text to show</td>
-  ---    <td></td>
-  ---  </tr>
-  ---  <tr>
-  ---    <td>`color_reset_node`</td>
-  ---    <td>`whatsit`</td>
-  ---    <td>`pdf_colorstack`</td>
-  ---    <td>Reset color</td>
-  ---  </tr>
-  ---  <tr>
-  ---    <td>`kern_stop_node`</td>
-  ---    <td>`kern`</td>
-  ---    <td>&amp; Depends on `align`</td>
-  ---    <td></td>
-  ---  </tr>
-  ---  <tr>
-  ---    <td>`stop_node`</td>
-  ---    <td>`whatsit`</td>
-  ---    <td>`user_definded`</td>
-  ---    <td>`index`</td>
-  ---  </tr>
-  ---</tbody>
-  ---</table>
+  ---| Variable name      | Node type | Node subtype         |             |
+  ---|--------------------|-----------|----------------------|-------------|
+  ---| `start_node`       | `whatsit` | `user_definded`      | `index`     |
+  ---| `line_node`        | `rule`    |                      | `width`     |
+  ---| `kern_start_node`  | `kern`    | Depends on `align`   |             |
+  ---| `color_text_node`  | `whatsit` | `pdf_colorstack`     | Text color  |
+  ---|                    | `glyphs`  | Text to show         |             |
+  ---| `color_reset_node` | `whatsit` | `pdf_colorstack`     | Reset color |
+  ---| `kern_stop_node`   | `kern`    | Depends on `align`   |             |
+  ---| `stop_node`        | `whatsit` | `user_definded`      | `index`     |
   ---
-  ---__Hide text:__
+  ---## Hide text:
   ---
-  ---<table>
-  ---<thead>
-  ---  <tr>
-  ---    <th>`start_node`</th>
-  ---    <th>`whatsit`</th>
-  ---    <th>`user_definded`</th>
-  ---    <th>`index`</th>
-  ---  </tr>
-  ---</thead>
-  ---<tbody>
-  ---  <tr>
-  ---    <td>`line_node`</td>
-  ---    <td>`rule`</td>
-  ---    <td></td>
-  ---    <td>`width`</td>
-  ---  </tr>
-  ---  <tr>
-  ---    <td>`stop_node`</td>
-  ---    <td>`whatsit`</td>
-  ---    <td>`user_definded`</td>
-  ---    <td>`index`</td>
-  ---  </tr>
-  ---</tbody>
-  ---</table>
+  ---| Variable name | Node type | Node subtype    |         |
+  ---|---------------|-----------|-----------------|---------|
+  ---| `start_node`  | `whatsit` | `user_definded` | `index` |
+  ---| `line_node`   | `rule`    |                 | `width` |
+  ---| `stop_node`   | `whatsit` | `user_definded` | `index` |
   ---
   ---Make a fixed sized cloze.
   ---
@@ -1152,79 +1092,26 @@ end
 ---The corresponding LaTeX environment to this lua function is
 ---`clozepar`.
 ---
----__Node lists__
+---# Node lists
 ---
----__Show text:__
+---## Show text:
 ---
----<table>
----<thead>
----  <tr>
----    <th>`strut_node`</th>
----    <th>`kern`</th>
----    <th></th>
----    <th>width = 0</th>
----  </tr>
----</thead>
----<tbody>
----  <tr>
----    <td>`line_node`</td>
----    <td>`rule`</td>
----    <td></td>
----    <td>`width` (Width from hlist)</td>
----  </tr>
----  <tr>
----    <td>`kern_node`</td>
----    <td>`kern`</td>
----    <td></td>
----    <td>`-width`</td>
----  </tr>
----  <tr>
----    <td>`color_text_node`</td>
----    <td>`whatsit`</td>
----    <td>`pdf_colorstack`</td>
----    <td>Text color</td>
----  </tr>
----  <tr>
----    <td></td>
----    <td>`glyphs`</td>
----    <td></td>
----    <td>Text to show</td>
----  </tr>
----  <tr>
----    <td>`tail_node`</td>
----    <td>`glyph`</td>
----    <td></td>
----    <td>Last glyph in hlist</td>
----  </tr>
----  <tr>
----    <td>`color_reset_node`</td>
----    <td>`whatsit`</td>
----    <td>`pdf_colorstack`</td>
----    <td>Reset color</td>
----  </tr>
----</tbody>
----</table>
+---| Variable name      | Node type | Node subtype     |                            |
+---|--------------------|-----------|------------------|----------------------------|
+---| `strut_node`       | `kern`    |                  | width = 0                  |
+---| `line_node`        | `rule`    |                  | `width` (Width from hlist) |
+---| `kern_node`        | `kern`    |                  | `-width`                   |
+---| `color_text_node`  | `whatsit` | `pdf_colorstack` | Text color                 |
+---|                    | `glyphs`  |                  | Text to show               |
+---| `tail_node`        | `glyph`   |                  | Last glyph in hlist        |
+---| `color_reset_node` | `whatsit` | `pdf_colorstack` | Reset color
 ---
----__Hide text:__
+---## Hide text:
 ---
----<table>
----<thead>
----  <tr>
----    <th>`strut_node`</th>
----    <th>`kern`</th>
----    <th></th>
----    <th>width = 0</th>
----  </tr>
----</thead>
----<tbody>
----  <tr>
----    <td>`line_node`</td>
----    <td>`rule`</td>
----    <td></td>
----    <td>`width` (Width from hlist)</td>
----  </tr>
----</tbody>
----</table>
+---| Variable name | Node type  | Node subtype |                            |
+---|---------------|------------|--------------|----------------------------|
+---| `strut_node`  | `kern`     |              | width = 0                  |
+---| `line_node`   | `rule`     |              | `width` (Width from hlist) |
 ---
 ---@param head_node Node # The head of a node list.
 local function make_par(head_node)
