@@ -1,14 +1,9 @@
 \documentclass{article}
-\usepackage[hide,debug=3]{cloze}
-% \usepackage[callback=preline]{nodetree}
+\usepackage{cloze}
 \begin{document}
 
-\begin{clozebox}*
-Lorem ipsum dolor sit
-\end{clozebox}
+\directlua{require('debug.lua')}
 
-\begin{clozebox}
-Lorem ipsum dolor sit
-\end{clozebox}
+Lorem \cloze{ipsum} dolor.
 
 \end{document}
