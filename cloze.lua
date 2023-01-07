@@ -264,7 +264,7 @@ local config = (function()
   ---
   ---@param marker UserDefinedWhatsitNode
   ---
-  ---@return unknown
+  ---@return Options|nil
   local function get_marker_values(marker)
     local data = get_marker_data(marker)
     if data then
@@ -352,7 +352,6 @@ local config = (function()
   ---
   ---Clear the global options storage.
   local function unset_global_options()
-    -- unset_local_options()
     global_options = {}
   end
 
@@ -910,21 +909,23 @@ local function make_basic(head_node_input)
   ---@return Node|nil head_node # The fast forwarded new head of the node list.
   ---@return Node|nil parent_node # The parent node (hlist) of the head node.
   function search_stop(start_node, parent_node)
-    local head_node = start_node
+    ---@type Node|nil
+    local n = start_node
+
     local last_node
-    while head_node do
-      if config.check_marker(head_node, 'basic', 'stop') then
-        return make_single(start_node, head_node, parent_node)
+    while n do
+      if config.check_marker(n, 'basic', 'stop') then
+        return make_single(start_node, n, parent_node)
       end
-      last_node = head_node
-      head_node = head_node.next
+      last_node = n
+      n = n.next
     end
     -- Make a cloze until the end of the node list.
-    head_node = make_single(start_node, last_node, parent_node)
+    n = make_single(start_node, last_node, parent_node)
     if parent_node.next then
       return continue_cloze(parent_node.next)
     else
-      return head_node, parent_node
+      return n, parent_node
     end
   end
 
@@ -947,23 +948,28 @@ local function make_basic(head_node_input)
   ---Search for a start marker.
   ---
   ---@param head_node Node # The head of a node list.
-  ---@param parent_node HlistNode # The parent node (hlist) of the head node.
-  ---
-  ---@return Node
+  ---@param parent_node? HlistNode # The parent node (hlist) of the head node.
   local function search_start(head_node, parent_node)
-    while head_node do
-      if head_node.head then
-        ---@cast head_node HlistNode
-        search_start(head_node.head, head_node)
-      elseif config.check_marker(head_node, 'basic', 'start') and
-        parent_node and parent_node.id == node.id('hlist') then
+    ---@type Node|nil
+    local n = head_node
+
+    ---@type Node|nil
+    local p = parent_node
+
+    while n do
+      if n.head then
+        ---@cast n HlistNode
+        search_start(n.head, n)
+      elseif config.check_marker(n, 'basic', 'start') and p and p.id ==
+        node.id('hlist') then
         ---Adds also a strut at the first position. It prepars the
         ---hlist and makes it ready to build a cloze.
-        utils.search_hlist(parent_node)
-        head_node, parent_node = search_stop(head_node, parent_node)
+        ---@cast p HlistNode
+        utils.search_hlist(p)
+        n, p = search_stop(n, p)
       end
-      if head_node then
-        head_node = head_node.next
+      if n then
+        n = n.next
       else
         break
       end
@@ -1064,7 +1070,11 @@ local function make_fix(head_node_input)
   ---
   ---@param head_node Node # The head of a node list.
   local function make_fix_recursion(head_node)
-    local start_node, stop_node = false, false
+    ---@type Node|false
+    local start_node = false
+
+    ---@type Node|false
+    local stop_node = false
     while head_node do
       if head_node.head then
         make_fix_recursion(head_node.head)
