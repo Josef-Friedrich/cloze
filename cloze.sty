@@ -26,6 +26,10 @@
 \input{cloze.tex}
 %    \end{macrocode}
 %
+%    \begin{macrocode}
+\ExplSyntaxOn
+%    \end{macrocode}
+%
 % This packages are used to build \emph{cloze}:
 %
 % \subsubsection{Dependencies}
@@ -79,8 +83,9 @@
 % can set values both to the local and the global options store.
 %    \begin{macrocode}
 \let\clozesetoption=\undefined
-\newcommand{\clozesetoption}[2]{%
-  \directlua{cloze.set_option('#1', '#2')}%
+\newcommand{\clozesetoption}[2]
+{
+  \directlua{cloze.set_option('#1', '#2')}
 }
 %    \end{macrocode}
 % \end{macro}
@@ -89,8 +94,10 @@
 % This macro is used in all cloze commands to handle the optional
 % arguments.
 %    \begin{macrocode}
-\def\ClozeSetLocalOptions#1{%
-  \directlua{
+\def\ClozeSetLocalOptions#1
+{
+  \directlua
+  {
     cloze.parse_options('#1', 'local')
   }%
 }
@@ -114,10 +121,12 @@
 % The usage of the command \cmd{\clozeset} is described in detail in
 % section \TmpSecRef{sec:command-clozeset}.
 %    \begin{macrocode}
-\newcommand{\clozeset}[1]{%
-  \directlua{
+\newcommand{\clozeset}[1]
+{
+  \directlua
+  {
     cloze.parse_options('#1', 'global')
-  }%
+  }
 }
 %    \end{macrocode}
 % \end{macro}
@@ -138,7 +147,8 @@
 % section \TmpSecRef{sec:command-clozehide}.
 %    \begin{macrocode}
 \let\clozehide=\undefined
-\newcommand{\clozehide}{%
+\newcommand{\clozehide}
+{
   \clozeset{hide}
 }
 %    \end{macrocode}
@@ -150,9 +160,10 @@
 %    \begin{macrocode}
 \let\clozePLAIN=\cloze
 \let\cloze=\undefined
-\newcommand{\cloze}[2][]{%
-  \ClozeSetLocalOptions{#1}%
-  \clozePLAIN{#2}%
+\newcommand{\cloze}[2][]
+{
+  \ClozeSetLocalOptions{#1}
+  \clozePLAIN{#2}
 }
 %    \end{macrocode}
 % \end{macro}
@@ -163,9 +174,10 @@
 %    \begin{macrocode}
 \let\clozefixPLAIN=\clozefix
 \let\clozefix=\undefined
-\newcommand{\clozefix}[2][]{%
-  \ClozeSetLocalOptions{#1}%
-  \clozefixPLAIN{#2}%
+\newcommand{\clozefix}[2][]
+{
+  \ClozeSetLocalOptions{#1}
+  \clozefixPLAIN{#2}
 }
 %    \end{macrocode}
 % \end{macro}
@@ -187,17 +199,17 @@
 % The usage of the environment |clozepar| is described in detail in
 % section \TmpSecRef{sec:command-clozepar}.
 %    \begin{macrocode}
-\newenvironment{clozepar}[1][]%
-{%
-  \par%
-  \ClozeSetLocalOptions{#1}%
-  \ClozeStartMarker{par}%
-  \clozefont\relax%
-}%
-{%
-  \ClozeStopMarker{par}%
-  \par%
-  \directlua{cloze.unregister_callback('par')}%
+\newenvironment{clozepar}[1][]
+{
+  \par
+  \ClozeSetLocalOptions{#1}
+  \ClozeStartMarker{par}
+  \clozefont\relax
+}
+{
+  \ClozeStopMarker{par}
+  \par
+  \directlua{cloze.unregister_callback('par')}
 }
 %    \end{macrocode}
 % \end{environment}
@@ -209,9 +221,10 @@
 %    \begin{macrocode}
 \let\clozeparplainPLAIN=\clozeparplain
 \let\clozeparplain=\undefined
-\newcommand{\clozeparplain}[2][]{%
-  \ClozeSetLocalOptions{#1}%
-  \clozeparplainPLAIN{#2}%
+\newcommand{\clozeparplain}[2][]
+{
+  \ClozeSetLocalOptions{#1}
+  \clozeparplainPLAIN{#2}
 }
 %    \end{macrocode}
 % \end{macro}
@@ -224,16 +237,19 @@
 % The dimension |fboxrule| have to be set before the environment
 % |lrbox|.
 %    \begin{macrocode}
-\newsavebox{\ClozeBox}%
-\NewDocumentEnvironment{clozebox}{ s O{} +b}{%
-
-  \directlua{
+\newsavebox{\ClozeBox}
+\NewDocumentEnvironment{clozebox}{ s O{} +b }
+{
+  \directlua
+  {
     cloze.print_box('\luaescapestring{\unexpanded{#3}}','\luaescapestring{\unexpanded{#2}}','\luaescapestring{\unexpanded{#1}}')
-  }%
-}{%
-  \directlua{
+  }
+}
+{
+  \directlua
+  {
     cloze.restore_fboxrule()
-  }%
+  }
 }
 %    \end{macrocode}
 % \end{environment}
@@ -243,11 +259,14 @@
 % section \TmpSecRef{sec:command-clozespace}.
 % TODO: Realization without setspace package.
 %    \begin{macrocode}
-\newenvironment{clozespace}[1][]%
-{%
-  \ClozeSetLocalOptions{#1}%
-  \begin{spacing}{\directlua{tex.print(cloze.get_option('spacing'))}}%
-}{\end{spacing}}
+\newenvironment{clozespace}[1][]
+{
+  \ClozeSetLocalOptions{#1}
+  \begin{spacing}{\directlua{tex.print(cloze.get_option('spacing'))}}
+}
+{
+  \end{spacing}
+}
 %    \end{macrocode}
 % \end{environment}
 %
@@ -270,9 +289,10 @@
 %    \begin{macrocode}
 \let\clozelinefilPLAIN=\clozelinefil
 \let\clozelinefil=\undefined
-\newcommand{\clozelinefil}[1][]{%
-  \ClozeSetLocalOptions{#1}%
-  \clozelinefilPLAIN%
+\newcommand{\clozelinefil}[1][]
+{
+  \ClozeSetLocalOptions{#1}
+  \clozelinefilPLAIN
 }
 %    \end{macrocode}
 % \end{macro}
@@ -282,8 +302,9 @@
 % section \TmpSecRef{sec:command-clozefil}.
 %    \begin{macrocode}
 \let\clozefil=\undefined
-\newcommand{\clozefil}[2][]{%
-  \cloze[#1]{#2}\clozelinefil[#1]%
+\newcommand{\clozefil}[2][]
+{
+  \cloze[#1]{#2}\clozelinefil[#1]
 }
 %    \end{macrocode}
 % \end{macro}
@@ -291,17 +312,20 @@
 % \begin{macro}{\clozeextend}
 % TODO: Use node library to create kern nodes.
 %    \begin{macrocode}
-\newcommand{\clozeextend}[1][1]{%
-  \directlua{
+\newcommand{\clozeextend}[1][1]
+{
+  \directlua
+  {
     cloze.print_extension('#1')
-  }%
+  }
 }
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\ClozeTextColor}
 %    \begin{macrocode}
-\newcommand{\ClozeTextColor}[1]{%
+\newcommand{\ClozeTextColor}[1]
+{
   \FarbeTextColor{blue}{#1}
 }
 %    \end{macrocode}
@@ -309,14 +333,15 @@
 %
 % \begin{macro}{\ClozeStrikeLine}
 %    \begin{macrocode}
-\newcommand\ClozeStrikeLine{%
-  \bgroup%
-  \markoverwith{%
-    \ClozeTextColor{%
-      \rule[0.5ex]{2pt}{1pt}%
-    }%
-  }%
-  \ULon%
+\newcommand\ClozeStrikeLine
+{
+  \bgroup
+  \markoverwith{
+    \ClozeTextColor{
+      \rule[0.5ex]{2pt}{1pt}
+    }
+  }
+  \ULon
 }
 %    \end{macrocode}
 % \end{macro}
@@ -349,3 +374,7 @@
 }
 %    \end{macrocode}
 % \end{macro}
+%
+%    \begin{macrocode}
+\ExplSyntaxOff
+%    \end{macrocode}
