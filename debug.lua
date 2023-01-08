@@ -1,4 +1,4 @@
----@type PreLinebreakFilterCallback
+---@type PreLinebreakFilter
 local function visit_nodes(n, group)
 
   while n do

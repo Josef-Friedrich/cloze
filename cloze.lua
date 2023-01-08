@@ -91,7 +91,9 @@ local config = (function()
   ---@field box_rule? string
   ---@field box_width? string
   ---@field distance? string
-  ---@field visibility? boolean
+  ---@field extension_count? integer
+  ---@field extension_height? string
+  ---@field extension_width? string
   ---@field line_color? string
   ---@field margin? string
   ---@field minlines? integer
@@ -100,6 +102,7 @@ local config = (function()
   ---@field spacing? number
   ---@field text_color? string
   ---@field thickness? string
+  ---@field visibility? boolean
   ---@field width? string
 
   ---The default options.
@@ -109,6 +112,9 @@ local config = (function()
     box_rule = '0.4pt',
     box_width = '\\linewidth',
     distance = '1.5pt',
+    extension_count = 5,
+    extension_height = '2ex',
+    extension_width = '1em',
     line_color = 'black',
     margin = '3pt',
     minlines = 0,
@@ -441,17 +447,38 @@ local config = (function()
         set_option('box_width', value)
       end,
     },
+    debug = {
+      data_type = 'integer',
+      process = function(value)
+        log.set(value)
+      end,
+    },
     distance = {
       description = 'The distance between the cloze text and the cloze line.',
       process = function(value)
         set_option('distance', value)
       end,
     },
-    visibility = {
-      description = 'Show or hide the cloze text.',
-      opposite_keys = { [true] = 'show', [false] = 'hide' },
+    extension_count = {
+      description = 'The number of extension units.',
+      alias = 'extensioncount',
       process = function(value)
-        set_option('visibility', value)
+        set_option('extension_count', value)
+      end,
+    },
+    extension_height = {
+      description = 'The height of one extension unit (default: 2ex).',
+      alias = 'extensionheight',
+      process = function(value)
+        set_option('extension_height', value)
+      end,
+
+    },
+    extension_width = {
+      description = 'The width of one extension unit (default: 1em).',
+      alias = 'extensionwidth',
+      process = function(value)
+        set_option('extension_width', value)
       end,
     },
     line_color = {
@@ -495,16 +522,17 @@ local config = (function()
         set_option('thickness', value)
       end,
     },
+    visibility = {
+      description = 'Show or hide the cloze text.',
+      opposite_keys = { [true] = 'show', [false] = 'hide' },
+      process = function(value)
+        set_option('visibility', value)
+      end,
+    },
     width = {
       description = 'The width of the cloze line of the command \\clozefix.',
       process = function(value)
         set_option('width', value)
-      end,
-    },
-    debug = {
-      data_type = 'integer',
-      process = function(value)
-        log.set(value)
       end,
     },
   }
@@ -1340,11 +1368,11 @@ return {
   unregister_callback = cb.unregister_callbacks,
 
   ---@param count string|number
-  print_extend = function(count)
+  print_extension = function(count)
     ---@type number|nil
     local c
     if count == '' then
-      c = 1
+      c = config.get('extension_count')
     end
     c = tonumber(count)
 
@@ -1355,8 +1383,9 @@ return {
 
     for _ = 1, c do
       ---ex: vertical measure of x
-      ---px: x height current font
-      tex.print('\\hspace{1em}\\rule{0pt}{2ex}')
+      ---px: x height current font (has no effect)
+      tex_printf('\\hspace{%s}\\rule{0pt}{%s}',
+        config.get('extension_width'), config.get('extension_height'))
     end
   end,
 

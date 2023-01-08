@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- ...
+- New options: `extension_count`, `extension_width`, `extension_height`
+- Options can be written with underscores: `box_height`, `box_rule`, `box_width`.
+- Debug informations can be enabled using the debug `option`.
 
 ### Changed
 
@@ -25,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- ...
+- Fix color changes to black after cloze command #9
 
 ### Security
 
