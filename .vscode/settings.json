@@ -32,10 +32,9 @@
     "~/repos/tex/luakeys/luakeys.lua",
     "${3rd}/lfs/library"
   ],
-  "Lua.diagnostics.disable": [
-    "redefined-local",
-  ],
+  "Lua.diagnostics.disable": ["redefined-local"],
   "Lua.diagnostics.severity": {
     "undefined-global": "Error!"
-  }
+  },
+  "latex-workshop.latex.autoBuild.run": "never"
 }
