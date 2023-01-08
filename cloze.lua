@@ -96,7 +96,7 @@ local config = (function()
   ---@field extension_width? string
   ---@field line_color? string
   ---@field margin? string
-  ---@field minlines? integer
+  ---@field min_lines? integer
   ---@field resetcolor? string
   ---@field show_text? boolean
   ---@field spacing? number
@@ -117,7 +117,7 @@ local config = (function()
     extension_width = '1em',
     line_color = 'black',
     margin = '3pt',
-    minlines = 0,
+    min_lines = 0,
     show_text = true,
     spacing = '1.6',
     text_color = 'blue',
@@ -495,10 +495,11 @@ local config = (function()
         set_option('margin', value)
       end,
     },
-    minlines = {
+    min_lines = {
+      alias = { 'minimum_lines', 'minlines' },
       description = 'How many lines a clozepar at least must have.',
       process = function(value)
-        set_option('minlines', value)
+        set_option('min_lines', value)
       end,
     },
     spacing = {
@@ -1244,8 +1245,8 @@ local function make_par(head_node)
     head_node = head_node.next
   end
 
-  local minlines = config.get('minlines')
-  local additional_lines = minlines - line_count
+  local min_lines = config.get('min_lines')
+  local additional_lines = min_lines - line_count
 
   if additional_lines > 0 then
     add_additional_lines(last_hlist_node, additional_lines)
