@@ -876,11 +876,28 @@ end)()
 ---@param head_node_input Node # The head of a node list.
 ---
 ---@return Node # The head of the node list.
-local function visit_tree (head_node_input)
+local function visit_tree(head_node_input)
 
   ---This local variables are overloaded by functions
   ---calling each other.
   local continue_cloze, search_stop
+
+  ---
+  ---Search for a `hlist` (subtype `line`) and insert a strut node into
+  ---the list if a hlist is found.
+  ---
+  ---@param head_node Node # The head of a node list.
+  ---
+  ---@return HlistNode|nil hlist_node
+  local function search_hlist(head_node)
+    while head_node do
+      if head_node.id == node.id('hlist') and head_node.subtype == 1 then
+        ---@cast head_node HlistNode
+        return head_node
+      end
+      head_node = head_node.next
+    end
+  end
 
   ---
   ---Search for a stop marker or make a cloze up to the end of the node
@@ -898,11 +915,14 @@ local function visit_tree (head_node_input)
     local last_node
     while n do
       if config.check_marker(n, 'basic', 'stop') then
+        log.warn('Stop marker found: %s', n)
         return n, parent_node
       end
       last_node = n
       n = n.next
     end
+    log.warn('End node: %s', last_node)
+
     if parent_node.next then
       return continue_cloze(parent_node.next)
     else
@@ -918,9 +938,10 @@ local function visit_tree (head_node_input)
   ---@return Node|nil head_node # The fast forwarded new head of the node list.
   ---@return Node|nil parent_node # The parent node (hlist) of the head node.
   function continue_cloze(parent_node)
-    local hlist_node = utils.search_hlist(parent_node)
+    local hlist_node = search_hlist(parent_node)
     if hlist_node then
       local start_node = hlist_node.head
+      log.warn('Continue cloze %s %s', hlist_node, start_node)
       return search_stop(start_node, hlist_node)
     end
   end
@@ -943,6 +964,7 @@ local function visit_tree (head_node_input)
         search_start(n.head, n)
       elseif config.check_marker(n, 'basic', 'start') and p and p.id ==
         node.id('hlist') then
+        log.warn('Start marker found: %s', n)
         ---@cast p HlistNode
         n, p = search_stop(n, p)
       end
@@ -953,7 +975,7 @@ local function visit_tree (head_node_input)
       end
     end
   end
-
+  log.warn('search start: %s', head_node_input)
   search_start(head_node_input)
   return head_node_input
 end
@@ -1400,7 +1422,7 @@ local cb = (function()
         elseif mode == 'fix' then
           register('pre_linebreak_filter', make_fix, mode)
         elseif mode == 'visitor' then
-          register('pre_linebreak_filter', visit_tree, mode)
+          register('pre_output_filter', visit_tree, mode)
         else
           return false
         end
