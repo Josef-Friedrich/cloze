@@ -301,7 +301,7 @@ local config = (function()
   end
 
   ---
-  ---This function removes a given whatsit marker.
+  ---Remove a whatsit marker.
   ---
   ---It only deletes a node, if a marker is given.
   ---
@@ -873,6 +873,91 @@ local utils = (function()
   }
 end)()
 
+---@param head_node_input Node # The head of a node list.
+---
+---@return Node # The head of the node list.
+local function visit_tree (head_node_input)
+
+  ---This local variables are overloaded by functions
+  ---calling each other.
+  local continue_cloze, search_stop
+
+  ---
+  ---Search for a stop marker or make a cloze up to the end of the node
+  ---list.
+  ---
+  ---@param start_node Node # The node to start a new cloze.
+  ---@param parent_node HlistNode # The parent node (hlist) of the start node.
+  ---
+  ---@return Node|nil head_node # The fast forwarded new head of the node list.
+  ---@return Node|nil parent_node # The parent node (hlist) of the head node.
+  function search_stop(start_node, parent_node)
+    ---@type Node|nil
+    local n = start_node
+
+    local last_node
+    while n do
+      if config.check_marker(n, 'basic', 'stop') then
+        return n, parent_node
+      end
+      last_node = n
+      n = n.next
+    end
+    if parent_node.next then
+      return continue_cloze(parent_node.next)
+    else
+      return n, parent_node
+    end
+  end
+
+  ---
+  ---Continue a multiline cloze.
+  ---
+  ---@param parent_node Node # A parent node to search for a hlist node.
+  ---
+  ---@return Node|nil head_node # The fast forwarded new head of the node list.
+  ---@return Node|nil parent_node # The parent node (hlist) of the head node.
+  function continue_cloze(parent_node)
+    local hlist_node = utils.search_hlist(parent_node)
+    if hlist_node then
+      local start_node = hlist_node.head
+      return search_stop(start_node, hlist_node)
+    end
+  end
+
+  ---
+  ---Search for a start marker.
+  ---
+  ---@param head_node Node # The head of a node list.
+  ---@param parent_node? HlistNode # The parent node (hlist) of the head node.
+  local function search_start(head_node, parent_node)
+    ---@type Node|nil
+    local n = head_node
+
+    ---@type Node|nil
+    local p = parent_node
+
+    while n do
+      if n.head then
+        ---@cast n HlistNode
+        search_start(n.head, n)
+      elseif config.check_marker(n, 'basic', 'start') and p and p.id ==
+        node.id('hlist') then
+        ---@cast p HlistNode
+        n, p = search_stop(n, p)
+      end
+      if n then
+        n = n.next
+      else
+        break
+      end
+    end
+  end
+
+  search_start(head_node_input)
+  return head_node_input
+end
+
 ---
 ---Assemble a possibly multiline cloze.
 ---
@@ -1051,16 +1136,16 @@ local function make_fix(head_node_input)
   ---
   ---## Show text:
   ---
-  ---| Variable name      | Node type | Node subtype         |             |
-  ---|--------------------|-----------|----------------------|-------------|
-  ---| `start_node`       | `whatsit` | `user_definded`      | `index`     |
-  ---| `line_node`        | `rule`    |                      | `width`     |
-  ---| `kern_start_node`  | `kern`    | Depends on `align`   |             |
-  ---| `color_text_node`  | `whatsit` | `pdf_colorstack`     | Text color  |
-  ---|                    | `glyphs`  | Text to show         |             |
-  ---| `color_reset_node` | `whatsit` | `pdf_colorstack`     | Reset color |
-  ---| `kern_stop_node`   | `kern`    | Depends on `align`   |             |
-  ---| `stop_node`        | `whatsit` | `user_definded`      | `index`     |
+  ---| Variable name      | Node type | Node subtype       |             |
+  ---|--------------------|-----------|--------------------|-------------|
+  ---| `start_node`       | `whatsit` | `user_definded`    | `index`     |
+  ---| `line_node`        | `rule`    |                    | `width`     |
+  ---| `kern_start_node`  | `kern`    | Depends on `align` |             |
+  ---| `color_text_node`  | `whatsit` | `pdf_colorstack`   | Text color  |
+  ---|                    | `glyphs`  | Text to show       |             |
+  ---| `color_reset_node` | `whatsit` | `pdf_colorstack`   | Reset color |
+  ---| `kern_stop_node`   | `kern`    | Depends on `align` |             |
+  ---| `stop_node`        | `whatsit` | `user_definded`    | `index`     |
   ---
   ---## Hide text:
   ---
@@ -1283,13 +1368,7 @@ local cb = (function()
   ---Store informations if the callbacks are already registered for
   ---a certain mode (`basic`, `fix`, `par`).
   ---
-  ---<code><pre>
-  ---is_registered = {
-  ---  fix = true,
-  ---  basic = false,
-  ---  par = false,
-  ---}</pre></code>
-  ---
+  ---@type table<'basic'|'fix'|'par'|'visitor', boolean>
   local is_registered = {}
 
   return {
@@ -1320,6 +1399,8 @@ local cb = (function()
           register('pre_output_filter', make_basic, mode)
         elseif mode == 'fix' then
           register('pre_linebreak_filter', make_fix, mode)
+        elseif mode == 'visitor' then
+          register('pre_linebreak_filter', visit_tree, mode)
         else
           return false
         end

@@ -99,7 +99,7 @@
   \directlua
   {
     cloze.parse_options('#1', 'local')
-  }%
+  }
 }
 %    \end{macrocode}
 % \end{macro}
@@ -188,9 +188,10 @@
 %    \begin{macrocode}
 \let\clozenolPLAIN=\clozenol
 \let\clozenol=\undefined
-\newcommand{\clozenol}[2][]{%
-  \ClozeSetLocalOptions{#1}%
-  \clozenolPLAIN{#2}%
+\newcommand{\clozenol}[2][]
+{
+  \ClozeSetLocalOptions{#1}
+  \clozenolPLAIN{#2}
 }
 %    \end{macrocode}
 % \end{macro}
@@ -276,9 +277,10 @@
 %    \begin{macrocode}
 \let\clozelinePLAIN=\clozeline
 \let\clozeline=\undefined
-\newcommand{\clozeline}[1][]{%
-  \ClozeSetLocalOptions{#1}%
-  \clozelinePLAIN%
+\newcommand{\clozeline}[1][]
+{
+  \ClozeSetLocalOptions{#1}
+  \clozelinePLAIN
 }
 %    \end{macrocode}
 % \end{macro}
