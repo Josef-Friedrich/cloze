@@ -1493,6 +1493,24 @@ return {
     end
   end,
 
+  print_cloze = function(text, kv_string)
+    config.parse_options(kv_string, 'local')
+    cb.register_callbacks('basic')
+    -- config.write_marker('basic', 'start')
+    -- tex.print('{\\clozefont\\relax')
+    -- utils.write_margin_node()
+    -- tex.print(text)
+    -- utils.write_margin_node()
+    -- tex.print('}')
+    -- config.write_marker('basic', 'stop')
+
+    local output = string.format(
+      '\\ClozeStartMarker{basic}%s\\ClozeStopMarker{basic}',
+      string.format('{\\clozefont\\relax%s}',
+        string.format('\\ClozeMargin{%s}', text)))
+    tex.print(output)
+  end,
+
   ---
   ---@param text string
   ---@param kv_string string
