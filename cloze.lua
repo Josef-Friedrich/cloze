@@ -428,21 +428,21 @@ local config = (function()
     },
     box_height = {
       description = 'The height of a cloze box.',
-      alias = 'boxheight',
+      alias = { 'boxheight', 'box_height' },
       process = function(value)
         set_option('box_height', value)
       end,
     },
     box_rule = {
       description = 'The thickness of the rule around a cloze box.',
-      alias = 'boxrule',
+      alias = { 'boxrule', 'box_rule' },
       process = function(value)
         set_option('box_rule', value)
       end,
     },
     box_width = {
       description = 'The width of a cloze box.',
-      alias = 'boxwidth',
+      alias = { 'boxwidth', 'box_width' },
       process = function(value)
         set_option('box_width', value)
       end,
@@ -547,12 +547,14 @@ local config = (function()
     luakeys.parse(kv_string, { defs = defs, debug = log.get() > 3 })
   end
 
+  local defs_manager = luakeys.DefinitionManager(defs)
+
   return {
     get = get,
     get_defaults = get_defaults,
     unset_global_options = unset_global_options,
     unset_local_options = unset_local_options,
-    set_is_global = set_options_dest,
+    set_options_dest = set_options_dest,
     remove_marker = remove_marker,
     check_marker = check_marker,
     set_option = set_option,
@@ -560,6 +562,7 @@ local config = (function()
     get_marker = get_marker,
     get_marker_data = get_marker_data,
     parse_options = parse_options,
+    defs_manager = defs_manager,
   }
 
 end)()
@@ -1013,7 +1016,7 @@ local function make_basic(head_node_input)
       parent_node.glue_sign, parent_node.glue_order, start_node,
       stop_node)
 
-    log.info('Make a line of the width of: %dsp', line_width)
+    log.info('Make a line of the width of: %s sp', line_width)
 
     local line_node = utils.insert_line(start_node, line_width)
     local color_text_node = utils.insert_list('after', line_node, {
@@ -1461,7 +1464,7 @@ return {
   write_line_nodes = utils.write_line_nodes,
   write_margin_node = utils.write_margin_node,
   set_option = config.set_option,
-  set_is_global = config.set_is_global,
+  set_options_dest = config.set_options_dest,
   unset_local_options = config.unset_local_options,
   reset = config.unset_global_options,
   get_defaults = config.get_defaults,
@@ -1518,7 +1521,17 @@ return {
   print_box = function(text, kv_string, starred)
     log.debug('text: %s kv_string: %s starred: %s', text, kv_string,
       starred)
-    config.parse_options(kv_string, 'local')
+
+    print(kv_string)
+
+    config.set_options_dest('local')
+    config.defs_manager:parse(kv_string, {
+      'visibility',
+      { 'box_rule', 'rule' },
+      { 'box_width', 'width' },
+      { 'box_height', 'height' },
+    })
+
     fboxrule_restore = tex.dimen['fboxrule']
     local rule = config.get('box_rule')
     if rule then
@@ -1530,6 +1543,7 @@ return {
 
     local height = config.get('box_height')
     local width = config.get('box_width')
+
     if height then
       tex_printf('\\begin{minipage}[t][%s][t]{%s}', height, width)
     else
