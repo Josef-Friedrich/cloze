@@ -1557,6 +1557,18 @@ return {
     end
   end,
 
+  ---
+  ---Print the required TeX markup for the environment `clozespace` using `tex.print()`
+  ---
+  ---@param kv_string string
+  print_space = function(kv_string)
+    config.set_options_dest('local')
+    local defs = config.defs_manager:include({ 'spacing' }, true)
+    defs.spacing.pick = 'number'
+    luakeys.parse(kv_string, { defs = defs })
+    tex_printf('\\begin{spacing}{%s}', config.get('spacing'))
+  end,
+
   restore_fboxrule = function()
     tex.dimen['fboxrule'] = fboxrule_restore
   end,

@@ -267,10 +267,9 @@
 % section \TmpSecRef{sec:command-clozespace}.
 % TODO: Realization without setspace package.
 %    \begin{macrocode}
-\newenvironment{clozespace}[1][]
+\NewDocumentEnvironment { clozespace } { O {} }
 {
-  \ClozeSetLocalOptions{#1}
-  \begin{spacing}{\directlua{tex.print(cloze.get_option('spacing'))}}
+  \directlua{cloze.print_space('#1')}
 }
 {
   \end{spacing}
