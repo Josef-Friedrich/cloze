@@ -1521,15 +1521,12 @@ return {
   print_box = function(text, kv_string, starred)
     log.debug('text: %s kv_string: %s starred: %s', text, kv_string,
       starred)
-
-    print(kv_string)
-
     config.set_options_dest('local')
     config.defs_manager:parse(kv_string, {
       'visibility',
-      { 'box_rule', 'rule' },
-      { 'box_width', 'width' },
-      { 'box_height', 'height' },
+      box_rule = 'rule',
+      box_width = 'width',
+      box_height = 'height',
     })
 
     fboxrule_restore = tex.dimen['fboxrule']
