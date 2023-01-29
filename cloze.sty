@@ -168,13 +168,6 @@
 %    \end{macrocode}
 % \end{macro}
 %
-%    \begin{macrocode}
-\NewDocumentCommand{\clozeNG}{ O{} m }
-{
-  \directlua{cloze.print_cloze('\luaescapestring{\unexpanded{#2}}', '\luaescapestring{\unexpanded{#1}}')}
-}
-%    \end{macrocode}
-%
 % \begin{macro}{\clozefix}
 % The usage of the command \cmd{\clozefix} is described in detail in
 % section \TmpSecRef{sec:command-clozefix}.

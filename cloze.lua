@@ -39,6 +39,7 @@ modules['cloze'] = {
 
 local farbe = require('farbe')
 local luakeys = require('luakeys')()
+local lparse = require('lparse')
 
 local ansi_color = luakeys.utils.ansi_color
 local log = luakeys.utils.log
@@ -1455,10 +1456,37 @@ end)()
 ---to be able to restore the previous thickness.
 local fboxrule_restore
 
+local function print_cloze ()
+  local kv_string, text = lparse.scan('O{} v')
+  config.parse_options(kv_string, 'local')
+  cb.register_callbacks('basic')
+  local output = string.format(
+    '\\ClozeStartMarker{basic}%s\\ClozeStopMarker{basic}',
+    string.format('{\\clozefont\\relax%s}',
+      string.format('\\ClozeMargin{%s}', text)))
+  tex.print(output)
+end
+
 ---
 ---This table contains some basic functions which are published to the
 ---`cloze.tex` and `cloze.sty` file.
 return {
+  register_functions = function()
+    ---
+    ---@param csname string
+    ---@param fn function
+    local function register_function(csname, fn)
+      local index = 376
+      local fns = lua.get_functions_table()
+      while fns[index] do
+        index = index + 1
+      end
+      fns[index] = fn
+      token.set_lua(csname, index, 'global', 'protected')
+    end
+
+    register_function('clozeNG', print_cloze)
+  end,
 
   write_linefil_nodes = utils.write_linefil_nodes,
   write_line_nodes = utils.write_line_nodes,

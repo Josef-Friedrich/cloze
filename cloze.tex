@@ -29,6 +29,7 @@
 \directlua{
   cloze = require('cloze')
   cloze.register_callback('visitor')
+  cloze.register_functions()
 }
 %    \end{macrocode}
 %
@@ -164,7 +165,6 @@
 }
 %    \end{macrocode}
 % \end{macro}
-%
 %
 % \begin{macro}{\clozereset}
 % The usage of the command \cmd{\clozereset} is described in detail in
