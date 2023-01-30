@@ -16,12 +16,12 @@ install:
 doc: doc_pdf
 
 doc_pdf:
-	lualatex --shell-escape documentation.tex
-	makeindex -s gglo.ist -o documentation.gls documentation.glo
-	makeindex -s gind.ist -o documentation.ind documentation.idx
-	lualatex --shell-escape documentation.tex
+	lualatex --shell-escape cloze-doc.tex
+	makeindex -s gglo.ist -o cloze-doc.gls cloze-doc.glo
+	makeindex -s gind.ist -o cloze-doc.ind cloze-doc.idx
+	lualatex --shell-escape cloze-doc.tex
 	mkdir -p $(texmf)/doc
-	cp documentation.pdf $(texmf)/doc/$(jobname).pdf
+	cp cloze-doc.pdf $(texmf)/doc/$(jobname).pdf
 
 test: install test_luatex_without_open test_lualatex_without_open
 	pdftk tests-luatex.pdf tests-lualatex.pdf cat output tests.pdf
