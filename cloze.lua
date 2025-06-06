@@ -1,5 +1,5 @@
 -- cloze.lua
--- Copyright 2015-2023 Josef Friedrich
+-- Copyright 2015-2025 Josef Friedrich
 --
 -- This work may be distributed and/or modified under the
 -- conditions of the LaTeX Project Public License, either version 1.3c
@@ -30,7 +30,7 @@ if not modules then
   modules = {}
 end
 modules['cloze'] = {
-  version = '1.6',
+  version = '1.7.0',
   comment = 'cloze',
   author = 'Josef Friedrich, R.-M. Huber',
   copyright = 'Josef Friedrich, R.-M. Huber',
