@@ -16,12 +16,12 @@ install:
 doc: doc_pdf
 
 doc_pdf:
-	lualatex --shell-escape cloze-doc.tex
-	makeindex -s gglo.ist -o cloze-doc.gls cloze-doc.glo
-	makeindex -s gind.ist -o cloze-doc.ind cloze-doc.idx
-	lualatex --shell-escape cloze-doc.tex
+	lualatex --shell-escape $(jobname)-doc.tex
+	makeindex -s gglo.ist -o $(jobname)-doc.gls $(jobname)-doc.glo
+	makeindex -s gind.ist -o $(jobname)-doc.ind $(jobname)-doc.idx
+	lualatex --shell-escape $(jobname)-doc.tex
 	mkdir -p $(texmf)/doc
-	cp cloze-doc.pdf $(texmf)/doc/$(jobname).pdf
+	cp $(jobname)-doc.pdf $(texmf)/doc/$(jobname).pdf
 
 test: install test_luatex_without_open test_lualatex_without_open
 	pdftk tests-luatex.pdf tests-lualatex.pdf cat output tests.pdf
@@ -47,15 +47,15 @@ clean:
 debug: install
 	lualatex -cd tests/lualatex/environment_clozebox.tex
 
-ctan:
+ctan: doc_pdf
 	rm -rf $(jobname)
 	mkdir $(jobname)
 	cp -f README.md $(jobname)/
-	rm -f $(jobname)/README.md.bak
-	cp -f $(jobname).ins $(jobname)/
-	cp -f $(jobname).dtx $(jobname)/
+	cp -f $(jobname).tex $(jobname)/
+	cp -f $(jobname).sty $(jobname)/
 	cp -f $(jobname).lua $(jobname)/
-	cp -f $(jobname).pdf $(jobname)/
+	cp -f $(jobname)-doc.pdf $(jobname)/
+	cp -f $(jobname)-doc.tex $(jobname)/
 	tar cvfz $(jobname).tar.gz $(jobname)
 	rm -rf $(jobname)
 
