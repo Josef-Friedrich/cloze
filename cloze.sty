@@ -72,6 +72,12 @@
 }
 %    \end{macrocode}
 %
+% Overwrite the cloze font definition in the plain tex definition to
+% avoid undefined old font command errors. In plain \TeX{} we use \cmd{\it}.
+%    \begin{macrocode}
+\def\clozefont{\itshape}
+%    \end{macrocode}
+%
 % Load the cloze lua module and put all return values in the variable
 % |cloze|.
 %
