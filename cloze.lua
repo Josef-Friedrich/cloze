@@ -570,6 +570,8 @@ end)()
 
 local utils = (function()
   ---
+  ---Create a new PDF colorstack whatsit node.
+  ---
   ---`utils.create_color()` is a wrapper for the function
   ---`utils.create_colorstack()`. It queries the current values of the
   ---options `line_color` and `text_color`.
@@ -590,8 +592,9 @@ local utils = (function()
   end
 
   ---
-  ---Create a rule node, which is used as a line for the cloze texts. The
-  ---`depth` and the `height` of the rule are calculated form the options
+  ---Create a rule node that is used as a line for the cloze texts.
+  ---
+  ---The `depth` and the `height` of the rule are calculated form the options
   ---`thickness` and `distance`.
   ---
   ---@param width number # The argument `width` must have the length unit __scaled points__.
@@ -608,9 +611,10 @@ local utils = (function()
   end
 
   ---
-  ---Insert a `list` of nodes after or before the `current`. The `head`
-  ---argument is optional. In some edge cases it is unfortately necessary.
-  ---if `head` is omitted the `current` node is used.
+  ---Insert a `list` of nodes after or before the `current`.
+  ---
+  ---The `head` argument is optional.  Unfortunately, it is necessary in some edge cases.
+  ---If `head` is omitted, the `current` node is used.
   ---
   ---@param position 'before'|'after' # The argument `position` can take the values `'after'` or `'before'`.
   ---@param current Node
@@ -985,7 +989,7 @@ local function visit_tree(head_node_input)
 end
 
 ---
----Assemble a possibly multiline cloze.
+---Assemble a possibly multi-line cloze text.
 ---
 ---The corresponding LaTeX command to this Lua function is `\cloze`.
 ---This function is used by other cloze TeX macros too: `\clozenol`,
@@ -1156,7 +1160,7 @@ local function make_fix(head_node_input)
   end
 
   ---
-  ---The function `make_single` generates a gap of fixed width.
+  ---Generate a gap with a fixed width.
   ---
   ---# Node lists
   ---
@@ -1181,8 +1185,6 @@ local function make_fix(head_node_input)
   ---| `line_node`   | `rule`    |                 | `width` |
   ---| `stop_node`   | `whatsit` | `user_definded` | `index` |
   ---
-  ---Make a fixed sized cloze.
-  ---
   ---@param start Node # The node, where the gap begins
   ---@param stop Node # The node, where the gap ends
   local function make_single(start, stop)
@@ -1206,7 +1208,7 @@ local function make_fix(head_node_input)
   end
 
   ---
-  ---Function to recurse the node list and search after marker.
+  ---Recurse the node list and search for the marker.
   ---
   ---@param head_node Node # The head of a node list.
   local function make_fix_recursion(head_node)
