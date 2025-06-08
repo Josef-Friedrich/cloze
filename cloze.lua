@@ -101,6 +101,7 @@ local config = (function()
   ---@field resetcolor? string
   ---@field show_text? boolean
   ---@field spacing? number
+  ---@field spread? number
   ---@field text_color? string
   ---@field thickness? string
   ---@field visibility? boolean
@@ -121,6 +122,7 @@ local config = (function()
     min_lines = 0,
     show_text = true,
     spacing = '1.6',
+    spread = 0,
     text_color = 'blue',
     thickness = '0.4pt',
     visibility = true,
@@ -509,6 +511,12 @@ local config = (function()
         set_option('spacing', value)
       end,
     },
+    spread = {
+      description = 'Enlarge or spread a gap by a certain factor.',
+      process = function(value)
+        set_option('spread', value)
+      end,
+    },
     text_color = {
       description = 'The color (name) of the cloze text.',
       alias = 'textcolor',
@@ -640,6 +648,7 @@ local utils = (function()
 
   ---
   ---Enclose a rule node (cloze line) with two PDF colorstack whatsits.
+  ---
   ---The first colorstack node colors the line, the second resets the
   ---color.
   ---
@@ -1125,6 +1134,61 @@ local function make_basic(head_node_input)
 end
 
 ---
+---Enlarge a basic cloze by a spread factor.
+---
+---We measure the widths of the cloze, calculate the spread width and
+---then simply put half of that to the left and right of the cloze if
+---the text is typeset.
+---
+---@param head_node_input Node # The head of a node list.
+local function spread_basic(head_node_input)
+  local function recurse(head_node)
+    local n = head_node
+    local m
+
+    while n do
+      if n.head then
+        recurse(n.head)
+      elseif config.check_marker(n, 'basic', 'start') then
+        local start = n
+        m = n
+        while m do
+          if config.check_marker(m, 'basic', 'stop') then
+            local stop = m
+
+            local width = node.dimensions(start, stop)
+            local spread = config.get('spread')
+            if spread == 0 then
+              break
+            end
+            local spread_half_width = (width * spread) / 2
+
+            local start_kern = utils.create_kern_node(spread_half_width)
+            local start_next = start.next
+            start.next = start_kern
+            start_kern.next = start_next
+
+            local stop_kern = utils.create_kern_node(spread_half_width)
+            local stop_prev = stop.prev
+            stop_prev.next = stop_kern
+            stop_kern.next = stop
+            break
+          end
+          m = m.next
+        end
+      end
+      if n then
+        n = n.next
+      else
+        break
+      end
+    end
+  end
+  recurse(head_node_input)
+  return head_node_input
+end
+
+---
 ---The corresponding LaTeX command to this Lua function is `\clozefix`.
 ---
 ---@param head_node_input Node # The head of a node list.
@@ -1423,6 +1487,7 @@ local cb = (function()
       end
       if not is_registered[mode] then
         if mode == 'basic' then
+          register('pre_linebreak_filter', spread_basic, mode)
           register('post_linebreak_filter', make_basic, mode)
           register('pre_output_filter', make_basic, mode)
         elseif mode == 'fix' then
@@ -1442,6 +1507,7 @@ local cb = (function()
     ---@param mode MarkerMode
     unregister_callbacks = function(mode)
       if mode == 'basic' then
+        unregister('pre_linebreak_filter', mode)
         unregister('post_linebreak_filter', mode)
         unregister('pre_output_filter', mode)
       elseif mode == 'fix' then
@@ -1458,7 +1524,7 @@ end)()
 ---to be able to restore the previous thickness.
 local fboxrule_restore
 
-local function print_cloze ()
+local function print_cloze()
   local kv_string, text = lparse.scan('O{} v')
   config.parse_options(kv_string, 'local')
   cb.register_callbacks('basic')
