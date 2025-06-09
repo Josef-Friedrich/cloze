@@ -1,0 +1,31 @@
+% https://github.com/Josef-Friedrich/cloze/issues/5
+\documentclass{article}
+\usepackage{tikz}
+\usepackage{cloze}
+\clozehide
+
+\begin{document}
+
+This \cloze{cloze} should be hidden.
+
+This \cloze[show]{cloze} should be shown.
+
+This \cloze{cloze} should be hidden. This \cloze[show]{cloze} should be shown.
+
+This \cloze[show]{cloze} should be shown. This \cloze{cloze} should be hidden.
+
+Cloze inside a TikZ: \tikz[baseline=(C.base)] \node (C) {This \cloze{cloze} should be hidden.};
+
+Cloze inside a TikZ: \tikz[baseline=(C.base)] \node (C) {This \cloze[show]{cloze} should be shown.};
+
+Cloze inside a TikZ: \tikz[baseline=(C.base)] {
+	\node (C) {This \cloze{cloze} should be hidden.};
+	\node at (5,0) {This \cloze[show]{cloze} should be shown.};
+	}
+
+Cloze inside a TikZ: \tikz[baseline=(C.base)] {
+	\node at (5,0) {This \cloze[show]{cloze} should be shown.};
+	\node (C) {This \cloze{cloze} should be hidden.};
+	}
+
+\end{document}
