@@ -5,9 +5,10 @@
 \usepackage[show]{cloze}
 
 \begin{document}
-\TestTitleDesc{}
-{}
+\TestTitleDesc{LuaLa\TeX: clozepar inside a TikZ picture}
+{environment clozepar and macro clozeparplain inside a TikZ picture}
 
+\def\TestExample{
 \begin{tikzpicture}
 \node[draw,text width=5cm]{
   \begin{clozepar}[minlines=15]
@@ -28,5 +29,8 @@
   est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit a}
 };
 \end{tikzpicture}
+}
+
+\TestShowAndHide
 
 \end{document}

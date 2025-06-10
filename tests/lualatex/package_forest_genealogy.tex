@@ -7,16 +7,21 @@
 \TestTitleDesc{LuaLa\TeX: package forest}
 {Example: genealogy}
 
+\def\TestExample{
 \begin{forest}
-[Johann Sebastian \cloze{Bach}
-  [\cloze{Wilhelm} Friedemann]
-  [Carl \cloze{Phillip} Emanuel
-    [Johann Sebastian (der \cloze{Jüngere})]
+  [Johann Sebastian \cloze{Bach}
+    [\cloze{Wilhelm} Friedemann]
+    [Carl \cloze{Phillip} Emanuel
+      [Johann Sebastian (der \cloze{Jüngere})]
+    ]
+    [Johann Christoph \cloze{Friedrich}
+      [\cloze{Wilhelm} Friedrich Ernst]
+    ]
+    [\cloze{Johann Christian}]
   ]
-  [Johann Christoph \cloze{Friedrich}
-    [\cloze{Wilhelm} Friedrich Ernst]
-  ]
-  [\cloze{Johann Christian}]
-]
 \end{forest}
+}
+
+\TestShowAndHide
+
 \end{document}

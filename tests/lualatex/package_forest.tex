@@ -7,14 +7,18 @@
 \TestTitleDesc{LuaLa\TeX: package forest}
 {}
 
+\def\TestExample{
 \begin{forest}
 [VP
-[DP[\cloze{John}]]
-[V’
-[V[\cloze{sent}]]
-[DP[\cloze{Mary}]]
-[DP[D[\cloze{a}]][NP[\cloze{letter}]]]
+    [DP[\cloze{John}]]
+    [V’
+        [V[\cloze{sent}]]
+        [DP[\cloze{Mary}]]
+        [DP[D[\cloze{a}]][NP[\cloze{letter}]]]
+    ]
 ]
-]
-\end{forest}
+\end{forest}}
+
+\TestShowAndHide
+
 \end{document}

@@ -1,3 +1,5 @@
+\input cloze.tex
+
 \font\TestTypewriterFontBigger=cmtt10 scaled \magstep3
 \font\TestTypewriterFontBig=cmtt10 scaled \magstep1
 \font\TestTypewriterFontNormal=cmtt10
@@ -16,7 +18,9 @@
   \TestTitle{#1}
   \par
   \TestDescription{#2}
-  \bigskip
+  \par
+  {\noindent\TestTypewriterFontNormal Test file: \jobname.tex}
+  \par
   \hrule width 6cm
   \bigskip
 }
@@ -26,4 +30,32 @@
   \noindent%
   {\TestTypewriterFontBig#1}%
   \bigskip%
+}
+
+\def\TestShowHideText#1#2{%
+  \par%
+  \bigskip\bigskip%
+  \noindent%
+  {\TestTypewriterFontNormal Cloze texts are #1 (visibility=#2):}%
+  \par\bigskip%
+}
+
+\def\TestShowCloze{%
+  \clozeshow%
+  \TestShowHideText{displayed}{true}%
+}
+
+\def\TestHideCloze{%
+  \clozehide%
+  \TestShowHideText{hidden}{false}%
+}
+
+\def\TestShowAndHide{
+  \TestShowCloze
+
+  \TestExample
+
+  \TestHideCloze
+
+  \TestExample
 }
