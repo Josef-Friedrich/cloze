@@ -1515,9 +1515,58 @@ unsteady line distances. This option only affects the environment
 \TmpOption{spread}{number}:
 %
 % Vergrößere bzw. spreize eine Lücke um einen gewissen Faktor.
-Enlarge or spread a gap by a certain factor.
-% O.5 beispielsweise vergrößert die Lücke um die Hälfte ihrer ursprünglichen bereite
-O.5, for example, enlarges the gap by half of its original size.
+The option |spread| enlarges or spreads a gap by a certain factor.
+% 0.5 beispielsweise vergrößert die Lücke um die Hälfte ihrer ursprünglichen bereite
+$0.5$, for example, enlarges the gap by half of its original size.
+% Ein spread-Faktor von 0 fügt keinen Abstand ein.
+A spread factor of $0$ does not insert a space.
+% Ein negativer spread-Faktor kann auch angewendet werden.
+A negative spread factor can also be applied.
+% Dadurch überlappen sich unter Umständen die Textzeichen.
+This may cause the text characters to overlap.
+% Diese Option kann nur in Verbindung mit den Kommandos cloze and clozenol eingesetzt werden.
+This option can only be used in combination with the commands
+\cmd{\cloze} \TmpSecRef{sec:command-cloze} and \cmd{\clozenol}
+\TmpSecRef{sec:command-clozenol}.
+
+\newcommand{\TmpOptionSpread}[1]{%
+  \noindent%
+  Lorem \cloze[spread=#1]{ipsum dolor sit} amet.%
+  \TmpDesc{#1}%
+}
+
+\begin{TmpExample}
+\TmpOptionSpread{-0.5}
+\TmpOptionSpread{0}
+\TmpOptionSpread{0.5}
+\TmpOptionSpread{1}
+\TmpOptionSpread{2}
+\end{TmpExample}
+
+\noindent
+% Die Option spread fügt am Anfang und am Ende einer Lücke einen Abstand
+% ein, der abhängig von der Breite des Texts in der Lücke ist.
+The |spread| option inserts a space at the beginning and end of a gap
+that depends on the width of the text in the gap.
+
+\begin{TmpExample}
+Lorem ipsum dolor \cloze[spread=0.5]{sit} amet. \TmpDesc{0.5}%
+\noindent
+Lorem ipsum \cloze[spread=0.5]{dolor sit} amet. \TmpDesc{0.5}%
+\noindent
+Lorem \cloze[spread=0.5]{ipsum dolor sit} amet. \TmpDesc{0.5}%
+\noindent
+\cloze[spread=0.5]{Lorem ipsum dolor sit} amet. \TmpDesc{0.5}%
+\noindent
+\cloze[spread=0.5]{Lorem ipsum dolor sit amet}. \TmpDesc{0.5}%
+\end{TmpExample}
+
+\noindent
+% Zusätzlich zu der der Option spread kann auch noch die Option margin
+% verwendet werden, die einen Abstand eingefügt werden, der unabhängig
+% von der Breite der Lücke ist.
+In addition to the |spread| option, the |margin| option can also be used,
+which inserts a distance that is independent of the width of the gap.
 
 %%
 % thickness
