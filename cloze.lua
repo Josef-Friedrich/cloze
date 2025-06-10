@@ -245,7 +245,15 @@ local config = (function()
   local function get_marker_data(n)
     if n.id == node.id('whatsit') and n.subtype ==
       node.subtype('user_defined') and n.user_id == user_id then
-      return get_storage(n.value --[[@as integer]] )
+      local data = get_storage(n.value --[[@as integer]] )
+      if data.position == 'start' then
+        if data.local_opts == nil then
+          local_options = {}
+        else
+          local_options = data.local_opts
+        end
+      end
+      return data
     end
   end
 
@@ -267,22 +275,6 @@ local config = (function()
   end
 
   ---
-  ---First this function saves the associatied values of a marker to the
-  ---local options table. Second it returns this values. The argument
-  ---`marker` is a whatsit node.
-  ---
-  ---@param marker UserDefinedWhatsitNode
-  ---
-  ---@return Options|nil
-  local function get_marker_values(marker)
-    local data = get_marker_data(marker)
-    if data then
-      local_options = data.local_opts
-      return data.local_opts
-    end
-  end
-
-  ---
   ---`get_marker` returns the given marker.
   ---
   ---@param head_node Node # The current node.
@@ -298,7 +290,7 @@ local config = (function()
       out = false
     end
     if out and position == 'start' then
-      get_marker_values(head_node --[[@as UserDefinedWhatsitNode]] )
+      get_marker_data(head_node --[[@as UserDefinedWhatsitNode]] )
     end
     return out
   end
