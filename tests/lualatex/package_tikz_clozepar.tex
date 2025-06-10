@@ -1,9 +1,14 @@
 %!TEX program = lualatex
 \documentclass{article}
+\input ../cloze-test-macros-lualatex.tex
+
 \usepackage{tikz}
 \usepackage[show]{cloze}
 
 \begin{document}
+\TestTitleDesc{}
+{}
+
 \begin{tikzpicture}
 \node[draw,text width=5cm]{
   \begin{clozepar}[minlines=15]

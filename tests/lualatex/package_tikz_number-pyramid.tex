@@ -1,11 +1,15 @@
 %!TEX program = lualatex
 
 \documentclass{article}
+\input ../cloze-test-macros-lualatex.tex
+
 \usepackage{tikz}
 \usetikzlibrary{positioning}
 \usepackage[show]{cloze}
 
 \begin{document}
+\TestTitleDesc{Cloze texts inside a TikZ picture}
+{}
 
 \clozesetfont{\ttfamily}
 \def\TmpNumberPyramid(#1,#2,#3,#4,#5,#6){
@@ -37,8 +41,12 @@
   \TmpNumberPyramid(10,\clozenol{7},3,\clozenol{5},2,\clozenol{1})
 }
 
+Cloze texts are hidden.
+
 \clozehide
 \TmpNumberPyramids
+
+Cloze texts are displayed.
 
 \clozeshow
 \TmpNumberPyramids
