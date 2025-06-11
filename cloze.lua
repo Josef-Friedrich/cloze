@@ -75,7 +75,6 @@ local tex_printf = luakeys.utils.tex_printf
 ---All values and functions, which are related to the option
 ---management, are stored in a table called `config`.
 local config = (function()
-
   ---
   ---I didn’t know what value I should take as `user_id`. Therefore I
   ---took my birthday and transformed it into a large number.
@@ -96,6 +95,7 @@ local config = (function()
   ---@field extension_height? string
   ---@field extension_width? string
   ---@field line_color? string
+  ---@field log? number
   ---@field margin? string
   ---@field min_lines? integer
   ---@field spacing? number
@@ -116,6 +116,7 @@ local config = (function()
     extension_height = '2ex',
     extension_width = '1em',
     line_color = 'black',
+    log = 0,
     margin = '3pt',
     min_lines = 0,
     spacing = '1.6',
@@ -479,6 +480,13 @@ local config = (function()
       process = function(value, input)
         tex_printf('\\FarbeImport{%s}', value)
         set_option('line_color', value)
+      end,
+    },
+    log = {
+      description = 'Set the log level.',
+      data_type = 'integer',
+      process = function(value, input)
+        log.set(value)
       end,
     },
     margin = {
