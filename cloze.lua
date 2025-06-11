@@ -98,8 +98,6 @@ local config = (function()
   ---@field line_color? string
   ---@field margin? string
   ---@field min_lines? integer
-  ---@field resetcolor? string
-  ---@field show_text? boolean
   ---@field spacing? number
   ---@field spread? number
   ---@field text_color? string
@@ -120,7 +118,6 @@ local config = (function()
     line_color = 'black',
     margin = '3pt',
     min_lines = 0,
-    show_text = true,
     spacing = '1.6',
     spread = 0,
     text_color = 'blue',
