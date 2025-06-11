@@ -2,10 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v1.7.0] - 2025-06-06
+## [1.8.0] - 2025-06-11
+
+### Added
+
+- Add an option to enlarge gaps by a `spread` factor #1
+
+### Fixed
+
+- Local option handling #5
+
+## [1.7.0] - 2025-06-06
 
 ### Added
 
@@ -18,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix color changes to black after cloze command #9
 - Fix old font commands error #15
 
-## [v1.6] - 2020-06-30
+## [1.6] - 2020-06-30
 
 ### Added
 
@@ -31,7 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix `\clozenol` not transparent #4
 - Fix `clozebox` not transparent.
 
-## [v1.5] - 2020-05-27
+## [1.5] - 2020-05-27
 
 ### Changed
 
@@ -48,7 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix two bugs (cloze in display math, line color and
   hide).
 
-## [v1.4] - 2020-05-20
+## [1.4] - 2020-05-20
 
 ### Added
 
@@ -58,7 +68,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improve the documentation
 
-## [v1.3] - 2017-03-13
+## [1.3] - 2017-03-13
 
 ### Added
 
@@ -66,27 +76,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   environments `clozebox` and `clozespace`
   (This version was not published on CTAN.)
 
-## [v1.2] - 2016-06-23
+## [1.2] - 2016-06-23
 
 ### Fixed
 
 - The cloze makros are now working in tabular, tabbing and picture
   environments
 
-## [v1.1] - 2016-06-13
+## [1.1] - 2016-06-13
 
 ### Fixed
 
 - Make cloze compatible to `LuaTeX` version 0.95
 
-## [v1.0] - 2015-07-08
+## [1.0] - 2015-07-08
 
 ### Added
 
 - Inital release
 
-## [v0.1] - 2015-06-16
+## [0.1] - 2015-06-16
 
 ### Changed
 
 - Converted to DTX file
+
+[1.8.0]: https://github.com/Josef-Friedrich/cloze/compare/v1.7.0..v1.8.0
+[1.7.0]: https://github.com/Josef-Friedrich/cloze/compare/v1.6..v1.7.0
+[1.6]: https://github.com/Josef-Friedrich/cloze/compare/v1.5..v1.6
+[1.5]: https://github.com/Josef-Friedrich/cloze/compare/v1.4..v1.5
+[1.4]: https://github.com/Josef-Friedrich/cloze/compare/v1.3..v1.4
+[1.3]: https://github.com/Josef-Friedrich/cloze/compare/v1.2..v1.3
+[1.2]: https://github.com/Josef-Friedrich/cloze/compare/v1.1..v1.2
+[1.1]: https://github.com/Josef-Friedrich/cloze/compare/v1.0..v1.1
+[1.0]: https://github.com/Josef-Friedrich/cloze/compare/v0.1..v1.0
