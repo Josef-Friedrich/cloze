@@ -749,15 +749,20 @@ local utils = (function()
   ---the list if a hlist is found.
   ---
   ---@param head_node Node # The head of a node list.
+  ---@param insert_strut boolean
   ---
   ---@return HlistNode|nil hlist_node
   ---@return Node|nil strut_node
   ---@return Node|nil prev_head_node
-  local function search_hlist(head_node)
+  local function search_hlist(head_node, insert_strut)
     while head_node do
       if head_node.id == node.id('hlist') and head_node.subtype == 1 then
         ---@cast head_node HlistNode
-        return insert_strut_into_hlist(head_node)
+        if insert_strut then
+          return insert_strut_into_hlist(head_node)
+        else
+          return head_node
+        end
       end
       head_node = head_node.next
     end
@@ -920,23 +925,6 @@ local function visit_tree(head_node_input)
   local search_stop
 
   ---
-  ---Search for a `hlist` (subtype `line`) and insert a strut node into
-  ---the list if a hlist is found.
-  ---
-  ---@param head_node Node # The head of a node list.
-  ---
-  ---@return HlistNode|nil hlist_node
-  local function search_hlist(head_node)
-    while head_node do
-      if head_node.id == node.id('hlist') and head_node.subtype == 1 then
-        ---@cast head_node HlistNode
-        return head_node
-      end
-      head_node = head_node.next
-    end
-  end
-
-  ---
   ---Search for a stop marker or make a cloze up to the end of the node
   ---list.
   ---
@@ -966,7 +954,7 @@ local function visit_tree(head_node_input)
     end
     visitor(parent_node, start_marker, start_node, last_node, nil)
     if parent_node.next then
-      local hlist_node = search_hlist(parent_node.next)
+      local hlist_node = utils.search_hlist(parent_node.next, false)
       if hlist_node then
         local start_node = hlist_node.head
         return search_stop(hlist_node, nil, start_node)
@@ -1101,7 +1089,7 @@ local function make_basic(head_node_input)
   ---@return Node|nil head_node # The fast forwarded new head of the node list.
   ---@return Node|nil parent_node # The parent node (hlist) of the head node.
   function continue_cloze(parent_node)
-    local hlist_node = utils.search_hlist(parent_node)
+    local hlist_node = utils.search_hlist(parent_node, true)
     if hlist_node then
       local start_node = hlist_node.head
       return search_stop(start_node, hlist_node)
@@ -1129,7 +1117,7 @@ local function make_basic(head_node_input)
         ---Adds also a strut at the first position. It prepars the
         ---hlist and makes it ready to build a cloze.
         ---@cast p HlistNode
-        utils.search_hlist(p)
+        utils.search_hlist(p, true)
         n, p = search_stop(n, p)
       end
       if n then
