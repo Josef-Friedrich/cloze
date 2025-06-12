@@ -892,10 +892,9 @@ local utils = (function()
   }
 end)()
 
----@param head_node_input Node # The head of a node list.
----
----@return Node # The head of the node list.
-local function visit_tree(head_node_input)
+local visitor = (function()
+
+  ---@alias Visitor fun(parent_hlist: Node, start_marker?: Node, start_node?: Node, stop_node?: Node, stop_marker?: Node): nil
 
   ---@param n? Node
   local function debug_node(n)
@@ -910,7 +909,7 @@ local function visit_tree(head_node_input)
   ---@param start_node? Node
   ---@param stop_node? Node
   ---@param stop_marker? Node
-  local function visitor(parent_hlist,
+  local function debug_visitor(parent_hlist,
     start_marker,
     start_node,
     stop_node,
@@ -928,13 +927,19 @@ local function visit_tree(head_node_input)
   ---Search for a stop marker or make a cloze up to the end of the node
   ---list.
   ---
+  ---@param visitor Visitor
+  ---@param mode MarkerMode
   ---@param parent_node HlistNode # The parent node (hlist) of the start node.
   ---@param start_marker? Node|nil
   ---@param start_node? Node # The node to start a new cloze.
   ---
   ---@return Node|nil head_node # The fast forwarded new head of the node list.
   ---@return Node|nil parent_node # The parent node (hlist) of the head node.
-  function search_stop(parent_node, start_marker, start_node)
+  function search_stop(visitor,
+    mode,
+    parent_node,
+    start_marker,
+    start_node)
     ---@type Node|nil
     local n
     if start_marker ~= nil then
@@ -945,7 +950,7 @@ local function visit_tree(head_node_input)
 
     local last_node
     while n do
-      if config.check_marker(n, 'basic', 'stop') then
+      if config.check_marker(n, mode, 'stop') then
         visitor(parent_node, start_marker, start_node, nil, n)
         return n, parent_node
       end
@@ -957,7 +962,7 @@ local function visit_tree(head_node_input)
       local hlist_node = utils.search_hlist(parent_node.next, false)
       if hlist_node then
         local start_node = hlist_node.head
-        return search_stop(hlist_node, nil, start_node)
+        return search_stop(visitor, mode, hlist_node, nil, start_node)
       end
     else
       return n, parent_node
@@ -967,9 +972,11 @@ local function visit_tree(head_node_input)
   ---
   ---Search for a start marker.
   ---
+  ---@param visitor Visitor
+  ---@param mode MarkerMode
   ---@param head_node Node # The head of a node list.
   ---@param parent_node? HlistNode # The parent node (hlist) of the head node.
-  local function search_start(head_node, parent_node)
+  local function visit(visitor, mode, head_node, parent_node)
     ---@type Node|nil
     local n = head_node
 
@@ -979,11 +986,11 @@ local function visit_tree(head_node_input)
     while n do
       if n.head then
         ---@cast n HlistNode
-        search_start(n.head, n)
-      elseif config.check_marker(n, 'basic', 'start') and p and p.id ==
+        visit(visitor, mode, n.head, n)
+      elseif config.check_marker(n, mode, 'start') and p and p.id ==
         node.id('hlist') then
         ---@cast p HlistNode
-        n, p = search_stop(p, n, nil)
+        n, p = search_stop(visitor, mode, p, n, nil)
       end
       if n then
         n = n.next
@@ -992,9 +999,18 @@ local function visit_tree(head_node_input)
       end
     end
   end
-  search_start(head_node_input)
-  return head_node_input
-end
+
+  ---
+  ---@param head_node Node
+  ---
+  ---@return Node head_node
+  local function visit_strike(head_node)
+    visit(debug_visitor, 'strike', head_node)
+    return head_node
+  end
+
+  return { visit_strike = visit_strike }
+end)()
 
 ---
 ---Assemble a possibly multi-line cloze text.
@@ -1491,8 +1507,6 @@ local cb = (function()
           register('pre_output_filter', make_basic, mode)
         elseif mode == 'fix' then
           register('pre_linebreak_filter', make_fix, mode)
-        elseif mode == 'visitor' then
-          register('pre_output_filter', visit_tree, mode)
         else
           return false
         end
