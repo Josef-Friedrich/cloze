@@ -323,3 +323,13 @@
 \let\clozeparcmd=\clozeparcapture
 %    \end{macrocode}
 % \end{macro}
+%
+% \begin{macro}{\clozestrikeng}
+%    \begin{macrocode}
+\def\clozestrikeng#1{%
+  \ClozeStartMarker{strike}%
+  #1%
+  \ClozeStopMarker{strike}%
+}
+%    \end{macrocode}
+% \end{macro}

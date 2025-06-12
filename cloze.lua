@@ -616,10 +616,10 @@ local utils = (function()
   end
 
   ---
-  ---Insert a `list` of nodes after or before the `current`.
+  ---Insert a `list` of nodes after or before the `current` node.
   ---
-  ---The `head` argument is optional.  Unfortunately, it is necessary in some edge cases.
-  ---If `head` is omitted, the `current` node is used.
+  ---The `head_node` argument is optional.  Unfortunately, it is necessary in some edge cases.
+  ---If `head_node` is omitted, the `current` node is used.
   ---
   ---@param position 'before'|'after' # The argument `position` can take the values `'after'` or `'before'`.
   ---@param current Node
@@ -885,6 +885,7 @@ local utils = (function()
     insert_line = insert_line,
     write_line_nodes = write_line_nodes,
     write_linefil_nodes = write_linefil_nodes,
+    create_line = create_line,
     create_kern_node = create_kern_node,
     insert_strut_into_hlist = insert_strut_into_hlist,
     write_margin_node = write_margin_node,
@@ -1005,7 +1006,48 @@ local visitor = (function()
   ---
   ---@return Node head_node
   local function visit_strike(head_node)
-    visit(debug_visitor, 'strike', head_node)
+    visit(function(parent_hlist,
+      start_marker,
+      start_node,
+      stop_node,
+      stop_marker)
+      print(debug_node(parent_hlist), debug_node(start_marker),
+        debug_node(start_node), debug_node(stop_node),
+        debug_node(stop_marker))
+
+      local start
+      if start_marker ~= nil then
+        start = start_marker
+      else
+        start = start_node
+      end
+
+      local stop
+      if stop_marker ~= nil then
+        stop = stop_marker
+      else
+        stop = stop_node
+      end
+
+      local width = node.dimensions(parent_hlist.glue_set,
+      parent_hlist.glue_sign, parent_hlist.glue_order, start, stop)
+
+      local kern_node = utils.create_kern_node(-width)
+      local line_node = utils.create_line(width)
+
+      line_node.next = kern_node
+
+      if start.prev == nil then
+        parent_hlist.head = line_node
+        kern_node.next = start
+      else
+        start.prev.next = line_node
+        kern_node.next = start
+      end
+
+      print(width)
+
+    end, 'strike', head_node)
     return head_node
   end
 
@@ -1507,6 +1549,8 @@ local cb = (function()
           register('pre_output_filter', make_basic, mode)
         elseif mode == 'fix' then
           register('pre_linebreak_filter', make_fix, mode)
+        elseif mode == 'strike' then
+          register('post_linebreak_filter', visitor.visit_strike, mode)
         else
           return false
         end
@@ -1524,6 +1568,8 @@ local cb = (function()
         unregister('post_linebreak_filter', mode)
         unregister('pre_output_filter', mode)
       elseif mode == 'fix' then
+        unregister('pre_linebreak_filter', mode)
+      elseif mode == 'strike' then
         unregister('pre_linebreak_filter', mode)
       else
         unregister('post_linebreak_filter', mode)

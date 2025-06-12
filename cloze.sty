@@ -382,6 +382,18 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\clozestrikeng}
+%    \begin{macrocode}
+\let\clozestrikengPLAIN=\clozestrikeng
+\let\clozestrikeng=\undefined
+\newcommand{\clozestrikeng}[2][]
+{
+  \ClozeSetLocalOptions{#1}
+  \clozestrikengPLAIN{#2}
+}
+%    \end{macrocode}
+% \end{macro}
+%
 %    \begin{macrocode}
 \ExplSyntaxOff
 %    \end{macrocode}
