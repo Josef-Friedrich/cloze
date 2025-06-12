@@ -75,7 +75,6 @@ local tex_printf = luakeys.utils.tex_printf
 ---All values and functions, which are related to the option
 ---management, are stored in a table called `config`.
 local config = (function()
-
   ---
   ---I didn’t know what value I should take as `user_id`. Therefore I
   ---took my birthday and transformed it into a large number.
@@ -96,10 +95,9 @@ local config = (function()
   ---@field extension_height? string
   ---@field extension_width? string
   ---@field line_color? string
+  ---@field log? number
   ---@field margin? string
   ---@field min_lines? integer
-  ---@field resetcolor? string
-  ---@field show_text? boolean
   ---@field spacing? number
   ---@field spread? number
   ---@field text_color? string
@@ -118,9 +116,9 @@ local config = (function()
     extension_height = '2ex',
     extension_width = '1em',
     line_color = 'black',
+    log = 0,
     margin = '3pt',
     min_lines = 0,
-    show_text = true,
     spacing = '1.6',
     spread = 0,
     text_color = 'blue',
@@ -482,6 +480,13 @@ local config = (function()
       process = function(value, input)
         tex_printf('\\FarbeImport{%s}', value)
         set_option('line_color', value)
+      end,
+    },
+    log = {
+      description = 'Set the log level.',
+      data_type = 'integer',
+      process = function(value, input)
+        log.set(value)
       end,
     },
     margin = {
@@ -887,9 +892,32 @@ end)()
 ---@return Node # The head of the node list.
 local function visit_tree(head_node_input)
 
+  ---@param n? Node
+  local function debug_node(n)
+    if n == nil then
+      return nil
+    end
+    return node.type(n.id)
+  end
+
+  ---@param parent_hlist Node
+  ---@param start_marker? Node
+  ---@param start_node? Node
+  ---@param stop_node? Node
+  ---@param stop_marker? Node
+  local function visitor(parent_hlist,
+    start_marker,
+    start_node,
+    stop_node,
+    stop_marker)
+    print(debug_node(parent_hlist), debug_node(start_marker),
+      debug_node(start_node), debug_node(stop_node),
+      debug_node(stop_marker))
+  end
+
   ---This local variables are overloaded by functions
   ---calling each other.
-  local continue_cloze, search_stop
+  local search_stop
 
   ---
   ---Search for a `hlist` (subtype `line`) and insert a strut node into
@@ -912,46 +940,39 @@ local function visit_tree(head_node_input)
   ---Search for a stop marker or make a cloze up to the end of the node
   ---list.
   ---
-  ---@param start_node Node # The node to start a new cloze.
   ---@param parent_node HlistNode # The parent node (hlist) of the start node.
+  ---@param start_marker? Node|nil
+  ---@param start_node? Node # The node to start a new cloze.
   ---
   ---@return Node|nil head_node # The fast forwarded new head of the node list.
   ---@return Node|nil parent_node # The parent node (hlist) of the head node.
-  function search_stop(start_node, parent_node)
+  function search_stop(parent_node, start_marker, start_node)
     ---@type Node|nil
-    local n = start_node
+    local n
+    if start_marker ~= nil then
+      n = start_marker
+    else
+      n = start_node
+    end
 
     local last_node
     while n do
       if config.check_marker(n, 'basic', 'stop') then
-        log.warn('Stop marker found: %s', n)
+        visitor(parent_node, start_marker, start_node, nil, n)
         return n, parent_node
       end
       last_node = n
       n = n.next
     end
-    log.warn('End node: %s', last_node)
-
+    visitor(parent_node, start_marker, start_node, last_node, nil)
     if parent_node.next then
-      return continue_cloze(parent_node.next)
+      local hlist_node = search_hlist(parent_node.next)
+      if hlist_node then
+        local start_node = hlist_node.head
+        return search_stop(hlist_node, nil, start_node)
+      end
     else
       return n, parent_node
-    end
-  end
-
-  ---
-  ---Continue a multiline cloze.
-  ---
-  ---@param parent_node Node # A parent node to search for a hlist node.
-  ---
-  ---@return Node|nil head_node # The fast forwarded new head of the node list.
-  ---@return Node|nil parent_node # The parent node (hlist) of the head node.
-  function continue_cloze(parent_node)
-    local hlist_node = search_hlist(parent_node)
-    if hlist_node then
-      local start_node = hlist_node.head
-      log.warn('Continue cloze %s %s', hlist_node, start_node)
-      return search_stop(start_node, hlist_node)
     end
   end
 
@@ -973,9 +994,8 @@ local function visit_tree(head_node_input)
         search_start(n.head, n)
       elseif config.check_marker(n, 'basic', 'start') and p and p.id ==
         node.id('hlist') then
-        log.warn('Start marker found: %s', n)
         ---@cast p HlistNode
-        n, p = search_stop(n, p)
+        n, p = search_stop(p, n, nil)
       end
       if n then
         n = n.next
@@ -984,7 +1004,6 @@ local function visit_tree(head_node_input)
       end
     end
   end
-  log.warn('search start: %s', head_node_input)
   search_start(head_node_input)
   return head_node_input
 end
