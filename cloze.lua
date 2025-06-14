@@ -895,7 +895,68 @@ end)()
 
 local visitor = (function()
 
-  ---@alias Visitor fun(parent_hlist: Node, start_marker?: Node, start_node?: Node, stop_node?: Node, stop_marker?: Node): nil
+  ---The enviroment in the node list where the cloze can be inserted.
+  ---@class ClozeNodeEnvironment
+  ---@field parent_hlist HlistNode
+  ---@field start_marker? UserDefinedWhatsitNode
+  ---@field start_node? Node
+  ---@field start Node
+  ---@field start_continuation boolean
+  ---@field stop_node? Node
+  ---@field stop_marker? UserDefinedWhatsitNode
+  ---@field stop Node
+  ---@field stop_continuation boolean True if the stop node is not a start marker. The cloze ends because the end of the line is reached.
+  ---@field width integer The width in scaled points from the start to the stop node.
+
+  ---@alias Visitor fun(env: ClozeNodeEnvironment, parent_hlist: Node, start_marker?: Node, start_node?: Node, stop_node?: Node, stop_marker?: Node): nil
+
+  ---@param visitor Visitor
+  ---@param parent_hlist HlistNode
+  ---@param start_marker? UserDefinedWhatsitNode
+  ---@param start_node? Node
+  ---@param stop_node? Node
+  ---@param stop_marker? UserDefinedWhatsitNode
+  local function call_visitor(visitor,
+    parent_hlist,
+    start_marker,
+    start_node,
+    stop_node,
+    stop_marker)
+
+    local start
+    if start_marker ~= nil then
+      start = start_marker
+    else
+      start = start_node
+    end
+
+    local stop
+    if stop_marker ~= nil then
+      stop = stop_marker
+    else
+      stop = stop_node
+    end
+
+    local width = node.dimensions(parent_hlist.glue_set,
+      parent_hlist.glue_sign, parent_hlist.glue_order, start, stop)
+
+    local env = {
+      parent_hlist = parent_hlist,
+      start_marker = start_marker,
+      start_node = start_node,
+      start = start,
+      start_continuation = start_marker == nil,
+      stop_node = stop_node,
+      stop_marker = stop_marker,
+      stop = stop,
+      stop_continuation = stop_marker == nil,
+      width = width,
+    }
+
+    visitor(env, parent_hlist, start_marker, start_node, stop_node,
+      stop_marker)
+
+  end
 
   ---@param n? Node
   local function debug_node(n)
@@ -952,13 +1013,15 @@ local visitor = (function()
     local last_node
     while n do
       if config.check_marker(n, mode, 'stop') then
-        visitor(parent_node, start_marker, start_node, nil, n)
+        call_visitor(visitor, parent_node, start_marker --[[@as UserDefinedWhatsitNode]] ,
+          start_node, nil, n --[[@as UserDefinedWhatsitNode]] )
         return n, parent_node
       end
       last_node = n
       n = n.next
     end
-    visitor(parent_node, start_marker, start_node, last_node, nil)
+    call_visitor(visitor, parent_node, start_marker --[[@as UserDefinedWhatsitNode]] ,
+      start_node, last_node, nil)
     if parent_node.next then
       local hlist_node = utils.search_hlist(parent_node.next, false)
       if hlist_node then
@@ -1006,7 +1069,8 @@ local visitor = (function()
   ---
   ---@return Node head_node
   local function visit_strike(head_node)
-    visit(function(parent_hlist,
+    visit(function(env,
+      parent_hlist,
       start_marker,
       start_node,
       stop_node,
@@ -1015,37 +1079,20 @@ local visitor = (function()
         debug_node(start_node), debug_node(stop_node),
         debug_node(stop_marker))
 
-      local start
-      if start_marker ~= nil then
-        start = start_marker
-      else
-        start = start_node
-      end
-
-      local stop
-      if stop_marker ~= nil then
-        stop = stop_marker
-      else
-        stop = stop_node
-      end
-
-      local width = node.dimensions(parent_hlist.glue_set,
-      parent_hlist.glue_sign, parent_hlist.glue_order, start, stop)
-
-      local kern_node = utils.create_kern_node(-width)
-      local line_node = utils.create_line(width)
+      local kern_node = utils.create_kern_node(-env.width)
+      local line_node = utils.create_line(env.width)
 
       line_node.next = kern_node
 
-      if start.prev == nil then
+      if env.start.prev == nil then
         parent_hlist.head = line_node
-        kern_node.next = start
+        kern_node.next = env.start
       else
-        start.prev.next = line_node
-        kern_node.next = start
+        env.start.prev.next = line_node
+        kern_node.next = env.start
       end
 
-      print(width)
+      print(env.width)
 
     end, 'strike', head_node)
     return head_node
