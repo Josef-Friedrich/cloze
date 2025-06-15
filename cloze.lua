@@ -1379,15 +1379,23 @@ end
 ---@return Node head_node
 local function make_strike(head_node)
   visitor.visit(function(env)
+    if not config.get('visibility') then
+      return
+    end
+
     local color = farbe.Color(config.get('text_color'))
 
     local color_push = color:create_pdf_colorstack_node('push')
 
+    local _, height, _ = node.dimensions(head_node)
+
+    local p = env.parent_hlist
+
     local line = node.new('rule') --[[@as RuleNode]]
     local thickness = tex.sp(config.get('thickness'))
     local distance = tex.sp(config.get('distance'))
-    line.depth = distance + thickness
-    line.height = -distance
+    line.depth = -(height / 3)
+    line.height = (height / 3) + thickness
     line.width = env.width
 
     local color_pop = color:create_pdf_colorstack_node('pop')

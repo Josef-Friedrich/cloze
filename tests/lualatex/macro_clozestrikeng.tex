@@ -1,11 +1,21 @@
 \documentclass{article}
-% \input ../cloze-test-macros-lualatex.tex
+\input ../cloze-test-macros-lualatex.tex
+\usepackage{nodetree}
 \usepackage{cloze}
 
 \begin{document}
-% \TestTitleDesc{LuaLa\TeX: macro \string\cloze}
-% {With different options.}
+\TestTitleDesc{LuaLa\TeX: macro \string\clozestrike}
+{With different options.}
 
+\def\TmpFontsize{\noindent Lorem ipsum \clozestrikeng{dolor} sit amet, consectetur}
+
+{\tiny\TmpFontsize}
+
+{\footnotesize\TmpFontsize}
+
+{\Large\TmpFontsize}
+
+\def\TestExample{
 Lorem ipsum \clozestrikeng{dolor} sit amet, consectetur adipisicing
 elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 Ut enim ad minim veniam exercitation ullamco. Lorem ipsum
@@ -15,6 +25,8 @@ minim veniam exercitation ullamco. \clozestrikeng{Lorem ipsum
 dolor sit amet, consectetur adipisicing elit, sed do
 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
 minim veniam exercitation ullamco.}
+}
 
+\TestShowAndHide
 
 \end{document}
