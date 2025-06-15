@@ -1068,37 +1068,32 @@ local visitor = (function()
   ---@param head_node Node
   ---
   ---@return Node head_node
-  local function visit_strike(head_node)
-    visit(function(env,
-      parent_hlist,
-      start_marker,
-      start_node,
-      stop_node,
-      stop_marker)
-      print(debug_node(parent_hlist), debug_node(start_marker),
-        debug_node(start_node), debug_node(stop_node),
-        debug_node(stop_marker))
+  local function make_strike(head_node)
+    visit(function(env)
+      local color = farbe.Color(config.get('text_color'))
 
-      local kern_node = utils.create_kern_node(-env.width)
+      local color_push = color:create_pdf_colorstack_node('push')
       local line_node = utils.create_line(env.width)
+      local color_pop = color:create_pdf_colorstack_node('pop')
+      local kern_node = utils.create_kern_node(-env.width)
 
-      line_node.next = kern_node
+      color_push.next = line_node
+      line_node.next = color_pop
+      color_pop.next = kern_node
 
       if env.start.prev == nil then
-        parent_hlist.head = line_node
-        kern_node.next = env.start
+        env.parent_hlist.head = color_push
       else
-        env.start.prev.next = line_node
-        kern_node.next = env.start
+        env.start.prev.next = color_push
       end
 
-      print(env.width)
+      kern_node.next = env.start
 
     end, 'strike', head_node)
     return head_node
   end
 
-  return { visit_strike = visit_strike }
+  return { make_strike = make_strike }
 end)()
 
 ---
@@ -1597,7 +1592,7 @@ local cb = (function()
         elseif mode == 'fix' then
           register('pre_linebreak_filter', make_fix, mode)
         elseif mode == 'strike' then
-          register('post_linebreak_filter', visitor.visit_strike, mode)
+          register('post_linebreak_filter', visitor.make_strike, mode)
         else
           return false
         end
