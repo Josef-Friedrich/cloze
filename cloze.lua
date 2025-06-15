@@ -908,7 +908,7 @@ local visitor = (function()
   ---@field stop_continuation boolean True if the stop node is not a start marker. The cloze ends because the end of the line is reached.
   ---@field width integer The width in scaled points from the start to the stop node.
 
-  ---@alias Visitor fun(env: ClozeNodeEnvironment, parent_hlist: Node, start_marker?: Node, start_node?: Node, stop_node?: Node, stop_marker?: Node): nil
+  ---@alias Visitor fun(env: ClozeNodeEnvironment): nil
 
   ---@param visitor Visitor
   ---@param parent_hlist HlistNode
@@ -953,8 +953,7 @@ local visitor = (function()
       width = width,
     }
 
-    visitor(env, parent_hlist, start_marker, start_node, stop_node,
-      stop_marker)
+    visitor(env)
 
   end
 
@@ -1064,36 +1063,7 @@ local visitor = (function()
     end
   end
 
-  ---
-  ---@param head_node Node
-  ---
-  ---@return Node head_node
-  local function make_strike(head_node)
-    visit(function(env)
-      local color = farbe.Color(config.get('text_color'))
-
-      local color_push = color:create_pdf_colorstack_node('push')
-      local line_node = utils.create_line(env.width)
-      local color_pop = color:create_pdf_colorstack_node('pop')
-      local kern_node = utils.create_kern_node(-env.width)
-
-      color_push.next = line_node
-      line_node.next = color_pop
-      color_pop.next = kern_node
-
-      if env.start.prev == nil then
-        env.parent_hlist.head = color_push
-      else
-        env.start.prev.next = color_push
-      end
-
-      kern_node.next = env.start
-
-    end, 'strike', head_node)
-    return head_node
-  end
-
-  return { make_strike = make_strike }
+  return { visit = visit }
 end)()
 
 ---
@@ -1404,6 +1374,42 @@ local function make_fix(head_node_input)
 end
 
 ---
+---@param head_node Node
+---
+---@return Node head_node
+local function make_strike(head_node)
+  visitor.visit(function(env)
+    local color = farbe.Color(config.get('text_color'))
+
+    local color_push = color:create_pdf_colorstack_node('push')
+
+    local line = node.new('rule') --[[@as RuleNode]]
+    local thickness = tex.sp(config.get('thickness'))
+    local distance = tex.sp(config.get('distance'))
+    line.depth = distance + thickness
+    line.height = -distance
+    line.width = env.width
+
+    local color_pop = color:create_pdf_colorstack_node('pop')
+    local kern = utils.create_kern_node(-env.width)
+
+    color_push.next = line
+    line.next = color_pop
+    color_pop.next = kern
+
+    if env.start.prev == nil then
+      env.parent_hlist.head = color_push
+    else
+      env.start.prev.next = color_push
+    end
+
+    kern.next = env.start
+
+  end, 'strike', head_node)
+  return head_node
+end
+
+---
 ---The corresponding LaTeX environment to this lua function is
 ---`clozepar`.
 ---
@@ -1592,7 +1598,7 @@ local cb = (function()
         elseif mode == 'fix' then
           register('pre_linebreak_filter', make_fix, mode)
         elseif mode == 'strike' then
-          register('post_linebreak_filter', visitor.make_strike, mode)
+          register('post_linebreak_filter', make_strike, mode)
         else
           return false
         end
