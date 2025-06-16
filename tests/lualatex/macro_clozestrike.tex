@@ -7,7 +7,7 @@
 \TestTitleDesc{LuaLa\TeX: macro \string\clozestrike}
 {With different options.}
 
-\def\TmpFontsize{\par\noindent Lorem ipsum \clozestrikeng{dolor} sit amet, consectetur}
+\def\TmpFontsize{\par\noindent Lorem ipsum \clozestrike{dolor sit}{amet}, consectetur}
 
 {\tiny\TmpFontsize}
 {\scriptsize\TmpFontsize}
@@ -21,15 +21,10 @@
 {\Huge\TmpFontsize}
 
 \def\TestExample{
-Lorem ipsum \clozestrikeng{dolor} sit amet, consectetur adipisicing
+Lorem ipsum \clozestrike{dolor sit}{amet}, consectetur adipisicing
 elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 Ut enim ad minim veniam exercitation ullamco. Lorem ipsum
-\clozestrikeng{dolor sit amet, consectetur adipisicing elit, sed do
-eiusmod tempor incididunt ut labore} et dolore magna aliqua. Ut enim ad
-minim veniam exercitation ullamco. \clozestrikeng{Lorem ipsum
-dolor sit amet, consectetur adipisicing elit, sed do
-eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-minim veniam exercitation ullamco.}
+\clozestrike{dolor sit amet,}{consectetur} adipisicing elit.
 }
 
 \TestShowAndHide

@@ -46,23 +46,6 @@
 \RequirePackage{xcolor}
 %    \end{macrocode}
 %
-% The package \href{https://www.ctan.org/pkg/stackengine}{stackengine}
-% is required by the command |\clozestrike{}{}|.
-%    \begin{macrocode}
-\RequirePackage{stackengine}
-%    \end{macrocode}
-%
-% The package \href{https://www.ctan.org/pkg/ulem}{ulem} is required by
-% the command |\clozestrike{}{}|.
-%    \begin{macrocode}
-\RequirePackage{ulem}
-\normalem
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\RequirePackage{transparent}
-%    \end{macrocode}
-%
 %    \begin{macrocode}
 \DeclareOption*{} % suppresses the error message: ! LaTeX Error: Unknown option
 \ProcessOptions\relax
@@ -338,58 +321,14 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\ClozeStrikeLine}
-%    \begin{macrocode}
-\newcommand\ClozeStrikeLine
-{
-  \bgroup
-  \markoverwith{
-    \ClozeTextColor{
-      \rule[0.5ex]{2pt}{1pt}
-    }
-  }
-  \ULon
-}
-%    \end{macrocode}
-% \end{macro}
-%
 % \begin{macro}{\clozestrike}
 %    \begin{macrocode}
-\newcommand{\clozestrike}[3][]{%
-  \ClozeSetLocalOptions{#1}%
-  \ifclozeshow%
-    \stackengine%
-      {\Sstackgap}% \Sstackgap or \Lstackgap or \stackgap or stacklength
-      {\ClozeStrikeLine{#2}}% anchor
-      {\ClozeTextColor{\clozefont{}#3}}% item
-      {O}% O or U
-      {c}% \stackalignment or l or c or r
-      {\quietstack}% \quietstack or T or F
-      {T}% \useanchorwidth or T or F
-      {\stacktype}% \stacktype or S or L
-  \else%
-    \stackengine%
-      {\Sstackgap}% \Sstackgap or \Lstackgap or \stackgap or stacklength
-      {#2}% anchor
-      {\texttransparent{0}{\clozefont{}#3}}% item
-      {O}% O or U
-      {c}% \stackalignment or l or c or r
-      {\quietstack}% \quietstack or T or F
-      {T}% \useanchorwidth or T or F
-      {\stacktype}% \stacktype or S or L
-  \fi%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\clozestrikeng}
-%    \begin{macrocode}
-\let\clozestrikengPLAIN=\clozestrikeng
-\let\clozestrikeng=\undefined
-\newcommand{\clozestrikeng}[2][]
+\let\clozestrikePLAIN=\clozestrike
+\let\clozestrike=\undefined
+\newcommand{\clozestrike}[3][]
 {
   \ClozeSetLocalOptions{#1}
-  \clozestrikengPLAIN{#2}
+  \clozestrikePLAIN{#2}{#3}
 }
 %    \end{macrocode}
 % \end{macro}
