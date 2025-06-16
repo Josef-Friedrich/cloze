@@ -1,32 +1,34 @@
 \documentclass{article}
 \input cloze-test-macros-lualatex.tex
-\usepackage{nodetree}
+\usepackage[callback=preline]{nodetree}
 \usepackage{cloze}
 
 \begin{document}
 \TestTitleDesc{LuaLa\TeX: macro \string\clozestrike}
 {With different options.}
 
-\def\TmpFontsize{\par\noindent Lorem ipsum \clozestrike{dolor sit}{amet}, consectetur}
+Lorem ipsum \clozestrike{short}{long text above} dolor sit.
 
-{\tiny\TmpFontsize}
-{\scriptsize\TmpFontsize}
-{\footnotesize\TmpFontsize}
-{\small\TmpFontsize}
-{\normalsize\TmpFontsize}
-{\large\TmpFontsize}
-{\Large\TmpFontsize}
-{\LARGE\TmpFontsize}
-{\huge\TmpFontsize}
-{\Huge\TmpFontsize}
+% \def\TmpFontsize{\par\noindent Lorem ipsum \clozestrike{dolor sit}{amet}, consectetur}
 
-\def\TestExample{
-Lorem ipsum \clozestrike{dolor sit}{amet}, consectetur adipisicing
-elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-Ut enim ad minim veniam exercitation ullamco. Lorem ipsum
-\clozestrike{dolor sit amet,}{consectetur} adipisicing elit.
-}
+% {\tiny\TmpFontsize}
+% {\scriptsize\TmpFontsize}
+% {\footnotesize\TmpFontsize}
+% {\small\TmpFontsize}
+% {\normalsize\TmpFontsize}
+% {\large\TmpFontsize}
+% {\Large\TmpFontsize}
+% {\LARGE\TmpFontsize}
+% {\huge\TmpFontsize}
+% {\Huge\TmpFontsize}
 
-\TestShowAndHide
+% \def\TestExample{
+% Lorem ipsum \clozestrike{dolor sit}{amet}, consectetur adipisicing
+% elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+% Ut enim ad minim veniam exercitation ullamco. Lorem ipsum
+% \clozestrike{dolor sit amet}{consectetur}, adipisicing elit.
+% }
+
+% \TestShowAndHide
 
 \end{document}

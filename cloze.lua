@@ -1373,15 +1373,64 @@ local function make_fix(head_node_input)
   return head_node_input
 end
 
+
+---```
+---├─RULE (normal) dp 5.4pt, ht 12.6pt
+---├─WHATSIT (pdf_colorstack) data '0 0 1 rg 0 0 1 RG'
+---├─RULE (normal) wd 51pt, dp -8.95pt, ht 9.35pt
+---├─WHATSIT (pdf_colorstack) data ''
+---├─KERN (fontkern) -51pt
+---├─WHATSIT (user_defined) user_id 3121978, type 100, value 13
+---├─VLIST (unknown) wd 51pt, dp 0.14pt, ht 26.86pt
+---│ ╚═head
+---│   ├─HLIST (box) wd 30.56pt, dp 0.14pt, ht 8.86pt
+---│   │ ╚═head
+---│   │   ├─GLYPH (glyph) 'a', font 24, wd 7.06pt, ht 6.42pt, dp 0.14pt
+---│   │   ├─GLYPH (glyph) 'm', font 24, wd 11.75pt, ht 6.35pt
+---│   │   ├─GLYPH (glyph) 'e', font 24, wd 6.26pt, ht 6.42pt, dp 0.14pt
+---│   │   └─GLYPH (glyph) 't', font 24, wd 5.49pt, ht 8.86pt, dp 0.14pt
+---│   ├─GLUE (baselineskip) wd 7.86pt
+---│   └─HLIST (box) wd 51pt, dp 0.14pt, ht 9.99pt
+---│     ╚═head
+---│       ├─GLYPH (glyph) 'd', font 24, wd 7.83pt, ht 9.99pt, dp 0.14pt
+---│       ├─GLYPH (glyph) 'o', font 24, wd 7.06pt, ht 6.42pt, dp 0.14pt
+---│       ├─DISC (regular) penalty 50
+---│       │ ╚═pre
+---│       │   └─GLYPH (glyph) '-', font 24, wd 4.69pt, ht 3.5pt
+---│       ├─GLYPH (glyph) 'l', font 24, wd 3.92pt, ht 9.99pt
+---│       ├─GLYPH (glyph) 'o', font 24, wd 7.06pt, ht 6.42pt, dp 0.14pt
+---│       ├─GLYPH (glyph) 'r', font 24, wd 5.49pt, ht 6.35pt
+---│       ├─GLUE (spaceskip) wd 4.69pt, plus 2.35pt, minus 1.56pt
+---│       ├─GLYPH (glyph) 's', font 24, wd 5.56pt, ht 6.42pt, dp 0.14pt
+---│       ├─GLYPH (glyph) 'i', font 24, wd 3.92pt, ht 9.4pt
+---│       └─GLYPH (glyph) 't', font 24, wd 5.49pt, ht 8.86pt, dp 0.14pt
+---├─RULE (normal) dp 5.4pt, ht 12.6pt
+---├─WHATSIT (user_defined) user_id 3121978, type 100, value 14
+---```
 ---
 ---@param head_node Node
 ---
 ---@return Node head_node
 local function make_strike(head_node)
   visitor.visit(function(env)
+
+    local vlist = env.start.next --[[@as VlistNode]]
+    local top_hlist = vlist.head --[[@as HlistNode]]
+    local baselineskip = top_hlist.next --[[@as GlueNode]]
+    local base_hlist = baselineskip.next --[[@as HlistNode]]
+
+
+    vlist.width = tex.sp('150pt')
+
+    -- baselineskip.width = tex.sp('4pt')
+
+    top_hlist.width = base_hlist.width
+
     if not config.get('visibility') then
       return
     end
+
+
 
     local color = farbe.Color(config.get('text_color'))
 
@@ -1606,7 +1655,7 @@ local cb = (function()
         elseif mode == 'fix' then
           register('pre_linebreak_filter', make_fix, mode)
         elseif mode == 'strike' then
-          register('post_linebreak_filter', make_strike, mode)
+          register('pre_linebreak_filter', make_strike, mode)
         else
           return false
         end
