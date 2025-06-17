@@ -47,7 +47,7 @@ https://github.com/Josef-Friedrich/cloze
 
 # Documentation
 
-* [User documentation as a PDF](http://mirror.ctan.org/tex-archive/macros/luatex/generic/cloze/cloze.pdf)
+* [User documentation as a PDF](https://ctan.net/macros/luatex/generic/cloze/cloze-doc.pdf)
 
 # Installation
 
