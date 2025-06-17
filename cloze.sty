@@ -321,18 +321,6 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\clozestrike}
-%    \begin{macrocode}
-\let\clozestrikePLAIN=\clozestrike
-\let\clozestrike=\undefined
-\newcommand{\clozestrike}[3][]
-{
-  \ClozeSetLocalOptions{#1}
-  \clozestrikePLAIN{#2}{#3}
-}
-%    \end{macrocode}
-% \end{macro}
-%
 %    \begin{macrocode}
 \ExplSyntaxOff
 %    \end{macrocode}

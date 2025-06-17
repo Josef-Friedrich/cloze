@@ -1769,6 +1769,15 @@ local function print_cloze()
   tex.print(output)
 end
 
+local function print_strike()
+  local kv_string, error_text, solution_text = lparse.scan('O{} v v')
+  config.parse_options(kv_string, 'local')
+  cb.register_callbacks('strike')
+  tex.print('\\ClozeStartMarker{strike}' .. string.format(
+    '\\vbox{\\hbox{\\kern0pt \\ClozeWrapWithFont{%s}}\\hbox{%s}}',
+    solution_text, error_text) .. '\\ClozeStopMarker{strike}')
+end
+
 ---
 ---This table contains some basic functions which are published to the
 ---`cloze.tex` and `cloze.sty` file.
@@ -1788,6 +1797,7 @@ return {
     end
 
     register_function('clozeNG', print_cloze)
+    register_function('clozestrike', print_strike)
   end,
 
   write_linefil_nodes = utils.write_linefil_nodes,
@@ -1824,24 +1834,6 @@ return {
       tex_printf('\\hspace{%s}\\rule{0pt}{%s}',
         config.get('extension_width'), config.get('extension_height'))
     end
-  end,
-
-  print_cloze = function(text, kv_string)
-    config.parse_options(kv_string, 'local')
-    cb.register_callbacks('basic')
-    -- config.write_marker('basic', 'start')
-    -- tex.print('{\\clozefont\\relax')
-    -- utils.write_margin_node()
-    -- tex.print(text)
-    -- utils.write_margin_node()
-    -- tex.print('}')
-    -- config.write_marker('basic', 'stop')
-
-    local output = string.format(
-      '\\ClozeStartMarker{basic}%s\\ClozeStopMarker{basic}',
-      string.format('{\\clozefont\\relax%s}',
-        string.format('\\ClozeMargin{%s}', text)))
-    tex.print(output)
   end,
 
   ---
