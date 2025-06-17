@@ -911,7 +911,7 @@ local visitor = (function()
   ---@alias Visitor fun(env: ClozeNodeEnvironment): nil
 
   ---@param visitor Visitor
-  ---@param parent_hlist HlistNode
+  ---@param parent_hlist? HlistNode
   ---@param start_marker? UserDefinedWhatsitNode
   ---@param start_node? Node
   ---@param stop_node? Node
@@ -923,22 +923,34 @@ local visitor = (function()
     stop_node,
     stop_marker)
 
-    local start
+    local start --[[@as Node]]
     if start_marker ~= nil then
       start = start_marker
     else
       start = start_node
     end
 
-    local stop
+    if start == nil then
+      error()
+    end
+
+    local stop --[[@as Node]]
     if stop_marker ~= nil then
       stop = stop_marker
     else
       stop = stop_node
     end
+    if stop == nil then
+      error()
+    end
 
-    local width = node.dimensions(parent_hlist.glue_set,
-      parent_hlist.glue_sign, parent_hlist.glue_order, start, stop)
+    local width
+    if parent_hlist then
+      width = node.dimensions(parent_hlist.glue_set,
+        parent_hlist.glue_sign, parent_hlist.glue_order, start, stop)
+    else
+      width = node.dimensions(start, stop)
+    end
 
     local env = {
       parent_hlist = parent_hlist,
@@ -1063,7 +1075,41 @@ local visitor = (function()
     end
   end
 
-  return { visit = visit }
+  ---
+  ---Traverse a flat node list such as the one in the
+  ---`pre_linebreak_filter` callback.
+  ---
+  ---@param visitor Visitor
+  ---@param mode MarkerMode
+  ---@param head_node Node # The head of a node list.
+  local function visit_pre_linebreak(visitor, mode, head_node)
+    ---@type Node|nil
+    local n = head_node
+
+    local start_marker = nil
+    local stop_marker = nil
+
+    while n do
+      if config.check_marker(n, mode, 'start') then
+        start_marker = n
+      end
+
+      if config.check_marker(n, mode, 'stop') then
+        stop_marker = n
+      end
+
+      if start_marker and stop_marker then
+        call_visitor(visitor, nil, start_marker --[[@as UserDefinedWhatsitNode]] ,
+          nil, nil, stop_marker --[[@as UserDefinedWhatsitNode]] )
+        start_marker = nil
+        stop_marker = nil
+      end
+      n = n.next
+
+    end
+  end
+
+  return { visit = visit, visit_pre_linebreak = visit_pre_linebreak }
 end)()
 
 ---
@@ -1373,7 +1419,6 @@ local function make_fix(head_node_input)
   return head_node_input
 end
 
-
 ---```
 ---├─RULE (normal) dp 5.4pt, ht 12.6pt
 ---├─WHATSIT (pdf_colorstack) data '0 0 1 rg 0 0 1 RG'
@@ -1412,25 +1457,32 @@ end
 ---
 ---@return Node head_node
 local function make_strike(head_node)
-  visitor.visit(function(env)
-
+  visitor.visit_pre_linebreak(function(env)
     local vlist = env.start.next --[[@as VlistNode]]
     local top_hlist = vlist.head --[[@as HlistNode]]
     local baselineskip = top_hlist.next --[[@as GlueNode]]
     local base_hlist = baselineskip.next --[[@as HlistNode]]
 
+    local top_kern = top_hlist.head --[[@as KernNode]]
 
-    vlist.width = tex.sp('150pt')
+    if top_hlist.width > base_hlist.width then
+      vlist.width = base_hlist.width
+      top_kern.kern = -(top_hlist.width - base_hlist.width) / 2
+    else
+      top_kern.kern = (base_hlist.width - top_hlist.width) / 2
+    end
 
-    -- baselineskip.width = tex.sp('4pt')
+    -- vlist.width = tex.sp('10pt')
 
-    top_hlist.width = base_hlist.width
+    -- baselineskip.width = tex.sp('8pt')
+
+    -- top_hlist.width = base_hlist.width
+
+    -- top_kern.kern = - tex.sp('150pt')
 
     if not config.get('visibility') then
       return
     end
-
-
 
     local color = farbe.Color(config.get('text_color'))
 
