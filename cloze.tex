@@ -328,7 +328,7 @@
 %    \begin{macrocode}
 \def\clozestrike#1#2{%
   \ClozeStartMarker{strike}%
-  \vbox{\hbox{\kern0pt #2}\hbox{#1}}%
+  \vbox{\hbox{\kern0pt \ClozeWrapWithFont{#2}}\hbox{#1}}%
   \ClozeStopMarker{strike}%
 }
 %    \end{macrocode}

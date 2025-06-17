@@ -1419,38 +1419,55 @@ local function make_fix(head_node_input)
   return head_node_input
 end
 
+---
+---
+---visibilty = true
+---
 ---```
----├─RULE (normal) dp 5.4pt, ht 12.6pt
----├─WHATSIT (pdf_colorstack) data '0 0 1 rg 0 0 1 RG'
----├─RULE (normal) wd 51pt, dp -8.95pt, ht 9.35pt
----├─WHATSIT (pdf_colorstack) data ''
----├─KERN (fontkern) -51pt
----├─WHATSIT (user_defined) user_id 3121978, type 100, value 13
----├─VLIST (unknown) wd 51pt, dp 0.14pt, ht 26.86pt
+---├─WHATSIT (user_defined) user_id 3121978, type 100, value 3
+---├─VLIST (unknown) wd 77.93pt, dp 2.01pt, ht 18.94pt
 ---│ ╚═head
----│   ├─HLIST (box) wd 30.56pt, dp 0.14pt, ht 8.86pt
+---│   ├─HLIST (box) wd 21.85pt, dp 0.11pt, ht 6.94pt
 ---│   │ ╚═head
----│   │   ├─GLYPH (glyph) 'a', font 24, wd 7.06pt, ht 6.42pt, dp 0.14pt
----│   │   ├─GLYPH (glyph) 'm', font 24, wd 11.75pt, ht 6.35pt
----│   │   ├─GLYPH (glyph) 'e', font 24, wd 6.26pt, ht 6.42pt, dp 0.14pt
----│   │   └─GLYPH (glyph) 't', font 24, wd 5.49pt, ht 8.86pt, dp 0.14pt
----│   ├─GLUE (baselineskip) wd 7.86pt
----│   └─HLIST (box) wd 51pt, dp 0.14pt, ht 9.99pt
+---│   │   ├─WHATSIT (pdf_colorstack) data '0 0 1 rg 0 0 1 RG'
+---│   │   ├─KERN (userkern) 28.04pt
+---│   │   ├─GLYPH (glyph) 't', font 19, wd 4.09pt, ht 4.42pt, dp 0.11pt
+---│   │   ├─GLYPH (glyph) 'o', font 19, wd 5.11pt, ht 6.94pt, dp 0.11pt
+---│   │   ├─GLYPH (glyph) 'p', font 19, wd 5.11pt, ht 4.42pt, dp 0.11pt
+---│   │   └─WHATSIT (pdf_colorstack) data ''
+---│   ├─GLUE (baselineskip) wd 4.95pt
+---│   └─HLIST (box) wd 77.93pt, dp 2.01pt, ht 6.94pt
 ---│     ╚═head
----│       ├─GLYPH (glyph) 'd', font 24, wd 7.83pt, ht 9.99pt, dp 0.14pt
----│       ├─GLYPH (glyph) 'o', font 24, wd 7.06pt, ht 6.42pt, dp 0.14pt
----│       ├─DISC (regular) penalty 50
----│       │ ╚═pre
----│       │   └─GLYPH (glyph) '-', font 24, wd 4.69pt, ht 3.5pt
----│       ├─GLYPH (glyph) 'l', font 24, wd 3.92pt, ht 9.99pt
----│       ├─GLYPH (glyph) 'o', font 24, wd 7.06pt, ht 6.42pt, dp 0.14pt
----│       ├─GLYPH (glyph) 'r', font 24, wd 5.49pt, ht 6.35pt
----│       ├─GLUE (spaceskip) wd 4.69pt, plus 2.35pt, minus 1.56pt
----│       ├─GLYPH (glyph) 's', font 24, wd 5.56pt, ht 6.42pt, dp 0.14pt
----│       ├─GLYPH (glyph) 'i', font 24, wd 3.92pt, ht 9.4pt
----│       └─GLYPH (glyph) 't', font 24, wd 5.49pt, ht 8.86pt, dp 0.14pt
----├─RULE (normal) dp 5.4pt, ht 12.6pt
----├─WHATSIT (user_defined) user_id 3121978, type 100, value 14
+---│       ├─WHATSIT (pdf_colorstack) data '0 0 1 rg 0 0 1 RG'
+---│       ├─RULE (normal) wd 77.93pt, dp -2.31pt, ht 2.71pt
+---│       ├─WHATSIT (pdf_colorstack) data ''
+---│       ├─KERN (fontkern) -77.93pt
+---│       ├─GLYPH (glyph) 'b', font 20, wd 3.19pt, ht 6.94pt
+---│       ├─GLYPH (glyph) 'a', font 20, wd 5.75pt, ht 4.53pt, dp 0.06pt
+---│       ├─GLYPH (glyph) 's', font 20, wd 6.39pt, ht 4.5pt
+---│       ├─GLYPH (glyph) 'e', font 20, wd 5.75pt, ht 4.55pt, dp 2.01pt
+---│       └─KERN (italiccorrection)
+---├─RULE (normal) dp 3.6pt, ht 8.4pt
+---├─WHATSIT (user_defined) user_id 3121978, type 100, value 4
+---```
+---
+---visibilty = false
+---
+---```
+---├─WHATSIT (user_defined) user_id 3121978, type 100, value 3
+---├─VLIST (unknown) wd 77.93pt, dp 2.01pt, ht 18.94pt
+---│ ╚═head
+---│   ├─HLIST (box) wd 21.85pt, dp 0.11pt, ht 6.94pt
+---│   ├─GLUE (baselineskip) wd 4.95pt
+---│   └─HLIST (box) wd 77.93pt, dp 2.01pt, ht 6.94pt
+---│     ╚═head
+---│       ├─GLYPH (glyph) 'b', font 20, wd 3.19pt, ht 6.94pt
+---│       ├─GLYPH (glyph) 'a', font 20, wd 5.75pt, ht 4.53pt, dp 0.06pt
+---│       ├─GLYPH (glyph) 's', font 20, wd 6.39pt, ht 4.5pt
+---│       ├─GLYPH (glyph) 'e', font 20, wd 5.75pt, ht 4.55pt, dp 2.01pt
+---│       └─KERN (italiccorrection)
+---├─RULE (normal) dp 3.6pt, ht 8.4pt
+---├─WHATSIT (user_defined) user_id 3121978, type 100, value 4
 ---```
 ---
 ---@param head_node Node
@@ -1458,6 +1475,8 @@ end
 ---@return Node head_node
 local function make_strike(head_node)
   visitor.visit_pre_linebreak(function(env)
+    local text_color = farbe.Color(config.get('text_color'))
+
     local vlist = env.start.next --[[@as VlistNode]]
     local top_hlist = vlist.head --[[@as HlistNode]]
     local baselineskip = top_hlist.next --[[@as GlueNode]]
@@ -1466,54 +1485,53 @@ local function make_strike(head_node)
     local top_kern = top_hlist.head --[[@as KernNode]]
 
     if top_hlist.width > base_hlist.width then
+      -- top  long
+      --   short
       vlist.width = base_hlist.width
       top_kern.kern = -(top_hlist.width - base_hlist.width) / 2
     else
+      --    top
+      -- base long
       top_kern.kern = (base_hlist.width - top_hlist.width) / 2
     end
 
-    -- vlist.width = tex.sp('10pt')
-
-    -- baselineskip.width = tex.sp('8pt')
-
-    -- top_hlist.width = base_hlist.width
-
-    -- top_kern.kern = - tex.sp('150pt')
-
-    if not config.get('visibility') then
-      return
-    end
-
-    local color = farbe.Color(config.get('text_color'))
-
-    local color_push = color:create_pdf_colorstack_node('push')
-
-    local _, height, _ = node.dimensions(head_node)
-
-    local p = env.parent_hlist
-
-    local line = node.new('rule') --[[@as RuleNode]]
-    local thickness = tex.sp(config.get('thickness'))
-    local distance = tex.sp(config.get('distance'))
-    line.depth = -(height / 3)
-    line.height = (height / 3) + thickness
-    line.width = env.width
-
-    local color_pop = color:create_pdf_colorstack_node('pop')
-    local kern = utils.create_kern_node(-env.width)
-
-    color_push.next = line
-    line.next = color_pop
-    color_pop.next = kern
-
-    if env.start.prev == nil then
-      env.parent_hlist.head = color_push
+    -- top
+    local top_start = top_hlist.head
+    if config.get('visibility') then
+      -- top color
+      top_hlist.head = text_color:create_pdf_colorstack_node('push')
+      top_hlist.head.next = top_start
+      local top_stop = node.tail(top_hlist.head)
+      top_stop.next = text_color:create_pdf_colorstack_node('pop')
     else
-      env.start.prev.next = color_push
+      top_hlist.head = nil
     end
 
-    kern.next = env.start
+    -- strike line
 
+    if config.get('visibility') then
+      local base_start = base_hlist.head
+      local base_stop = node.tail(base_hlist.head)
+
+      local width, height, _ = node.dimensions(base_start, base_stop)
+
+      local line = node.new('rule') --[[@as RuleNode]]
+      local thickness = tex.sp(config.get('thickness'))
+      line.depth = -(height / 3)
+      line.height = (height / 3) + thickness
+      line.width = width
+
+      base_hlist.head = text_color:create_pdf_colorstack_node('push')
+
+      local color_pop = text_color:create_pdf_colorstack_node('pop')
+      local kern = utils.create_kern_node(-width)
+
+      base_hlist.head.next = line
+      line.next = color_pop
+      color_pop.next = kern
+
+      kern.next = base_start
+    end
   end, 'strike', head_node)
   return head_node
 end
