@@ -2,6 +2,7 @@ jobname = cloze
 texmf = $(HOME)/texmf
 texmftex = $(texmf)/tex/luatex
 installdir = $(texmftex)/$(jobname)
+FONTS_URL = https://raw.githubusercontent.com/google/fonts/refs/heads/main
 
 all: install doc
 
@@ -62,4 +63,13 @@ ctan: doc_pdf
 	tar cvfz $(jobname).tar.gz $(jobname)
 	rm -rf $(jobname)
 
-.PHONY: all install doc doc_pdf doc_lua test test_luatex test_lualatex clean ctan
+download_google_fonts:
+	mkdir -p $(HOME)/.local/share/fonts/google-fonts
+	cd $(HOME)/.local/share/fonts/google-fonts
+	curl --output-dir $(HOME)/.local/share/fonts/google-fonts -O $(FONTS_URL)/ofl/oregano/Oregano-Regular.ttf
+	curl --output-dir $(HOME)/.local/share/fonts/google-fonts -O $(FONTS_URL)/ofl/mali/Mali-Regular.ttf
+	curl --output-dir $(HOME)/.local/share/fonts/google-fonts -O "$(FONTS_URL)/ofl/gluten/Gluten%5Bslnt%2Cwght%5D.ttf"
+	curl --output-dir $(HOME)/.local/share/fonts/google-fonts -O $(FONTS_URL)/apache/comingsoon/ComingSoon-Regular.ttf
+	curl --output-dir $(HOME)/.local/share/fonts/google-fonts -O $(FONTS_URL)/ofl/kalam/Kalam-Regular.ttf
+
+.PHONY: all install doc doc_pdf doc_lua test test_luatex test_lualatex clean ctan download_google_fonts
