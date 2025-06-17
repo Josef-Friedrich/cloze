@@ -820,37 +820,37 @@ Lorem\clozelinefil
 % \clozestrike
 %%
 
-% \subsubsection{\cmd{\clozestrike}}
-% \label{sec:command-clozelinefil}
+\subsubsection{\cmd{\clozestrike}}
+\label{sec:command-clozestrike}
 
-% \DescribeMacro{\clozestrike}
-% \cmd{\clozestrike}\oarg{options}\marg{wrong text}\marg{correct text}:
-% This macro can be useful for worksheets that contain intentionally
-% errors. The pupils have to find and cross out the mistakes and
-% write the right solution on top of the errors.
+\DescribeMacro{\clozestrike}
+\cmd{\clozestrike}\oarg{options}\marg{wrong text}\marg{correct text}:
+This macro can be useful for worksheets that contain intentionally
+errors. The pupils have to find and cross out the mistakes and
+write the right solution on top of the errors.
 
-% \begin{minted}{latex}
-% Wolfgang Amadeus Mozart was born in \clozestrike{Vienna}{Salzburg}.
-% \end{minted}
+\begin{minted}{latex}
+Wolfgang Amadeus Mozart was born in \clozestrike{Vienna}{Salzburg}.
+\end{minted}
 
-% \begin{TmpExample}
-% Wolfgang Amadeus Mozart was born in \clozestrike[textcolor=green]{Vienna}{Salzburg}.
-% \end{TmpExample}
+\begin{TmpExample}
+Wolfgang Amadeus Mozart was born in \clozestrike{Vienna}{Salzburg}.
+\end{TmpExample}
 
-% \noindent
-% The option |linecolor| has no effect on the lines produced by the
-% macro \cmd{\clozestrike}. The line color and and the text color
-% are both the same, because the pupils have to draw the lines.
+\noindent
+The option |linecolor| has no effect on the lines produced by the
+macro \cmd{\clozestrike}. The line color and and the text color
+are both the same, because the pupils have to draw the lines.
 
-% \begin{minted}{latex}
-% Mozart’s father was called
-% \clozestrike[textcolor=red]{Ludwig}{Leopold} Mozart.
-% \end{minted}
+\begin{minted}{latex}
+Mozart’s father was called
+\clozestrike[textcolor=red]{Ludwig}{Leopold} Mozart.
+\end{minted}
 
-% \begin{TmpExample}
-% Mozart’s father was called
-% \clozestrike[textcolor=red]{Ludwig}{Leopold} Mozart.
-% \end{TmpExample}
+\begin{TmpExample}
+Mozart’s father was called
+\clozestrike[textcolor=red]{Ludwig}{Leopold} Mozart.
+\end{TmpExample}
 
 %-----------------------------------------------------------------------
 % Options
