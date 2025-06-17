@@ -10,7 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Implement `\clozestrike `in Lua without LaTeX packages
-Mozart’s father was called Ludwig Mozart.
 
 ### Added
 
