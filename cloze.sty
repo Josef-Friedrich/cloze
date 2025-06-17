@@ -143,20 +143,6 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\cloze}
-% The usage of the command \cmd{\cloze} is described in detail in
-% section \TmpSecRef{sec:command-cloze}.
-%    \begin{macrocode}
-\let\clozePLAIN=\cloze
-\let\cloze=\undefined
-\newcommand{\cloze}[2][]
-{
-  \ClozeSetLocalOptions{#1}
-  \clozePLAIN{#2}
-}
-%    \end{macrocode}
-% \end{macro}
-%
 % \begin{macro}{\clozefix}
 % The usage of the command \cmd{\clozefix} is described in detail in
 % section \TmpSecRef{sec:command-clozefix}.
