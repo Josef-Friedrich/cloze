@@ -1792,7 +1792,7 @@ return {
         index = index + 1
       end
       fns[index] = fn
-      token.set_lua(csname, index, 'global', 'protected')
+      token.set_lua(csname, index)
     end
 
     register_function('cloze', print_cloze)
