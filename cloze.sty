@@ -143,6 +143,21 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\cloze}
+% The usage of the command \cmd{\cloze} is described in detail in
+% section \TmpSecRef{sec:command-cloze}.
+%    \begin{macrocode}
+\let\cloze=\undefined
+\NewDocumentCommand{\cloze}{ O{} m }
+{
+  \ClozeSetLocalOptions{#1}
+  \ClozeStartMarker{basic}%
+  \ClozeWrapWithFont{\ClozeMargin{#2}}%
+  \ClozeStopMarker{basic}%
+}
+%    \end{macrocode}
+% \end{macro}
+
 % \begin{macro}{\clozefix}
 % The usage of the command \cmd{\clozefix} is described in detail in
 % section \TmpSecRef{sec:command-clozefix}.
