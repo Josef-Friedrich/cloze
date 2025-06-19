@@ -1762,11 +1762,10 @@ local function print_cloze()
   local kv_string, text = lparse.scan('O{} v')
   config.parse_options(kv_string, 'local')
   cb.register_callbacks('basic')
-  local output = string.format(
+  tex.print(string.format(
     '\\ClozeStartMarker{basic}%s\\ClozeStopMarker{basic}',
     string.format('{\\clozefont\\relax%s}',
-      string.format('\\ClozeMargin{%s}', text)))
-  tex.print(output)
+      string.format('\\ClozeMargin{%s}', text))))
 end
 
 local function print_strike()
@@ -1793,10 +1792,10 @@ return {
         index = index + 1
       end
       fns[index] = fn
-      token.set_lua(csname, index, 'global', 'protected')
+      token.set_lua(csname, index)
     end
 
-    register_function('clozeNG', print_cloze)
+    register_function('cloze', print_cloze)
     register_function('clozestrike', print_strike)
   end,
 
