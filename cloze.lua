@@ -893,24 +893,37 @@ local utils = (function()
   }
 end)()
 
-local visitor = (function()
+---
+---The `traversor` table provides functions to simplify traversing node
+---lists. The cloze algorithms can then be implemented in callback
+---functions. One callback call is made for each cloze line to be drawn.
+local traversor = (function()
 
   ---The enviroment in the node list where the cloze can be inserted.
+  ---The table is passed as an input parameter to the callback function
+  ---`Visitor`.
   ---@class ClozeNodeEnvironment
   ---@field parent_hlist HlistNode
   ---@field start_marker? UserDefinedWhatsitNode
-  ---@field start_node? Node
-  ---@field start Node
-  ---@field start_continuation boolean
-  ---@field stop_node? Node
+  ---@field start_node? Node # The start node, which marks the beginning of a cloze.
+  ---@field start Node # The start node, which marks the beginning of a cloze. This field is derived from the fields `start_marker` or `start_node`.
+  ---@field start_continuation boolean # `true` if the cloze must be continued by a line break.
+  ---@field stop_node? Node # The stop node, which marks the end of a cloze. This field is derived from the fields `stop_marker` or `stop_node`.
   ---@field stop_marker? UserDefinedWhatsitNode
-  ---@field stop Node
+  ---@field stop Node # The stop node, which marks the end of a cloze. This field is derived from the fields `stop_marker` or `stop_node`.
   ---@field stop_continuation boolean True if the stop node is not a start marker. The cloze ends because the end of the line is reached.
   ---@field width integer The width in scaled points from the start to the stop node.
 
+  ---
+  ---This callback function is called every time a cloze line needs to
+  ---be inserted into the node list.
   ---@alias Visitor fun(env: ClozeNodeEnvironment): nil
 
-  ---@param visitor Visitor
+  ---
+  ---Call the Visitor callback and assemble `ClozeNodeEnvironment` table
+  ---and pass it in.
+  ---
+  ---@param visitor Visitor A callback function that is called each time a cloze line needs to be inserted into the node list.
   ---@param parent_hlist? HlistNode
   ---@param start_marker? UserDefinedWhatsitNode
   ---@param start_node? Node
@@ -969,29 +982,6 @@ local visitor = (function()
 
   end
 
-  ---@param n? Node
-  local function debug_node(n)
-    if n == nil then
-      return nil
-    end
-    return node.type(n.id)
-  end
-
-  ---@param parent_hlist Node
-  ---@param start_marker? Node
-  ---@param start_node? Node
-  ---@param stop_node? Node
-  ---@param stop_marker? Node
-  local function debug_visitor(parent_hlist,
-    start_marker,
-    start_node,
-    stop_node,
-    stop_marker)
-    print(debug_node(parent_hlist), debug_node(start_marker),
-      debug_node(start_node), debug_node(stop_node),
-      debug_node(stop_marker))
-  end
-
   ---This local variables are overloaded by functions
   ---calling each other.
   local search_stop
@@ -1000,7 +990,7 @@ local visitor = (function()
   ---Search for a stop marker or make a cloze up to the end of the node
   ---list.
   ---
-  ---@param visitor Visitor
+  ---@param visitor Visitor A callback function that is called each time a cloze line needs to be inserted into the node list.
   ---@param mode MarkerMode
   ---@param parent_node HlistNode # The parent node (hlist) of the start node.
   ---@param start_marker? Node|nil
@@ -1045,13 +1035,14 @@ local visitor = (function()
   end
 
   ---
-  ---Search for a start marker.
+  ---Traverse a recursive node tree such as the one in the
+  ---`linebreak_filter` callback.
   ---
-  ---@param visitor Visitor
+  ---@param visitor Visitor A callback function that is called each time a cloze line needs to be inserted into the node list.
   ---@param mode MarkerMode
   ---@param head_node Node # The head of a node list.
   ---@param parent_node? HlistNode # The parent node (hlist) of the head node.
-  local function visit(visitor, mode, head_node, parent_node)
+  local function traverse_tree(visitor, mode, head_node, parent_node)
     ---@type Node|nil
     local n = head_node
 
@@ -1061,7 +1052,7 @@ local visitor = (function()
     while n do
       if n.head then
         ---@cast n HlistNode
-        visit(visitor, mode, n.head, n)
+        traverse_tree(visitor, mode, n.head, n)
       elseif config.check_marker(n, mode, 'start') and p and p.id ==
         node.id('hlist') then
         ---@cast p HlistNode
@@ -1079,10 +1070,10 @@ local visitor = (function()
   ---Traverse a flat node list such as the one in the
   ---`pre_linebreak_filter` callback.
   ---
-  ---@param visitor Visitor
+  ---@param visitor Visitor # A callback function that is called each time a cloze line needs to be inserted into the node list.
   ---@param mode MarkerMode
   ---@param head_node Node # The head of a node list.
-  local function visit_pre_linebreak(visitor, mode, head_node)
+  local function traverse_list(visitor, mode, head_node)
     ---@type Node|nil
     local n = head_node
 
@@ -1109,7 +1100,7 @@ local visitor = (function()
     end
   end
 
-  return { visit = visit, visit_pre_linebreak = visit_pre_linebreak }
+  return { traverse_tree = traverse_tree, traverse_list = traverse_list }
 end)()
 
 ---
@@ -1474,7 +1465,7 @@ end
 ---
 ---@return Node head_node
 local function make_strike(head_node)
-  visitor.visit_pre_linebreak(function(env)
+  traversor.traverse_list(function(env)
     local text_color = farbe.Color(config.get('text_color'))
 
     local vlist = env.start.next --[[@as VlistNode]]
