@@ -75,18 +75,6 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\ClozeColor}
-% Convert a color definiton name to a PDF colorstack string, for example
-% convert the color name |blue| to the colorstack string
-% |0 0 1 rg 0 0 1 RG|. The macro definition |\ClozeColor{blue}|
-% builds itself the macro |\color@blue|, which expands to the PDF
-% colorstack string. The colorstack string is necessary to generate a
-% PDF colorstack whatsit.
-%    \begin{macrocode}
-\def\ClozeColor#1{\csname\string\color@#1\endcsname}
-%    \end{macrocode}
-% \end{macro}
-%
 % \begin{macro}{\ClozeStartMarker}
 % At the begining |\ClozeStartMarker| registers the required Lua
 % callbacks. Then it inserts a whatsit marker which marks the begin of a
