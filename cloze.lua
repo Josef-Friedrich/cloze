@@ -1121,10 +1121,7 @@ local traversor = (function()
     end
   end
 
-  return {
-    traverse_tree = traverse_tree,
-    traverse = traverse,
-  }
+  return { traverse_tree = traverse_tree, traverse = traverse }
 end)()
 
 ---
@@ -1319,118 +1316,83 @@ local function spread_basic(head_node_input)
 end
 
 ---
----The corresponding LaTeX command to this Lua function is `\clozefix`.
+---Generate a gap with a fixed width. The corresponding LaTeX command to this Lua function is `\clozefix`.
+---
+---# Node lists
+---
+---## Show text:
+---
+---| Variable name      | Node type | Node subtype       |             |
+---|--------------------|-----------|--------------------|-------------|
+---| `start_node`       | `whatsit` | `user_definded`    | `index`     |
+---| `line_node`        | `rule`    |                    | `width`     |
+---| `kern_start_node`  | `kern`    | Depends on `align` |             |
+---| `color_text_node`  | `whatsit` | `pdf_colorstack`   | Text color  |
+---|                    | `glyphs`  | Text to show       |             |
+---| `color_reset_node` | `whatsit` | `pdf_colorstack`   | Reset color |
+---| `kern_stop_node`   | `kern`    | Depends on `align` |             |
+---| `stop_node`        | `whatsit` | `user_definded`    | `index`     |
+---
+---## Hide text:
+---
+---| Variable name | Node type | Node subtype    |         |
+---|---------------|-----------|-----------------|---------|
+---| `start_node`  | `whatsit` | `user_definded` | `index` |
+---| `line_node`   | `rule`    |                 | `width` |
+---| `stop_node`   | `whatsit` | `user_definded` | `index` |
 ---
 ---@param head_node_input Node # The head of a node list.
 local function make_fix(head_node_input)
+  traversor.traverse(function(env)
 
-  ---
-  ---Calculate the widths of the whitespace before (`start_width`) and
-  ---after (`stop_width`) the cloze text.
-  ---
-  ---@param start Node
-  ---@param stop Node
-  ---
-  ---@return integer width
-  ---@return integer start_width # The width of the whitespace before the cloze text.
-  ---@return integer stop_width # The width of the whitespace after the cloze text.
-  local function calculate_widths(start, stop)
-    local start_width, stop_width
-    local width = tex.sp(config.get('width'))
-    local text_width = node.dimensions(start, stop)
-    local align = config.get('align')
-    if align == 'right' then
-      start_width = -text_width
-      stop_width = 0
-    elseif align == 'center' then
-      local half = (width - text_width) / 2
-      start_width = -half - text_width
-      stop_width = half
-    else
-      start_width = -width
-      stop_width = width - text_width
+    ---
+    ---Calculate the widths of the whitespace before (`start_width`) and
+    ---after (`stop_width`) the cloze text.
+    ---
+    ---@param start Node
+    ---@param stop Node
+    ---
+    ---@return integer width
+    ---@return integer start_width # The width of the whitespace before the cloze text.
+    ---@return integer stop_width # The width of the whitespace after the cloze text.
+    local function calculate_widths(start, stop)
+      local start_width, stop_width
+      local width = tex.sp(config.get('width'))
+      local text_width = node.dimensions(start, stop)
+      local align = config.get('align')
+      if align == 'right' then
+        start_width = -text_width
+        stop_width = 0
+      elseif align == 'center' then
+        local half = (width - text_width) / 2
+        start_width = -half - text_width
+        stop_width = half
+      else
+        start_width = -width
+        stop_width = width - text_width
+      end
+      return width, start_width, stop_width
     end
-    return width, start_width, stop_width
-  end
 
-  ---
-  ---Generate a gap with a fixed width.
-  ---
-  ---# Node lists
-  ---
-  ---## Show text:
-  ---
-  ---| Variable name      | Node type | Node subtype       |             |
-  ---|--------------------|-----------|--------------------|-------------|
-  ---| `start_node`       | `whatsit` | `user_definded`    | `index`     |
-  ---| `line_node`        | `rule`    |                    | `width`     |
-  ---| `kern_start_node`  | `kern`    | Depends on `align` |             |
-  ---| `color_text_node`  | `whatsit` | `pdf_colorstack`   | Text color  |
-  ---|                    | `glyphs`  | Text to show       |             |
-  ---| `color_reset_node` | `whatsit` | `pdf_colorstack`   | Reset color |
-  ---| `kern_stop_node`   | `kern`    | Depends on `align` |             |
-  ---| `stop_node`        | `whatsit` | `user_definded`    | `index`     |
-  ---
-  ---## Hide text:
-  ---
-  ---| Variable name | Node type | Node subtype    |         |
-  ---|---------------|-----------|-----------------|---------|
-  ---| `start_node`  | `whatsit` | `user_definded` | `index` |
-  ---| `line_node`   | `rule`    |                 | `width` |
-  ---| `stop_node`   | `whatsit` | `user_definded` | `index` |
-  ---
-  ---@param start Node # The node, where the gap begins
-  ---@param stop Node # The node, where the gap ends
-  local function make_single(start, stop)
     local width, kern_start_length, kern_stop_length = calculate_widths(
-      start, stop)
-    local line_node = utils.insert_line(start, width)
+      env.start, env.stop)
+    local line_node = utils.insert_line(env.start, width)
     if config.get('visibility') then
       utils.insert_list('after', line_node, {
         utils.create_kern_node(kern_start_length),
         utils.create_color('text', 'push'),
       })
-      utils.insert_list('before', stop, {
+      utils.insert_list('before', env.stop, {
         utils.create_color('text', 'pop'),
         utils.create_kern_node(kern_stop_length),
-      }, start)
+      }, env.start)
     else
-      line_node.next = stop.next
+      line_node.next = env.stop.next
     end
-    config.remove_marker(start)
-    config.remove_marker(stop)
-  end
+    config.remove_marker(env.start)
+    config.remove_marker(env.stop)
 
-  ---
-  ---Recurse the node list and search for the marker.
-  ---
-  ---@param head_node Node # The head of a node list.
-  local function make_fix_recursion(head_node)
-    ---@type UserDefinedWhatsitNode|nil
-    local start_node = nil
-
-    ---@type UserDefinedWhatsitNode|nil
-    local stop_node = nil
-    while head_node do
-      if head_node.head then
-        make_fix_recursion(head_node.head)
-      else
-        if not start_node then
-          start_node = config.get_marker(head_node, 'fix', 'start')
-        end
-        if not stop_node then
-          stop_node = config.get_marker(head_node, 'fix', 'stop')
-        end
-        if start_node and stop_node then
-          make_single(start_node, stop_node)
-          start_node, stop_node = nil, nil
-        end
-      end
-      head_node = head_node.next
-    end
-  end
-
-  make_fix_recursion(head_node_input)
+  end, 'fix', head_node_input)
   return head_node_input
 end
 
