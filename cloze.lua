@@ -1081,47 +1081,13 @@ local traversor = (function()
   end
 
   ---
-  ---Traverse a flat node list such as the one in the
-  ---`pre_linebreak_filter` callback.
-  ---
-  ---@param visitor Visitor # A callback function that is called each time a cloze line needs to be inserted into the node list.
-  ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
-  ---@param head_node Node # The head of a node list.
-  local function traverse_list(visitor, cloze_type, head_node)
-    ---@type Node|nil
-    local n = head_node
-
-    local start_marker = nil
-    local stop_marker = nil
-
-    while n do
-      if config.check_marker(n, cloze_type, 'start') then
-        start_marker = n
-      end
-
-      if config.check_marker(n, cloze_type, 'stop') then
-        stop_marker = n
-      end
-
-      if start_marker and stop_marker then
-        call_visitor(visitor, nil, start_marker --[[@as UserDefinedWhatsitNode]] ,
-          nil, nil, stop_marker --[[@as UserDefinedWhatsitNode]] )
-        start_marker = nil
-        stop_marker = nil
-      end
-      n = n.next
-
-    end
-  end
-
-  ---
   ---Recurse the node list and search for the marker.
   ---
   ---@param visitor Visitor # A callback function that is called each time a cloze line needs to be inserted into the node list.
   ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
   ---@param head_node Node # The head of a node list.
   ---@param parent_node? HlistNode # The parent node (hlist) of the head node.
-  local function traverse_ng(visitor,
+  local function traverse(visitor,
     cloze_type,
     head_node,
     parent_node)
@@ -1132,7 +1098,7 @@ local traversor = (function()
     local stop_marker = nil
     while head_node do
       if head_node.head then
-        traverse_ng(visitor, cloze_type, head_node.head, head_node --[[@as HlistNode]] )
+        traverse(visitor, cloze_type, head_node.head, head_node --[[@as HlistNode]] )
       else
         if not start_marker then
           start_marker = config.get_marker(head_node, cloze_type,
@@ -1157,8 +1123,7 @@ local traversor = (function()
 
   return {
     traverse_tree = traverse_tree,
-    traverse_list = traverse_list,
-    traverse_ng = traverse_ng,
+    traverse = traverse,
   }
 end)()
 
@@ -1651,7 +1616,7 @@ end
 ---
 ---@return Node head_node
 local function make_strike(head_node)
-  traversor.traverse_list(function(env)
+  traversor.traverse(function(env)
     local text_color = farbe.Color(config.get('text_color'))
 
     local vlist = env.start.next --[[@as VlistNode]]
