@@ -60,14 +60,14 @@ local tex_printf = luakeys.utils.tex_printf
 ---  additional data like the local options.
 
 ---
----@alias MarkerMode 'basic'|'strike'|'fix'|'par' # The argument `mode` accepts the string values `basic`, `fix` and `par`.
+---@alias ClozeType 'basic'|'strike'|'fix'|'par'
 
 ---
 ---@alias MarkerPosition 'start'|'stop' # The argument `position` is either set to `start` or to `stop`.
 
 ---
 ---@class MarkerData
----@field mode MarkerMode
+---@field cloze_type ClozeType
 ---@field position MarkerPosition
 ---@field local_opts Options
 
@@ -77,7 +77,7 @@ local tex_printf = luakeys.utils.tex_printf
 local config = (function()
   ---
   ---I didn’t know what value I should take as `user_id`. Therefore I
-  ---took my birthday and transformed it into a large number.
+  ---took my birthday (3.12.1978) and transformed it into a large number.
   local user_id = 3121978
 
   ---
@@ -170,14 +170,14 @@ local config = (function()
   ---It returns a numeric index number. This index number is the key,
   ---where the local options in the Lua table are stored.
   ---
-  ---@param mode MarkerMode
+  ---@param cloze_type ClozeType
   ---@param position MarkerPosition
   ---
   ---@return number # The index number of the corresponding table in
   ---  `storage`.
-  local function set_storage(mode, position)
+  local function set_storage(cloze_type, position)
     local index = get_index()
-    local data = { mode = mode, position = position }
+    local data = { cloze_type = cloze_type, position = position }
     if position == 'start' then
       data.local_opts = {}
       for key, value in pairs(local_options) do
@@ -210,10 +210,10 @@ local config = (function()
   ---
   ---Write a marker node to TeX's current node list.
   ---
-  ---@param mode MarkerMode
+  ---@param cloze_type ClozeType
   ---@param position MarkerPosition
-  local function write_marker(mode, position)
-    local index = set_storage(mode, position)
+  local function write_marker(cloze_type, position)
+    local index = set_storage(cloze_type, position)
     local marker = create_marker(index)
     node.write(marker)
   end
@@ -259,14 +259,14 @@ local config = (function()
   ---This functions tests, whether the given node `item` is a marker.
   ---
   ---@param head_node Node # The current node.
-  ---@param mode MarkerMode
+  ---@param cloze_type ClozeType
   ---@param position MarkerPosition
   ---
   ---@return boolean
-  local function check_marker(head_node, mode, position)
+  local function check_marker(head_node, cloze_type, position)
     local data =
       get_marker_data(head_node --[[@as UserDefinedWhatsitNode]] )
-    if data and data.mode == mode and data.position == position then
+    if data and data.cloze_type == cloze_type and data.position == position then
       return true
     end
     return false
@@ -276,13 +276,13 @@ local config = (function()
   ---`get_marker` returns the given marker.
   ---
   ---@param head_node Node # The current node.
-  ---@param mode MarkerMode
+  ---@param cloze_type ClozeType
   ---@param position MarkerPosition
   ---
   ---@return false|Node # The node if `head_node` is a marker node.
-  local function get_marker(head_node, mode, position)
+  local function get_marker(head_node, cloze_type, position)
     local out
-    if check_marker(head_node, mode, position) then
+    if check_marker(head_node, cloze_type, position) then
       out = head_node
     else
       out = false
@@ -991,7 +991,7 @@ local traversor = (function()
   ---list.
   ---
   ---@param visitor Visitor A callback function that is called each time a cloze line needs to be inserted into the node list.
-  ---@param mode MarkerMode
+  ---@param cloze_type ClozeType
   ---@param parent_node HlistNode # The parent node (hlist) of the start node.
   ---@param start_marker? Node|nil
   ---@param start_node? Node # The node to start a new cloze.
@@ -999,7 +999,7 @@ local traversor = (function()
   ---@return Node|nil head_node # The fast forwarded new head of the node list.
   ---@return Node|nil parent_node # The parent node (hlist) of the head node.
   function search_stop(visitor,
-    mode,
+    cloze_type,
     parent_node,
     start_marker,
     start_node)
@@ -1013,7 +1013,7 @@ local traversor = (function()
 
     local last_node
     while n do
-      if config.check_marker(n, mode, 'stop') then
+      if config.check_marker(n, cloze_type, 'stop') then
         call_visitor(visitor, parent_node, start_marker --[[@as UserDefinedWhatsitNode]] ,
           start_node, nil, n --[[@as UserDefinedWhatsitNode]] )
         return n, parent_node
@@ -1027,7 +1027,7 @@ local traversor = (function()
       local hlist_node = utils.search_hlist(parent_node.next, false)
       if hlist_node then
         local start_node = hlist_node.head
-        return search_stop(visitor, mode, hlist_node, nil, start_node)
+        return search_stop(visitor, cloze_type, hlist_node, nil, start_node)
       end
     else
       return n, parent_node
@@ -1039,10 +1039,10 @@ local traversor = (function()
   ---`linebreak_filter` callback.
   ---
   ---@param visitor Visitor A callback function that is called each time a cloze line needs to be inserted into the node list.
-  ---@param mode MarkerMode
+  ---@param cloze_type ClozeType
   ---@param head_node Node # The head of a node list.
   ---@param parent_node? HlistNode # The parent node (hlist) of the head node.
-  local function traverse_tree(visitor, mode, head_node, parent_node)
+  local function traverse_tree(visitor, cloze_type, head_node, parent_node)
     ---@type Node|nil
     local n = head_node
 
@@ -1052,11 +1052,11 @@ local traversor = (function()
     while n do
       if n.head then
         ---@cast n HlistNode
-        traverse_tree(visitor, mode, n.head, n)
-      elseif config.check_marker(n, mode, 'start') and p and p.id ==
+        traverse_tree(visitor, cloze_type, n.head, n)
+      elseif config.check_marker(n, cloze_type, 'start') and p and p.id ==
         node.id('hlist') then
         ---@cast p HlistNode
-        n, p = search_stop(visitor, mode, p, n, nil)
+        n, p = search_stop(visitor, cloze_type, p, n, nil)
       end
       if n then
         n = n.next
@@ -1071,9 +1071,9 @@ local traversor = (function()
   ---`pre_linebreak_filter` callback.
   ---
   ---@param visitor Visitor # A callback function that is called each time a cloze line needs to be inserted into the node list.
-  ---@param mode MarkerMode
+  ---@param cloze_type ClozeType
   ---@param head_node Node # The head of a node list.
-  local function traverse_list(visitor, mode, head_node)
+  local function traverse_list(visitor, cloze_type, head_node)
     ---@type Node|nil
     local n = head_node
 
@@ -1081,11 +1081,11 @@ local traversor = (function()
     local stop_marker = nil
 
     while n do
-      if config.check_marker(n, mode, 'start') then
+      if config.check_marker(n, cloze_type, 'start') then
         start_marker = n
       end
 
-      if config.check_marker(n, mode, 'stop') then
+      if config.check_marker(n, cloze_type, 'stop') then
         stop_marker = n
       end
 
@@ -1681,9 +1681,9 @@ local cb = (function()
 
   ---
   ---Store informations if the callbacks are already registered for
-  ---a certain mode (`basic`, `fix`, `par`).
+  ---a certain cloze type (`basic`, `fix`, `par`).
   ---
-  ---@type table<'basic'|'fix'|'par'|'visitor', boolean>
+  ---@type table<'basic'|'fix'|'par'|'strike', boolean>
   local is_registered = {}
 
   return {
@@ -1694,51 +1694,50 @@ local cb = (function()
     ---
     ---`make_par` and `make_basic` are registered to the callback
     ---`post_linebreak_filter` and `make_fix` to the callback
-    ---`pre_linebreak_filter`. The argument `mode` accepts the string values
-    ---`basic`, `fix` and `par`. A special treatment is needed for clozes in
+    ---`pre_linebreak_filter`. A special treatment is needed for clozes in
     ---display math mode. The `post_linebreak_filter` is not called on
     ---display math formulas. I’m not sure if the `pre_output_filter` is the
     ---right choice to capture the display math formulas.
     ---
-    ---@param mode MarkerMode
+    ---@param cloze_type ClozeType
     ---
     ---@return boolean|nil
-    register_callbacks = function(mode)
-      if mode == 'par' then
-        register('post_linebreak_filter', make_par, mode)
+    register_callbacks = function(cloze_type)
+      if cloze_type == 'par' then
+        register('post_linebreak_filter', make_par, cloze_type)
         return true
       end
-      if not is_registered[mode] then
-        if mode == 'basic' then
-          register('pre_linebreak_filter', spread_basic, mode)
-          register('post_linebreak_filter', make_basic, mode)
-          register('pre_output_filter', make_basic, mode)
-        elseif mode == 'fix' then
-          register('pre_linebreak_filter', make_fix, mode)
-        elseif mode == 'strike' then
-          register('pre_linebreak_filter', make_strike, mode)
+      if not is_registered[cloze_type] then
+        if cloze_type == 'basic' then
+          register('pre_linebreak_filter', spread_basic, cloze_type)
+          register('post_linebreak_filter', make_basic, cloze_type)
+          register('pre_output_filter', make_basic, cloze_type)
+        elseif cloze_type == 'fix' then
+          register('pre_linebreak_filter', make_fix, cloze_type)
+        elseif cloze_type == 'strike' then
+          register('pre_linebreak_filter', make_strike, cloze_type)
         else
           return false
         end
-        is_registered[mode] = true
+        is_registered[cloze_type] = true
       end
     end,
 
     ---
     ---Delete the registered functions from the Lua callbacks.
     ---
-    ---@param mode MarkerMode
-    unregister_callbacks = function(mode)
-      if mode == 'basic' then
-        unregister('pre_linebreak_filter', mode)
-        unregister('post_linebreak_filter', mode)
-        unregister('pre_output_filter', mode)
-      elseif mode == 'fix' then
-        unregister('pre_linebreak_filter', mode)
-      elseif mode == 'strike' then
-        unregister('pre_linebreak_filter', mode)
+    ---@param cloze_type ClozeType
+    unregister_callbacks = function(cloze_type)
+      if cloze_type == 'basic' then
+        unregister('pre_linebreak_filter', cloze_type)
+        unregister('post_linebreak_filter', cloze_type)
+        unregister('pre_output_filter', cloze_type)
+      elseif cloze_type == 'fix' then
+        unregister('pre_linebreak_filter', cloze_type)
+      elseif cloze_type == 'strike' then
+        unregister('pre_linebreak_filter', cloze_type)
       else
-        unregister('post_linebreak_filter', mode)
+        unregister('post_linebreak_filter', cloze_type)
       end
     end,
   }
