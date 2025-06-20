@@ -45,22 +45,15 @@ local ansi_color = luakeys.utils.ansi_color
 local log = luakeys.utils.log
 local tex_printf = luakeys.utils.tex_printf
 
----Option handling.
 ---
----The table `config` bundles functions that deal with the option
----handling.
+---The different types of cloze texts required different processing of
+---the node lists.
 ---
----<h2>Marker processing (marker)</h2>
----
----A marker is a whatsit node of the subtype `user_defined`. A marker
----has two purposes:
----
----* Mark the begin and the end of a gap.
----* Store a index number, that points to a Lua table, which holds some
----  additional data like the local options.
-
----
----@alias ClozeType 'basic'|'strike'|'fix'|'par'
+---@alias ClozeType
+---|'basic' # `\cloze`, `\clozenol`
+---|'fix' # `\clozefix`
+---|'par' # `\begin{clozepar}` and `\end{clozepar}`
+---|'strike' # `\clozestrike`
 
 ---
 ---@alias MarkerPosition 'start'|'stop' # The argument `position` is either set to `start` or to `stop`.
@@ -72,8 +65,18 @@ local tex_printf = luakeys.utils.tex_printf
 ---@field local_opts Options
 
 ---
----All values and functions, which are related to the option
----management, are stored in a table called `config`.
+---The table `config` bundles functions that deal with the option
+---handling. All values and functions, which are related to the option
+---management, are stored in this table.
+---
+---<h2>Marker processing (marker)</h2>
+---
+---A marker is a whatsit node of the subtype `user_defined`. A marker
+---has two purposes:
+---
+---* Mark the begin and the end of a gap.
+---* Store a index number, that points to a Lua table, which holds some
+---  additional data like the local options.
 local config = (function()
   ---
   ---I didn’t know what value I should take as `user_id`. Therefore I
@@ -266,7 +269,8 @@ local config = (function()
   local function check_marker(head_node, cloze_type, position)
     local data =
       get_marker_data(head_node --[[@as UserDefinedWhatsitNode]] )
-    if data and data.cloze_type == cloze_type and data.position == position then
+    if data and data.cloze_type == cloze_type and data.position ==
+      position then
       return true
     end
     return false
@@ -1027,7 +1031,8 @@ local traversor = (function()
       local hlist_node = utils.search_hlist(parent_node.next, false)
       if hlist_node then
         local start_node = hlist_node.head
-        return search_stop(visitor, cloze_type, hlist_node, nil, start_node)
+        return search_stop(visitor, cloze_type, hlist_node, nil,
+          start_node)
       end
     else
       return n, parent_node
@@ -1042,7 +1047,10 @@ local traversor = (function()
   ---@param cloze_type ClozeType
   ---@param head_node Node # The head of a node list.
   ---@param parent_node? HlistNode # The parent node (hlist) of the head node.
-  local function traverse_tree(visitor, cloze_type, head_node, parent_node)
+  local function traverse_tree(visitor,
+    cloze_type,
+    head_node,
+    parent_node)
     ---@type Node|nil
     local n = head_node
 
@@ -1100,7 +1108,8 @@ local traversor = (function()
     end
   end
 
-  return { traverse_tree = traverse_tree, traverse_list = traverse_list }
+  return
+    { traverse_tree = traverse_tree, traverse_list = traverse_list }
 end)()
 
 ---
@@ -1411,123 +1420,6 @@ local function make_fix(head_node_input)
 end
 
 ---
----
----visibilty = true
----
----```
----├─WHATSIT (user_defined) user_id 3121978, type 100, value 3
----├─VLIST (unknown) wd 77.93pt, dp 2.01pt, ht 18.94pt
----│ ╚═head
----│   ├─HLIST (box) wd 21.85pt, dp 0.11pt, ht 6.94pt
----│   │ ╚═head
----│   │   ├─WHATSIT (pdf_colorstack) data '0 0 1 rg 0 0 1 RG'
----│   │   ├─KERN (userkern) 28.04pt
----│   │   ├─GLYPH (glyph) 't', font 19, wd 4.09pt, ht 4.42pt, dp 0.11pt
----│   │   ├─GLYPH (glyph) 'o', font 19, wd 5.11pt, ht 6.94pt, dp 0.11pt
----│   │   ├─GLYPH (glyph) 'p', font 19, wd 5.11pt, ht 4.42pt, dp 0.11pt
----│   │   └─WHATSIT (pdf_colorstack) data ''
----│   ├─GLUE (baselineskip) wd 4.95pt
----│   └─HLIST (box) wd 77.93pt, dp 2.01pt, ht 6.94pt
----│     ╚═head
----│       ├─WHATSIT (pdf_colorstack) data '0 0 1 rg 0 0 1 RG'
----│       ├─RULE (normal) wd 77.93pt, dp -2.31pt, ht 2.71pt
----│       ├─WHATSIT (pdf_colorstack) data ''
----│       ├─KERN (fontkern) -77.93pt
----│       ├─GLYPH (glyph) 'b', font 20, wd 3.19pt, ht 6.94pt
----│       ├─GLYPH (glyph) 'a', font 20, wd 5.75pt, ht 4.53pt, dp 0.06pt
----│       ├─GLYPH (glyph) 's', font 20, wd 6.39pt, ht 4.5pt
----│       ├─GLYPH (glyph) 'e', font 20, wd 5.75pt, ht 4.55pt, dp 2.01pt
----│       └─KERN (italiccorrection)
----├─RULE (normal) dp 3.6pt, ht 8.4pt
----├─WHATSIT (user_defined) user_id 3121978, type 100, value 4
----```
----
----visibilty = false
----
----```
----├─WHATSIT (user_defined) user_id 3121978, type 100, value 3
----├─VLIST (unknown) wd 77.93pt, dp 2.01pt, ht 18.94pt
----│ ╚═head
----│   ├─HLIST (box) wd 21.85pt, dp 0.11pt, ht 6.94pt
----│   ├─GLUE (baselineskip) wd 4.95pt
----│   └─HLIST (box) wd 77.93pt, dp 2.01pt, ht 6.94pt
----│     ╚═head
----│       ├─GLYPH (glyph) 'b', font 20, wd 3.19pt, ht 6.94pt
----│       ├─GLYPH (glyph) 'a', font 20, wd 5.75pt, ht 4.53pt, dp 0.06pt
----│       ├─GLYPH (glyph) 's', font 20, wd 6.39pt, ht 4.5pt
----│       ├─GLYPH (glyph) 'e', font 20, wd 5.75pt, ht 4.55pt, dp 2.01pt
----│       └─KERN (italiccorrection)
----├─RULE (normal) dp 3.6pt, ht 8.4pt
----├─WHATSIT (user_defined) user_id 3121978, type 100, value 4
----```
----
----@param head_node Node
----
----@return Node head_node
-local function make_strike(head_node)
-  traversor.traverse_list(function(env)
-    local text_color = farbe.Color(config.get('text_color'))
-
-    local vlist = env.start.next --[[@as VlistNode]]
-    local top_hlist = vlist.head --[[@as HlistNode]]
-    local baselineskip = top_hlist.next --[[@as GlueNode]]
-    local base_hlist = baselineskip.next --[[@as HlistNode]]
-
-    local top_kern = top_hlist.head --[[@as KernNode]]
-
-    if top_hlist.width > base_hlist.width then
-      -- top  long
-      --   short
-      vlist.width = base_hlist.width
-      top_kern.kern = -(top_hlist.width - base_hlist.width) / 2
-    else
-      --    top
-      -- base long
-      top_kern.kern = (base_hlist.width - top_hlist.width) / 2
-    end
-
-    -- top
-    local top_start = top_hlist.head
-    if config.get('visibility') then
-      -- top color
-      top_hlist.head = text_color:create_pdf_colorstack_node('push')
-      top_hlist.head.next = top_start
-      local top_stop = node.tail(top_hlist.head)
-      top_stop.next = text_color:create_pdf_colorstack_node('pop')
-    else
-      top_hlist.head = nil
-    end
-
-    -- strike line
-
-    if config.get('visibility') then
-      local base_start = base_hlist.head
-      local base_stop = node.tail(base_hlist.head)
-
-      local width, height, _ = node.dimensions(base_start, base_stop)
-
-      local line = node.new('rule') --[[@as RuleNode]]
-      local thickness = tex.sp(config.get('thickness'))
-      line.depth = -(height / 3)
-      line.height = (height / 3) + thickness
-      line.width = width
-
-      base_hlist.head = text_color:create_pdf_colorstack_node('push')
-
-      local color_pop = text_color:create_pdf_colorstack_node('pop')
-      local kern = utils.create_kern_node(-width)
-
-      base_hlist.head.next = line
-      line.next = color_pop
-      color_pop.next = kern
-
-      kern.next = base_start
-    end
-  end, 'strike', head_node)
-  return head_node
-end
-
----
 ---The corresponding LaTeX environment to this lua function is
 ---`clozepar`.
 ---
@@ -1653,6 +1545,122 @@ local function make_par(head_node)
   end
 
   return true
+end
+
+---
+---visibilty = true
+---
+---```
+---├─WHATSIT (user_defined) user_id 3121978, type 100, value 3
+---├─VLIST (unknown) wd 77.93pt, dp 2.01pt, ht 18.94pt
+---│ ╚═head
+---│   ├─HLIST (box) wd 21.85pt, dp 0.11pt, ht 6.94pt
+---│   │ ╚═head
+---│   │   ├─WHATSIT (pdf_colorstack) data '0 0 1 rg 0 0 1 RG'
+---│   │   ├─KERN (userkern) 28.04pt
+---│   │   ├─GLYPH (glyph) 't', font 19, wd 4.09pt, ht 4.42pt, dp 0.11pt
+---│   │   ├─GLYPH (glyph) 'o', font 19, wd 5.11pt, ht 6.94pt, dp 0.11pt
+---│   │   ├─GLYPH (glyph) 'p', font 19, wd 5.11pt, ht 4.42pt, dp 0.11pt
+---│   │   └─WHATSIT (pdf_colorstack) data ''
+---│   ├─GLUE (baselineskip) wd 4.95pt
+---│   └─HLIST (box) wd 77.93pt, dp 2.01pt, ht 6.94pt
+---│     ╚═head
+---│       ├─WHATSIT (pdf_colorstack) data '0 0 1 rg 0 0 1 RG'
+---│       ├─RULE (normal) wd 77.93pt, dp -2.31pt, ht 2.71pt
+---│       ├─WHATSIT (pdf_colorstack) data ''
+---│       ├─KERN (fontkern) -77.93pt
+---│       ├─GLYPH (glyph) 'b', font 20, wd 3.19pt, ht 6.94pt
+---│       ├─GLYPH (glyph) 'a', font 20, wd 5.75pt, ht 4.53pt, dp 0.06pt
+---│       ├─GLYPH (glyph) 's', font 20, wd 6.39pt, ht 4.5pt
+---│       ├─GLYPH (glyph) 'e', font 20, wd 5.75pt, ht 4.55pt, dp 2.01pt
+---│       └─KERN (italiccorrection)
+---├─RULE (normal) dp 3.6pt, ht 8.4pt
+---├─WHATSIT (user_defined) user_id 3121978, type 100, value 4
+---```
+---
+---visibilty = false
+---
+---```
+---├─WHATSIT (user_defined) user_id 3121978, type 100, value 3
+---├─VLIST (unknown) wd 77.93pt, dp 2.01pt, ht 18.94pt
+---│ ╚═head
+---│   ├─HLIST (box) wd 21.85pt, dp 0.11pt, ht 6.94pt
+---│   ├─GLUE (baselineskip) wd 4.95pt
+---│   └─HLIST (box) wd 77.93pt, dp 2.01pt, ht 6.94pt
+---│     ╚═head
+---│       ├─GLYPH (glyph) 'b', font 20, wd 3.19pt, ht 6.94pt
+---│       ├─GLYPH (glyph) 'a', font 20, wd 5.75pt, ht 4.53pt, dp 0.06pt
+---│       ├─GLYPH (glyph) 's', font 20, wd 6.39pt, ht 4.5pt
+---│       ├─GLYPH (glyph) 'e', font 20, wd 5.75pt, ht 4.55pt, dp 2.01pt
+---│       └─KERN (italiccorrection)
+---├─RULE (normal) dp 3.6pt, ht 8.4pt
+---├─WHATSIT (user_defined) user_id 3121978, type 100, value 4
+---```
+---
+---@param head_node Node
+---
+---@return Node head_node
+local function make_strike(head_node)
+  traversor.traverse_list(function(env)
+    local text_color = farbe.Color(config.get('text_color'))
+
+    local vlist = env.start.next --[[@as VlistNode]]
+    local top_hlist = vlist.head --[[@as HlistNode]]
+    local baselineskip = top_hlist.next --[[@as GlueNode]]
+    local base_hlist = baselineskip.next --[[@as HlistNode]]
+
+    local top_kern = top_hlist.head --[[@as KernNode]]
+
+    if top_hlist.width > base_hlist.width then
+      -- top  long
+      --   short
+      vlist.width = base_hlist.width
+      top_kern.kern = -(top_hlist.width - base_hlist.width) / 2
+    else
+      --    top
+      -- base long
+      top_kern.kern = (base_hlist.width - top_hlist.width) / 2
+    end
+
+    -- top
+    local top_start = top_hlist.head
+    if config.get('visibility') then
+      -- top color
+      top_hlist.head = text_color:create_pdf_colorstack_node('push')
+      top_hlist.head.next = top_start
+      local top_stop = node.tail(top_hlist.head)
+      top_stop.next = text_color:create_pdf_colorstack_node('pop')
+    else
+      top_hlist.head = nil
+    end
+
+    -- strike line
+
+    if config.get('visibility') then
+      local base_start = base_hlist.head
+      local base_stop = node.tail(base_hlist.head)
+
+      local width, height, _ = node.dimensions(base_start, base_stop)
+
+      local line = node.new('rule') --[[@as RuleNode]]
+      local thickness = tex.sp(config.get('thickness'))
+      line.depth = -(height / 3)
+      line.height = (height / 3) + thickness
+      line.width = width
+
+      base_hlist.head = text_color:create_pdf_colorstack_node('push')
+
+      local color_pop = text_color:create_pdf_colorstack_node('pop')
+      local kern = utils.create_kern_node(-width)
+
+      base_hlist.head.next = line
+      line.next = color_pop
+      color_pop.next = kern
+
+      kern.next = base_start
+    end
+  end, 'strike', head_node)
+  return head_node
 end
 
 local cb = (function()
