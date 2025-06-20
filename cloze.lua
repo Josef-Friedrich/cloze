@@ -48,7 +48,6 @@ local tex_printf = luakeys.utils.tex_printf
 ---
 ---The different types of cloze texts required different processing of
 ---the node lists.
----
 ---@alias ClozeType
 ---|'basic' # `\cloze`, `\clozenol`
 ---|'fix' # `\clozefix`
@@ -283,18 +282,17 @@ local config = (function()
   ---@param cloze_type ClozeType
   ---@param position MarkerPosition
   ---
-  ---@return false|Node # The node if `head_node` is a marker node.
+  ---@return UserDefinedWhatsitNode|nil # The node if `head_node` is a marker node.
   local function get_marker(head_node, cloze_type, position)
-    local out
+    ---@type UserDefinedWhatsitNode|nil
+    local marker = nil
     if check_marker(head_node, cloze_type, position) then
-      out = head_node
-    else
-      out = false
+      marker = head_node --[[@as UserDefinedWhatsitNode]]
     end
-    if out and position == 'start' then
+    if marker and position == 'start' then
       get_marker_data(head_node --[[@as UserDefinedWhatsitNode]] )
     end
-    return out
+    return marker
   end
 
   ---
@@ -1119,10 +1117,10 @@ local traversor = (function()
     cloze_type,
     head_node,
     parent_node)
-    ---@type Node|nil
+    ---@type UserDefinedWhatsitNode|nil
     local start_node = nil
 
-    ---@type Node|nil
+    ---@type UserDefinedWhatsitNode|nil
     local stop_node = nil
     while head_node do
       if head_node.head then
@@ -1433,11 +1431,11 @@ local function make_fix(head_node_input)
   ---
   ---@param head_node Node # The head of a node list.
   local function make_fix_recursion(head_node)
-    ---@type Node|false
-    local start_node = false
+    ---@type UserDefinedWhatsitNode|nil
+    local start_node = nil
 
-    ---@type Node|false
-    local stop_node = false
+    ---@type UserDefinedWhatsitNode|nil
+    local stop_node = nil
     while head_node do
       if head_node.head then
         make_fix_recursion(head_node.head)
@@ -1450,7 +1448,7 @@ local function make_fix(head_node_input)
         end
         if start_node and stop_node then
           make_single(start_node, stop_node)
-          start_node, stop_node = false, false
+          start_node, stop_node = nil, nil
         end
       end
       head_node = head_node.next
