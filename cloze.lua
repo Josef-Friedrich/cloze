@@ -59,8 +59,8 @@ local tex_printf = luakeys.utils.tex_printf
 
 ---
 ---@class MarkerData
----@field cloze_type ClozeType
----@field position MarkerPosition
+---@field cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
+---@field position MarkerPosition # Whether the marker node indicates the beginning or the end of a cloze.
 ---@field local_opts Options
 
 ---
@@ -172,8 +172,8 @@ local config = (function()
   ---It returns a numeric index number. This index number is the key,
   ---where the local options in the Lua table are stored.
   ---
-  ---@param cloze_type ClozeType
-  ---@param position MarkerPosition
+  ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
+  ---@param position MarkerPosition # Whether the marker node indicates the beginning or the end of a cloze.
   ---
   ---@return number # The index number of the corresponding table in
   ---  `storage`.
@@ -212,8 +212,8 @@ local config = (function()
   ---
   ---Write a marker node to TeX's current node list.
   ---
-  ---@param cloze_type ClozeType
-  ---@param position MarkerPosition
+  ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
+  ---@param position MarkerPosition # Whether the marker node indicates the beginning or the end of a cloze.
   local function write_marker(cloze_type, position)
     local index = set_storage(cloze_type, position)
     local marker = create_marker(index)
@@ -237,7 +237,8 @@ local config = (function()
 
   ---
   ---Test whether the node `n` is a marker and retrieve the
-  ---the corresponding marker data.
+  ---the corresponding marker data. If the specified node is a start
+  ---marker, the local options of that marker node are loaded.
   ---
   ---@param n UserDefinedWhatsitNode # The argument `n` is a node of unspecified type.
   ---
@@ -258,11 +259,14 @@ local config = (function()
   end
 
   ---
-  ---This functions tests, whether the given node `item` is a marker.
+  ---Check if the given node is a marker.
+  ---
+  ---If the specified node is a start marker, the local options of that
+  ---marker node are loaded.
   ---
   ---@param head_node Node # The current node.
-  ---@param cloze_type ClozeType
-  ---@param position MarkerPosition
+  ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
+  ---@param position MarkerPosition # Whether the marker node indicates the beginning or the end of a cloze.
   ---
   ---@return boolean
   local function check_marker(head_node, cloze_type, position)
@@ -276,11 +280,15 @@ local config = (function()
   end
 
   ---
-  ---`get_marker` returns the given marker.
+  ---Return the input node only if it is a marker of the specified
+  ---cloze type and position.
+  ---
+  ---If the specified node is a start marker, the local options of that
+  ---marker node are loaded.
   ---
   ---@param head_node Node # The current node.
-  ---@param cloze_type ClozeType
-  ---@param position MarkerPosition
+  ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
+  ---@param position MarkerPosition # Whether the marker node indicates the beginning or the end of a cloze.
   ---
   ---@return UserDefinedWhatsitNode|nil # The node if `head_node` is a marker node.
   local function get_marker(head_node, cloze_type, position)
@@ -993,7 +1001,7 @@ local traversor = (function()
   ---list.
   ---
   ---@param visitor Visitor A callback function that is called each time a cloze line needs to be inserted into the node list.
-  ---@param cloze_type ClozeType
+  ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
   ---@param parent_node HlistNode # The parent node (hlist) of the start node.
   ---@param start_marker? Node|nil
   ---@param start_node? Node # The node to start a new cloze.
@@ -1042,7 +1050,7 @@ local traversor = (function()
   ---`linebreak_filter` callback.
   ---
   ---@param visitor Visitor A callback function that is called each time a cloze line needs to be inserted into the node list.
-  ---@param cloze_type ClozeType
+  ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
   ---@param head_node Node # The head of a node list.
   ---@param parent_node? HlistNode # The parent node (hlist) of the head node.
   local function traverse_tree(visitor,
@@ -1077,7 +1085,7 @@ local traversor = (function()
   ---`pre_linebreak_filter` callback.
   ---
   ---@param visitor Visitor # A callback function that is called each time a cloze line needs to be inserted into the node list.
-  ---@param cloze_type ClozeType
+  ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
   ---@param head_node Node # The head of a node list.
   local function traverse_list(visitor, cloze_type, head_node)
     ---@type Node|nil
@@ -1110,7 +1118,7 @@ local traversor = (function()
   ---Recurse the node list and search for the marker.
   ---
   ---@param visitor Visitor # A callback function that is called each time a cloze line needs to be inserted into the node list.
-  ---@param cloze_type ClozeType
+  ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
   ---@param head_node Node # The head of a node list.
   ---@param parent_node? HlistNode # The parent node (hlist) of the head node.
   local function traverse_ng(visitor,
@@ -1118,27 +1126,29 @@ local traversor = (function()
     head_node,
     parent_node)
     ---@type UserDefinedWhatsitNode|nil
-    local start_node = nil
+    local start_marker = nil
 
     ---@type UserDefinedWhatsitNode|nil
-    local stop_node = nil
+    local stop_marker = nil
     while head_node do
       if head_node.head then
-        traverse_ng(visitor, cloze_type, head_node.head, head_node)
+        traverse_ng(visitor, cloze_type, head_node.head, head_node --[[@as HlistNode]] )
       else
-        if not start_node then
-          start_node = config.get_marker(head_node, cloze_type, 'start')
+        if not start_marker then
+          start_marker = config.get_marker(head_node, cloze_type,
+            'start')
         end
-        if not stop_node then
-          stop_node = config.get_marker(head_node, cloze_type, 'stop')
+        if not stop_marker then
+          stop_marker = config.get_marker(head_node, cloze_type, 'stop')
         end
-        if start_node and stop_node then
-          call_visitor(visitor, parent_node, start_node, nil, nil,
-            stop_node)
-          start_node, stop_node = nil, nil
-        elseif start_node and not stop_node and head_node.next == nil and
-          parent_node then
+        if start_marker and stop_marker then
+          call_visitor(visitor, parent_node, start_marker, nil, nil,
+            stop_marker)
+          start_marker, stop_marker = nil, nil
+        elseif start_marker and not stop_marker and head_node.next ==
+          nil and parent_node then
           print('continue cloze in the next line')
+          start_marker = nil
         end
       end
       head_node = head_node.next
@@ -1747,7 +1757,7 @@ local cb = (function()
     ---display math formulas. I’m not sure if the `pre_output_filter` is the
     ---right choice to capture the display math formulas.
     ---
-    ---@param cloze_type ClozeType
+    ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
     ---
     ---@return boolean|nil
     register_callbacks = function(cloze_type)
@@ -1774,7 +1784,7 @@ local cb = (function()
     ---
     ---Delete the registered functions from the Lua callbacks.
     ---
-    ---@param cloze_type ClozeType
+    ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
     unregister_callbacks = function(cloze_type)
       if cloze_type == 'basic' then
         unregister('pre_linebreak_filter', cloze_type)
