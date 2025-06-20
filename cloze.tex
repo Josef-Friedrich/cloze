@@ -37,10 +37,6 @@
 \input farbe.tex
 %    \end{macrocode}
 %
-%    \begin{macrocode}
-\newif\ifclozeshow\clozeshowtrue
-%    \end{macrocode}
-%
 % \subsubsection{Internal macros}
 %
 % \begin{macro}{\ClozeSetToGlobal}
@@ -182,7 +178,6 @@
 % section \TmpSecRef{sec:command-clozeshow}.
 %    \begin{macrocode}
 \def\clozeshow{%
-  \clozeshowtrue%
   \ClozeSetToGlobal%
   \clozesetoption{visibility}{true}%
 }
@@ -194,7 +189,6 @@
 % section \TmpSecRef{sec:command-clozehide}.
 %    \begin{macrocode}
 \def\clozehide{%
-  \clozeshowfalse%
   \ClozeSetToGlobal%
   \clozesetoption{visibility}{false}%
 }
