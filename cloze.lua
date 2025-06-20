@@ -1108,8 +1108,50 @@ local traversor = (function()
     end
   end
 
-  return
-    { traverse_tree = traverse_tree, traverse_list = traverse_list }
+  ---
+  ---Recurse the node list and search for the marker.
+  ---
+  ---@param visitor Visitor # A callback function that is called each time a cloze line needs to be inserted into the node list.
+  ---@param cloze_type ClozeType
+  ---@param head_node Node # The head of a node list.
+  ---@param parent_node? HlistNode # The parent node (hlist) of the head node.
+  local function traverse_ng(visitor,
+    cloze_type,
+    head_node,
+    parent_node)
+    ---@type Node|nil
+    local start_node = nil
+
+    ---@type Node|nil
+    local stop_node = nil
+    while head_node do
+      if head_node.head then
+        traverse_ng(visitor, cloze_type, head_node.head, head_node)
+      else
+        if not start_node then
+          start_node = config.get_marker(head_node, cloze_type, 'start')
+        end
+        if not stop_node then
+          stop_node = config.get_marker(head_node, cloze_type, 'stop')
+        end
+        if start_node and stop_node then
+          call_visitor(visitor, parent_node, start_node, nil, nil,
+            stop_node)
+          start_node, stop_node = nil, nil
+        elseif start_node and not stop_node and head_node.next == nil and
+          parent_node then
+          print('continue cloze in the next line')
+        end
+      end
+      head_node = head_node.next
+    end
+  end
+
+  return {
+    traverse_tree = traverse_tree,
+    traverse_list = traverse_list,
+    traverse_ng = traverse_ng,
+  }
 end)()
 
 ---
