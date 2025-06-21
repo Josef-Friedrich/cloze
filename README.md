@@ -1,4 +1,4 @@
-# Description
+## Description
 
 EN: `cloze` is a LuaLaTeX/LaTeX package to generate cloze. It uses the
 capabilities of the modern TeX engine LuaTex.
@@ -6,7 +6,7 @@ capabilities of the modern TeX engine LuaTex.
 DE: `cloze` ist a LuaLaTeX/LaTeX-Paket zum Erstellen von Lückentexten.
 Es nutzt die Möglichkeiten der modernen TeX-Engine LuaTeX.
 
-# License
+## License
 
 Copyright (C) 2015-2025 by Josef Friedrich <josef@friedrich.rocks>
 ------------------------------------------------------------------------
@@ -20,42 +20,46 @@ license is in:
 and version 1.3c or later is part of all distributions of LaTeX
 version 2008/05/04 or later.
 
-# CTAN
+## Packaging
 
-Since July 2015 the cloze package is included in the Comprehensive TeX
-Archive Network (CTAN).
+### CTAN
+
+The `cloze` package has been included in the Comprehensive TeX Archive
+Network (CTAN) since July 2015.
 
 * [TeX archive](https://mirrors.ctan.org/macros/luatex/generic/cloze/)
 * [Package page](https://www.ctan.org/pkg/cloze)
 
-# Distributions
+### Distributions
 
-* MiKTeX: https://miktex.org/packages/cloze
 * TeX Live:
   * run files:
-    * [cloze.lua](https://tug.org/svn/texlive/trunk/Master/texmf-dist/scripts/cloze/cloze.lua) texmf-dist/scripts/cloze/cloze.lua
-    * [cloze.tex](https://tug.org/svn/texlive/trunk/Master/texmf-dist/tex/luatex/cloze/cloze.tex) texmf-dist/tex/luatex/cloze/cloze.tex
-    * [cloze.sty](https://tug.org/svn/texlive/trunk/Master/texmf-dist/tex/luatex/cloze/cloze.sty) texmf-dist/tex/luatex/cloze/cloze.sty
+    * [scripts/cloze/cloze.lua](https://tug.org/svn/texlive/trunk/Master/texmf-dist/scripts/cloze/cloze.lua)
+    * [tex/luatex/cloze/cloze.tex](https://tug.org/svn/texlive/trunk/Master/texmf-dist/tex/luatex/cloze/cloze.tex)
+    * [tex/luatex/cloze/cloze.sty](https://tug.org/svn/texlive/trunk/Master/texmf-dist/tex/luatex/cloze/cloze.sty)
   * doc files:
-    * [cloze-doc.tex](https://tug.org/svn/texlive/trunk/Master/texmf-dist/tex/luatex/cloze/cloze-doc.tex) texmf-dist/tex/luatex/cloze/cloze-doc.tex
-    * [cloze-doc.pdf](https://tug.org/svn/texlive/trunk/Master/texmf-dist/doc/luatex/cloze/cloze-doc.pdf) texmf-dist/doc/luatex/cloze/cloze-doc.pdf
-    * [README.md](https://tug.org/svn/texlive/trunk/Master/texmf-dist/doc/luatex/cloze/README.md) texmf-dist/doc/luatex/cloze/README.md
+    * [tex/luatex/cloze/cloze-doc.tex](https://tug.org/svn/texlive/trunk/Master/texmf-dist/tex/luatex/cloze/cloze-doc.tex) texmf-dist/tex/luatex/cloze/cloze-doc.tex
+    * [doc/luatex/cloze/cloze-doc.pdf](https://tug.org/svn/texlive/trunk/Master/texmf-dist/doc/luatex/cloze/cloze-doc.pdf) texmf-dist/doc/luatex/cloze/cloze-doc.pdf
+    * [doc/luatex/cloze/README.md](https://tug.org/svn/texlive/trunk/Master/texmf-dist/doc/luatex/cloze/README.md)
+* [MiKTeX](https://miktex.org/packages/cloze)
 
-# Repository
+### Repository
 
-https://github.com/Josef-Friedrich/cloze
+The [Git repository](https://github.com/Josef-Friedrich/cloze) in
+which the development takes place is hosted on
+[GitHub](https://github.com).
 
-# Documentation
+## Documentation
 
 * [User documentation as a PDF](https://ctan.net/macros/luatex/generic/cloze/cloze-doc.pdf)
 
-# Installation
+## Installation
 
-## TeX Live
+### TeX Live
 
     tlmgr install cloze
 
-## Manually
+### Manually
 
     git clone git@github.com:Josef-Friedrich/cloze.git
     cd cloze
