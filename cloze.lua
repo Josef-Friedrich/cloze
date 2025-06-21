@@ -1615,20 +1615,17 @@ local function make_strike(head_node)
 
     if config.get('visibility') then
       local base_start = base_hlist.head
-      local base_stop = node.tail(base_hlist.head)
-
-      local width, height, _ = node.dimensions(base_start, base_stop)
-
       local line = node.new('rule') --[[@as RuleNode]]
       local thickness = tex.sp(config.get('thickness'))
-      line.depth = -(height / 3)
-      line.height = (height / 3) + thickness
-      line.width = width
+      line.depth = -(base_hlist.height / 3)
+      line.height = (base_hlist.height / 3) + thickness
+      line.width = base_hlist.width
 
       base_hlist.head = text_color:create_pdf_colorstack_node('push')
 
       local color_pop = text_color:create_pdf_colorstack_node('pop')
-      local kern = utils.create_kern_node(-width)
+      line.width = base_hlist.width
+      local kern = utils.create_kern_node(-base_hlist.width)
 
       base_hlist.head.next = line
       line.next = color_pop
