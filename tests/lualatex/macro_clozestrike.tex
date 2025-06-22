@@ -1,6 +1,7 @@
 \documentclass{article}
 \input cloze-test-macros-lualatex.tex
 \usepackage{cloze}
+\usepackage{mdframed}
 
 \begin{document}
 \TestTitleDesc{LuaLa\TeX: macro \string\clozestrike}
@@ -35,7 +36,13 @@ Lorem ipsum \clozestrike{\textbf{long text below}}{short} dolor sit.
 
 \TestSection{Local options}
 
-Lorem ipsum \clozestrike[textcolor=green]{dolor sit}{amet},
+Lorem ipsum \clozestrike[textcolor=green]{dolor sit}{amet}.
+
+\TestSection{Package mdframed}
+
+\begin{mdframed}
+Lorem \clozestrike{ipsum}{sit} consectetur.
+\end{mdframed}
 
 \TestSection{Hide and show}
 
@@ -47,5 +54,4 @@ Ut enim ad minim veniam exercitation ullamco. Lorem ipsum
 }
 
 \TestShowAndHide
-
 \end{document}

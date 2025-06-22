@@ -1488,6 +1488,8 @@ end
 ---@return Node head_node
 local function make_strike(head_node)
   traversor.traverse(function(env)
+    -- The pre linebreak filter gets fired multiple times (e.g. by package mdframed)
+    config.finalize_cloze()
     local text_color = farbe.Color(config.get('text_color'))
 
     local vlist = env.start.next --[[@as VlistNode]]
