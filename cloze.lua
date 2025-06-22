@@ -1081,6 +1081,31 @@ local traversor = (function()
   end
 
   ---
+  ---Continue a basic cloze gap across line breaks.
+  ---
+  ---@param visitor Visitor # A callback function that is called each time a cloze line needs to be inserted into the node list.
+  ---@param p Node # The head of a node list.
+  local function continue_cloze(visitor, p)
+    while p.next do
+      p = p.next
+      if p.head then
+        local start = p.head
+        local n = p.head
+        while n do
+          local stop_marker = config.get_marker(n, 'basic', 'stop')
+          if stop_marker then
+            call_visitor(visitor, p, nil, start, nil, stop_marker)
+            return
+          elseif n.next == nil then
+            call_visitor(visitor, p, nil, start, n, nil)
+          end
+          n = n.next
+        end
+      end
+    end
+  end
+
+  ---
   ---Recurse the node list and search for the marker.
   ---
   ---@param visitor Visitor # A callback function that is called each time a cloze line needs to be inserted into the node list.
@@ -1114,6 +1139,9 @@ local traversor = (function()
         elseif start_marker and not stop_marker and head_node.next ==
           nil and parent_node then
           print('continue cloze in the next line')
+          call_visitor(visitor, parent_node, start_marker, nil,
+            head_node, nil)
+          continue_cloze(visitor, parent_node)
           start_marker = nil
         end
       end
