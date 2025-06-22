@@ -15,9 +15,17 @@ Lorem \cloze[text_color=green,margin=4mm]{i\textbf{ps}um} dolor
 
 \TestSection{Multi lines}
 
+Lorem ipsum \cloze{dolor sit} amet.
+
 Lorem ipsum \cloze{dolor sit amet, consectetur adipisicing elit, sed do
 eiusmod tempor incididunt ut labore} et dolore magna aliqua. Ut enim ad
 minim veniam exercitation ullamco.
+
+Lorem ipsum \cloze{dolor sit amet, consectetur adipisicing elit, sed do
+eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+minim veniam exercitation ullamco.Lorem ipsumdolor sit amet, consectetur
+adipisicing elit, sed do eiusmod tempor incididunt ut labore} et dolore
+magna aliqua. Ut enim ad minim veniam exercitation ullamco.
 
 \TestSection{Behaviour after punctation}
 
@@ -79,11 +87,19 @@ minim veniam exercitation ullamco.
 \item 3mm: \cloze[thickness=3mm]{Magna aliqua. Ut enim ad minim veniam.}
 \end{itemize}
 
-\TestSection{distance}
+\TestSection{Distance}
 
 \begin{itemize}
 \item 1mm: \cloze[distance=1mm]{Lorem ipsum dolor sit amet.}
 \item 2mm: \cloze[distance=2mm]{Consectetur adipisicing elit, sed do eiusmod.}
 \item 3mm: \cloze[distance=3mm]{Magna aliqua. Ut enim ad minim veniam.}
 \end{itemize}
+
+\TestSection{Environment displaymath}
+
+\clozesetfont{}
+
+\begin{displaymath}
+1+1=\cloze{2}
+\end{displaymath}
 \end{document}

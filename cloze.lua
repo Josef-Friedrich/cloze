@@ -61,6 +61,7 @@ local tex_printf = luakeys.utils.tex_printf
 ---@class MarkerData
 ---@field cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
 ---@field position MarkerPosition # Whether the marker node indicates the beginning or the end of a cloze.
+---@field finished? boolean # true if the node manipulation for the cloze is finished
 ---@field local_opts Options
 
 ---
@@ -138,6 +139,9 @@ local config = (function()
   ---The local options.
   ---@type Options
   local local_options = {}
+
+  ---@type MarkerData|nil
+  local current_marker_data = nil
 
   local index
 
@@ -253,6 +257,7 @@ local config = (function()
         else
           local_options = data.local_opts
         end
+        current_marker_data = data
       end
       return data
     end
@@ -273,7 +278,7 @@ local config = (function()
     local data =
       get_marker_data(head_node --[[@as UserDefinedWhatsitNode]] )
     if data and data.cloze_type == cloze_type and data.position ==
-      position then
+      position and not data.finished then
       return true
     end
     return false
@@ -297,9 +302,6 @@ local config = (function()
     if check_marker(head_node, cloze_type, position) then
       marker = head_node --[[@as UserDefinedWhatsitNode]]
     end
-    if marker and position == 'start' then
-      get_marker_data(head_node --[[@as UserDefinedWhatsitNode]] )
-    end
     return marker
   end
 
@@ -315,6 +317,12 @@ local config = (function()
   local function remove_marker(marker)
     if is_marker(marker) then
       return node.remove(marker, marker)
+    end
+  end
+
+  local function finalize_cloze()
+    if current_marker_data ~= nil then
+      current_marker_data.finished = true
     end
   end
 
@@ -410,6 +418,16 @@ local config = (function()
       g(value), g(key), g(source))
 
     return value
+  end
+
+  ---@return Color
+  local function get_text_color()
+    return farbe.Color(get('text_color'))
+  end
+
+  ---@return Color
+  local function get_line_color()
+    return farbe.Color(get('line_color'))
   end
 
   ---
@@ -567,10 +585,13 @@ local config = (function()
 
   return {
     get = get,
+    get_text_color = get_text_color,
+    get_line_color = get_line_color,
     get_defaults = get_defaults,
     unset_global_options = unset_global_options,
     unset_local_options = unset_local_options,
     set_options_dest = set_options_dest,
+    finalize_cloze = finalize_cloze,
     remove_marker = remove_marker,
     check_marker = check_marker,
     set_option = set_option,
@@ -909,6 +930,8 @@ end)()
 ---functions. One callback call is made for each cloze line to be drawn.
 local traversor = (function()
 
+  ---@alias ClozeContinuation 'start-stop' | 'continue-stop' | 'start-continue' | 'continue-continue'
+
   ---The enviroment in the node list where the cloze can be inserted.
   ---The table is passed as an input parameter to the callback function
   ---`Visitor`.
@@ -923,11 +946,12 @@ local traversor = (function()
   ---@field stop Node # The stop node, which marks the end of a cloze. This field is derived from the fields `stop_marker` or `stop_node`.
   ---@field stop_continuation boolean True if the stop node is not a start marker. The cloze ends because the end of the line is reached.
   ---@field width integer The width in scaled points from the start to the stop node.
+  ---@field continuation ClozeContinuation
 
   ---
   ---This callback function is called every time a cloze line needs to
   ---be inserted into the node list.
-  ---@alias Visitor fun(env: ClozeNodeEnvironment): nil
+  ---@alias Visitor fun(env: ClozeNodeEnvironment): Node|nil
 
   ---
   ---Call the Visitor callback and assemble `ClozeNodeEnvironment` table
@@ -939,6 +963,8 @@ local traversor = (function()
   ---@param start_node? Node
   ---@param stop_node? Node
   ---@param stop_marker? UserDefinedWhatsitNode
+  ---
+  ---@return Node new_head To avoid endless loops if a new node is inserted at the end of a node list we can use this new head to continue
   local function call_visitor(visitor,
     parent_hlist,
     start_marker,
@@ -975,6 +1001,19 @@ local traversor = (function()
       width = node.dimensions(start, stop)
     end
 
+    ---@type ClozeContinuation
+    local continuation
+    if start_marker and stop_marker then
+      continuation = 'start-stop'
+    elseif start_node and stop_marker then
+      continuation = 'continue-stop'
+    elseif start_marker and stop_node then
+      continuation = 'start-continue'
+    elseif start_node and stop_node then
+      continuation = 'continue-continue'
+    end
+
+    ---@type ClozeNodeEnvironment
     local env = {
       parent_hlist = parent_hlist,
       start_marker = start_marker,
@@ -986,98 +1025,14 @@ local traversor = (function()
       stop = stop,
       stop_continuation = stop_marker == nil,
       width = width,
+      continuation = continuation,
     }
 
-    visitor(env)
-
-  end
-
-  ---This local variables are overloaded by functions
-  ---calling each other.
-  local search_stop
-
-  ---
-  ---Search for a stop marker or make a cloze up to the end of the node
-  ---list.
-  ---
-  ---@param visitor Visitor A callback function that is called each time a cloze line needs to be inserted into the node list.
-  ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
-  ---@param parent_node HlistNode # The parent node (hlist) of the start node.
-  ---@param start_marker? Node|nil
-  ---@param start_node? Node # The node to start a new cloze.
-  ---
-  ---@return Node|nil head_node # The fast forwarded new head of the node list.
-  ---@return Node|nil parent_node # The parent node (hlist) of the head node.
-  function search_stop(visitor,
-    cloze_type,
-    parent_node,
-    start_marker,
-    start_node)
-    ---@type Node|nil
-    local n
-    if start_marker ~= nil then
-      n = start_marker
-    else
-      n = start_node
+    local new_head = visitor(env)
+    if new_head then
+      return new_head
     end
-
-    local last_node
-    while n do
-      if config.check_marker(n, cloze_type, 'stop') then
-        call_visitor(visitor, parent_node, start_marker --[[@as UserDefinedWhatsitNode]] ,
-          start_node, nil, n --[[@as UserDefinedWhatsitNode]] )
-        return n, parent_node
-      end
-      last_node = n
-      n = n.next
-    end
-    call_visitor(visitor, parent_node, start_marker --[[@as UserDefinedWhatsitNode]] ,
-      start_node, last_node, nil)
-    if parent_node.next then
-      local hlist_node = utils.search_hlist(parent_node.next, false)
-      if hlist_node then
-        local start_node = hlist_node.head
-        return search_stop(visitor, cloze_type, hlist_node, nil,
-          start_node)
-      end
-    else
-      return n, parent_node
-    end
-  end
-
-  ---
-  ---Traverse a recursive node tree such as the one in the
-  ---`linebreak_filter` callback.
-  ---
-  ---@param visitor Visitor A callback function that is called each time a cloze line needs to be inserted into the node list.
-  ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
-  ---@param head_node Node # The head of a node list.
-  ---@param parent_node? HlistNode # The parent node (hlist) of the head node.
-  local function traverse_tree(visitor,
-    cloze_type,
-    head_node,
-    parent_node)
-    ---@type Node|nil
-    local n = head_node
-
-    ---@type Node|nil
-    local p = parent_node
-
-    while n do
-      if n.head then
-        ---@cast n HlistNode
-        traverse_tree(visitor, cloze_type, n.head, n)
-      elseif config.check_marker(n, cloze_type, 'start') and p and p.id ==
-        node.id('hlist') then
-        ---@cast p HlistNode
-        n, p = search_stop(visitor, cloze_type, p, n, nil)
-      end
-      if n then
-        n = n.next
-      else
-        break
-      end
-    end
+    return stop
   end
 
   ---
@@ -1097,7 +1052,7 @@ local traversor = (function()
             call_visitor(visitor, p, nil, start, nil, stop_marker)
             return
           elseif n.next == nil then
-            call_visitor(visitor, p, nil, start, n, nil)
+            n = call_visitor(visitor, p, nil, start, n, nil)
           end
           n = n.next
         end
@@ -1138,7 +1093,7 @@ local traversor = (function()
           start_marker, stop_marker = nil, nil
         elseif start_marker and not stop_marker and head_node.next ==
           nil and parent_node then
-          print('continue cloze in the next line')
+          --- continue cloze in the next line
           call_visitor(visitor, parent_node, start_marker, nil,
             head_node, nil)
           continue_cloze(visitor, parent_node)
@@ -1149,143 +1104,69 @@ local traversor = (function()
     end
   end
 
-  return { traverse_tree = traverse_tree, traverse = traverse }
+  return { traverse = traverse }
 end)()
 
----
----Assemble a possibly multi-line cloze text.
----
----The corresponding LaTeX command to this Lua function is `\cloze`.
----This function is used by other cloze TeX macros too: `\clozenol`,
----`\clozefil`
----
----@param head_node_input Node # The head of a node list.
----
----@return Node # The head of the node list.
-local function make_basic(head_node_input)
+local function make_basic(head_node)
+  traversor.traverse(function(env)
+    config.finalize_cloze()
 
-  utils.debug_node_list(head_node_input)
+    local line_color = farbe.Color(config.get('line_color'))
+    local text_color = farbe.Color(config.get('text_color'))
 
-  ---This local variables are overloaded by functions
-  ---calling each other.
-  local continue_cloze, search_stop
+    local line_color_push = line_color:create_pdf_colorstack_node(
+      'push')
+    local line = utils.create_line(env.width)
+    line_color_push.next = line
 
-  ---
-  ---Make a single gap.
-  ---
-  ---@param start_node Node # The node to start / begin a new cloze.
-  ---@param stop_node Node # The node to stop / end a new cloze.
-  ---@param parent_node HlistNode # The parent node (hlist) of the start and the stop node.
-  ---
-  ---@return Node|nil stop_node # The stop node.
-  ---@return HlistNode parent_node # The parent node (hlist) of the stop node.
-  local function make_single(start_node, stop_node, parent_node)
-    local node_head = start_node
-    local line_width = node.dimensions(parent_node.glue_set,
-      parent_node.glue_sign, parent_node.glue_order, start_node,
-      stop_node)
+    local line_color_pop = line_color:create_pdf_colorstack_node(
+      'pop')
+    line.next = line_color_pop
 
-    log.info('Make a line of the width of: %s sp', line_width)
+    local first
+    if env.start_continuation then
+      -- the first node is attached on head of a hlist
+      first = env.parent_hlist.head
+      env.parent_hlist.head = line_color_push
+    else
+      first = env.start.next
+      env.start.next = line_color_push
+    end
 
-    local line_node = utils.insert_line(start_node, line_width)
-    local color_text_node = utils.insert_list('after', line_node, {
-      utils.create_color('text', 'push'),
-    })
     if config.get('visibility') then
-      utils.insert_list('after', color_text_node,
-        { utils.create_kern_node(-line_width) })
-      utils.insert_list('before', stop_node,
-        { utils.create_color('text', 'pop') }, node_head)
-    else
-      line_node.next = stop_node.next
-      stop_node.prev = line_node -- not line_node.prev -> line color leaks out
-    end
-    ---In some edge cases the lua callbacks get fired up twice. After the
-    ---cloze has been created, the start and stop whatsit markers can be
-    ---deleted.
-    config.remove_marker(start_node)
-    return config.remove_marker(stop_node), parent_node
-  end
+      -- show cloze text
+      local kern = utils.create_kern_node(-env.width)
+      line_color_pop.next = kern
+      local text_color_push = text_color:create_pdf_colorstack_node(
+        'push')
+      kern.next = text_color_push
+      local text_color_pop =
+        text_color:create_pdf_colorstack_node('pop')
 
-  ---
-  ---Search for a stop marker or make a cloze up to the end of the node
-  ---list.
-  ---
-  ---@param start_node Node # The node to start a new cloze.
-  ---@param parent_node HlistNode # The parent node (hlist) of the start node.
-  ---
-  ---@return Node|nil head_node # The fast forwarded new head of the node list.
-  ---@return Node|nil parent_node # The parent node (hlist) of the head node.
-  function search_stop(start_node, parent_node)
-    ---@type Node|nil
-    local n = start_node
+      --- start
+      text_color_push.next = first
 
-    local last_node
-    while n do
-      if config.check_marker(n, 'basic', 'stop') then
-        return make_single(start_node, n, parent_node)
-      end
-      last_node = n
-      n = n.next
-    end
-    -- Make a cloze until the end of the node list.
-    n = make_single(start_node, last_node, parent_node)
-    if parent_node.next then
-      return continue_cloze(parent_node.next)
-    else
-      return n, parent_node
-    end
-  end
-
-  ---
-  ---Continue a multiline cloze.
-  ---
-  ---@param parent_node Node # A parent node to search for a hlist node.
-  ---
-  ---@return Node|nil head_node # The fast forwarded new head of the node list.
-  ---@return Node|nil parent_node # The parent node (hlist) of the head node.
-  function continue_cloze(parent_node)
-    local hlist_node = utils.search_hlist(parent_node, true)
-    if hlist_node then
-      local start_node = hlist_node.head
-      return search_stop(start_node, hlist_node)
-    end
-  end
-
-  ---
-  ---Search for a start marker.
-  ---
-  ---@param head_node Node # The head of a node list.
-  ---@param parent_node? HlistNode # The parent node (hlist) of the head node.
-  local function search_start(head_node, parent_node)
-    ---@type Node|nil
-    local n = head_node
-
-    ---@type Node|nil
-    local p = parent_node
-
-    while n do
-      if n.head then
-        ---@cast n HlistNode
-        search_start(n.head, n)
-      elseif config.check_marker(n, 'basic', 'start') and p and p.id ==
-        node.id('hlist') then
-        ---Adds also a strut at the first position. It prepars the
-        ---hlist and makes it ready to build a cloze.
-        ---@cast p HlistNode
-        utils.search_hlist(p, true)
-        n, p = search_stop(n, p)
-      end
-      if n then
-        n = n.next
+      --- stop
+      if env.stop.next ~= nil then
+        local tmp = env.stop.next
+        env.stop.next = text_color_pop
+        text_color_pop.next = tmp
       else
-        break
+        env.stop.next = text_color_pop
+        -- to avoid endless loop, we have to return the new end of the node list
+        return text_color_pop
+      end
+    else
+      -- hide cloze text
+      --- stop
+      if env.stop_marker ~= nil then
+        line_color_pop.next = env.stop_marker.prev
+      else
+        return line_color_pop
       end
     end
-  end
-
-  search_start(head_node_input)
-  return head_node_input
+  end, 'basic', head_node)
+  return head_node
 end
 
 ---
@@ -1719,8 +1600,8 @@ local cb = (function()
       end
       if not is_registered[cloze_type] then
         if cloze_type == 'basic' then
-          register('pre_linebreak_filter', spread_basic, cloze_type)
           register('post_linebreak_filter', make_basic, cloze_type)
+          register('pre_linebreak_filter', spread_basic, cloze_type)
           register('pre_output_filter', make_basic, cloze_type)
         elseif cloze_type == 'fix' then
           register('pre_linebreak_filter', make_fix, cloze_type)
@@ -1739,8 +1620,8 @@ local cb = (function()
     ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
     unregister_callbacks = function(cloze_type)
       if cloze_type == 'basic' then
-        unregister('pre_linebreak_filter', cloze_type)
         unregister('post_linebreak_filter', cloze_type)
+        unregister('pre_linebreak_filter', cloze_type)
         unregister('pre_output_filter', cloze_type)
       elseif cloze_type == 'fix' then
         unregister('pre_linebreak_filter', cloze_type)
