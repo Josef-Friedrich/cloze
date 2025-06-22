@@ -306,20 +306,7 @@ local config = (function()
   end
 
   ---
-  ---Remove a whatsit marker.
-  ---
-  ---It only deletes a node, if a marker is given.
-  ---
-  ---@param marker Node
-  ---
-  ---@return Node|nil head
-  ---@return Node|nil current
-  local function remove_marker(marker)
-    if is_marker(marker) then
-      return node.remove(marker, marker)
-    end
-  end
-
+  ---Set the current start marker as completed by setting the `finalized` field to true.
   local function finalize_cloze()
     if current_marker_data ~= nil then
       current_marker_data.finished = true
@@ -592,7 +579,6 @@ local config = (function()
     unset_local_options = unset_local_options,
     set_options_dest = set_options_dest,
     finalize_cloze = finalize_cloze,
-    remove_marker = remove_marker,
     check_marker = check_marker,
     set_option = set_option,
     write_marker = write_marker,
@@ -1253,7 +1239,7 @@ end
 ---@param head_node_input Node # The head of a node list.
 local function make_fix(head_node_input)
   traversor.traverse(function(env)
-
+    config.finalize_cloze()
     ---
     ---Calculate the widths of the whitespace before (`start_width`) and
     ---after (`stop_width`) the cloze text.
@@ -1298,9 +1284,6 @@ local function make_fix(head_node_input)
     else
       line_node.next = env.stop.next
     end
-    config.remove_marker(env.start)
-    config.remove_marker(env.stop)
-
   end, 'fix', head_node_input)
   return head_node_input
 end
