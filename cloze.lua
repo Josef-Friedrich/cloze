@@ -1099,6 +1099,7 @@ local traversor = (function()
           continue_cloze(visitor, parent_node)
           start_marker = nil
         end
+        stop_marker = nil
       end
       head_node = head_node.next
     end
@@ -1114,13 +1115,12 @@ local function make_basic(head_node)
     local line_color = farbe.Color(config.get('line_color'))
     local text_color = farbe.Color(config.get('text_color'))
 
-    local line_color_push = line_color:create_pdf_colorstack_node(
-      'push')
+    local line_color_push =
+      line_color:create_pdf_colorstack_node('push')
     local line = utils.create_line(env.width)
     line_color_push.next = line
 
-    local line_color_pop = line_color:create_pdf_colorstack_node(
-      'pop')
+    local line_color_pop = line_color:create_pdf_colorstack_node('pop')
     line.next = line_color_pop
 
     local first
