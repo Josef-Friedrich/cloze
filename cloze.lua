@@ -407,16 +407,6 @@ local config = (function()
     return value
   end
 
-  ---@return Color
-  local function get_text_color()
-    return farbe.Color(get('text_color'))
-  end
-
-  ---@return Color
-  local function get_line_color()
-    return farbe.Color(get('line_color'))
-  end
-
   ---
   ---Return the default value of the given option.
   ---
@@ -1098,15 +1088,11 @@ local function make_basic(head_node)
   traversor.traverse(function(env)
     config.finalize_cloze()
 
-    local line_color = farbe.Color(config.get('line_color'))
-    local text_color = farbe.Color(config.get('text_color'))
-
-    local line_color_push =
-      line_color:create_pdf_colorstack_node('push')
+    local line_color_push = utils.create_color('line', 'push')
     local line = utils.create_line(env.width)
     line_color_push.next = line
 
-    local line_color_pop = line_color:create_pdf_colorstack_node('pop')
+    local line_color_pop = utils.create_color('line', 'pop')
     line.next = line_color_pop
 
     local first
@@ -1123,11 +1109,9 @@ local function make_basic(head_node)
       -- show cloze text
       local kern = utils.create_kern_node(-env.width)
       line_color_pop.next = kern
-      local text_color_push = text_color:create_pdf_colorstack_node(
-        'push')
+      local text_color_push = utils.create_color('text', 'push')
       kern.next = text_color_push
-      local text_color_pop =
-        text_color:create_pdf_colorstack_node('pop')
+      local text_color_pop = utils.create_color('text', 'pop')
 
       --- start
       text_color_push.next = first
@@ -1497,10 +1481,10 @@ local function make_strike(head_node)
     local top_start = top_hlist.head
     if config.get('visibility') then
       -- top color
-      top_hlist.head = text_color:create_pdf_colorstack_node('push')
+      top_hlist.head = utils.create_color('text', 'push')
       top_hlist.head.next = top_start
       local top_stop = node.tail(top_hlist.head)
-      top_stop.next = text_color:create_pdf_colorstack_node('pop')
+      top_stop.next = utils.create_color('text', 'pop')
     else
       top_hlist.head = nil
     end
