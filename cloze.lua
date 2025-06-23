@@ -143,6 +143,7 @@ local config = (function()
   ---@type MarkerData|nil
   local current_marker_data = nil
 
+  ---@type integer
   local index
 
   ---
