@@ -562,8 +562,6 @@ local config = (function()
 
   return {
     get = get,
-    get_text_color = get_text_color,
-    get_line_color = get_line_color,
     get_defaults = get_defaults,
     unset_global_options = unset_global_options,
     unset_local_options = unset_local_options,
