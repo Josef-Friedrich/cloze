@@ -539,7 +539,6 @@ local config = (function()
   ---@param kv_string string
   ---@param options_dest 'local'|'global'
   local function parse_options(kv_string, options_dest)
-    unset_local_options()
     set_options_dest(options_dest)
     luakeys.parse(kv_string, { defs = defs, debug = log.get() > 3 })
   end
