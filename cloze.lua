@@ -226,21 +226,6 @@ local config = (function()
   end
 
   ---
-  ---Check if the given node is a marker.
-  ---
-  ---@param item Node
-  ---
-  ---@return boolean
-  local function is_marker(item)
-    local n = item --[[@as UserDefinedWhatsitNode]]
-    if n.id == node.id('whatsit') and n.subtype ==
-      node.subtype('user_defined') and n.user_id == user_id then
-      return true
-    end
-    return false
-  end
-
-  ---
   ---Test whether the node `n` is a marker and retrieve the
   ---the corresponding marker data. If the specified node is a start
   ---marker, the local options of that marker node are loaded.
