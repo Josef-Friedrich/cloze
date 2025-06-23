@@ -43,7 +43,7 @@
 % are then stored in the variable |registry.global_options|.
 %    \begin{macrocode}
 \def\ClozeSetToGlobal{%
-  \directlua{cloze.set_options_dest(true)}%
+  \directlua{cloze.set_options_dest('global')}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -56,7 +56,7 @@
 \def\ClozeSetToLocal{%
   \directlua{
     cloze.unset_local_options()
-    cloze.set_options_dest(false)
+    cloze.set_options_dest('local')
   }%
 }
 %    \end{macrocode}
