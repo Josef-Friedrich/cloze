@@ -82,7 +82,7 @@
 \def\ClozeStartMarker#1{%
   \strut\directlua{
     cloze.register_callback('#1')
-    cloze.marker('#1', 'start')
+    cloze.write_marker('#1', 'start')
   }%
 }
 %    \end{macrocode}
@@ -94,7 +94,7 @@
 %    \begin{macrocode}
 \def\ClozeStopMarker#1{%
   \strut\directlua{
-    cloze.marker('#1', 'stop')
+    cloze.write_marker('#1', 'stop')
   }%
 }
 %    \end{macrocode}

@@ -1642,7 +1642,7 @@ return {
   reset = config.unset_global_options,
   get_defaults = config.get_defaults,
   get_option = config.get,
-  marker = config.write_marker,
+  write_marker = config.write_marker,
   parse_options = config.parse_options,
   register_callback = cb.register_callbacks,
   unregister_callback = cb.unregister_callbacks,
