@@ -1479,9 +1479,20 @@ end)()
 ---to be able to restore the previous thickness.
 local fboxrule_restore
 
-local function print_cloze()
+---
+---@param cloze_type ClozeType
+---@param append_opts? string
+local function print_cloze(cloze_type, append_opts)
   local kv_string, text = lparse.scan('O{} v')
-  tex.print(string.format('\\ClozeBasic{%s}{%s}', text, kv_string))
+  if append_opts ~= nil then
+    if kv_string == '' then
+      kv_string = append_opts
+    else
+      kv_string = kv_string .. ',' .. append_opts
+    end
+  end
+
+  tex.print(string.format('\\Cloze{%s}{%s}{%s}', cloze_type, kv_string, text))
 end
 
 local function print_strike()
@@ -1511,7 +1522,18 @@ return {
       token.set_lua(csname, index)
     end
 
-    register_function('cloze', print_cloze)
+    register_function('cloze', function ()
+      print_cloze('basic')
+    end)
+
+    register_function('clozefix', function ()
+      print_cloze('fix')
+    end)
+
+    register_function('clozenol', function ()
+      print_cloze('basic', 'thickness=0pt')
+    end)
+
     register_function('clozestrike', print_strike)
   end,
 

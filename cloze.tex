@@ -57,7 +57,7 @@
 %    \begin{macrocode}
 \def\ClozeStartMarker#1#2{%
   \strut\directlua{
-    cloze.initialize_cloze('#1', '#2')
+    cloze.initialize_cloze('#1', '\luaescapestring{#2}')
   }%
 }
 %    \end{macrocode}
@@ -107,7 +107,7 @@
 \def\clozeset#1{%
   \directlua
   {
-    cloze.parse_global_options('#1')
+    cloze.parse_global_options('\luaescapestring{#1}')
   }%
 }
 %    \end{macrocode}
@@ -165,45 +165,15 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\ClozeBasic}
+% \begin{macro}{\Cloze}
+% \cmd{\Cloze}\marg{cloze-type}\marg{kv-string}\marg{text}
 %    \begin{macrocode}
-\def\ClozeBasic#1#2{%
-  \ClozeStartMarker{basic}{#2}%
-  {%
-    \clozefont\relax%
-    \ClozeMargin{#1}%
+\def\Cloze#1#2#3{%
+  \ClozeStartMarker{#1}{#2}%
+  \ClozeWrapWithFont{%
+    \ClozeMargin{#3}%
   }%
-  \ClozeStopMarker{basic}%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\clozefix}
-% This is the plain Lua\TeX-Version of \cmd{\clozefix}. The usage of the
-% command \cmd{\clozefix} is described in detail in
-% section \TmpSecRef{sec:command-clozefix}.
-%    \begin{macrocode}
-\def\clozefix#1{%
-  \ClozeStartMarker{fix}%
-  {%
-    \clozefont\relax%
-    \ClozeMargin{#1}%
-  }%
-  \ClozeStopMarker{fix}%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\clozenol}
-% This is the plain Lua\TeX-Version of the macro \cmd{\clozenol}. The
-% usage of the command \cmd{\clozenol} is described in detail in
-% section \TmpSecRef{sec:command-clozenol}.
-%    \begin{macrocode}
-\def\clozenol#1{%
-  \clozesetoption{thickness}{0pt}%
-  \ClozeStartMarker{basic}%
-  \ClozeWrapWithFont{\ClozeMargin{#1}}%
-  \ClozeStopMarker{basic}%
+  \ClozeStopMarker{#1}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -242,15 +212,14 @@
 }
 %    \end{macrocode}
 % \end{macro}
-
-% \begin{macro}{\clozeparplain}
-% The usage of the macro \cmd{\clozeparplain} is described in detail in
-% section \TmpSecRef{sec:command-clozeparplain}.
+%
+% \begin{macro}{\ClozePar}
+% \cmd{\ClozePar}\marg{kv-string}\marg{text}
 %    \begin{macrocode}
-\def\clozeparplain#1{%
+\def\ClozePar#1#2{%
   \par%
-  \ClozeStartMarker{par}%
-  \ClozeWrapWithFont{#1}%
+  \ClozeStartMarker{par}{#1}%
+  \ClozeWrapWithFont{#2}%
   \ClozeStopMarker{par}%
   \par%
   \directlua{cloze.unregister_callback('par')}%
@@ -263,7 +232,7 @@
 % section \TmpSecRef{sec:command-clozeparcapture}.
 %    \begin{macrocode}
 \def\clozeparcapture#1\par {%
-  \clozeparplain{#1}%
+  \ClozePar{}{#1}%
 }
 \let\clozeparcmd=\clozeparcapture
 %    \end{macrocode}
