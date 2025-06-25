@@ -172,57 +172,22 @@ local config = (function()
   end
 
   ---
-  ---`set_storage()` stores the local options in the Lua table
-  --- `storage`.
-  ---
-  ---It returns a numeric index number. This index number is the key,
-  ---where the local options in the Lua table are stored.
-  ---
-  ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
-  ---@param position MarkerPosition # Whether the marker node indicates the beginning or the end of a cloze.
-  ---
-  ---@return number # The index number of the corresponding table in
-  ---  `storage`.
-  local function set_storage(cloze_type, position)
-    local index = get_index()
-    local data = { cloze_type = cloze_type, position = position }
-    if position == 'start' then
-      data.local_opts = {}
-      for key, value in pairs(local_options) do
-        data.local_opts[key] = value
-      end
-    end
-    storage[index] = data
-    return index
-  end
-
-  ---
-  ---We create a user defined whatsit node that can store a number (type
-  --- = 100).
-  ---
-  ---In order to distinguish this node from other user defined whatsit
-  ---nodes we set the `user_id` to a large number. We call this whatsit
-  ---node a marker.
-  ---
-  ---@param index number The argument `index` is a number, which is associated to values in the `storage` table.
-  ---
-  ---@return UserDefinedWhatsitNode
-  local function create_marker(index)
-    local marker = node.new('whatsit', 'user_defined') --[[@as UserDefinedWhatsitNode]]
-    marker.type = 100 -- number
-    marker.user_id = user_id
-    marker.value = index
-    return marker
-  end
-
-  ---
   ---Write a marker node to TeX's current node list.
   ---
   ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
   ---@param position MarkerPosition # Whether the marker node indicates the beginning or the end of a cloze.
-  local function write_marker(cloze_type, position)
-    local index = set_storage(cloze_type, position)
-    local marker = create_marker(index)
+  ---@param local_opts? Options
+  local function write_marker(cloze_type, position, local_opts)
+    local index = get_index()
+    local data = { cloze_type = cloze_type, position = position }
+    if local_opts ~= nil then
+      data.local_opts = local_opts
+    end
+    storage[index] = data
+    local marker = node.new('whatsit', 'user_defined') --[[@as UserDefinedWhatsitNode]]
+    marker.type = 100 -- number
+    marker.user_id = user_id
+    marker.value = index
     node.write(marker)
   end
 
@@ -300,49 +265,9 @@ local config = (function()
     end
   end
 
-  ---@type 'local'|'global'
-  local options_dest
-
-  ---
-  ---Store a value `value` and his associated key `key`
-  ---either to the global (`global_options`) or to the local
-  ---(`local_options`) option table.
-  ---
-  ---The global boolean variable `local_options` controls in
-  ---which table the values are stored.
-  ---
-  ---@param key string # The option key.
-  ---@param value any # The value that is stored under the options key.
-  local function set_option(key, value)
-    if value == '' then
-      return false
-    end
-    log.info('Set %s option “%s” to “%s”', options_dest, key,
-      value)
-    if options_dest == 'global' then
-      global_options[key] = value
-    else
-      local_options[key] = value
-    end
-  end
-
-  ---
-  ---Set the variable `options_dest`.
-  ---
-  ---@param dest 'local'|'global'
-  local function set_options_dest(dest)
-    options_dest = dest
-  end
-
-  ---
-  ---Clear the local options storage.
-  local function unset_local_options()
-    local_options = {}
-  end
-
   ---
   ---Clear the global options storage.
-  local function unset_global_options()
+  local function reset_global_options()
     global_options = {}
   end
 
@@ -405,32 +330,18 @@ local config = (function()
   end
 
   local defs = {
-    align = {
-      description = 'Align the text of a fixed size cloze.',
-      process = function(value)
-        set_option('align', value)
-      end,
-    },
+    align = { description = 'Align the text of a fixed size cloze.' },
     box_height = {
       description = 'The height of a cloze box.',
       alias = { 'boxheight', 'box_height' },
-      process = function(value)
-        set_option('box_height', value)
-      end,
     },
     box_rule = {
       description = 'The thickness of the rule around a cloze box.',
       alias = { 'boxrule', 'box_rule' },
-      process = function(value)
-        set_option('box_rule', value)
-      end,
     },
     box_width = {
       description = 'The width of a cloze box.',
       alias = { 'boxwidth', 'box_width' },
-      process = function(value)
-        set_option('box_width', value)
-      end,
     },
     debug = {
       data_type = 'integer',
@@ -440,38 +351,25 @@ local config = (function()
     },
     distance = {
       description = 'The distance between the cloze text and the cloze line.',
-      process = function(value)
-        set_option('distance', value)
-      end,
     },
     extension_count = {
       description = 'The number of extension units.',
       alias = 'extensioncount',
-      process = function(value)
-        set_option('extension_count', value)
-      end,
     },
     extension_height = {
       description = 'The height of one extension unit (default: 2ex).',
       alias = 'extensionheight',
-      process = function(value)
-        set_option('extension_height', value)
-      end,
 
     },
     extension_width = {
       description = 'The width of one extension unit (default: 1em).',
       alias = 'extensionwidth',
-      process = function(value)
-        set_option('extension_width', value)
-      end,
     },
     line_color = {
       description = 'A color name to colorize the cloze line.',
       alias = 'linecolor',
       process = function(value, input)
         tex_printf('\\FarbeImport{%s}', value)
-        set_option('line_color', value)
       end,
     },
     log = {
@@ -483,28 +381,16 @@ local config = (function()
     },
     margin = {
       description = 'Indicates how far the cloze line sticks up horizontally from the text.',
-      process = function(value)
-        set_option('margin', value)
-      end,
     },
     min_lines = {
       alias = { 'minimum_lines', 'minlines' },
       description = 'How many lines a clozepar at least must have.',
-      process = function(value)
-        set_option('min_lines', value)
-      end,
     },
     spacing = {
       description = 'The spacing between lines (environment clozespace).',
-      process = function(value)
-        set_option('spacing', value)
-      end,
     },
     spread = {
       description = 'Enlarge or spread a gap by a certain factor.',
-      process = function(value)
-        set_option('spread', value)
-      end,
     },
     text_color = {
       description = 'The color (name) of the cloze text.',
@@ -512,37 +398,38 @@ local config = (function()
       data_type = 'string',
       process = function(value)
         tex_printf('\\FarbeImport{%s}', value)
-        set_option('text_color', value)
       end,
     },
-    thickness = {
-      description = 'The thickness of the cloze line.',
-      process = function(value)
-        set_option('thickness', value)
-      end,
-    },
+    thickness = { description = 'The thickness of the cloze line.' },
     visibility = {
       description = 'Show or hide the cloze text.',
       opposite_keys = { [true] = 'show', [false] = 'hide' },
-      process = function(value)
-        set_option('visibility', value)
-      end,
     },
     width = {
       description = 'The width of the cloze line of the command \\clozefix.',
-      process = function(value)
-        set_option('width', value)
-      end,
     },
   }
 
   ---
+  ---Parse local options
+  ---
   ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
-  ---@param options_dest 'local'|'global'
-  local function parse_options(kv_string, options_dest)
-    unset_local_options()
-    set_options_dest(options_dest)
-    luakeys.parse(kv_string, { defs = defs, debug = log.get() > 3 })
+  ---
+  ---@return Options
+  local function parse_local_options(kv_string)
+    local result = luakeys.parse(kv_string,
+      { defs = defs, debug = log.get() > 3 })
+    return result
+  end
+
+  ---
+  ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
+  local function parse_global_options(kv_string)
+    luakeys.parse(kv_string, {
+      defs = defs,
+      accumulated_result = global_options,
+      debug = log.get() > 3,
+    })
   end
 
   local defs_manager = luakeys.DefinitionManager(defs)
@@ -550,16 +437,14 @@ local config = (function()
   return {
     get = get,
     get_defaults = get_defaults,
-    unset_global_options = unset_global_options,
-    unset_local_options = unset_local_options,
-    set_options_dest = set_options_dest,
+    reset_global_options = reset_global_options,
     finalize_cloze = finalize_cloze,
     check_marker = check_marker,
-    set_option = set_option,
     write_marker = write_marker,
     get_marker = get_marker,
     get_marker_data = get_marker_data,
-    parse_options = parse_options,
+    parse_local_options = parse_local_options,
+    parse_global_options = parse_global_options,
     defs_manager = defs_manager,
   }
 
@@ -1010,7 +895,8 @@ local traversor = (function()
         while n do
           local stop_marker = config.get_marker(n, 'basic', 'stop')
           if stop_marker then
-            call_visitor(visitor, head_node, nil, start, nil, stop_marker)
+            call_visitor(visitor, head_node, nil, start, nil,
+              stop_marker)
             return
           elseif n.next == nil then
             n = call_visitor(visitor, head_node, nil, start, n, nil)
@@ -1595,12 +1481,7 @@ local fboxrule_restore
 
 local function print_cloze()
   local kv_string, text = lparse.scan('O{} v')
-  config.parse_options(kv_string, 'local')
-  cb.register_callbacks('basic')
-  tex.print(string.format(
-    '\\ClozeStartMarker{basic}%s\\ClozeStopMarker{basic}',
-    string.format('{\\clozefont\\relax%s}',
-      string.format('\\ClozeMargin{%s}', text))))
+  tex.print(string.format('\\ClozeBasic{%s}{%s}', text, kv_string))
 end
 
 local function print_strike()
@@ -1637,16 +1518,21 @@ return {
   write_linefil_nodes = utils.write_linefil_nodes,
   write_line_nodes = utils.write_line_nodes,
   write_margin_node = utils.write_margin_node,
-  set_option = config.set_option,
-  set_options_dest = config.set_options_dest,
-  unset_local_options = config.unset_local_options,
-  reset = config.unset_global_options,
+  reset = config.reset_global_options,
   get_defaults = config.get_defaults,
   get_option = config.get,
   write_marker = config.write_marker,
-  parse_options = config.parse_options,
+  parse_global_options = config.parse_global_options,
+  parse_local_options = config.parse_local_options,
+
   register_callback = cb.register_callbacks,
   unregister_callback = cb.unregister_callbacks,
+
+  initialize_cloze = function(cloze_type, kv_string)
+    cb.register_callbacks(cloze_type)
+    config.write_marker(cloze_type, 'start',
+      config.parse_local_options(kv_string))
+  end,
 
   ---@param count string|number
   print_extension = function(count)

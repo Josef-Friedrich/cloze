@@ -38,30 +38,6 @@
 %
 % \subsubsection{Internal macros}
 %
-% \begin{macro}{\ClozeSetToGlobal}
-% Set the Lua variable |registry.is_global| to |true|. All options
-% are then stored in the variable |registry.global_options|.
-%    \begin{macrocode}
-\def\ClozeSetToGlobal{%
-  \directlua{cloze.set_options_dest('global')}%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\ClozeSetToLocal}
-% First unset the variable |registry.local_options|. Now set the Lua
-% variable |registry.is_global| to |false|. All options are then stored
-% in the variable |registry.local_options|.
-%    \begin{macrocode}
-\def\ClozeSetToLocal{%
-  \directlua{
-    cloze.unset_local_options()
-    cloze.set_options_dest('local')
-  }%
-}
-%    \end{macrocode}
-% \end{macro}
-%
 % \begin{macro}{\ClozeGetOption}
 % This macro is used in the documentation to show the default values
 % of some options.
@@ -79,10 +55,9 @@
 % callbacks. Then it inserts a whatsit marker which marks the begin of a
 % gap.
 %    \begin{macrocode}
-\def\ClozeStartMarker#1{%
+\def\ClozeStartMarker#1#2{%
   \strut\directlua{
-    cloze.register_callback('#1')
-    cloze.write_marker('#1', 'start')
+    cloze.initialize_cloze('#1', '#2')
   }%
 }
 %    \end{macrocode}
@@ -125,36 +100,26 @@
 %
 % \subsubsection{Public plain \TeX{} macros}
 %
-% \begin{macro}{\clozesetoption}
-% \cmd{\clozesetoption} is a wrapper for the Lua function
-% |registry.set_option|. \cmd{\clozesetoption}\marg{key}\marg{value}
-% sets a key \meta{key} to the value \meta{value}.
+% \begin{macro}{\clozeset}
+% The usage of the command \cmd{\clozeset} is described in detail in
+% section \TmpSecRef{sec:command-clozeset}.
 %    \begin{macrocode}
-\def\clozesetoption#1#2{%
-  \ClozeSetToGlobal%
-  \directlua{cloze.set_option('#1', '#2')}%
+\def\clozeset#1{%
+  \directlua
+  {
+    cloze.parse_global_options('#1')
+  }%
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\clozesetlocaloption}
-% \cmd{\clozesetlocaloption} is a wrapper for the Lua function
-% |registry.set_option|. \cmd{\clozesetlocaloption}\marg{key}\marg{value}
-% sets a key \meta{key} to the value \meta{value}.
-%    \begin{macrocode}
-\def\clozesetlocaloption#1#2{%
-  \ClozeSetToLocal%
-  \directlua{cloze.set_option('#1', '#2')}%
-}
-%    \end{macrocode}
-% \end{macro}
+
 %
 % \begin{macro}{\clozereset}
 % The usage of the command \cmd{\clozereset} is described in detail in
 % section \TmpSecRef{sec:command-clozereset}.
 %    \begin{macrocode}
 \def\clozereset{%
-  \ClozeSetToGlobal%
   \directlua{cloze.reset()}%
 }
 %    \end{macrocode}
@@ -165,8 +130,7 @@
 % section \TmpSecRef{sec:command-clozeshow}.
 %    \begin{macrocode}
 \def\clozeshow{%
-  \ClozeSetToGlobal%
-  \clozesetoption{visibility}{true}%
+  \clozeset{show}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -176,12 +140,10 @@
 % section \TmpSecRef{sec:command-clozehide}.
 %    \begin{macrocode}
 \def\clozehide{%
-  \ClozeSetToGlobal%
-  \clozesetoption{visibility}{false}%
+  \clozeset{hide}%
 }
 %    \end{macrocode}
 % \end{macro}
-%
 %
 % \begin{macro}{\clozefont}
 % The usage of the command \cmd{\clozefont} is described in detail in
@@ -199,6 +161,19 @@
   \def\clozefont{%
     #1%
   }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ClozeBasic}
+%    \begin{macrocode}
+\def\ClozeBasic#1#2{%
+  \ClozeStartMarker{basic}{#2}%
+  {%
+    \clozefont\relax%
+    \ClozeMargin{#1}%
+  }%
+  \ClozeStopMarker{basic}%
 }
 %    \end{macrocode}
 % \end{macro}

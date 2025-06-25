@@ -1,0 +1,15 @@
+\input cloze-test-macros-luatex.tex
+\input cloze.tex
+
+\TestTitleDesc{Lua\TeX: macro \string\clozeshow}
+{}
+
+Should be displayed: \ClozeBasic{ipsum}{show} dolor
+
+Should be hidden: \ClozeBasic{ipsum}{hide} dolor
+
+Should be green: \ClozeBasic{ipsum}{text_color=green} dolor
+
+Should be displayed: \ClozeBasic{ipsum}{} dolor
+
+\bye
