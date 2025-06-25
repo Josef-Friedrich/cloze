@@ -536,7 +536,7 @@ local config = (function()
   }
 
   ---
-  ---@param kv_string string
+  ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
   ---@param options_dest 'local'|'global'
   local function parse_options(kv_string, options_dest)
     unset_local_options()
@@ -999,20 +999,20 @@ local traversor = (function()
   ---Continue a basic cloze gap across line breaks.
   ---
   ---@param visitor Visitor # A callback function that is called each time a cloze line needs to be inserted into the node list.
-  ---@param p Node # The head of a node list.
-  local function continue_cloze(visitor, p)
-    while p.next do
-      p = p.next
-      if p.head then
-        local start = p.head
-        local n = p.head
+  ---@param head_node Node # The head of a node list.
+  local function continue_cloze(visitor, head_node)
+    while head_node.next do
+      head_node = head_node.next
+      if head_node.head then
+        local start = head_node.head
+        local n = head_node.head
         while n do
           local stop_marker = config.get_marker(n, 'basic', 'stop')
           if stop_marker then
-            call_visitor(visitor, p, nil, start, nil, stop_marker)
+            call_visitor(visitor, head_node, nil, start, nil, stop_marker)
             return
           elseif n.next == nil then
-            n = call_visitor(visitor, p, nil, start, n, nil)
+            n = call_visitor(visitor, head_node, nil, start, n, nil)
           end
           n = n.next
         end
@@ -1434,7 +1434,7 @@ end
 ---├─WHATSIT (user_defined) user_id 3121978, type 100, value 4
 ---```
 ---
----@param head_node Node
+---@param head_node Node # The head of a node list.
 ---
 ---@return Node head_node
 local function make_strike(head_node)
@@ -1671,7 +1671,7 @@ return {
 
   ---
   ---@param text string
-  ---@param kv_string string
+  ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
   ---@param starred string # `\BooleanTrue` `\BooleanFalse`
   print_box = function(text, kv_string, starred)
     log.debug('text: %s kv_string: %s starred: %s', text, kv_string,
@@ -1715,7 +1715,7 @@ return {
   ---
   ---Print the required TeX markup for the environment `clozespace` using `tex.print()`
   ---
-  ---@param kv_string string
+  ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
   print_space = function(kv_string)
     config.set_options_dest('local')
     local defs = config.defs_manager:include({ 'spacing' }, true)
