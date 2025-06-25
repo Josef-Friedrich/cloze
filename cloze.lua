@@ -109,9 +109,10 @@ local config = (function()
   ---@field width? string
 
   ---The default options.
+  ---@type Options
   local defaults = {
     align = 'l',
-    box_height = false,
+    box_height = nil,
     box_rule = '0.4pt',
     box_width = '\\linewidth',
     distance = '1.5pt',
@@ -122,7 +123,7 @@ local config = (function()
     log = 0,
     margin = '3pt',
     min_lines = 0,
-    spacing = '1.6',
+    spacing = 1.6,
     spread = 0,
     text_color = 'blue',
     thickness = '0.4pt',
