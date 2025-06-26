@@ -359,7 +359,6 @@ local config = (function()
     extension_height = {
       description = 'The height of one extension unit (default: 2ex).',
       alias = 'extensionheight',
-
     },
     extension_width = {
       description = 'The width of one extension unit (default: 1em).',
@@ -1611,12 +1610,12 @@ return {
   print_box = function(text, kv_string, starred)
     log.debug('text: %s kv_string: %s starred: %s', text, kv_string,
       starred)
-    local local_opts = config.defs_manager:parse(kv_string, {
-      'visibility',
-      box_rule = 'rule',
-      box_width = 'width',
-      box_height = 'height',
-    })
+    local defs = config.defs_manager:exclude({ 'width' }, true)
+    defs.box_rule.alias = { 'boxrule', 'rule' }
+    defs.box_width.alias = { 'boxwidth', 'width' }
+    defs.box_height.alias = { 'boxheight', 'height' }
+    local local_opts =  luakeys.parse(kv_string, { defs = defs})
+    luakeys.debug(local_opts)
     config.set_local_options(local_opts)
 
     fboxrule_restore = tex.dimen['fboxrule']
