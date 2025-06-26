@@ -38,30 +38,6 @@
 %
 % \subsubsection{Internal macros}
 %
-% \begin{macro}{\ClozeSetToGlobal}
-% Set the Lua variable |registry.is_global| to |true|. All options
-% are then stored in the variable |registry.global_options|.
-%    \begin{macrocode}
-\def\ClozeSetToGlobal{%
-  \directlua{cloze.set_options_dest('global')}%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\ClozeSetToLocal}
-% First unset the variable |registry.local_options|. Now set the Lua
-% variable |registry.is_global| to |false|. All options are then stored
-% in the variable |registry.local_options|.
-%    \begin{macrocode}
-\def\ClozeSetToLocal{%
-  \directlua{
-    cloze.unset_local_options()
-    cloze.set_options_dest('local')
-  }%
-}
-%    \end{macrocode}
-% \end{macro}
-%
 % \begin{macro}{\ClozeGetOption}
 % This macro is used in the documentation to show the default values
 % of some options.
@@ -79,10 +55,9 @@
 % callbacks. Then it inserts a whatsit marker which marks the begin of a
 % gap.
 %    \begin{macrocode}
-\def\ClozeStartMarker#1{%
+\def\ClozeStartMarker#1#2{%
   \strut\directlua{
-    cloze.register_callback('#1')
-    cloze.write_marker('#1', 'start')
+    cloze.initialize_cloze('#1', '\luaescapestring{#2}')
   }%
 }
 %    \end{macrocode}
@@ -125,75 +100,49 @@
 %
 % \subsubsection{Public plain \TeX{} macros}
 %
-% \begin{macro}{\clozesetoption}
-% \cmd{\clozesetoption} is a wrapper for the Lua function
-% |registry.set_option|. \cmd{\clozesetoption}\marg{key}\marg{value}
-% sets a key \meta{key} to the value \meta{value}.
+% \begin{macro}{\clozeset}
 %    \begin{macrocode}
-\def\clozesetoption#1#2{%
-  \ClozeSetToGlobal%
-  \directlua{cloze.set_option('#1', '#2')}%
+\def\clozeset#1{%
+  \directlua
+  {
+    cloze.parse_global_options('\luaescapestring{#1}')
+  }%
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\clozesetlocaloption}
-% \cmd{\clozesetlocaloption} is a wrapper for the Lua function
-% |registry.set_option|. \cmd{\clozesetlocaloption}\marg{key}\marg{value}
-% sets a key \meta{key} to the value \meta{value}.
-%    \begin{macrocode}
-\def\clozesetlocaloption#1#2{%
-  \ClozeSetToLocal%
-  \directlua{cloze.set_option('#1', '#2')}%
-}
-%    \end{macrocode}
-% \end{macro}
 %
 % \begin{macro}{\clozereset}
-% The usage of the command \cmd{\clozereset} is described in detail in
-% section \TmpSecRef{sec:command-clozereset}.
 %    \begin{macrocode}
 \def\clozereset{%
-  \ClozeSetToGlobal%
   \directlua{cloze.reset()}%
 }
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\clozeshow}
-% The usage of the command \cmd{\clozeshow} is described in detail in
-% section \TmpSecRef{sec:command-clozeshow}.
 %    \begin{macrocode}
 \def\clozeshow{%
-  \ClozeSetToGlobal%
-  \clozesetoption{visibility}{true}%
+  \clozeset{show}%
 }
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\clozehide}
-% The usage of the command \cmd{\clozehide} is described in detail in
-% section \TmpSecRef{sec:command-clozehide}.
 %    \begin{macrocode}
 \def\clozehide{%
-  \ClozeSetToGlobal%
-  \clozesetoption{visibility}{false}%
+  \clozeset{hide}%
 }
 %    \end{macrocode}
 % \end{macro}
 %
-%
 % \begin{macro}{\clozefont}
-% The usage of the command \cmd{\clozefont} is described in detail in
-% section \TmpSecRef{sec:command-clozefont}.
 %    \begin{macrocode}
 \def\clozefont{\it}
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\clozesetfont}
-% The usage of the command \cmd{\clozesetfont} is described in detail in
-% section \TmpSecRef{sec:command-clozesetfont}.
 %    \begin{macrocode}
 \def\clozesetfont#1{%
   \def\clozefont{%
@@ -203,79 +152,71 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\clozefix}
-% This is the plain Lua\TeX-Version of \cmd{\clozefix}. The usage of the
-% command \cmd{\clozefix} is described in detail in
-% section \TmpSecRef{sec:command-clozefix}.
+% \begin{macro}{\Cloze}
+% \cmd{\Cloze}\marg{cloze-type}\marg{kv-string}\marg{text}
 %    \begin{macrocode}
-\def\clozefix#1{%
-  \ClozeStartMarker{fix}%
-  {%
-    \clozefont\relax%
-    \ClozeMargin{#1}%
+\def\Cloze#1#2#3{%
+  \ClozeStartMarker{#1}{#2}%
+  \ClozeWrapWithFont{%
+    \ClozeMargin{#3}%
   }%
-  \ClozeStopMarker{fix}%
+  \ClozeStopMarker{#1}%
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\clozenol}
-% This is the plain Lua\TeX-Version of the macro \cmd{\clozenol}. The
-% usage of the command \cmd{\clozenol} is described in detail in
-% section \TmpSecRef{sec:command-clozenol}.
+% \begin{macro}{\ClozeLine}
+% This is the plain Lua\TeX-Version of the macro \cmd{\clozeline}.
 %    \begin{macrocode}
-\def\clozenol#1{%
-  \clozesetoption{thickness}{0pt}%
-  \ClozeStartMarker{basic}%
-  \ClozeWrapWithFont{\ClozeMargin{#1}}%
-  \ClozeStopMarker{basic}%
+\def\ClozeLine#1{%
+  \directlua{
+    cloze.parse_local_options('\luaescapestring{#1}')
+    cloze.write_line_nodes()
+  }%
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\clozeline}
-% This is the plain Lua\TeX-Version of the macro \cmd{\clozeline}. The
-% usage of the command \cmd{\clozeline} is described in detail in
-% section \TmpSecRef{sec:command-clozeline}.
-%    \begin{macrocode}
-\def\clozeline{%
-  \directlua{cloze.write_line_nodes()}%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\clozelinefil}
+% \begin{macro}{\ClozeLinefil}
 % This is the plain Lua\TeX-Version of the macro \cmd{\clozelinefil}.
-% The usage of the command \cmd{\clozelinefil} is described in detail in
-% section \TmpSecRef{sec:command-clozelinefil}.
 %    \begin{macrocode}
-\def\clozelinefil{%
+\def\ClozeLinefil#1{%
   \strut%
-  \directlua{cloze.write_linefil_nodes()}%
+  \directlua{
+    cloze.parse_local_options('\luaescapestring{#1}')
+    cloze.write_linefil_nodes()
+  }%
   \strut%
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\clozefil}
+% \begin{macro}{\ClozeFil}
 % This is the plain Lua\TeX-Version of the macro \cmd{\clozefil}.
-% The usage of the command \cmd{\clozefil} is described in detail in
-% section \TmpSecRef{sec:command-clozefil}.
 %    \begin{macrocode}
-\def\clozefil#1{%
-  \cloze{#1}\clozelinefil%
+\def\ClozeFil#1#2{%
+  \Cloze{basic}{#1}{#2}\ClozeLinefil{#1}%
 }
 %    \end{macrocode}
 % \end{macro}
-
-% \begin{macro}{\clozeparplain}
-% The usage of the macro \cmd{\clozeparplain} is described in detail in
-% section \TmpSecRef{sec:command-clozeparplain}.
+%
+% \begin{macro}{\ClozeStrike}
 %    \begin{macrocode}
-\def\clozeparplain#1{%
+\def\ClozeStrike#1#2#3{%
+  \ClozeStartMarker{strike}{#1}%
+  \vbox{\hbox{\kern0pt\ClozeWrapWithFont{#3}}\hbox{#2}}%
+  \ClozeStopMarker{strike}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ClozePar}
+% \cmd{\ClozePar}\marg{kv-string}\marg{text}
+%    \begin{macrocode}
+\def\ClozePar#1#2{%
   \par%
-  \ClozeStartMarker{par}%
-  \ClozeWrapWithFont{#1}%
+  \ClozeStartMarker{par}{#1}%
+  \ClozeWrapWithFont{#2}%
   \ClozeStopMarker{par}%
   \par%
   \directlua{cloze.unregister_callback('par')}%
@@ -284,12 +225,22 @@
 % \end{macro}
 %
 % \begin{macro}{\clozeparcapture}
-% The usage of the macro \cmd{\clozeparcapture} is described in detail in
-% section \TmpSecRef{sec:command-clozeparcapture}.
 %    \begin{macrocode}
 \def\clozeparcapture#1\par {%
-  \clozeparplain{#1}%
+  \ClozePar{}{#1}%
 }
 \let\clozeparcmd=\clozeparcapture
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{\ClozeExtend}
+% TODO: Use node library to create kern nodes.
+%    \begin{macrocode}
+\def\ClozeExtend#1{%
+  \directlua
+  {
+    cloze.print_extension('\luaescapestring{#1}')
+  }%
+}
 %    \end{macrocode}
 % \end{macro}

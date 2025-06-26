@@ -4,6 +4,16 @@
 \TestTitleDesc{Lua\TeX: macro \string\clozelinefil}
 {}
 
-Lorem \clozelinefil dolor
+\TestSection{After cloze}
+
+Lorem ipsum \cloze{dolor sit amet}\clozelinefil
+
+\TestSection{Before cloze}
+
+\clozelinefil\cloze{Lorem ipsum} dolor sit amet.
+
+\TestSection{Local option: linecolor}
+
+Lorem ipsum \cloze{dolor sit amet}\clozelinefil[linecolor=green]
 
 \bye

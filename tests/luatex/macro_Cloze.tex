@@ -1,0 +1,35 @@
+\input cloze-test-macros-luatex.tex
+\input cloze.tex
+
+\TestTitleDesc{Lua\TeX: low-level macro \string\Cloze}
+{}
+
+\TestSection{basic}
+
+Should be displayed: Lorem\Cloze{basic}{show}{ipsum} dolor
+
+Should be hidden: Lorem \Cloze{basic}{hide}{ipsum} dolor
+
+Should be green: Lorem \Cloze{basic}{text_color=green}{ipsum} dolor
+
+Should be displayed: Lorem \Cloze{basic}{}{ipsum} dolor
+
+Should be displayed: Lorem \Cloze{basic}{thickness=0pt}{ipsum} dolor
+
+\TestSection{fix}
+
+align=left: Lorem \Cloze{fix}{align=left}{left} dolor
+
+align=center: Lorem \Cloze{fix}{align=center}{center} dolor
+
+align=right: Lorem \Cloze{fix}{align=right}{right} dolor
+
+Should be displayed: Lorem\Cloze{fix}{show}{ipsum} dolor
+
+Should be hidden: Lorem \Cloze{fix}{hide}{iiipsum} dolor
+
+Should be green: Lorem \Cloze{fix}{text_color=green}{iiiiipsum} dolor
+
+Should be displayed: Lorem \Cloze{fix}{}{iiiiiiipsum} dolor
+
+\bye
