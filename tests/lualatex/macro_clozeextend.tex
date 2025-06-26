@@ -6,17 +6,30 @@
 \TestTitleDesc{LuaLa\TeX: macro \string\clozeextend}
 {}
 
-\section{Without an option}
+\TestComment{Without an option}
 
 Lorem ipsum \cloze[hide]{dolor sit \clozeextend}
 
-\section{extend 10}
+\TestComment{extend 10}
 
 Lorem ipsum \cloze[hide]{dolor sit reprehenderit\clozeextend[10]}
 
+\def\TmpExtend#1{\TestComment{extension\_count=#1} Lorem ipsum \cloze[show]{dolor sit reprehenderit\clozeextend[#1]}}
+
+\TmpExtend{1}
+\TmpExtend{2}
+\TmpExtend{3}
+\TmpExtend{4}
+\TmpExtend{5}
+\TmpExtend{6}
+\TmpExtend{7}
+\TmpExtend{8}
+\TmpExtend{9}
+\TmpExtend{10}
+
 \newpage
 
-\section{Inside a squeezed environment}
+\TestComment{Inside a squeezed environment}
 
 \begin{clozespace}[spacing=0.6]
 Lorem ipsum \cloze{dolor sit reprehenderit in voluptate velit esse
@@ -28,7 +41,7 @@ sunt in culpa qui officia deserunt mollit anim id est
 laborum.\clozeextend[100]}
 \end{clozespace}
 
-\section{Inside a squeezed environment}
+\TestComment{spacing=2}
 
 \begin{clozespace}[spacing=2]
 Lorem ipsum \cloze{dolor sit reprehenderit in voluptate velit esse
