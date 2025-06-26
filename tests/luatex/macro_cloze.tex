@@ -2,11 +2,88 @@
 \input cloze.tex
 
 \TestTitleDesc{Lua\TeX: macro \string\cloze}
-{}
+{With different options.}
 
-Lorem \cloze{ipsum} dolor.
+\TestSection{Simple}
 
-Lorem \cloze[text_color=green,margin=4mm]{i{\bf ps}um} dolor
+Lorem ipsum \cloze{dolor sit} amet.
 
-Lorem \cloze[show,spread=2]{show} and hide \cloze[hide]{hide} dolor
+Lorem \cloze[text_color=green,margin=4mm]{i\bf{ps}um} dolor
+
+\TestSection{Multi lines}
+
+Lorem ipsum \cloze{dolor sit} amet.
+
+Lorem ipsum \cloze{dolor sit amet, consectetur adipisicing elit, sed do
+eiusmod tempor incididunt ut labore} et dolore magna aliqua. Ut enim ad
+minim veniam exercitation ullamco.
+
+Lorem ipsum \cloze{dolor sit amet, consectetur adipisicing elit, sed do
+eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+minim veniam exercitation ullamco.Lorem ipsumdolor sit amet, consectetur
+adipisicing elit, sed do eiusmod tempor incididunt ut labore} et dolore
+magna aliqua. Ut enim ad minim veniam exercitation ullamco.
+
+\TestSection{Behaviour after punctation}
+
+\def\clozepunctation{%
+  Lorem ipsum dolor sit amet, consectetur adipisicing elit sit amet
+  \cloze{Lorem}.
+  \cloze{ipsum},
+  \cloze{dolor};
+  \cloze{sit}: %
+}
+
+\def\Repeat[#1]#2{
+  \count0=#1
+  \loop
+  \ifnum\count0>0
+  \advance\count0 by -1
+  #2%
+  \repeat
+}
+\Repeat[20]\clozepunctation
+
+\TestSection{Hide and show}
+
+\TestComment{Hide} \cloze[hide]{Lorem ipsum dolor sit amet.}
+\TestComment{Show} \cloze[show]{Consectetur adipisicing elit, sed do eiusmod.}
+\TestComment{Hide} \cloze[hide]{Magna aliqua. Ut enim ad minim veniam.}
+
+\TestSection{Text color}
+
+\TestComment{Black} \cloze[textcolor=black]{Lorem ipsum dolor sit amet.}
+\TestComment{Red} \cloze[textcolor=red]{Consectetur adipisicing elit, sed do eiusmod.}
+\TestComment{Green} \cloze[textcolor=green]{Magna aliqua. Ut enim ad minim veniam.}
+
+\TestSection{Line color}
+
+\TestComment{Black} \cloze[linecolor=black]{Lorem ipsum dolor sit amet.}
+\TestComment{Red} \cloze[linecolor=red]{Consectetur adipisicing elit, sed do eiusmod.}
+\TestComment{Green} \cloze[linecolor=green]{Magna aliqua. Ut enim ad minim veniam.}
+
+\TestSection{Margin}
+
+\TestComment{0pt} \cloze[margin=0pt]{Lorem ipsum dolor sit amet.}
+\TestComment{10pt} \cloze[margin=10pt]{Consectetur adipisicing elit, sed do eiusmod.}
+\TestComment{20pt} \cloze[margin=20pt]{Magna aliqua. Ut enim ad minim veniam.}
+
+\TestSection{Thickness}
+
+\TestComment{1mm} \cloze[thickness=1mm]{Lorem ipsum dolor sit amet.}
+\TestComment{2mm} \cloze[thickness=2mm]{Consectetur adipisicing elit, sed do eiusmod.}
+\TestComment{3mm} \cloze[thickness=3mm]{Magna aliqua. Ut enim ad minim veniam.}
+
+\TestSection{Distance}
+
+\TestComment{1mm} \cloze[distance=1mm]{Lorem ipsum dolor sit amet.}
+\TestComment{2mm} \cloze[distance=2mm]{Consectetur adipisicing elit, sed do eiusmod.}
+\TestComment{3mm} \cloze[distance=3mm]{Magna aliqua. Ut enim ad minim veniam.}
+
+\TestSection{Environment displaymath}
+
+\clozesetfont{}
+
+$$1+1=\cloze{2}$$
+
 \bye

@@ -1,7 +1,9 @@
-\input cloze-test-macros-luatex.tex
-\input cloze.tex
+\documentclass{article}
+\input cloze-test-macros-lualatex.tex
+\usepackage{cloze}
 
-\TestTitleDesc{Lua\TeX: macro \string\clozeline}
+\begin{document}
+\TestTitleDesc{LuaLa\TeX: macro \string\clozeline}
 {}
 
 \TestComment{default} Lorem \clozeline{} dolor
@@ -20,4 +22,4 @@
 
 \TestComment{thickness=3pt} Lorem \clozeline[thickness=3pt] dolor
 
-\bye
+\end{document}
