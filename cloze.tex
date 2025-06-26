@@ -101,8 +101,6 @@
 % \subsubsection{Public plain \TeX{} macros}
 %
 % \begin{macro}{\clozeset}
-% The usage of the command \cmd{\clozeset} is described in detail in
-% section \TmpSecRef{sec:command-clozeset}.
 %    \begin{macrocode}
 \def\clozeset#1{%
   \directlua
@@ -113,11 +111,8 @@
 %    \end{macrocode}
 % \end{macro}
 %
-
 %
 % \begin{macro}{\clozereset}
-% The usage of the command \cmd{\clozereset} is described in detail in
-% section \TmpSecRef{sec:command-clozereset}.
 %    \begin{macrocode}
 \def\clozereset{%
   \directlua{cloze.reset()}%
@@ -126,8 +121,6 @@
 % \end{macro}
 %
 % \begin{macro}{\clozeshow}
-% The usage of the command \cmd{\clozeshow} is described in detail in
-% section \TmpSecRef{sec:command-clozeshow}.
 %    \begin{macrocode}
 \def\clozeshow{%
   \clozeset{show}%
@@ -136,8 +129,6 @@
 % \end{macro}
 %
 % \begin{macro}{\clozehide}
-% The usage of the command \cmd{\clozehide} is described in detail in
-% section \TmpSecRef{sec:command-clozehide}.
 %    \begin{macrocode}
 \def\clozehide{%
   \clozeset{hide}%
@@ -146,16 +137,12 @@
 % \end{macro}
 %
 % \begin{macro}{\clozefont}
-% The usage of the command \cmd{\clozefont} is described in detail in
-% section \TmpSecRef{sec:command-clozefont}.
 %    \begin{macrocode}
 \def\clozefont{\it}
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\clozesetfont}
-% The usage of the command \cmd{\clozesetfont} is described in detail in
-% section \TmpSecRef{sec:command-clozesetfont}.
 %    \begin{macrocode}
 \def\clozesetfont#1{%
   \def\clozefont{%
@@ -179,36 +166,46 @@
 % \end{macro}
 %
 % \begin{macro}{\clozeline}
-% This is the plain Lua\TeX-Version of the macro \cmd{\clozeline}. The
-% usage of the command \cmd{\clozeline} is described in detail in
-% section \TmpSecRef{sec:command-clozeline}.
+% This is the plain Lua\TeX-Version of the macro \cmd{\clozeline}.
 %    \begin{macrocode}
-\def\clozeline{%
-  \directlua{cloze.write_line_nodes()}%
+\def\ClozeLine#1{%
+  \directlua{
+    cloze.parse_local_options('\luaescapestring{#1}')
+    cloze.write_line_nodes()
+  }%
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\clozelinefil}
+% \begin{macro}{\ClozeLinefil}
 % This is the plain Lua\TeX-Version of the macro \cmd{\clozelinefil}.
-% The usage of the command \cmd{\clozelinefil} is described in detail in
-% section \TmpSecRef{sec:command-clozelinefil}.
 %    \begin{macrocode}
-\def\clozelinefil{%
+\def\ClozeLinefil#1{%
   \strut%
-  \directlua{cloze.write_linefil_nodes()}%
+  \directlua{
+    cloze.parse_local_options('\luaescapestring{#1}')
+    cloze.write_linefil_nodes()
+  }%
   \strut%
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\clozefil}
+% \begin{macro}{\ClozeFil}
 % This is the plain Lua\TeX-Version of the macro \cmd{\clozefil}.
-% The usage of the command \cmd{\clozefil} is described in detail in
-% section \TmpSecRef{sec:command-clozefil}.
 %    \begin{macrocode}
-\def\clozefil#1{%
-  \cloze{#1}\clozelinefil%
+\def\ClozeFil#1#2{%
+  \Cloze{basic}{#1}{#2}\ClozeLinefil{#1}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ClozeStrike}
+%    \begin{macrocode}
+\def\ClozeStrike#1#2#3{%
+  \ClozeStartMarker{strike}{#1}%
+  \vbox{\hbox{\kern0pt\ClozeWrapWithFont{#3}}\hbox{#2}}%
+  \ClozeStopMarker{strike}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -235,5 +232,17 @@
   \ClozePar{}{#1}%
 }
 \let\clozeparcmd=\clozeparcapture
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{\clozeextend}
+% TODO: Use node library to create kern nodes.
+%    \begin{macrocode}
+\def\ClozeExtend#1{%
+  \directlua
+  {
+    cloze.print_extension('\luaescapestring{#1}')
+  }%
+}
 %    \end{macrocode}
 % \end{macro}

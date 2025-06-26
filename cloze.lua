@@ -411,15 +411,23 @@ local config = (function()
   }
 
   ---
-  ---Parse local options
+  ---@param local_opts Options
+  local function set_local_options(local_opts)
+    local_options = local_opts
+  end
+
+  ---
+  ---Parse local options and set this options to the global variabl local_options
   ---
   ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
   ---
   ---@return Options
   local function parse_local_options(kv_string)
-    local result = luakeys.parse(kv_string,
-      { defs = defs, debug = log.get() > 3 })
-    return result
+    local_options = luakeys.parse(kv_string, {
+      defs = defs,
+      debug = log.get() > 3,
+    })
+    return local_options
   end
 
   ---
@@ -443,6 +451,7 @@ local config = (function()
     write_marker = write_marker,
     get_marker = get_marker,
     get_marker_data = get_marker_data,
+    set_local_options = set_local_options,
     parse_local_options = parse_local_options,
     parse_global_options = parse_global_options,
     defs_manager = defs_manager,
@@ -1492,16 +1501,8 @@ local function print_cloze(cloze_type, append_opts)
     end
   end
 
-  tex.print(string.format('\\Cloze{%s}{%s}{%s}', cloze_type, kv_string, text))
-end
-
-local function print_strike()
-  local kv_string, error_text, solution_text = lparse.scan('O{} v v')
-  config.parse_options(kv_string, 'local')
-  cb.register_callbacks('strike')
-  tex.print('\\ClozeStartMarker{strike}' .. string.format(
-    '\\vbox{\\hbox{\\kern0pt \\ClozeWrapWithFont{%s}}\\hbox{%s}}',
-    solution_text, error_text) .. '\\ClozeStopMarker{strike}')
+  tex.print(string.format('\\Cloze{%s}{%s}{%s}', cloze_type, kv_string,
+    text))
 end
 
 ---
@@ -1522,19 +1523,45 @@ return {
       token.set_lua(csname, index)
     end
 
-    register_function('cloze', function ()
+    register_function('cloze', function()
       print_cloze('basic')
     end)
 
-    register_function('clozefix', function ()
+    register_function('clozefix', function()
       print_cloze('fix')
     end)
 
-    register_function('clozenol', function ()
+    register_function('clozenol', function()
       print_cloze('basic', 'thickness=0pt')
     end)
 
-    register_function('clozestrike', print_strike)
+    register_function('clozestrike', function()
+      local kv_string, error_text, solution_text =
+        lparse.scan('O{} v v')
+      tex.print(string.format('\\ClozeStrike{%s}{%s}{%s}', kv_string,
+        error_text, solution_text))
+    end)
+
+    register_function('clozeline', function()
+      local kv_string = lparse.scan('O{}')
+      tex.print(string.format('\\ClozeLine{%s}', kv_string))
+    end)
+
+    register_function('clozelinefil', function()
+      local kv_string = lparse.scan('O{}')
+      tex.print(string.format('\\ClozeLinefil{%s}', kv_string))
+    end)
+
+    register_function('clozefil', function()
+      local kv_string, text = lparse.scan('O{} v')
+      tex.print(string.format('\\ClozeFil{%s}{%s}', kv_string, text))
+    end)
+
+    register_function('clozeextend', function()
+      local kv_string = lparse.scan('O{}')
+      tex.print(string.format('\\ClozeExtend{%s}', kv_string))
+    end)
+
   end,
 
   write_linefil_nodes = utils.write_linefil_nodes,
@@ -1560,14 +1587,13 @@ return {
   print_extension = function(count)
     ---@type number|nil
     local c
-    if count == '' then
+    if not count or count == '' then
       c = config.get('extension_count')
     end
     c = tonumber(count)
 
     if not c then
-      luakeys.utils.throw_error_message(
-        'clozeextend count must be greater than 0.')
+      c = 5
     end
 
     for _ = 1, c do
@@ -1585,13 +1611,13 @@ return {
   print_box = function(text, kv_string, starred)
     log.debug('text: %s kv_string: %s starred: %s', text, kv_string,
       starred)
-    config.set_options_dest('local')
-    config.defs_manager:parse(kv_string, {
+    local local_opts = config.defs_manager:parse(kv_string, {
       'visibility',
       box_rule = 'rule',
       box_width = 'width',
       box_height = 'height',
     })
+    config.set_local_options(local_opts)
 
     fboxrule_restore = tex.dimen['fboxrule']
     local rule = config.get('box_rule')
@@ -1626,10 +1652,10 @@ return {
   ---
   ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
   print_space = function(kv_string)
-    config.set_options_dest('local')
     local defs = config.defs_manager:include({ 'spacing' }, true)
     defs.spacing.pick = 'number'
-    luakeys.parse(kv_string, { defs = defs })
+    local local_opts = luakeys.parse(kv_string, { defs = defs })
+    config.set_local_options(local_opts)
     tex_printf('\\begin{spacing}{%s}', config.get('spacing'))
   end,
 
