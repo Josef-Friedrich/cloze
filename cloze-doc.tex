@@ -10,6 +10,11 @@
 \usetikzlibrary{positioning}
 
 %%
+% Make underscore an "other" character
+%%
+\catcode`\_=12
+
+%%
 % titlesec
 %%
 
@@ -317,7 +322,7 @@ Excepteur \cloze{sint} occaecat \cloze{cupidatat} non proident.
 
 \noindent Please do not put any color definitions in
 \cmd{\clozesetfont}, as it won't work. Use the option
-|textcolor| instead \TmpSecRef{sec:option-textcolor}.
+|text_color| instead \TmpSecRef{sec:option-text-color}.
 
 |\clozesetfont{\ttfamily\normalsize}| changes the gap text for example
 into a normal sized typewriter font.
@@ -406,11 +411,11 @@ Lorem \clozenol{ipsum dolor} sit amet.
 \end{TmpExample}
 
 \begin{minted}{latex}
-Lorem \clozenol[textcolor=green]{ipsum dolor} sit amet.
+Lorem \clozenol[text_color=green]{ipsum dolor} sit amet.
 \end{minted}
 
 \begin{TmpExample}
-Lorem \clozenol[textcolor=green]{ipsum dolor} sit amet.
+Lorem \clozenol[text_color=green]{ipsum dolor} sit amet.
 \end{TmpExample}
 
 \noindent
@@ -491,8 +496,8 @@ I am someone who can’t \clozefil{write cloze worksheets in MS Word}.
 \DescribeMacro{\clozeextend} \cmd{\clozeextend}\oarg{spaces}: The
 command |\clozeextend| adds some invisible placeholders to extend some
 cloze texts with blank space. Keep in mind that there is the option
-\tt{minlines} \TmpSecRef{sec:option-minlines}, if you want to extend some
-cloze paragraphs.
+\tt{min_lines} \TmpSecRef{sec:option-min-lines}, if you want to extend
+some cloze paragraphs.
 
 Corresponding options:
 
@@ -649,8 +654,8 @@ Explain three ways that RAM is different to ROM.
 \DescribeEnv{clozebox} |\begin{clozebox}|*\oarg{options} \dots
 \textit{some text} \dots |\end{clozebox}|: The environment \tt{clozebox}
 surrounds a text with a box. The starred version omits the line around
-the box. Use the options |boxheight| \TmpSecRef{sec:option-boxheight}
-and |boxwidth| \TmpSecRef{sec:option-boxwidth} to specify the dimensions
+the box. Use the options |box_height| \TmpSecRef{sec:option-box-height}
+and |box_width| \TmpSecRef{sec:option-box-width} to specify the dimensions
 of the box. By default the width of the box is |\linewidth|. The height
 of the box is determined by the amount of text. This environment is
 realized by a combination of the |minipage| environment surrounded by a
@@ -833,18 +838,18 @@ Wolfgang Amadeus Mozart was born in \clozestrike{Vienna}{Salzburg}.
 \end{TmpExample}
 
 \noindent
-The option |linecolor| has no effect on the lines produced by the
+The option |line_color| has no effect on the lines produced by the
 macro \cmd{\clozestrike}. The line color and and the text color
 are both the same, because the pupils have to draw the lines.
 
 \begin{minted}{latex}
 Mozart’s father was called
-\clozestrike[textcolor=red]{Ludwig}{Leopold} Mozart.
+\clozestrike[text_color=red]{Ludwig}{Leopold} Mozart.
 \end{minted}
 
 \begin{TmpExample}
 Mozart’s father was called
-\clozestrike[textcolor=red]{Ludwig}{Leopold} Mozart.
+\clozestrike[text_color=red]{Ludwig}{Leopold} Mozart.
 \end{TmpExample}
 
 %-----------------------------------------------------------------------
@@ -868,17 +873,17 @@ Mozart’s father was called
 \TmpDescriptionLine{Align the text of a fixed size cloze (\cmd{\clozefix})}. &
 \TmpSecRef{sec:option-align} \\
 
-\tt{boxheight} &
+\tt{box_height} &
 \TmpDescriptionLine{The height of a cloze box (\tt{clozebox}).} &
-\TmpSecRef{sec:option-boxheight} \\
+\TmpSecRef{sec:option-box-height} \\
 
-\tt{boxrule} &
+\tt{box_rule} &
 \TmpDescriptionLine{The thickness of the rule around a \tt{clozebox}.} &
-\TmpSecRef{sec:option-boxrule} \\
+\TmpSecRef{sec:option-box-rule} \\
 
-\tt{boxwidth} &
+\tt{box_width} &
 \TmpDescriptionLine{The width of a cloze box (\tt{clozebox}).} &
-\TmpSecRef{sec:option-boxwidth} \\
+\TmpSecRef{sec:option-box-width} \\
 
 \tt{distance} &
 \TmpDescriptionLine{The distance between the cloze text and the cloze line.} &
@@ -888,9 +893,9 @@ Mozart’s father was called
 \TmpDescriptionLine{Hide the cloze text.} &
 \TmpSecRef{sec:option-hide} \\
 
-\tt{linecolor} &
+\tt{line_color} &
 \TmpDescriptionLine{A color name to colorize the cloze line.} &
-\TmpSecRef{sec:option-linecolor} \\
+\TmpSecRef{sec:option-line-color} \\
 
 \tt{log} &
 \TmpDescriptionLine{Set the log level.} &
@@ -900,9 +905,9 @@ Mozart’s father was called
 \TmpDescriptionLine{Additional margin between the normal and the cloze text.} &
 \TmpSecRef{sec:option-margin} \\
 
-\tt{minlines} &
+\tt{min_lines} &
 \TmpDescriptionLine{The minimum of lines a \tt{clozepar} environment must have.} &
-\TmpSecRef{sec:option-minlines} \\
+\TmpSecRef{sec:option-min-lines} \\
 
 \tt{show} &
 \TmpDescriptionLine{Show the cloze text.} &
@@ -916,9 +921,9 @@ Mozart’s father was called
 \TmpDescriptionLine{Enlarge or spread a gap by a certain factor.} &
 \TmpSecRef{sec:option-spread} \\
 
-\tt{textcolor} &
+\tt{text_color} &
 \TmpDescriptionLine{A color name to colorize the cloze text.} &
-\TmpSecRef{sec:option-textcolor} \\
+\TmpSecRef{sec:option-text-color} \\
 
 \tt{thickness} &
 \TmpDescriptionLine{The thickness of a line.} &
@@ -954,11 +959,11 @@ Mozart’s father was called
 \node (margin) at (11.75,4) {margin};
 \draw [|<->|] (11,3.5) --  (12.5,3.5);
 
-\node (textcolor) at (4.5,6) {textcolor};
-\draw [->] (textcolor) --  (6.4,5);
+\node (text_color) at (4.5,6) {text_color};
+\draw [->] (text_color) --  (6.4,5);
 
-\node (linecolor) at (7,0.5) {linecolor};
-\draw [->] (linecolor) --  (7,1.5);
+\node (line_color) at (7,0.5) {line_color};
+\draw [->] (line_color) --  (7,1.5);
 \end{tikzpicture}
 
 %%
@@ -1004,13 +1009,13 @@ Mozart’s father was called
 % \draw (0,0) grid[step=1] (12,7);
 % \draw[help lines] (0,0) grid[step=0.2] (12,7);
 \node (onlytikz) at (6,3.5) [draw,text width=3cm,scale=3,transform shape,thick] {
-  \clozeparplain[minlines=3,]{clozebox}
+  \clozeparplain[min_lines=3,]{clozebox}
 };
 
-\node (boxheight) at (0.5,3.5) [rotate=90] {boxheight};
+\node (box_height) at (0.5,3.5) [rotate=90] {box_height};
 \draw [|<->|] (1,1.05) --  (1,5.95);
 
-\node (boxwidth) at (6,0.5){boxwidth};
+\node (box_width) at (6,0.5){box_width};
 \draw [|<->|] (1.15,0.9) --  (10.85,0.9);
 \end{tikzpicture}
 
@@ -1039,13 +1044,13 @@ declaration, the cloze package offers a special command to set
 options for each paragraph.
 
 \begin{minted}{latex}
-\clozeset{textcolor=red} Lorem \cloze{ipsum} dolor \par
-\clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
+\clozeset{text_color=red} Lorem \cloze{ipsum} dolor \par
+\clozeset{text_color=green} Lorem \cloze{ipsum} dolor
 \end{minted}
 
 \begin{TmpExample}
-\clozeset{textcolor=red} Lorem \cloze{ipsum} dolor \par
-\clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
+\clozeset{text_color=red} Lorem \cloze{ipsum} dolor \par
+\clozeset{text_color=green} Lorem \cloze{ipsum} dolor
 \end{TmpExample}
 
 \noindent \cmd{\clozeset} does not change the options within a
@@ -1053,13 +1058,13 @@ paragraph. As you can see in the example below the last \cmd{\clozeset}
 applies the color green for both gaps.
 
 \begin{minted}{latex}
-\clozeset{textcolor=red} Lorem \cloze{ipsum} dolor
-\clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
+\clozeset{text_color=red} Lorem \cloze{ipsum} dolor
+\clozeset{text_color=green} Lorem \cloze{ipsum} dolor
 \end{minted}
 
 \begin{TmpExample}
-\clozeset{textcolor=red} Lorem \cloze{ipsum} dolor
-\clozeset{textcolor=green} Lorem \cloze{ipsum} dolor
+\clozeset{text_color=red} Lorem \cloze{ipsum} dolor
+\clozeset{text_color=green} Lorem \cloze{ipsum} dolor
 \end{TmpExample}
 
 \clozereset
@@ -1078,13 +1083,13 @@ default values. It has no effect on the \emph{local} options.
 \begin{minted}{latex}
 \clozeset{
   thickness=3mm,
-  linecolor=yellow,
-  textcolor=magenta,
+  line_color=yellow,
+  text_color=magenta,
   margin=-2pt
 }
 \end{minted}
 
-\clozeset{thickness=3mm,linecolor=yellow,textcolor=magenta,margin=-2pt}
+\clozeset{thickness=3mm,line_color=yellow,text_color=magenta,margin=-2pt}
 
 \begin{TmpExample}
 Very \cloze{silly} global \cloze{options}.
@@ -1158,18 +1163,18 @@ of the line is larger than the width of the text.
 \end{TmpExample}
 
 %%
-% boxheight
+% box_height
 %%
 
-\subsubsection{\tt{boxheight}}
-\label{sec:option-boxheight}
+\subsubsection{\tt{box_height}}
+\label{sec:option-box-height}
 
-\TmpOption{boxheight}{dimen}:
+\TmpOption{box_height}{dimen}:
 specifies the height of a cloze box. This option has only
 an effect on the environment |clozebox| \TmpSecRef{sec:command-clozebox}.
 
 \begin{minted}{latex}
-\begin{clozebox}[boxwidth=5cm]
+\begin{clozebox}[box_height=5cm]
 \end{minted}
 
 \TmpReduceVspace
@@ -1177,32 +1182,32 @@ an effect on the environment |clozebox| \TmpSecRef{sec:command-clozebox}.
 \begin{TmpExample}
 \bigskip
 \begin{center}
-\begin{clozebox}[boxwidth=2.5cm]
-boxwidth: 2.5cm; Lorem ipsum dolor sit amet ...
+\begin{clozebox}[box_height=3cm,box_width=3cm]
+box_height: 3cm; Lorem ipsum dolor sit amet ...
 \end{clozebox}
-\begin{clozebox}[boxwidth=3cm]
-boxwidth: 3cm; Lorem ipsum dolor sit amet ...
+\begin{clozebox}[box_height=2cm,box_width=3cm]
+box_height: 2cm; Lorem ipsum dolor sit amet ...
 \end{clozebox}
-\begin{clozebox}[boxwidth=5cm]
-boxwidth: 4cm; Lorem ipsum dolor sit amet ...
+\begin{clozebox}[box_height=1cm,box_width=3cm]
+box_height: 1cm; Lorem ipsum dolor sit amet ...
 \end{clozebox}
 \end{center}
 \bigskip
 \end{TmpExample}
 
 %%
-% boxrule
+% box_rule
 %%
 
-\subsubsection{\tt{boxrule}}
-\label{sec:option-boxrule}
+\subsubsection{\tt{box_rule}}
+\label{sec:option-box-rule}
 
-\TmpOption{boxrule}{dimen}: specifies the thickness of the rule around a
+\TmpOption{box_rule}{dimen}: specifies the thickness of the rule around a
 cloze box. This option has only an effect on the environment |clozebox|
 \TmpSecRef{sec:command-clozebox}.
 
 \begin{minted}{latex}
-\begin{clozebox}[boxrule=2pt]
+\begin{clozebox}[box_rule=2pt]
 \end{minted}
 
 \TmpReduceVspace
@@ -1210,32 +1215,32 @@ cloze box. This option has only an effect on the environment |clozebox|
 \begin{TmpExample}
 \bigskip
 \begin{center}
-\begin{clozebox}[boxrule=1pt,boxwidth=3cm]
-boxrule: 1pt
+\begin{clozebox}[box_rule=1pt,box_width=3cm]
+box_rule: 1pt
 \end{clozebox}
-\begin{clozebox}[boxrule=2pt,boxwidth=3cm]
-boxrule: 2pt
+\begin{clozebox}[box_rule=2pt,box_width=3cm]
+box_rule: 2pt
 \end{clozebox}
-\begin{clozebox}[boxrule=3pt,boxwidth=3cm]
-boxrule: 3pt
+\begin{clozebox}[box_rule=3pt,box_width=3cm]
+box_rule: 3pt
 \end{clozebox}
 \end{center}
 \bigskip
 \end{TmpExample}
 
 %%
-% boxwidth
+% box_width
 %%
 
-\subsubsection{\tt{boxwidth}}
-\label{sec:option-boxwidth}
+\subsubsection{\tt{box_width}}
+\label{sec:option-box-width}
 
-\TmpOption{boxwidth}{dimen}:
+\TmpOption{box_width}{dimen}:
 specifies the width of a cloze box. This option has only an
 effect on the environment |clozebox| \TmpSecRef{sec:command-clozebox}.
 
 \begin{minted}{latex}
-\begin{clozebox}[boxheight=3cm]
+\begin{clozebox}[box_width=3cm]
 \end{minted}
 
 \TmpReduceVspace
@@ -1243,14 +1248,14 @@ effect on the environment |clozebox| \TmpSecRef{sec:command-clozebox}.
 \begin{TmpExample}
 \bigskip
 \begin{center}
-\begin{clozebox}[boxheight=3cm,boxwidth=3cm]
-boxheight: 3cm; Lorem ipsum dolor sit amet ...
+\begin{clozebox}[box_width=2.5cm]
+box_width: 2.5cm; Lorem ipsum dolor sit amet ...
 \end{clozebox}
-\begin{clozebox}[boxheight=2cm,boxwidth=3cm]
-boxheight: 2cm; Lorem ipsum dolor sit amet ...
+\begin{clozebox}[box_width=3cm]
+box_width: 3cm; Lorem ipsum dolor sit amet ...
 \end{clozebox}
-\begin{clozebox}[boxheight=1cm,boxwidth=3cm]
-boxheight: 1cm; Lorem ipsum dolor sit amet ...
+\begin{clozebox}[box_width=5cm]
+box_width: 4cm; Lorem ipsum dolor sit amet ...
 \end{clozebox}
 \end{center}
 \bigskip
@@ -1308,21 +1313,21 @@ the cloze text from the output.
 \end{TmpExample}
 
 %%
-% linecolor and textcolor
+% line_color and text_color
 %%
 
-\subsubsection{\tt{linecolor} and \tt{textcolor}}
-\label{sec:option-linecolor}
-\label{sec:option-textcolor}
+\subsubsection{\tt{line_color} and \tt{text_color}}
+\label{sec:option-line-color}
+\label{sec:option-text-color}
 
-\TmpOption{linecolor}{color name} and
-\TmpOption{textcolor}{color name}:
+\TmpOption{line_color}{color name} and
+\TmpOption{text_color}{color name}:
 Values for both color options are color names.
 To define your own color use the following command:
 
 \begin{minted}{latex}
 \definecolor{myclozecolor}{rgb}{0.1,0.4,0.6}
-\cloze[textcolor=myclozecolor]{Lorem ipsum}
+\cloze[text_color=myclozecolor]{Lorem ipsum}
 \end{minted}
 \definecolor{myclozecolor}{rgb}{0.1,0.4,0.6}
 
@@ -1334,17 +1339,17 @@ To define your own color use the following command:
 }
 
 \begin{TmpExample}
-\TmpOptioncolor{textcolor}{myclozecolor}
-\TmpOptioncolor{textcolor}{red}
-\TmpOptioncolor{textcolor}{green}
+\TmpOptioncolor{text_color}{myclozecolor}
+\TmpOptioncolor{text_color}{red}
+\TmpOptioncolor{text_color}{green}
 \end{TmpExample}
 
 \noindent You can use the same color names to colorize the cloze lines.
 
 \begin{TmpExample}
-\TmpOptioncolor{linecolor}{myclozecolor}
-\TmpOptioncolor{linecolor}{red}
-\TmpOptioncolor{linecolor}{green}
+\TmpOptioncolor{line_color}{myclozecolor}
+\TmpOptioncolor{line_color}{red}
+\TmpOptioncolor{line_color}{green}
 \end{TmpExample}
 
 \noindent
@@ -1352,9 +1357,9 @@ And now hide the clozes:
 
 \clozehide
 \begin{TmpExample}
-\TmpOptioncolor{linecolor}{myclozecolor}
-\TmpOptioncolor{linecolor}{red}
-\TmpOptioncolor{linecolor}{green}
+\TmpOptioncolor{line_color}{myclozecolor}
+\TmpOptioncolor{line_color}{red}
+\TmpOptioncolor{line_color}{green}
 \end{TmpExample}
 \clozeshow
 
@@ -1420,19 +1425,19 @@ line breaks after this punctation mark. Even the most large value of
 \clozereset
 
 %%
-% minlines
+% min_lines
 %%
 
 \newpage
-\subsubsection{\tt{minlines}}
-\label{sec:option-minlines}
+\subsubsection{\tt{min_lines}}
+\label{sec:option-min-lines}
 
-\TmpOption{minlines}{integer}: \tt{minlines} stands for
-“\textbf{min}imum \textbf{lines}”. With the option \tt{minlines} you can
+\TmpOption{min_lines}{integer}: \tt{min_lines} stands for
+“\textbf{min}imum \textbf{lines}”. With the option \tt{min_lines} you can
 set how many lines a \tt{clozepar} at least must have. If the text to be
 typeset results in fewer lines, empty lines are appended to the end. If
 the text of a \tt{clozepar} produces more lines as specified in
-\tt{minlines}, the option has no effect at all. The option \tt{minlines}
+\tt{min_lines}, the option has no effect at all. The option \tt{min_lines}
 only affects the behavior of the environment \tt{clozepar}
 \TmpSecRef{sec:command-clozepar} and the macro versions
 \cmd{\clozeparplain} \TmpSecRef{sec:command-clozeparplain} and
@@ -1441,7 +1446,7 @@ only affects the behavior of the environment \tt{clozepar}
 % https://www.pinterest.de/pin/856176579144764867/
 
 \begin{minted}{latex}
-\clozeset{minlines=4}
+\clozeset{min_lines=4}
 \begin{enumerate}
 \item Battlements
 
@@ -1449,7 +1454,7 @@ only affects the behavior of the environment \tt{clozepar}
 Higher ...
 \end{minted}
 
-\clozeset{minlines=4}
+\clozeset{min_lines=4}
 
 \def\TmpExampleMinlines{
 \textbf{\Large{}Defending a Castle}
