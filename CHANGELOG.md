@@ -10,7 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - `LuaLaTeX`: commands are now defined with `\NewDocumentCommand` or
- `\NewDocumentEnvironment` instead of `\newcommand` or `\newenvironment`.
+  `\NewDocumentEnvironment` instead of `\newcommand` or
+  `\newenvironment`.
+- Remove dependency of `xcolor`.
 
 ### Added
 
