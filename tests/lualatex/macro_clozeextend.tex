@@ -2,6 +2,8 @@
 \input cloze-test-macros-lualatex.tex
 \usepackage{cloze}
 
+\catcode`\_=12
+
 \begin{document}
 \TestTitleDesc{LuaLa\TeX: macro \string\clozeextend}
 {}
@@ -10,11 +12,9 @@
 
 Lorem ipsum \cloze[hide]{dolor sit \clozeextend}
 
-\TestComment{extend 10}
+\TestSection{extension_count}
 
-Lorem ipsum \cloze[hide]{dolor sit reprehenderit\clozeextend[10]}
-
-\def\TmpExtend#1{\TestComment{extension\_count=#1} Lorem ipsum \cloze[show]{dolor sit reprehenderit\clozeextend[#1]}}
+\def\TmpExtend#1{\TestComment{[#1]} Lorem ipsum \cloze[show]{dolor sit reprehenderit\clozeextend[#1]}}
 
 \TmpExtend{1}
 \TmpExtend{2}
@@ -26,6 +26,38 @@ Lorem ipsum \cloze[hide]{dolor sit reprehenderit\clozeextend[10]}
 \TmpExtend{8}
 \TmpExtend{9}
 \TmpExtend{10}
+
+\TestComment{[10]}
+
+Lorem ipsum \cloze[hide]{dolor sit reprehenderit\clozeextend[10]}
+
+\TestComment{[count=10]}
+
+Lorem ipsum \cloze[hide]{dolor sit reprehenderit\clozeextend[count=10]}
+
+\TestComment{[extension_count=10]}
+
+Lorem ipsum \cloze[hide]{dolor sit reprehenderit\clozeextend[extension_count=10]}
+
+\TestSection{extension_height}
+
+\TestComment{[height=2cm]}
+
+Lorem ipsum \cloze[hide]{dolor sit reprehenderit\clozeextend[10,height=2cm]}
+
+\TestComment{[extension_height=2cm]}
+
+Lorem ipsum \cloze[hide]{dolor sit reprehenderit\clozeextend[10,extension_height=2cm]}
+
+\TestSection{extension_width}
+
+\TestComment{[width=2cm]}
+
+Lorem ipsum \cloze[hide]{dolor sit reprehenderit\clozeextend[10,width=2cm]}
+
+\TestComment{[extension_width=2cm]}
+
+Lorem ipsum \cloze[hide]{dolor sit reprehenderit\clozeextend[10,extension_width=2cm]}
 
 \newpage
 

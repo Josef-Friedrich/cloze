@@ -462,9 +462,9 @@ local config = (function()
   ---Key-value pair definitions for the environment `clozebox`
   local defs_box = (function()
     local defs = defs_manager:exclude({ 'width' }, true)
+    defs.box_height.alias = { 'boxheight', 'height' }
     defs.box_rule.alias = { 'boxrule', 'rule' }
     defs.box_width.alias = { 'boxwidth', 'width' }
-    defs.box_height.alias = { 'boxheight', 'height' }
     return luakeys.DefinitionManager(defs)
   end)()
 
@@ -474,6 +474,30 @@ local config = (function()
   ---@param kv_string string
   local function parse_local_box_options(kv_string)
     local local_opts = defs_box:parse(kv_string)
+    set_local_options(local_opts)
+  end
+
+  ---
+  ---Key-value pair definitions for the command `clozeextend`
+  local defs_extend = (function()
+    local defs = defs_manager:include({
+      'extension_count',
+      'extension_height',
+      'extension_width',
+    }, true)
+    defs.extension_count.pick = 'number'
+    defs.extension_count.alias = { 'extensioncount', 'count' }
+    defs.extension_height.alias = { 'extensionheight', 'height' }
+    defs.extension_width.alias = { 'extensionwidth', 'width' }
+    return luakeys.DefinitionManager(defs)
+  end)()
+
+  ---
+  ---Parse the oarg (optional argument) of the command `clozeextend`
+  ---
+  ---@param kv_string string
+  local function parse_local_extend_options(kv_string)
+    local local_opts = defs_extend:parse(kv_string)
     set_local_options(local_opts)
   end
 
@@ -491,6 +515,7 @@ local config = (function()
     parse_global_options = parse_global_options,
     parse_local_space_options = parse_local_space_options,
     parse_local_box_options = parse_local_box_options,
+    parse_local_extend_options = parse_local_extend_options,
     defs_manager = defs_manager,
   }
 
@@ -1620,20 +1645,13 @@ return {
       config.parse_local_options(kv_string))
   end,
 
-  ---@param count string|number
-  print_extension = function(count)
-    ---@type number|nil
-    local c
-    if not count or count == '' then
-      c = config.get('extension_count')
-    end
-    c = tonumber(count)
-
-    if not c then
-      c = 5
-    end
-
-    for _ = 1, c do
+  ---
+  ---Print the TeX markup for the command `\clozeextend`
+  ---
+  ---@param kv_string string
+  print_extension = function(kv_string)
+    config.parse_local_extend_options(kv_string)
+    for _ = 1, config.get('extension_count') do
       ---ex: vertical measure of x
       ---px: x height current font (has no effect)
       tex_printf('\\hspace{%s}\\rule{0pt}{%s}',
