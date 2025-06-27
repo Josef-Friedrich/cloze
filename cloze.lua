@@ -441,6 +441,22 @@ local config = (function()
 
   local defs_manager = luakeys.DefinitionManager(defs)
 
+  ---Key-value pair definitions for the environment `clozespace`
+  local defs_space = (function()
+    local defs = defs_manager:include({ 'spacing' }, true)
+    defs.spacing.pick = 'number'
+    return luakeys.DefinitionManager(defs)
+  end)()
+
+  ---
+  ---Parse the oarg (optional argument) of the environment `clozespace`
+  ---
+  ---@param kv_string string for example `2` or `spacing=2`
+  local function parse_local_space_options(kv_string)
+    local local_opts = defs_space:parse(kv_string)
+    set_local_options(local_opts)
+  end
+
   return {
     get = get,
     get_defaults = get_defaults,
@@ -453,6 +469,7 @@ local config = (function()
     set_local_options = set_local_options,
     parse_local_options = parse_local_options,
     parse_global_options = parse_global_options,
+    parse_local_space_options = parse_local_space_options,
     defs_manager = defs_manager,
   }
 
@@ -1614,7 +1631,7 @@ return {
     defs.box_rule.alias = { 'boxrule', 'rule' }
     defs.box_width.alias = { 'boxwidth', 'width' }
     defs.box_height.alias = { 'boxheight', 'height' }
-    local local_opts =  luakeys.parse(kv_string, { defs = defs})
+    local local_opts = luakeys.parse(kv_string, { defs = defs })
     luakeys.debug(local_opts)
     config.set_local_options(local_opts)
 
@@ -1651,10 +1668,7 @@ return {
   ---
   ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
   print_space = function(kv_string)
-    local defs = config.defs_manager:include({ 'spacing' }, true)
-    defs.spacing.pick = 'number'
-    local local_opts = luakeys.parse(kv_string, { defs = defs })
-    config.set_local_options(local_opts)
+    config.parse_local_space_options(kv_string)
     tex_printf('\\begin{spacing}{%s}', config.get('spacing'))
   end,
 
