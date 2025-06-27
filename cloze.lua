@@ -30,7 +30,7 @@ if not modules then
   modules = {}
 end
 modules['cloze'] = {
-  version = '1.8.1',
+  version = '2.0.0',
   comment = 'cloze',
   author = 'Josef Friedrich, R.-M. Huber',
   copyright = 'Josef Friedrich, R.-M. Huber',
