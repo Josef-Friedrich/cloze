@@ -441,6 +441,7 @@ local config = (function()
 
   local defs_manager = luakeys.DefinitionManager(defs)
 
+  ---
   ---Key-value pair definitions for the environment `clozespace`
   local defs_space = (function()
     local defs = defs_manager:include({ 'spacing' }, true)
@@ -457,6 +458,25 @@ local config = (function()
     set_local_options(local_opts)
   end
 
+  ---
+  ---Key-value pair definitions for the environment `clozebox`
+  local defs_box = (function()
+    local defs = defs_manager:exclude({ 'width' }, true)
+    defs.box_rule.alias = { 'boxrule', 'rule' }
+    defs.box_width.alias = { 'boxwidth', 'width' }
+    defs.box_height.alias = { 'boxheight', 'height' }
+    return luakeys.DefinitionManager(defs)
+  end)()
+
+  ---
+  ---Parse the oarg (optional argument) of the environment `clozebox`
+  ---
+  ---@param kv_string string
+  local function parse_local_box_options(kv_string)
+    local local_opts = defs_box:parse(kv_string)
+    set_local_options(local_opts)
+  end
+
   return {
     get = get,
     get_defaults = get_defaults,
@@ -470,6 +490,7 @@ local config = (function()
     parse_local_options = parse_local_options,
     parse_global_options = parse_global_options,
     parse_local_space_options = parse_local_space_options,
+    parse_local_box_options = parse_local_box_options,
     defs_manager = defs_manager,
   }
 
@@ -1627,14 +1648,7 @@ return {
   print_box = function(text, kv_string, starred)
     log.debug('text: %s kv_string: %s starred: %s', text, kv_string,
       starred)
-    local defs = config.defs_manager:exclude({ 'width' }, true)
-    defs.box_rule.alias = { 'boxrule', 'rule' }
-    defs.box_width.alias = { 'boxwidth', 'width' }
-    defs.box_height.alias = { 'boxheight', 'height' }
-    local local_opts = luakeys.parse(kv_string, { defs = defs })
-    luakeys.debug(local_opts)
-    config.set_local_options(local_opts)
-
+    config.parse_local_box_options(kv_string)
     fboxrule_restore = tex.dimen['fboxrule']
     local rule = config.get('box_rule')
     if rule then
