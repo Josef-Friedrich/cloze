@@ -1,0 +1,19 @@
+\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\ProvidesPackage{cloze-test}[2025/06/29 v2.0.0 Package to test cloze tests]
+
+\RequirePackage{cloze}
+
+\RequirePackage{color}
+\definecolor{background}{rgb}{.9, .9, .9}
+
+\RequirePackage{minted}
+\setminted{
+  bgcolor=background,
+  bgcolorpadding=2mm,
+  fontsize=\footnotesize,
+}
+
+\NewDocumentEnvironment{ ClozeTest }{ c }
+{
+  \directlua{cloze.print_test('\luaescapestring{\unexpanded{#1}}')}
+} {}
