@@ -1654,8 +1654,21 @@ return {
     for _ = 1, config.get('extension_count') do
       ---ex: vertical measure of x
       ---px: x height current font (has no effect)
-      tex_printf('\\hspace{%s}\\rule{0pt}{%s}',
-        config.get('extension_width'), config.get('extension_height'))
+      local userskip = node.new('glue', 'userskip')   --[[@as GlueNode]]
+      userskip.width = tex.sp(config.get('extension_width'))
+      node.write(userskip)
+
+      local spaceskip = node.new('glue', 'spaceskip')   --[[@as GlueNode]]
+      spaceskip.width = 0
+      spaceskip.stretch = tex.sp(config.get('extension_width'))
+      spaceskip.shrink = tex.sp(config.get('extension_width'))
+      node.write(spaceskip)
+
+      local rule = node.new('rule') --[[@as RuleNode]]
+      rule.depth = 0
+      rule.height = tex.sp(config.get('extension_height'))
+      rule.width = 0
+      node.write(rule)
     end
   end,
 
