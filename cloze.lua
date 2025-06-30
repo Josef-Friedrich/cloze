@@ -1724,18 +1724,17 @@ return {
   ---
   ---Print to a minted environment and then as material to be typeset.
   ---
+  ---verbatim alternativ? https://www.alanshawn.com/tech/2020/07/07/luatex-mimic-input.html#source-code
+  ---
   ---Only used for the visual test files.
   ---
   ---@param markup string unexpanded TeX markup
   print_test = function(markup)
-
     markup = string.gsub(markup, '\\obeyedline ', '\n')
-
     tex.print('\\begin{minted}{latex}')
     tex.print(string.format('%s',
       markup))
       tex.print('\\end{minted}')
-
     tex.print(markup)
   end,
 }

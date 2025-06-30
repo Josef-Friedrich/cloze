@@ -15,5 +15,6 @@
 
 \NewDocumentEnvironment{ ClozeTest }{ c }
 {
+  % verbatim alternativ? https://www.alanshawn.com/tech/2020/07/07/luatex-mimic-input.html#source-code
   \directlua{cloze.print_test('\luaescapestring{\unexpanded{#1}}')}
 } {}
