@@ -444,9 +444,9 @@ local config = (function()
   ---
   ---Key-value pair definitions for the environment `clozespace`
   local defs_space = (function()
-    local defs = defs_manager:include({ 'spacing' }, true)
-    defs.spacing.pick = 'number'
-    return luakeys.DefinitionManager(defs)
+    local manager = defs_manager:clone({ include = { 'spacing' } })
+    manager.defs.spacing.pick = 'number'
+    return manager
   end)()
 
   ---
@@ -461,11 +461,11 @@ local config = (function()
   ---
   ---Key-value pair definitions for the environment `clozebox`
   local defs_box = (function()
-    local defs = defs_manager:exclude({ 'width' }, true)
-    defs.box_height.alias = { 'boxheight', 'height' }
-    defs.box_rule.alias = { 'boxrule', 'rule' }
-    defs.box_width.alias = { 'boxwidth', 'width' }
-    return luakeys.DefinitionManager(defs)
+    local manager = defs_manager:clone({ exclude = { 'width' } })
+    manager.defs.box_height.alias = { 'boxheight', 'height' }
+    manager.defs.box_rule.alias = { 'boxrule', 'rule' }
+    manager.defs.box_width.alias = { 'boxwidth', 'width' }
+    return manager
   end)()
 
   ---
@@ -480,16 +480,19 @@ local config = (function()
   ---
   ---Key-value pair definitions for the command `clozeextend`
   local defs_extend = (function()
-    local defs = defs_manager:include({
-      'extension_count',
-      'extension_height',
-      'extension_width',
-    }, true)
-    defs.extension_count.pick = 'number'
-    defs.extension_count.alias = { 'extensioncount', 'count' }
-    defs.extension_height.alias = { 'extensionheight', 'height' }
-    defs.extension_width.alias = { 'extensionwidth', 'width' }
-    return luakeys.DefinitionManager(defs)
+    local manager = defs_manager:clone({
+      include = {
+        'extension_count',
+        'extension_height',
+        'extension_width',
+      },
+    })
+    manager.defs.extension_count.pick = 'number'
+    manager.defs.extension_count.alias = { 'extensioncount', 'count' }
+    manager.defs.extension_height.alias =
+      { 'extensionheight', 'height' }
+    manager.defs.extension_width.alias = { 'extensionwidth', 'width' }
+    return manager
   end)()
 
   ---
