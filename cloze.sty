@@ -67,7 +67,7 @@
 \let\cloze=\undefined
 \NewDocumentCommand{ \cloze }{ O{} m }
 {
-  \Cloze{basic}{#1}{#2}
+  \Cloze{basic}{\unexpanded{#1}}{#2}
 }
 %    \end{macrocode}
 % \end{macro}

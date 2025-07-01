@@ -80,7 +80,7 @@
 %    \begin{macrocode}
 \def\ClozeWrapWithFont#1{%
   {%
-    \clozefont\relax%
+    \directlua{cloze.print_font()}\relax%
     #1%
   }%
 }%
@@ -105,7 +105,7 @@
 \def\clozeset#1{%
   \directlua
   {
-    cloze.parse_global_options('\luaescapestring{#1}')
+    cloze.parse_global_options('\luaescapestring{\unexpanded{#1}}')
   }%
 }
 %    \end{macrocode}

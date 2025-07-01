@@ -1,0 +1,37 @@
+\documentclass{article}
+\input cloze-test-macros-lualatex.tex
+
+% not working global options \usepackage[font=\ttfamily]{cloze}
+
+\usepackage{cloze}
+\begin{document}
+\TestTitleDesc{LuaLa\TeX: option font}
+{}
+
+\clozeset{font=\ttfamily}
+
+Lorem \cloze{ipsum} dolor.
+
+Lorem \cloze[font=\tiny]{ipsum} dolor.
+
+Lorem \cloze[font=\scriptsize]{ipsum} dolor.
+
+Lorem \cloze[font=\footnotesize]{ipsum} dolor.
+
+Lorem \cloze[font=\small]{ipsum} dolor.
+
+Lorem \cloze[font=\normalsize]{ipsum} dolor.
+
+Lorem \cloze[font=\large]{ipsum} dolor.
+
+Lorem \cloze[font=\Large]{ipsum} dolor.
+
+Lorem \cloze[font=\LARGE]{ipsum} dolor.
+
+Lorem \cloze[font=\huge]{ipsum} dolor.
+
+Lorem \cloze[font=\Huge]{ipsum} dolor.
+
+Lorem \cloze[font=\bfseries\Huge]{ipsum} dolor.
+
+\end{document}

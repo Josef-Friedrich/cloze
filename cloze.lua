@@ -97,6 +97,7 @@ local config = (function()
   ---@field extension_count? integer
   ---@field extension_height? string
   ---@field extension_width? string
+  ---@field font? string
   ---@field line_color? string
   ---@field log? number
   ---@field margin? string
@@ -119,6 +120,7 @@ local config = (function()
     extension_count = 5,
     extension_height = '2ex',
     extension_width = '1em',
+    font = nil,
     line_color = 'black',
     log = 0,
     margin = '3pt',
@@ -329,6 +331,7 @@ local config = (function()
     return defaults[key]
   end
 
+  ---@type DefinitionCollection
   local defs = {
     align = { description = 'Align the text of a fixed size cloze.' },
     box_height = {
@@ -364,6 +367,7 @@ local config = (function()
       description = 'The width of one extension unit (default: 1em).',
       alias = 'extensionwidth',
     },
+    font = { description = 'The cloze font.', data_type = 'string' },
     line_color = {
       description = 'A color name to colorize the cloze line.',
       alias = 'linecolor',
@@ -1657,11 +1661,11 @@ return {
     for _ = 1, config.get('extension_count') do
       ---ex: vertical measure of x
       ---px: x height current font (has no effect)
-      local userskip = node.new('glue', 'userskip')   --[[@as GlueNode]]
+      local userskip = node.new('glue', 'userskip') --[[@as GlueNode]]
       userskip.width = tex.sp(config.get('extension_width'))
       node.write(userskip)
 
-      local spaceskip = node.new('glue', 'spaceskip')   --[[@as GlueNode]]
+      local spaceskip = node.new('glue', 'spaceskip') --[[@as GlueNode]]
       spaceskip.width = 0
       spaceskip.stretch = tex.sp(config.get('extension_width'))
       spaceskip.shrink = tex.sp(config.get('extension_width'))
@@ -1720,6 +1724,15 @@ return {
     tex_printf('\\begin{spacing}{%s}', config.get('spacing'))
   end,
 
+  print_font = function()
+    local font = config.get('font')
+    if font ~= nil then
+      tex.print(font)
+    else
+      tex.print('\\clozefont')
+    end
+  end,
+
   restore_fboxrule = function()
     tex.dimen['fboxrule'] = fboxrule_restore
   end,
@@ -1735,9 +1748,8 @@ return {
   print_test = function(markup)
     markup = string.gsub(markup, '\\obeyedline ', '\n')
     tex.print('\\begin{minted}{latex}')
-    tex.print(string.format('%s',
-      markup))
-      tex.print('\\end{minted}')
+    tex.print(string.format('%s', markup))
+    tex.print('\\end{minted}')
     tex.print(markup)
   end,
 }

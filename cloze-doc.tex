@@ -893,6 +893,10 @@ Mozart’s father was called
 \TmpDescriptionLine{Hide the cloze text.} &
 \TmpSecRef{sec:option-hide} \\
 
+\tt{font} &
+\TmpDescriptionLine{The cloze font.} &
+\TmpSecRef{sec:option-font} \\
+
 \tt{line_color} &
 \TmpDescriptionLine{A color name to colorize the cloze line.} &
 \TmpSecRef{sec:option-line-color} \\
@@ -1283,9 +1287,25 @@ to appear above the baseline. The default value is
 }
 
 \begin{TmpExample}
-\TmpOptiondistance{\ClozeGetOption{distance}}
+\TmpOptiondistance{1.5pt}
 \TmpOptiondistance{3pt}
 \TmpOptiondistance{-3pt}
+\end{TmpExample}
+
+\subsubsection{\tt{font}}
+\label{sec:option-font}
+
+\TmpOption{font}{cmd}: The option |font| is an alternative to the
+commands \cmd{\clozefont} or \cmd{\clozesetfont}. If this option is used
+\cmd{\clozefont} or \cmd{\clozesetfont} have no effect. The option can
+used as a local or global option, but not as a package option.
+
+\begin{minted}{latex}
+Lorem \cloze[font=\Huge]{ipsum} dolor.
+\end{minted}
+
+\begin{TmpExample}
+Lorem \cloze[font=\Huge]{ipsum} dolor.
 \end{TmpExample}
 
 %%
