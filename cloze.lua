@@ -89,25 +89,25 @@ local config = (function()
   local storage = {}
 
   ---@class Options
-  ---@field align? 'l'|'r'
-  ---@field box_height? string
-  ---@field box_rule? string
-  ---@field box_width? string
-  ---@field debug? number
-  ---@field distance? string
-  ---@field extension_count? integer
-  ---@field extension_height? string
-  ---@field extension_width? string
-  ---@field font? string
-  ---@field line_color? string
-  ---@field margin? string
-  ---@field min_lines? integer
-  ---@field spacing? number
-  ---@field spread? number
-  ---@field text_color? string
-  ---@field thickness? string
+  ---@field align? 'l'|'r' # The alignment of a fixed-size cloze text (`\clozefix`).
+  ---@field box_height? string # The height of a cloze box (`clozebox`).
+  ---@field box_rule? string # The thickness of the line around a cloze box (`clozebox`)
+  ---@field box_width? string # The width of a cloze box (`clozebox`).
+  ---@field debug? number # The debug or log level.
+  ---@field distance? string # The distance between the cloze text and the cloze line.
+  ---@field extend_count? integer # The number of extension units (`\clozeextend`).
+  ---@field extend_height? string # The height of one extension unit (`\clozeextend`).
+  ---@field extend_width? string # The width of one extension unit (`\clozeextend`).
+  ---@field font? string # The font of the cloze text.
+  ---@field line_color? string # The color name to colorize the cloze line.
+  ---@field margin? string # The additional margin between the normal and the cloze text.
+  ---@field min_lines? integer # The minimum number of lines a `clozepar` environment must have.
+  ---@field spacing? number # The spacing of the lines in the environment `clozespace`.
+  ---@field spread? number # The magnification or spreading factor of a gap.
+  ---@field text_color? string # The color name to colorize the cloze text.
+  ---@field thickness? string # The thickness of a line.
   ---@field visibility? boolean
-  ---@field width? string
+  ---@field width? string # The width of a fixed size cloze (`\clozefix`).
 
   ---The default options.
   ---@type Options
@@ -118,9 +118,9 @@ local config = (function()
     box_width = '\\linewidth',
     debug = 0,
     distance = '1.5pt',
-    extension_count = 5,
-    extension_height = '2ex',
-    extension_width = '1em',
+    extend_count = 5,
+    extend_height = '2ex',
+    extend_width = '1em',
     font = nil,
     line_color = 'black',
     margin = '3pt',
@@ -333,21 +333,24 @@ local config = (function()
 
   ---@type DefinitionCollection
   local defs = {
-    align = { description = 'Align the text of a fixed size cloze.' },
+    align = {
+      alias = 'alignment',
+      description = 'The alignment of a fixed-size cloze text (\\clozefix).',
+    },
     box_height = {
-      description = 'The height of a cloze box.',
+      description = 'The height of a cloze box (clozebox).',
       alias = { 'boxheight', 'box_height' },
     },
     box_rule = {
-      description = 'The thickness of the rule around a cloze box.',
+      description = 'The thickness of the line around a cloze box (clozebox).',
       alias = { 'boxrule', 'box_rule' },
     },
     box_width = {
-      description = 'The width of a cloze box.',
+      description = 'The width of a cloze box (clozebox).',
       alias = { 'boxwidth', 'box_width' },
     },
     debug = {
-      description = 'Set the log level.',
+      description = 'The debug or log level.',
       alias = { 'log' },
       data_type = 'integer',
       process = function(value)
@@ -357,54 +360,60 @@ local config = (function()
     distance = {
       description = 'The distance between the cloze text and the cloze line.',
     },
-    extension_count = {
-      description = 'The number of extension units.',
-      alias = 'extensioncount',
+    extend_count = {
+      description = 'The number of extension units (\\clozeextend).',
+      alias = { 'extension_count', 'extensioncount' },
     },
-    extension_height = {
-      description = 'The height of one extension unit (default: 2ex).',
-      alias = 'extensionheight',
+    extend_height = {
+      -- default = '2ex',
+      description = 'The height of one extension unit (\\clozeextend).',
+      alias = { 'extension_height', 'extensionheight' },
     },
-    extension_width = {
-      description = 'The width of one extension unit (default: 1em).',
-      alias = 'extensionwidth',
+    extend_width = {
+      -- default = '1em',
+      description = 'The width of one extension unit (\\clozeextend).',
+      alias = { 'extension_width', 'extensionwidth' },
     },
-    font = { description = 'The cloze font.', data_type = 'string' },
+    font = {
+      description = 'The font of the cloze text.',
+      data_type = 'string',
+    },
     line_color = {
-      description = 'A color name to colorize the cloze line.',
+      description = 'The color name to colorize the cloze line.',
       alias = 'linecolor',
       process = function(value, input)
         tex_printf('\\FarbeImport{%s}', value)
       end,
     },
     margin = {
-      description = 'Indicates how far the cloze line sticks up horizontally from the text.',
+      description = 'The additional margin between the normal and the cloze text.',
     },
     min_lines = {
       alias = { 'minimum_lines', 'minlines' },
-      description = 'How many lines a clozepar at least must have.',
+      description = 'The minimum number of lines a `clozepar` environment must have.',
     },
     spacing = {
-      description = 'The spacing between lines (environment clozespace).',
+      description = 'The spacing of the lines in the environment clozespace',
     },
     spread = {
-      description = 'Enlarge or spread a gap by a certain factor.',
+      alias = { 'openup', 'scale' },
+      description = 'The magnification or spreading factor of a gap.',
     },
     text_color = {
-      description = 'The color (name) of the cloze text.',
+      description = 'The color name to colorize the cloze text.',
       alias = 'textcolor',
       data_type = 'string',
       process = function(value)
         tex_printf('\\FarbeImport{%s}', value)
       end,
     },
-    thickness = { description = 'The thickness of the cloze line.' },
+    thickness = { description = 'The thickness of a line.' },
     visibility = {
       description = 'Show or hide the cloze text.',
       opposite_keys = { [true] = 'show', [false] = 'hide' },
     },
     width = {
-      description = 'The width of the cloze line of the command \\clozefix.',
+      description = 'The width of a fixed size cloze (\\clozefix)',
     },
   }
 
@@ -480,17 +489,24 @@ local config = (function()
   ---Key-value pair definitions for the command `clozeextend`
   local defs_extend = (function()
     local manager = defs_manager:clone({
-      include = {
-        'extension_count',
-        'extension_height',
-        'extension_width',
-      },
+      include = { 'extend_count', 'extend_height', 'extend_width' },
     })
-    manager.defs.extension_count.pick = 'number'
-    manager.defs.extension_count.alias = { 'extensioncount', 'count' }
-    manager.defs.extension_height.alias =
-      { 'extensionheight', 'height' }
-    manager.defs.extension_width.alias = { 'extensionwidth', 'width' }
+    manager.defs.extend_count.pick = 'number'
+    manager.defs.extend_count.alias = {
+      'extension_count',
+      'extensioncount',
+      'count',
+    }
+    manager.defs.extend_height.alias = {
+      'extension_height',
+      'extensionheight',
+      'height',
+    }
+    manager.defs.extend_width.alias = {
+      'extension_width',
+      'extensionwidth',
+      'width',
+    }
     return manager
   end)()
 
@@ -1640,22 +1656,22 @@ return {
   ---@param kv_string string
   print_extension = function(kv_string)
     config.parse_local_extend_options(kv_string)
-    for _ = 1, config.get('extension_count') do
+    for _ = 1, config.get('extend_count') do
       ---ex: vertical measure of x
       ---px: x height current font (has no effect)
       local userskip = node.new('glue', 'userskip') --[[@as GlueNode]]
-      userskip.width = tex.sp(config.get('extension_width'))
+      userskip.width = tex.sp(config.get('extend_width'))
       node.write(userskip)
 
       local spaceskip = node.new('glue', 'spaceskip') --[[@as GlueNode]]
       spaceskip.width = 0
-      spaceskip.stretch = tex.sp(config.get('extension_width'))
-      spaceskip.shrink = tex.sp(config.get('extension_width'))
+      spaceskip.stretch = tex.sp(config.get('extend_width'))
+      spaceskip.shrink = tex.sp(config.get('extend_width'))
       node.write(spaceskip)
 
       local rule = node.new('rule') --[[@as RuleNode]]
       rule.depth = 0
-      rule.height = tex.sp(config.get('extension_height'))
+      rule.height = tex.sp(config.get('extend_height'))
       rule.width = 0
       node.write(rule)
     end
