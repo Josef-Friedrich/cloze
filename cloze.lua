@@ -1579,54 +1579,41 @@ end
 ---`cloze.tex` and `cloze.sty` file.
 return {
   register_functions = function()
-    ---
-    ---@param csname string
-    ---@param fn function
-    local function register_function(csname, fn)
-      local index = 376
-      local fns = lua.get_functions_table()
-      while fns[index] do
-        index = index + 1
-      end
-      fns[index] = fn
-      token.set_lua(csname, index)
-    end
-
-    register_function('cloze', function()
+    lparse.register_csname('cloze', function()
       print_cloze('basic')
     end)
 
-    register_function('clozefix', function()
+    lparse.register_csname('clozefix', function()
       print_cloze('fix')
     end)
 
-    register_function('clozenol', function()
+    lparse.register_csname('clozenol', function()
       print_cloze('basic', 'thickness=0pt')
     end)
 
-    register_function('clozestrike', function()
+    lparse.register_csname('clozestrike', function()
       local kv_string, error_text, solution_text =
         lparse.scan('O{} v v')
       tex.print(string.format('\\ClozeStrike{%s}{%s}{%s}', kv_string,
         error_text, solution_text))
     end)
 
-    register_function('clozeline', function()
+    lparse.register_csname('clozeline', function()
       local kv_string = lparse.scan('O{}')
       tex.print(string.format('\\ClozeLine{%s}', kv_string))
     end)
 
-    register_function('clozelinefil', function()
+    lparse.register_csname('clozelinefil', function()
       local kv_string = lparse.scan('O{}')
       tex.print(string.format('\\ClozeLinefil{%s}', kv_string))
     end)
 
-    register_function('clozefil', function()
+    lparse.register_csname('clozefil', function()
       local kv_string, text = lparse.scan('O{} v')
       tex.print(string.format('\\ClozeFil{%s}{%s}', kv_string, text))
     end)
 
-    register_function('clozeextend', function()
+    lparse.register_csname('clozeextend', function()
       local kv_string = lparse.scan('O{}')
       tex.print(string.format('\\ClozeExtend{%s}', kv_string))
     end)
