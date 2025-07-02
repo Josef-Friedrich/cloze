@@ -93,13 +93,13 @@ local config = (function()
   ---@field box_height? string
   ---@field box_rule? string
   ---@field box_width? string
+  ---@field debug? number
   ---@field distance? string
   ---@field extension_count? integer
   ---@field extension_height? string
   ---@field extension_width? string
   ---@field font? string
   ---@field line_color? string
-  ---@field log? number
   ---@field margin? string
   ---@field min_lines? integer
   ---@field spacing? number
@@ -116,13 +116,13 @@ local config = (function()
     box_height = nil,
     box_rule = '0.4pt',
     box_width = '\\linewidth',
+    debug = 0,
     distance = '1.5pt',
     extension_count = 5,
     extension_height = '2ex',
     extension_width = '1em',
     font = nil,
     line_color = 'black',
-    log = 0,
     margin = '3pt',
     min_lines = 0,
     spacing = 1.6,
@@ -347,6 +347,8 @@ local config = (function()
       alias = { 'boxwidth', 'box_width' },
     },
     debug = {
+      description = 'Set the log level.',
+      alias = { 'log' },
       data_type = 'integer',
       process = function(value)
         log.set(value)
@@ -373,13 +375,6 @@ local config = (function()
       alias = 'linecolor',
       process = function(value, input)
         tex_printf('\\FarbeImport{%s}', value)
-      end,
-    },
-    log = {
-      description = 'Set the log level.',
-      data_type = 'integer',
-      process = function(value, input)
-        log.set(value)
       end,
     },
     margin = {

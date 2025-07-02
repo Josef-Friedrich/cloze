@@ -889,6 +889,10 @@ Mozart’s father was called
 \TmpDescriptionLine{The distance between the cloze text and the cloze line.} &
 \TmpSecRef{sec:option-distance} \\
 
+\tt{debug} &
+\TmpDescriptionLine{Set the debug or log level.} &
+\TmpSecRef{sec:option-debug} \\
+
 \tt{hide} &
 \TmpDescriptionLine{Hide the cloze text.} &
 \TmpSecRef{sec:option-hide} \\
@@ -900,10 +904,6 @@ Mozart’s father was called
 \tt{line_color} &
 \TmpDescriptionLine{A color name to colorize the cloze line.} &
 \TmpSecRef{sec:option-line-color} \\
-
-\tt{log} &
-\TmpDescriptionLine{Set the log level.} &
-\TmpSecRef{sec:option-log} \\
 
 \tt{margin} &
 \TmpDescriptionLine{Additional margin between the normal and the cloze text.} &
@@ -1266,6 +1266,32 @@ box_width: 4cm; Lorem ipsum dolor sit amet ...
 \end{TmpExample}
 
 %%
+% debug
+%%
+
+\subsubsection{\tt{debug}}
+\label{sec:option-debug}
+
+% Die Option |debug| definiert den Debug- oder Log-Level für den
+% Lua-Code. Die folgenden Debug-Level können eingestellt werden.
+The |debug| option sets the log level. The following debug levels can be
+set.
+% Es gibt einige Stellen im Lua-Code, an denen Print-Anweisungen
+% eingebaut sind, die bei Bedarf Debug-Meldungen auf der Konsole
+% ausgeben.
+There are a few places in the Lua code where print statements are built
+in, which output debug messages to the console if required. The default
+value is \tt{\ClozeGetOption{debug}}.
+
+\begin{itemize}
+\item 1 (error)
+\item 2 (warn)
+\item 3 (info)
+\item 4 (verbose)
+\item 5 (debug)
+\end{itemize}
+
+%%
 % distance
 %%
 
@@ -1383,23 +1409,6 @@ And now hide the clozes:
 \end{TmpExample}
 \clozeshow
 
-%%
-% log
-%%
-
-\subsubsection{\tt{log}}
-\label{sec:option-log}
-
-The |log| option defines the log level for the Lua code. The following
-log levels can be set.
-
-\begin{itemize}
-\item 1 (error)
-\item 2 (warn)
-\item 3 (info)
-\item 4 (verbose)
-\item 5 (debug)
-\end{itemize}
 
 %%
 % margin
