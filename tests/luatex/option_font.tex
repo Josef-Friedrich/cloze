@@ -1,0 +1,36 @@
+\input cloze-test-macros-luatex.tex
+
+\input cloze.tex
+
+\TestTitleDesc{LuaLa\TeX: option font}
+{}
+
+\clozeset{font=\tt,log=5}
+
+Lorem \cloze{ipsum} dolor.
+
+{\bf bf}
+
+Lorem \cloze[font=\bf]{ipsum} dolor.
+
+{\cal cal}
+
+Lorem \cloze[font=\cal]{ipsum} dolor.
+
+{\it it}
+
+Lorem \cloze[font=\it]{ipsum} dolor.
+
+{\rm rm}
+
+Lorem \cloze[font=\rm]{ipsum} dolor.
+
+{\sl sl}
+
+Lorem \cloze[font=\sl]{ipsum} dolor.
+
+{\tt tt}
+
+Lorem \cloze[font=\tt]{ipsum} dolor.
+
+\bye
