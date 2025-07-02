@@ -12,11 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `LuaLaTeX`: commands are now defined with `\NewDocumentCommand` or
   `\NewDocumentEnvironment` instead of `\newcommand` or
   `\newenvironment`.
-- Remove dependency of `xcolor`.
+- Remove dependency of [xcolor](https://www.ctan.org/pkg/xcolor).
 
 ### Added
 
 - `oarg` (optional argument) support for the plain `LuaTeX` commands.
+- option `font`
 
 ### Removed
 
@@ -24,13 +25,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.8.1] - 2025-06-17
 
-### Changed
-
-- Implement `\clozestrike `in Lua without LaTeX packages
-
 ### Added
 
 - Add option `log`
+
+### Changed
+
+- Implement `\clozestrike` in Lua without LaTeX packages
+
+### Removed
+
+- Dependency to the packages [stackengine](https://www.ctan.org/pkg/stackengine), [ulem](https://www.ctan.org/pkg/ulem) and [transparent](https://www.ctan.org/pkg/transparent)
 
 ## [1.8.0] - 2025-06-11
 
