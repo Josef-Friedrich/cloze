@@ -74,9 +74,9 @@
 % Temporary local macros
 %%
 
-\newcommand{\TmpExpDesc}[1]{(|#1|)}
+\def\TmpExpDesc#1{(|#1|)}
 
-\newcommand{\TmpDesc}[1]{%
+\def\TmpDesc#1{%
   \hfill%
   \TmpExpDesc{#1}%
   \par%
@@ -173,7 +173,7 @@ luatex cloze-text.tex
 The main feature of the package is that the formatting doesn't change
 when using the |hide| and |show| \TmpSecRef{sec:option-hide} options.
 
-\newcommand{\clozelorem}{%
+\def\clozelorem{%
 Lorem ipsum \cloze{dolor sit} amet, consectetur \cloze{adipisicing}
 elit, sed do eiusmod tempor incididunt ut labore et \cloze{dolore magna}
 aliqua. Ut enim ad minim veniam, quis nostrud \cloze{exercitation}
@@ -1170,16 +1170,16 @@ the option \tt{align} into account. Possible values are \tt{left},
 \tt{center} and \tt{right}. This option only makes sense, if the width
 of the line is larger than the width of the text.
 
-\newcommand{\TmpOptionsalign}[1]{%
+\def\TmpOptionAlign#1{%
   \noindent%
   \clozefix[align=#1,width=8cm]{Lorem ipsum}%
   \TmpDesc{#1}%
 }
 
 \begin{TmpExample}
-\TmpOptionsalign{left}
-\TmpOptionsalign{center}
-\TmpOptionsalign{right}
+\TmpOptionAlign{left}
+\TmpOptionAlign{center}
+\TmpOptionAlign{right}
 \end{TmpExample}
 
 %%
@@ -1321,7 +1321,7 @@ text and the gap line. The larger the dimension of the option
 to appear above the baseline. The default value is
 \tt{\ClozeGetOption{distance}}.
 
-\newcommand{\TmpOptiondistance}[1]{%
+\def\TmpOptionDistance#1{%
   \noindent%
   \clozefil[distance=#1]{Lorem ipsum dolor sit amet.}
   \TmpExpDesc{#1}
@@ -1329,9 +1329,9 @@ to appear above the baseline. The default value is
 }
 
 \begin{TmpExample}
-\TmpOptiondistance{1.5pt}
-\TmpOptiondistance{3pt}
-\TmpOptiondistance{-3pt}
+\TmpOptionDistance{1.5pt}
+\TmpOptionDistance{3pt}
+\TmpOptionDistance{-3pt}
 \end{TmpExample}
 
 \subsubsection{\tt{font}}
@@ -1362,7 +1362,7 @@ Lorem \cloze[font=\Huge]{ipsum} dolor.
 By default the cloze text is displayed. Use the option |hide| to remove
 the cloze text from the output.
 
-\newcommand{\TmpOptionshow}[1]{%
+\def\TmpOptionShow#1{%
   \noindent%
   Lorem ipsum \cloze[#1]{dolor sit amet}, consectetur
   \cloze[#1]{adipisicing} elit.%
@@ -1370,8 +1370,8 @@ the cloze text from the output.
 }
 
 \begin{TmpExample}
-\TmpOptionshow{hide}
-\TmpOptionshow{show}
+\TmpOptionShow{hide}
+\TmpOptionShow{show}
 \end{TmpExample}
 
 %%
@@ -1393,7 +1393,7 @@ To define your own color use the following command:
 \end{minted}
 \definecolor{myclozecolor}{rgb}{0.1,0.4,0.6}
 
-\newcommand{\TmpOptioncolor}[2]{%
+\def\TmpOptionColor#1#2{%
   \noindent%
   \clozefil[#1=#2]{Lorem ipsum dolor sit amet, consectetur} %
   \TmpExpDesc{#2}%
@@ -1401,17 +1401,17 @@ To define your own color use the following command:
 }
 
 \begin{TmpExample}
-\TmpOptioncolor{text_color}{myclozecolor}
-\TmpOptioncolor{text_color}{red}
-\TmpOptioncolor{text_color}{green}
+\TmpOptionColor{text_color}{myclozecolor}
+\TmpOptionColor{text_color}{red}
+\TmpOptionColor{text_color}{green}
 \end{TmpExample}
 
 \noindent You can use the same color names to colorize the cloze lines.
 
 \begin{TmpExample}
-\TmpOptioncolor{line_color}{myclozecolor}
-\TmpOptioncolor{line_color}{red}
-\TmpOptioncolor{line_color}{green}
+\TmpOptionColor{line_color}{myclozecolor}
+\TmpOptionColor{line_color}{red}
+\TmpOptionColor{line_color}{green}
 \end{TmpExample}
 
 \noindent
@@ -1419,9 +1419,9 @@ And now hide the clozes:
 
 \clozehide
 \begin{TmpExample}
-\TmpOptioncolor{line_color}{myclozecolor}
-\TmpOptioncolor{line_color}{red}
-\TmpOptioncolor{line_color}{green}
+\TmpOptionColor{line_color}{myclozecolor}
+\TmpOptionColor{line_color}{red}
+\TmpOptionColor{line_color}{green}
 \end{TmpExample}
 \clozeshow
 
@@ -1439,18 +1439,18 @@ The option can be used with the commands \cmd{\cloze}, \cmd{\clozefix}
 and \cmd{\clozefil}. The default value of the option is
 \tt{\ClozeGetOption{margin}}.
 
-\newcommand{\TmpOptionmargin}[1]{%
+\def\TmpOptionMargin#1{%
   \noindent%
   Lorem ipsum \cloze[margin=#1]{dolor} sit amet.%
   \TmpDesc{#1}%
 }
 
 \begin{TmpExample}
-\TmpOptionmargin{0pt}
-\TmpOptionmargin{5mm}
-\TmpOptionmargin{1cm}
-\TmpOptionmargin{6em}
-\TmpOptionmargin{-4pt}
+\TmpOptionMargin{0pt}
+\TmpOptionMargin{5mm}
+\TmpOptionMargin{1cm}
+\TmpOptionMargin{6em}
+\TmpOptionMargin{-4pt}
 \end{TmpExample}
 
 % Folgt ein Satzzeichen direkt auf eine Lücke, so findet der
@@ -1584,7 +1584,7 @@ This option can only be used in combination with the commands
 \cmd{\cloze} \TmpSecRef{sec:command-cloze} and \cmd{\clozenol}
 \TmpSecRef{sec:command-clozenol}.
 
-\newcommand{\TmpOptionSpread}[1]{%
+\def\TmpOptionSpread#1{%
   \noindent%
   Lorem \cloze[spread=#1]{ipsum dolor sit} amet.%
   \TmpDesc{#1}%
@@ -1637,16 +1637,16 @@ The option |thickness| indicates how thick the line is. The option
 option, because the bottom of the line moves down. The default value of
 this option is \tt{\ClozeGetOption{thickness}}.
 
-\newcommand{\TmpOptionthickness}[1]{%
+\def\TmpOptionThickness#1{%
   \noindent%
   Lorem \cloze[thickness=#1]{ipsum dolor sit} amet.%
   \TmpDesc{#1}%
 }
 
 \begin{TmpExample}
-\TmpOptionthickness{0.01pt}
-\TmpOptionthickness{1pt}
-\TmpOptionthickness{2pt}
+\TmpOptionThickness{0.01pt}
+\TmpOptionThickness{1pt}
+\TmpOptionThickness{2pt}
 \end{TmpExample}
 
 %%
@@ -1661,7 +1661,7 @@ The only command which can be changed by the option |width| is
 \cmd{\clozefix} \TmpSecRef{sec:command-clozefix}. The default value of
 the option is \tt{\ClozeGetOption{width}}.
 
-\newcommand{\TmpOptionWidth}[1]{%
+\def\TmpOptionWidth#1{%
   \noindent%
   Lorem \clozefix[width=#1]{dolor} amet.%
   \TmpDesc{#1}%
