@@ -89,9 +89,9 @@ local config = (function()
   local storage = {}
 
   ---@class Options
-  ---@field align? 'l'|'r' # The alignment of a fixed-size cloze text (`\clozefix`).
+  ---@field align? 'left'|'center'|'right' # The alignment of a fixed-size cloze text (`\clozefix`).
   ---@field box_height? string # The height of a cloze box (`clozebox`).
-  ---@field box_rule? string # The thickness of the line around a cloze box (`clozebox`)
+  ---@field box_rule? string # The thickness of the line around a cloze box (`clozebox`).
   ---@field box_width? string # The width of a cloze box (`clozebox`).
   ---@field debug? number # The debug or log level.
   ---@field distance? string # The distance between the cloze text and the cloze line.
@@ -112,7 +112,7 @@ local config = (function()
   ---The default options.
   ---@type Options
   local defaults = {
-    align = 'l',
+    align = 'left',
     box_height = nil,
     box_rule = '0.4pt',
     box_width = '\\linewidth',
@@ -537,6 +537,46 @@ local config = (function()
     defs_manager = defs_manager,
 
     ---
+    ---Get the alignment of a fixed-size cloze text (`\clozefix`).
+    ---
+    ---@return 'left'|'center'|'right' align # The alignment of a fixed-size cloze text (`\clozefix`).
+    get_align= function()
+      return get('align')
+    end,
+
+    ---
+    ---Get the height of a cloze box (`clozebox`).
+    ---
+    ---@return string|nil box_width # The height of a cloze box (`clozebox`).
+    get_box_height= function()
+      return get('box_height')
+    end,
+
+    ---
+    ---Get the thickness of the line around a cloze box (`clozebox`).
+    ---
+    ---@return string box_width # The thickness of the line around a cloze box (`clozebox`).
+    get_box_rule = function()
+      return get('box_rule')
+    end,
+
+    ---
+    ---Get the width of a cloze box (`clozebox`).
+    ---
+    ---@return string box_width # The width of a cloze box (`clozebox`).
+    get_box_width = function()
+      return get('box_width')
+    end,
+
+    ---
+    ---Get the distance between the cloze text and the cloze line in scaled points.
+    ---
+    ---@return integer distance # The distance between the cloze text and the cloze line in scaled points.
+    get_distance = function()
+      return tex.sp(get('distance'))
+    end,
+
+    ---
     ---Get the number of extension units (`\clozeextend`).
     ---
     ---@return integer extend_count # The number of extension units (`\clozeextend`).
@@ -677,7 +717,7 @@ local utils = (function()
   local function create_line(width)
     local rule = node.new('rule') --[[@as RuleNode]]
     local thickness = config.get_thickness()
-    local distance = tex.sp(config.get('distance'))
+    local distance = config.get_distance()
     rule.depth = distance + thickness
     rule.height = -distance
     rule.width = width
@@ -1301,7 +1341,7 @@ local function make_fix(head_node_input)
       local start_width, stop_width
       local width = config.get_width()
       local text_width = node.dimensions(start, stop)
-      local align = config.get('align')
+      local align = config.get_align()
       if align == 'right' then
         start_width = -text_width
         stop_width = 0
@@ -1788,7 +1828,7 @@ return {
       starred)
     config.parse_local_box_options(kv_string)
     fboxrule_restore = tex.dimen['fboxrule']
-    local rule = config.get('box_rule')
+    local rule = config.get_box_rule()
     if rule then
       tex.dimen['fboxrule'] = tex.sp(rule)
     end
@@ -1796,8 +1836,8 @@ return {
     tex.print('\\noindent')
     tex.print('\\begin{lrbox}{\\ClozeBox}')
 
-    local height = config.get('box_height')
-    local width = config.get('box_width')
+    local height = config.get_box_height()
+    local width = config.get_box_width()
 
     if height then
       tex_printf('\\begin{minipage}[t][%s][t]{%s}', height, width)
