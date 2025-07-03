@@ -334,20 +334,24 @@ local config = (function()
   ---@type DefinitionCollection
   local defs = {
     align = {
-      alias = 'alignment',
       description = 'The alignment of a fixed-size cloze text (\\clozefix).',
+      alias = 'alignment',
+      choices = { 'left', 'center', 'right' },
     },
     box_height = {
       description = 'The height of a cloze box (clozebox).',
-      alias = { 'boxheight', 'box_height' },
+      alias = { 'boxheight' },
+      data_type = 'string'
     },
     box_rule = {
       description = 'The thickness of the line around a cloze box (clozebox).',
-      alias = { 'boxrule', 'box_rule' },
+      alias = { 'boxrule' },
+      data_type = 'string'
     },
     box_width = {
       description = 'The width of a cloze box (clozebox).',
-      alias = { 'boxwidth', 'box_width' },
+      alias = { 'boxwidth' },
+      data_type = 'string'
     },
     debug = {
       description = 'The debug or log level.',
@@ -359,20 +363,24 @@ local config = (function()
     },
     distance = {
       description = 'The distance between the cloze text and the cloze line.',
+      data_type = 'string'
     },
     extend_count = {
       description = 'The number of extension units (\\clozeextend).',
       alias = { 'extension_count', 'extensioncount' },
+      data_type = 'integer',
     },
     extend_height = {
       -- default = '2ex',
       description = 'The height of one extension unit (\\clozeextend).',
       alias = { 'extension_height', 'extensionheight' },
+      data_type = 'string',
     },
     extend_width = {
       -- default = '1em',
       description = 'The width of one extension unit (\\clozeextend).',
       alias = { 'extension_width', 'extensionwidth' },
+      data_type = 'string',
     },
     font = {
       description = 'The font of the cloze text.',
@@ -384,20 +392,25 @@ local config = (function()
       process = function(value, input)
         tex_printf('\\FarbeImport{%s}', value)
       end,
+      data_type = 'string'
     },
     margin = {
       description = 'The additional margin between the normal and the cloze text.',
+      data_type = 'string',
     },
     min_lines = {
-      alias = { 'minimum_lines', 'minlines' },
       description = 'The minimum number of lines a `clozepar` environment must have.',
+      alias = { 'minimum_lines', 'minlines' },
+      data_type = 'integer',
     },
     spacing = {
+      data_type = 'number',
       description = 'The spacing of the lines in the environment clozespace',
     },
     spread = {
       alias = { 'openup', 'scale' },
       description = 'The magnification or spreading factor of a gap.',
+      data_type = 'number',
     },
     text_color = {
       description = 'The color name to colorize the cloze text.',
@@ -407,13 +420,17 @@ local config = (function()
         tex_printf('\\FarbeImport{%s}', value)
       end,
     },
-    thickness = { description = 'The thickness of a line.' },
+    thickness = {
+      description = 'The thickness of a line.',
+      data_type = 'string',
+    },
     visibility = {
       description = 'The visibility of the cloze text',
       opposite_keys = { [true] = 'show', [false] = 'hide' },
     },
     width = {
       description = 'The width of a fixed size cloze (\\clozefix)',
+      data_type = 'string',
     },
   }
 
@@ -540,7 +557,7 @@ local config = (function()
     ---Get the alignment of a fixed-size cloze text (`\clozefix`).
     ---
     ---@return 'left'|'center'|'right' align # The alignment of a fixed-size cloze text (`\clozefix`).
-    get_align= function()
+    get_align = function()
       return get('align')
     end,
 
@@ -548,7 +565,7 @@ local config = (function()
     ---Get the height of a cloze box (`clozebox`).
     ---
     ---@return string|nil box_width # The height of a cloze box (`clozebox`).
-    get_box_height= function()
+    get_box_height = function()
       return get('box_height')
     end,
 
