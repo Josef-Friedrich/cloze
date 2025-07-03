@@ -535,6 +535,46 @@ local config = (function()
     parse_local_box_options = parse_local_box_options,
     parse_local_extend_options = parse_local_extend_options,
     defs_manager = defs_manager,
+
+    ---
+    ---Get the spacing of the lines in the environment `clozespace`.
+    ---
+    ---@return number spacing # The spacing of the lines in the environment `clozespace`.
+    get_spacing = function()
+      return get('spacing')
+    end,
+
+    ---
+    ---Get the magnification or spreading factor of a gap.
+    ---
+    ---@return number spread # The magnification or spreading factor of a gap.
+    get_spread = function()
+      return get('spread')
+    end,
+
+    ---
+    ---Get the thickness of a line in scaled points.
+    ---
+    ---@return integer thickness # The thickness of a line in scaled points.
+    get_thickness = function()
+      return tex.sp(get('thickness'))
+    end,
+
+    ---
+    ---Get the visibility of the cloze text.
+    ---
+    ---@return boolean visibility # The visibility of the cloze text.
+    get_visibility = function()
+      return get('visibility')
+    end,
+
+    ---
+    ---Get the width of a fixed size cloze (`\clozefix`) in scaled points.
+    ---
+    ---@return integer width # The width of a fixed size cloze (`\clozefix`) in scaled points.
+    get_width = function()
+      return tex.sp(get('width'))
+    end,
   }
 
 end)()
@@ -573,7 +613,7 @@ local utils = (function()
   ---@return RuleNode
   local function create_line(width)
     local rule = node.new('rule') --[[@as RuleNode]]
-    local thickness = tex.sp(config.get('thickness'))
+    local thickness = config.get_thickness()
     local distance = tex.sp(config.get('distance'))
     rule.depth = distance + thickness
     rule.height = -distance
@@ -641,7 +681,7 @@ local utils = (function()
   ---
   local function write_line_nodes()
     node.write(create_color('line', 'push'))
-    node.write(create_line(tex.sp(config.get('width'))))
+    node.write(create_line(config.get_width()))
     node.write(create_color('line', 'pop'))
   end
 
@@ -1065,7 +1105,7 @@ local function make_basic(head_node)
       env.start.next = line_color_push
     end
 
-    if config.get('visibility') then
+    if config.get_visibility() then
       -- show cloze text
       local kern = utils.create_kern_node(-env.width)
       line_color_pop.next = kern
@@ -1123,7 +1163,7 @@ local function spread_basic(head_node_input)
             local stop = m
 
             local width = node.dimensions(start, stop)
-            local spread = config.get('spread')
+            local spread = config.get_spread()
             if spread == 0 then
               break
             end
@@ -1196,7 +1236,7 @@ local function make_fix(head_node_input)
     ---@return integer stop_width # The width of the whitespace after the cloze text.
     local function calculate_widths(start, stop)
       local start_width, stop_width
-      local width = tex.sp(config.get('width'))
+      local width = config.get_width()
       local text_width = node.dimensions(start, stop)
       local align = config.get('align')
       if align == 'right' then
@@ -1216,7 +1256,7 @@ local function make_fix(head_node_input)
     local width, kern_start_length, kern_stop_length = calculate_widths(
       env.start, env.stop)
     local line_node = utils.insert_line(env.start, width)
-    if config.get('visibility') then
+    if config.get_visibility() then
       utils.insert_list('after', line_node, {
         utils.create_kern_node(kern_start_length),
         utils.create_color('text', 'push'),
@@ -1336,7 +1376,7 @@ local function make_par(head_node)
       hlist_node, strut_node, _ = utils.insert_strut_into_hlist(
         hlist_node)
       line_node = utils.insert_line(strut_node, width)
-      if config.get('visibility') then
+      if config.get_visibility() then
         utils.insert_list('after', line_node, {
           utils.create_kern_node(-width),
           utils.create_color('text', 'push'),
@@ -1439,7 +1479,7 @@ local function make_strike(head_node)
 
     -- top
     local top_start = top_hlist.head
-    if config.get('visibility') then
+    if config.get_visibility() then
       -- top color
       top_hlist.head = utils.create_color('text', 'push')
       top_hlist.head.next = top_start
@@ -1451,10 +1491,10 @@ local function make_strike(head_node)
 
     -- strike line
 
-    if config.get('visibility') then
+    if config.get_visibility() then
       local base_start = base_hlist.head
       local line = node.new('rule') --[[@as RuleNode]]
-      local thickness = tex.sp(config.get('thickness'))
+      local thickness = config.get_thickness()
       line.depth = -(base_hlist.height / 3)
       line.height = (base_hlist.height / 3) + thickness
       line.width = base_hlist.width
@@ -1719,7 +1759,7 @@ return {
   ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
   print_space = function(kv_string)
     config.parse_local_space_options(kv_string)
-    tex_printf('\\begin{spacing}{%s}', config.get('spacing'))
+    tex_printf('\\begin{spacing}{%s}', config.get_spacing())
   end,
 
   print_font = function()
