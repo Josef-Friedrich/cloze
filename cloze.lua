@@ -106,7 +106,7 @@ local config = (function()
   ---@field spread? number # The magnification or spreading factor of a gap.
   ---@field text_color? string # The color name to colorize the cloze text.
   ---@field thickness? string # The thickness of a line.
-  ---@field visibility? boolean
+  ---@field visibility? boolean # The visibility of the cloze text.
   ---@field width? string # The width of a fixed size cloze (`\clozefix`).
 
   ---The default options.
@@ -409,7 +409,7 @@ local config = (function()
     },
     thickness = { description = 'The thickness of a line.' },
     visibility = {
-      description = 'Show or hide the cloze text.',
+      description = 'The visibility of the cloze text',
       opposite_keys = { [true] = 'show', [false] = 'hide' },
     },
     width = {

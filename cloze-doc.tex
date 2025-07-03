@@ -948,6 +948,10 @@ Mozart’s father was called
 \tt{width} &
 \TmpDescriptionLine{The width of a fixed size cloze (\cmd{\clozefix}).} &
 \TmpSecRef{sec:option-show} \\
+
+\tt{visibility} &
+\TmpDescriptionLine{The visibility of the cloze text.} &
+\TmpSecRef{sec:option-visibility} \\
 \end{tabular}
 
 %%
@@ -1657,17 +1661,52 @@ The only command which can be changed by the option |width| is
 \cmd{\clozefix} \TmpSecRef{sec:command-clozefix}. The default value of
 the option is \tt{\ClozeGetOption{width}}.
 
-\newcommand{\TmpOptionwidth}[1]{%
+\newcommand{\TmpOptionWidth}[1]{%
   \noindent%
   Lorem \clozefix[width=#1]{dolor} amet.%
   \TmpDesc{#1}%
 }
 
 \begin{TmpExample}
-\TmpOptionwidth{3cm}
-\TmpOptionwidth{5cm}
-\TmpOptionwidth{7cm}
+\TmpOptionWidth{3cm}
+\TmpOptionWidth{5cm}
+\TmpOptionWidth{7cm}
 \end{TmpExample}
+
+%%
+% visibility
+%%
+
+\subsubsection{\tt{visibility}}\label{sec:option-visibility}
+
+\TmpOption{visibility}{boolean}:
+%
+% Anstelle der entgegengesetzten Optionen |show| und |hide| können Sie
+% die Option |visibility| verwenden und diese auf einen booleschen Wert
+% setzen.
+Instead of the opposite naked |show| and |hide| keys, you can use the
+|visibility| option and set it to a boolean value.
+
+\begin{minted}{latex}
+Lorem \cloze[visibility=false]{ipsum} dolor.
+
+Lorem \cloze[visibility=true]{ipsum} dolor.
+
+Lorem \cloze[visibility=false]{ipsum} dolor.
+\end{minted}
+
+\def\TmpOptionVisibility#1{%
+  \noindent%
+  Lorem \cloze[visibility=#1]{ipsum} dolor.%
+  \TmpDesc{#1}%
+}
+
+\begin{TmpExample}
+\TmpOptionVisibility{false}
+\TmpOptionVisibility{true}
+\TmpOptionVisibility{false}
+\end{TmpExample}
+%
 
 %-----------------------------------------------------------------------
 % Handwriting fonts from CTAN and \TeX{} Live
