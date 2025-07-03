@@ -537,6 +537,62 @@ local config = (function()
     defs_manager = defs_manager,
 
     ---
+    ---Get the number of extension units (`\clozeextend`).
+    ---
+    ---@return integer extend_count # The number of extension units (`\clozeextend`).
+    get_extend_count = function()
+      return get('extend_count')
+    end,
+
+    ---
+    ---Get the height of one extension unit (`\clozeextend`) in scaled points.
+    ---
+    ---@return integer extend_height # The height of one extension unit (`\clozeextend`) in scaled points.
+    get_extend_height = function()
+      return tex.sp(get('extend_height'))
+    end,
+
+    ---
+    ---Get the width of one extension unit (`\clozeextend`) in scaled points.
+    ---
+    ---@return integer extend_width # The width of one extension unit (`\clozeextend`) in scaled points.
+    get_extend_width = function()
+      return tex.sp(get('extend_width'))
+    end,
+
+    ---
+    ---Get the font of the cloze text.
+    ---
+    ---@return string|nil font # The font of the cloze text.
+    get_font = function()
+      return get('font')
+    end,
+
+    ---
+    ---Get the color to colorize the cloze line.
+    ---
+    ---@return Color text_color # The color to colorize the cloze line.
+    get_line_color = function()
+      return farbe.Color(get('line_color'))
+    end,
+
+    ---
+    ---Get the additional margin in scaled points between the normal and the cloze text.
+    ---
+    ---@return integer min_lines # The additional margin in scaled points between the normal and the cloze text.
+    get_margin = function()
+      return tex.sp(get('margin'))
+    end,
+
+    ---
+    ---Get the minimum number of lines a `clozepar` environment must have.
+    ---
+    ---@return number min_lines # The minimum number of lines a `clozepar` environment must have.
+    get_min_lines = function()
+      return get('min_lines')
+    end,
+
+    ---
     ---Get the spacing of the lines in the environment `clozespace`.
     ---
     ---@return number spacing # The spacing of the lines in the environment `clozespace`.
@@ -550,6 +606,14 @@ local config = (function()
     ---@return number spread # The magnification or spreading factor of a gap.
     get_spread = function()
       return get('spread')
+    end,
+
+    ---
+    ---Get the color to colorize the cloze text.
+    ---
+    ---@return Color text_color # The color to colorize the cloze text.
+    get_text_color = function()
+      return farbe.Color(get('text_color'))
     end,
 
     ---
@@ -592,13 +656,12 @@ local utils = (function()
   ---
   ---@return PdfColorstackWhatsitNode
   local function create_color(kind, command)
-    local color_spec
+    local color
     if kind == 'line' then
-      color_spec = config.get('line_color')
+      color = config.get_line_color()
     else
-      color_spec = config.get('text_color')
+      color = config.get_text_color()
     end
-    local color = farbe.Color(color_spec)
     return color:create_pdf_colorstack_node(command)
   end
 
@@ -747,7 +810,7 @@ local utils = (function()
   ---Write a kern node to the current node list. This kern node can be
   ---used to build a margin.
   local function write_margin_node()
-    node.write(create_kern_node(tex.sp(config.get('margin'))))
+    node.write(create_kern_node(config.get_margin()))
   end
 
   ---
@@ -1390,8 +1453,7 @@ local function make_par(head_node)
     head_node = head_node.next
   end
 
-  local min_lines = config.get('min_lines')
-  local additional_lines = min_lines - line_count
+  local additional_lines = config.get_min_lines() - line_count
 
   if additional_lines > 0 then
     add_additional_lines(last_hlist_node, additional_lines)
@@ -1457,7 +1519,7 @@ local function make_strike(head_node)
   traversor.traverse(function(env)
     -- The pre linebreak filter gets fired multiple times (e.g. by package mdframed)
     config.finalize_cloze()
-    local text_color = farbe.Color(config.get('text_color'))
+    local text_color = config.get_text_color()
 
     local vlist = env.start.next --[[@as VlistNode]]
     local top_hlist = vlist.head --[[@as HlistNode]]
@@ -1696,22 +1758,22 @@ return {
   ---@param kv_string string
   print_extension = function(kv_string)
     config.parse_local_extend_options(kv_string)
-    for _ = 1, config.get('extend_count') do
+    for _ = 1, config.get_extend_count() do
       ---ex: vertical measure of x
       ---px: x height current font (has no effect)
       local userskip = node.new('glue', 'userskip') --[[@as GlueNode]]
-      userskip.width = tex.sp(config.get('extend_width'))
+      userskip.width = config.get_extend_width()
       node.write(userskip)
 
       local spaceskip = node.new('glue', 'spaceskip') --[[@as GlueNode]]
       spaceskip.width = 0
-      spaceskip.stretch = tex.sp(config.get('extend_width'))
-      spaceskip.shrink = tex.sp(config.get('extend_width'))
+      spaceskip.stretch = config.get_extend_width()
+      spaceskip.shrink = config.get_extend_width()
       node.write(spaceskip)
 
       local rule = node.new('rule') --[[@as RuleNode]]
       rule.depth = 0
-      rule.height = tex.sp(config.get('extend_height'))
+      rule.height = config.get_extend_height()
       rule.width = 0
       node.write(rule)
     end
@@ -1763,7 +1825,7 @@ return {
   end,
 
   print_font = function()
-    local font = config.get('font')
+    local font = config.get_font()
     if font ~= nil then
       tex.print(font)
     else
