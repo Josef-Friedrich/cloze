@@ -133,7 +133,7 @@ Lua\TeX{} that would be extremely painful otherwise"} in TUGboat, Volume
   \href{https://github.com/Josef-Friedrich/cloze}
   {github.com/Josef-Friedrich/cloze}%
 }
-\date{v2.0.0~from 2025/06/19}
+\date{v2.0.0~from 2025/07/04}
 
 \maketitle\vfill
 
@@ -212,7 +212,14 @@ on top of each other you will see that they perfectly match.
 %
 %%
 
-\subsubsection{The plain \TeX{} interface}
+\subsubsection{The plain (Lua)\TeX{} interface}
+
+% Dank \href{https://ctan.org/pkg/lparse}{lparse} sollten die meisten
+% Kommandos in plain Lua\TeX{} genauso funktionieren wie in Lua\LaTeX{}.
+Thanks to \href{https://ctan.org/pkg/lparse}{lparse}, most
+commands should work in plain Lua\TeX{} just like in Lua\LaTeX{}.
+% In Lua\TeX{} gibt es jedoch keine Umgebungen.
+However, there are no environments in Lua\TeX{}.
 
 \begin{minted}{tex}
 \input cloze.tex
@@ -226,7 +233,7 @@ Lorem \cloze{ipsum} dolor.
 %
 %%
 
-\subsubsection{The \LaTeX{} interface}
+\subsubsection{The (Lua)\LaTeX{} interface}
 
 \begin{minted}{latex}
 \documentclass{article}

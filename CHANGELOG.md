@@ -5,23 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - 2025-06-29
+## [2.0.0] - 2025-07-04
 
 ### Changed
 
 - `LuaLaTeX`: commands are now defined with `\NewDocumentCommand` or
   `\NewDocumentEnvironment` instead of `\newcommand` or
   `\newenvironment`.
-- Remove dependency of [xcolor](https://www.ctan.org/pkg/xcolor).
+- Remove dependency of [xcolor](https://ctan.org/pkg/xcolor).
 
 ### Added
 
 - `oarg` (optional argument) support for the plain `LuaTeX` commands.
-- option `font`
+- Add option `font` as an alternative of the commands `\clozefont` and
+  `\clozesetfont`
 
 ### Removed
 
-- `\clozesetoption` and `\clozesetlocaloption`
+- Remove `\clozesetoption` and `\clozesetlocaloption`. Thanks to
+  [luakeys](https://ctan.org/pkg/luakeys), options can now also be
+  processed as key-value pairs in plain `LuaTeX` using the `\clozeset`
+  command.
 
 ## [1.8.1] - 2025-06-17
 
