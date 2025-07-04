@@ -498,15 +498,20 @@ command |\clozeextend| adds some invisible placeholders to extend some
 cloze texts with blank space. Keep in mind that there is the option
 \tt{min_lines} \TmpSecRef{sec:option-min-lines}, if you want to extend
 some cloze paragraphs.
-
-Corresponding options:
+% Die zugehörigen Optionen sind:
+The associated options are:
 
 \begin{description}
-\item[extension\_count]: The number of extension units.
+\item[|extension_count|]: The number of extension units
+\TmpSecRef{sec:option-extend-count}.
 
-\item[extension\_height]: The height of one extension unit (default: 2ex).
+\item[|extension_height|]:
+The height of one extension unit (default: 2ex)
+\TmpSecRef{sec:option-extend-height}.
 
-\item[extension\_width]: The width of one extension unit (default: 1em).
+\item[|extension_width|]:
+The width of one extension unit (default: 1em)
+\TmpSecRef{sec:option-extend-width}.
 \end{description}
 
 \begin{minted}{latex}
@@ -514,8 +519,8 @@ Corresponding options:
 \item \clozefil{Lorem ipsum dolor sit amet, consectetur adipisicing
 elit, sed do eiusmod tempor incididunt ut labore et dolore magna
 aliqua.}
-\item \clozefil{Ut enim ad minim veniam \clozeextend[20]}
-\item \clozefil{quis nostrud \clozeextend[20]}
+\item \clozefil{Ut enim ad minim veniam \clozeextend[30]}
+\item \clozefil{quis nostrud \clozeextend[40]}
 \end{itemize}
 \end{minted}
 
@@ -524,8 +529,8 @@ aliqua.}
 \item \clozefil{Lorem ipsum dolor sit amet, consectetur adipisicing
 elit, sed do eiusmod tempor incididunt ut labore et dolore magna
 aliqua.}
-\item \clozefil{Ut enim ad minim veniam \clozeextend[20]}
-\item \clozefil{quis nostrud \clozeextend[20]}
+\item \clozefil{Ut enim ad minim veniam \clozeextend[30]}
+\item \clozefil{quis nostrud \clozeextend[40]}
 \end{itemize}
 \end{TmpExample}
 
@@ -649,7 +654,7 @@ Explain three ways that RAM is different to ROM.
 %%
 
 \subsubsection{\tt{clozebox}}
-\label{sec:command-clozebox}
+\label{sec:environment-clozebox}
 
 \DescribeEnv{clozebox} |\begin{clozebox}|*\oarg{options} \dots
 \textit{some text} \dots |\end{clozebox}|: The environment \tt{clozebox}
@@ -1190,8 +1195,9 @@ of the line is larger than the width of the text.
 \label{sec:option-box-height}
 
 \TmpOption{box_height}{dimen}:
-specifies the height of a cloze box. This option has only
-an effect on the environment |clozebox| \TmpSecRef{sec:command-clozebox}.
+specifies the height of a cloze box. This
+option has only an effect on the environment |clozebox|
+\TmpSecRef{sec:environment-clozebox}.
 
 \begin{minted}{latex}
 \begin{clozebox}[box_height=5cm]
@@ -1224,7 +1230,7 @@ box_height: 1cm; Lorem ipsum dolor sit amet ...
 
 \TmpOption{box_rule}{dimen}: specifies the thickness of the rule around a
 cloze box. This option has only an effect on the environment |clozebox|
-\TmpSecRef{sec:command-clozebox}.
+\TmpSecRef{sec:environment-clozebox}.
 
 \begin{minted}{latex}
 \begin{clozebox}[box_rule=2pt]
@@ -1257,7 +1263,7 @@ box_rule: 3pt
 
 \TmpOption{box_width}{dimen}:
 specifies the width of a cloze box. This option has only an
-effect on the environment |clozebox| \TmpSecRef{sec:command-clozebox}.
+effect on the environment |clozebox| \TmpSecRef{sec:environment-clozebox}.
 
 \begin{minted}{latex}
 \begin{clozebox}[box_width=3cm]
@@ -1349,6 +1355,131 @@ Lorem \cloze[font=\Huge]{ipsum} dolor.
 \begin{TmpExample}
 Lorem \cloze[font=\Huge]{ipsum} dolor.
 \end{TmpExample}
+
+%%
+% extend_count
+%%
+
+\subsubsection{\tt{extend_count}}
+\label{sec:option-extend-count}
+
+\TmpOption{extend_count}{integer}:
+% Als lokale Option innerhalb des Kommandos \cmd{\clozeextend} angegeben,
+% kann die Option abgekürzt und das prefix |extend_| weggelassen
+% werden.
+If specified as a local option within the \cmd{\clozeextend} command,
+the option can be abbreviated and the prefix |extend_| omitted.
+
+\begin{minted}{latex}
+\cloze{Lorem ipsum dolor sit amet. \clozeextend[count=5]}
+\end{minted}
+
+\def\TmpExtendCount#1{%
+  \noindent%
+  \cloze{Lorem ipsum dolor sit amet. \clozeextend[count=#1]}
+  \hfill
+  \TmpExpDesc{#1}
+  \par%
+}
+
+\begin{TmpExample}
+\TmpExtendCount{5}
+\TmpExtendCount{10}
+\TmpExtendCount{15}
+\end{TmpExample}
+
+% Die Option kann sogar noch weiter gekürzt werden, nämlich als eine
+% einzige Zahl.
+The option can be shortened even further, namely as a single number.
+% In allen drei Beispielen wird die Option |extend_count| auf 5 gesetzt.
+All three examples set the |extend_count| option to 5.
+
+\begin{minted}{latex}
+\clozeextend[5]
+\clozeextend[count=5]
+\clozeextend[extend_count=5]
+\end{minted}
+
+% Diese Option hat nur Auswirkungen auf den Befehl \cmd{\clozeextend}
+% \TmpSecRef{sec:command-clozeextend}.
+\noindent
+This option only has an effect on the command \cmd{\clozeextend}
+\TmpSecRef{sec:command-clozeextend}.
+
+%%
+% extend_height
+%%
+
+\subsubsection{\tt{extend_height}}
+\label{sec:option-extend-height}
+
+\TmpOption{extend_height}{dim}:
+% Als lokale Option innerhalb des Kommandos \cmd{\clozeextend} angegeben,
+% kann die Option abgekürzt und das prefix |extend_| weggelassen
+% werden.
+If specified as a local option within the \cmd{\clozeextend} command,
+the option can be abbreviated and the prefix |extend_| omitted.
+
+\begin{minted}{latex}
+\cloze{Lorem ipsum dolor sit amet. \clozeextend[height=2ex]}
+\end{minted}
+
+\def\TmpExtendHeight#1{%
+  \noindent%
+  \cloze{Lorem ipsum dolor sit amet. \clozeextend[height=#1]}
+  \hfill
+  \TmpExpDesc{#1}
+  \par%
+}
+
+\begin{TmpExample}
+\TmpExtendHeight{2ex}
+\TmpExtendHeight{3ex}
+\TmpExtendHeight{4ex}
+\end{TmpExample}
+
+% Diese Option hat nur Auswirkungen auf den Befehl \cmd{\clozeextend}
+% \TmpSecRef{sec:command-clozeextend}.
+\noindent
+This option only has an effect on the command \cmd{\clozeextend}
+\TmpSecRef{sec:command-clozeextend}.
+
+%%
+% extend_width
+%%
+
+\subsubsection{\tt{extend_width}}
+\label{sec:option-extend-width}
+
+\TmpOption{extend_width}{dim}:
+% Als lokale Option innerhalb des Kommandos \cmd{\clozeextend} angegeben,
+% kann die Option abgekürzt und das prefix |extend_| weggelassen
+% werden.
+If specified as a local option within the \cmd{\clozeextend} command,
+the option can be abbreviated and the prefix |extend_| omitted.
+
+\begin{minted}{latex}
+\cloze{Lorem ipsum dolor sit amet. \clozeextend[width=1em]}
+\end{minted}
+
+\def\TmpExtendWidth#1{%
+  \noindent%
+  \cloze{Lorem ipsum dolor sit amet. \clozeextend[width=#1]}
+  \hfill
+  \TmpExpDesc{#1}
+  \par%
+}
+
+\begin{TmpExample}
+\TmpExtendWidth{1em}
+\TmpExtendWidth{2em}
+\TmpExtendWidth{3em}
+\end{TmpExample}
+
+% Diese Option hat nur Auswirkungen auf den Befehl \cmd{\clozeextend}
+% \TmpSecRef{sec:command-clozeextend}.
+This option only has an effect on the command \cmd{\clozeextend}
+\TmpSecRef{sec:command-clozeextend}.
 
 %%
 % hide and show
