@@ -62,7 +62,8 @@ local tex_printf = luakeys.utils.tex_printf
 ---@field cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
 ---@field position MarkerPosition # Whether the marker node indicates the beginning or the end of a cloze.
 ---@field finished? boolean # true if the node manipulation for the cloze is finished
----@field local_opts Options
+---@field local_opts Options # The local options that only apply to a single cloze command or environment.
+---@field merged_opts Options # The merged global/group options and the local options. The local options overwrite the global ones.
 
 ---
 ---The table `config` bundles functions that deal with the option
@@ -147,9 +148,9 @@ local config = (function()
   local global_options = {}
 
   ---
-  ---The current local options.
+  ---The current merged local and global/group options.
   ---@type Options
-  local local_options = {}
+  local merged_options = {}
 
   ---@type MarkerData|nil
   local current_marker_data = nil
@@ -186,12 +187,19 @@ local config = (function()
   ---
   ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
   ---@param position MarkerPosition # Whether the marker node indicates the beginning or the end of a cloze.
-  ---@param local_opts? Options
-  local function write_marker(cloze_type, position, local_opts)
+  ---@param local_opts? Options # The local options that only apply to a single cloze command or environment.
+  ---@param merged_opts? Options # The merged global/group options and the local options. The local options overwrite the global ones.
+  local function write_marker(cloze_type,
+    position,
+    local_opts,
+    merged_opts)
     local index = get_index()
     local data = { cloze_type = cloze_type, position = position }
     if local_opts ~= nil then
       data.local_opts = local_opts
+    end
+    if merged_opts ~= nil then
+      data.merged_opts = merged_opts
     end
     storage[index] = data
     local marker = node.new('whatsit', 'user_defined') --[[@as UserDefinedWhatsitNode]]
@@ -199,6 +207,35 @@ local config = (function()
     marker.user_id = user_id
     marker.value = index
     node.write(marker)
+  end
+
+  ---
+  ---Load and set the two global variables `global_options` and `merged_options`.
+  ---
+  ---@param local_opts? Options # The not merged local options of a single cloze command.
+  ---@param merged_opts? Options # Already merged options
+  ---@param group? string # If not specified local_opts is asked for a group field
+  ---
+  ---@return Options merged_opts
+  ---@return Options global_options
+  local function load_opts(local_opts, merged_opts, group)
+    if local_opts == nil then
+      local_opts = {}
+    end
+    if group == nil and local_opts.group ~= nil then
+      group = local_opts.group
+    end
+    if group ~= nil then
+      global_options = group_storage[group]
+    else
+      global_options = group_storage.global
+    end
+    if merged_opts == nil then
+      merged_opts = luakeys.utils.clone_table(global_options)
+      luakeys.utils.merge_tables(merged_opts, local_opts)
+    end
+    merged_options = merged_opts
+    return merged_opts, global_options
   end
 
   ---
@@ -214,18 +251,7 @@ local config = (function()
       node.subtype('user_defined') and n.user_id == user_id then
       local data = get_storage(n.value --[[@as integer]] )
       if data.position == 'start' then
-        -- global or groups
-        if data.local_opts ~= nil and data.local_opts.group ~= nil then
-          global_options = group_storage[data.local_opts.group]
-        else
-          global_options = group_storage.global
-        end
-        -- local opts
-        if data.local_opts == nil then
-          local_options = {}
-        else
-          local_options = data.local_opts
-        end
+        load_opts(data.local_opts, data.merged_opts)
         current_marker_data = data
       end
       return data
@@ -313,16 +339,11 @@ local config = (function()
   ---
   ---@return any # The value of the corresponding option key.
   local function get(key)
-    local value_local = local_options[key]
-    local value_global = global_options[key]
-
+    local value_local = merged_options[key]
     local value, source
     if has_value(value_local) then
-      source = 'local'
-      value = local_options[key]
-    elseif has_value(value_global) then
-      source = 'global'
-      value = value_global
+      source = 'merged'
+      value = merged_options[key]
     else
       source = 'default'
       value = defaults[key]
@@ -457,26 +478,24 @@ local config = (function()
   ---
   ---@param local_opts Options
   local function set_local_options(local_opts)
-    local_options = local_opts
+    merged_options = local_opts
   end
 
   ---
-  ---Parse local options and set this options to the global variabl local_options
+  ---Parse local options and set this options to the global variable
+  ---`local_options`.
   ---
   ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
   ---
-  ---@return Options
+  ---@return Options local_opts # The local options that only apply to a single cloze command or environment.
+  ---@return Options merged_opts # The merged global/group options and the local options. The local options overwrite the global ones.
   local function parse_local_options(kv_string)
-    local_options = luakeys.parse(kv_string, {
+    local local_opts = luakeys.parse(kv_string, {
       defs = defs,
       debug = log.get() > 3,
     })
-    if local_options.group ~= nil then
-      global_options = group_storage[local_options.group]
-    else
-      global_options = group_storage.global
-    end
-    return local_options
+    local merged_opts = load_opts(local_opts)
+    return local_opts, merged_opts
   end
 
   ---
@@ -518,7 +537,7 @@ local config = (function()
   ---@param kv_string string for example `2` or `spacing=2`
   local function parse_local_space_options(kv_string)
     local local_opts = defs_space:parse(kv_string)
-    set_local_options(local_opts)
+    load_opts(local_opts)
   end
 
   ---
@@ -537,7 +556,7 @@ local config = (function()
   ---@param kv_string string
   local function parse_local_box_options(kv_string)
     local local_opts = defs_box:parse(kv_string)
-    set_local_options(local_opts)
+    load_opts(local_opts)
   end
 
   ---
@@ -583,6 +602,9 @@ local config = (function()
     write_marker = write_marker,
     get_marker = get_marker,
     get_marker_data = get_marker_data,
+    debug_marker = function()
+      luakeys.debug(storage)
+    end,
     set_local_options = set_local_options,
     parse_local_options = parse_local_options,
     parse_global_options = parse_global_options,
@@ -1831,6 +1853,10 @@ return {
       print(group, kv_string)
       config.parse_global_options(kv_string, group)
     end)
+
+    lparse.register_csname('ClozeDebugMarker', function()
+      config.debug_marker()
+    end)
   end,
 
   write_linefil_nodes = utils.write_linefil_nodes,
@@ -1842,14 +1868,14 @@ return {
   write_marker = config.write_marker,
   parse_global_options = config.parse_global_options,
   parse_local_options = config.parse_local_options,
-
   register_callback = cb.register_callbacks,
   unregister_callback = cb.unregister_callbacks,
 
   initialize_cloze = function(cloze_type, kv_string)
     cb.register_callbacks(cloze_type)
-    config.write_marker(cloze_type, 'start',
-      config.parse_local_options(kv_string))
+    local local_opts, merged_opts =
+      config.parse_local_options(kv_string)
+    config.write_marker(cloze_type, 'start', local_opts, merged_opts)
   end,
 
   ---

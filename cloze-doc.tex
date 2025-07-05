@@ -1077,31 +1077,19 @@ declaration, the cloze package offers a special command to set
 
 \DescribeMacro{\clozeset}
 \cmd{\clozeset}\oarg{group-name}\marg{global options}:
-The command can set \emph{global} or \emph{group} options for each
-paragraph.
+% Der Befehl \clozeset setzt \emph{globale} oder \emph{group} Optionen.
+The \cmd{\clozeset} command sets \emph{global} or \emph{group} options.
 
 \begin{minted}{latex}
-\clozeset{text_color=red} Lorem \cloze{ipsum} dolor \par
-\clozeset{text_color=green} Lorem \cloze{ipsum} dolor
+\clozeset{text_color=red} Lorem \cloze{ipsum} dolor.
+\clozeset{line_color=green} Lorem \cloze{ipsum} dolor.
+\clozeset{thickness=3pt} Lorem \cloze{ipsum} dolor.
 \end{minted}
 
 \begin{TmpExample}
-\clozeset{text_color=red} Lorem \cloze{ipsum} dolor \par
-\clozeset{text_color=green} Lorem \cloze{ipsum} dolor
-\end{TmpExample}
-
-\noindent \cmd{\clozeset} does not change the options within a
-paragraph. As you can see in the example below the last \cmd{\clozeset}
-applies the color green for both gaps.
-
-\begin{minted}{latex}
-\clozeset{text_color=red} Lorem \cloze{ipsum} dolor
-\clozeset{text_color=green} Lorem \cloze{ipsum} dolor
-\end{minted}
-
-\begin{TmpExample}
-\clozeset{text_color=red} Lorem \cloze{ipsum} dolor
-\clozeset{text_color=green} Lorem \cloze{ipsum} dolor
+\clozeset{text_color=red} Lorem \cloze{ipsum} dolor.
+\clozeset{line_color=green} Lorem \cloze{ipsum} dolor.
+\clozeset{thickness=3pt} Lorem \cloze{ipsum} dolor.
 \end{TmpExample}
 
 \clozereset
