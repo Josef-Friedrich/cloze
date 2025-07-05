@@ -100,18 +100,6 @@
 %
 % \subsubsection{Public plain \TeX{} macros}
 %
-% \begin{macro}{\clozeset}
-%    \begin{macrocode}
-\def\clozeset#1{%
-  \directlua
-  {
-    cloze.parse_global_options('\luaescapestring{\unexpanded{#1}}')
-  }%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-%
 % \begin{macro}{\clozereset}
 %    \begin{macrocode}
 \def\clozereset{%

@@ -114,7 +114,7 @@ local config = (function()
   ---A table with the group options that are indexed with the corresponding
   ---group name.
   ---@type {[string]: Options }
-  local group_storage = {}
+  local group_storage = { global = {} }
 
   ---The default options.
   ---@type Options
@@ -142,17 +142,12 @@ local config = (function()
   }
 
   ---
-  ---The global options set by the user.
+  ---The current global or group options.
   ---@type Options
   local global_options = {}
 
   ---
-  ---The current group options.
-  ---@type Options
-  local group_options = {}
-
-  ---
-  ---The currnt local options.
+  ---The current local options.
   ---@type Options
   local local_options = {}
 
@@ -219,15 +214,17 @@ local config = (function()
       node.subtype('user_defined') and n.user_id == user_id then
       local data = get_storage(n.value --[[@as integer]] )
       if data.position == 'start' then
-        group_options = {}
+        -- global or groups
+        if data.local_opts ~= nil and data.local_opts.group ~= nil then
+          global_options = group_storage[data.local_opts.group]
+        else
+          global_options = group_storage.global
+        end
+        -- local opts
         if data.local_opts == nil then
           local_options = {}
         else
           local_options = data.local_opts
-          if data.local_opts.group ~= nil and
-            group_storage[data.local_opts.group] ~= nil then
-            group_options = group_storage[data.local_opts.group]
-          end
         end
         current_marker_data = data
       end
@@ -288,7 +285,7 @@ local config = (function()
   ---
   ---Clear the global options storage.
   local function reset_global_options()
-    global_options = {}
+    group_storage.global = {}
   end
 
   ---
@@ -317,16 +314,12 @@ local config = (function()
   ---@return any # The value of the corresponding option key.
   local function get(key)
     local value_local = local_options[key]
-    local value_group = group_options[key]
     local value_global = global_options[key]
 
     local value, source
     if has_value(value_local) then
       source = 'local'
       value = local_options[key]
-    elseif has_value(value_group) then
-      source = 'group'
-      value = value_group
     elseif has_value(value_global) then
       source = 'global'
       value = value_global
@@ -409,6 +402,10 @@ local config = (function()
       description = 'The font of the cloze text.',
       data_type = 'string',
     },
+    group = {
+      description = 'The name of the group to which the cloze belongs.',
+      data_type = 'string',
+    },
     line_color = {
       description = 'The color name to colorize the cloze line.',
       alias = 'linecolor',
@@ -474,6 +471,11 @@ local config = (function()
       defs = defs,
       debug = log.get() > 3,
     })
+    if local_options.group ~= nil then
+      global_options = group_storage[local_options.group]
+    else
+      global_options = group_storage.global
+    end
     return local_options
   end
 
@@ -483,24 +485,21 @@ local config = (function()
   ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
   ---@param group? string # The name of a cloze group
   local function parse_global_options(kv_string, group)
-    if group ~= nil then
+    if has_value(group) then
       if group_storage[group] ~= nil then
-        group_options = group_storage[group]
+        global_options = group_storage[group]
       else
-        group_options = {}
+        global_options = {}
+        group_storage[group] = global_options
       end
-      luakeys.parse(kv_string, {
-        defs = defs,
-        accumulated_result = group_options,
-        debug = log.get() > 3,
-      })
     else
-      luakeys.parse(kv_string, {
-        defs = defs,
-        accumulated_result = global_options,
-        debug = log.get() > 3,
-      })
+      global_options = group_storage.global
     end
+    luakeys.parse(kv_string, {
+      defs = defs,
+      accumulated_result = global_options,
+      debug = log.get() > 3,
+    })
   end
 
   local defs_manager = luakeys.DefinitionManager(defs)
@@ -1827,6 +1826,11 @@ return {
       tex.print(string.format('\\ClozeExtend{%s}', kv_string))
     end)
 
+    lparse.register_csname('clozeset', function()
+      local group, kv_string = lparse.scan('O{} m')
+      print(group, kv_string)
+      config.parse_global_options(kv_string, group)
+    end)
   end,
 
   write_linefil_nodes = utils.write_linefil_nodes,

@@ -62,6 +62,18 @@
 %
 % All public macros are prefixed with |\cloze|.
 %
+% \begin{macro}{\clozeset}
+%    \begin{macrocode}
+\let\clozeset=\undefined
+\NewDocumentCommand{ \clozeset } { O{} m } {
+  \directlua
+  {
+    cloze.parse_global_options('\luaescapestring{\unexpanded{#2}}', '#1')
+  }
+}
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}{\cloze}
 %    \begin{macrocode}
 \let\cloze=\undefined
