@@ -1080,6 +1080,26 @@ declaration, the cloze package offers a special command to set
 % Der Befehl \clozeset setzt \emph{globale} oder \emph{group} Optionen.
 The \cmd{\clozeset} command sets \emph{global} or \emph{group} options.
 
+% Der Befehl \cmd{\clozeset} verhält sich additiv, d. h. bei jedem Aufruf
+% werden die Optionen des Befehl in die aktuelle globale Konfiguration
+% übernommen.
+The command \cmd{\clozeset} behaves additively, i.\,e. the options of
+the command are transferred to the current global configuration each
+time it is called.
+% Ist eine Option bereits gesetzt worden, so wird die vorhandene Option
+% aktualisiert.
+If an option has already been set, the existing option is updated.
+% Wie im folgenden Beispiel zu sehen ist, wird die Lücke pro Aufruf von
+% \clozeset immer weiter konfiguiert.
+As can be seen in the following example, the gap is configured further
+and further each time \cmd{\clozeset} is called.
+% Die erste Lücke hat nur eine andere Textfarbe, die zweite hat auch
+% eine andere Linienfarbe und die dritte schließlich hat zusätzlich zu
+% den vorhergehenden Optionen eine andere Linienstärke.
+The first gap only has a different text color, the second also has a
+different line color, and finally the third has a different line
+thickness in addition to the previous options.
+
 \begin{minted}{latex}
 \clozeset{text_color=red} Lorem \cloze{ipsum} dolor.
 \clozeset{line_color=green} Lorem \cloze{ipsum} dolor.
@@ -1090,6 +1110,30 @@ The \cmd{\clozeset} command sets \emph{global} or \emph{group} options.
 \clozeset{text_color=red} Lorem \cloze{ipsum} dolor.
 \clozeset{line_color=green} Lorem \cloze{ipsum} dolor.
 \clozeset{thickness=3pt} Lorem \cloze{ipsum} dolor.
+\end{TmpExample}
+
+% Der Befehl \cmd{\clozeset} kann auch dazu verwendet werden eine neue
+% Konfigurationsgruppe zu definieren.
+\noindent
+The command \cmd{\clozeset} can also be used to define a new
+configuration group.
+% Dazu steht ein optionales Argument zur Verfügung.
+An optional argument is available for this.
+
+\begin{minted}{latex}
+\clozeset[small]{font=\tiny}
+\clozeset[large]{font=\large}
+This cloze text belongs to the \cloze[group=small]{small} group.
+This cloze text belongs to the\cloze[group=large]{large} group.
+This cloze text belongs to the \cloze[group=small]{small} group.
+\end{minted}
+
+\begin{TmpExample}
+\clozeset[small]{font=\tiny}
+\clozeset[large]{font=\large}
+This cloze text belongs to the \cloze[group=small]{small} group.
+This cloze text belongs to the\cloze[group=large]{large} group.
+This cloze text belongs to the \cloze[group=small]{small} group.
 \end{TmpExample}
 
 \clozereset
