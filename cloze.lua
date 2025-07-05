@@ -476,12 +476,6 @@ local config = (function()
   }
 
   ---
-  ---@param local_opts Options
-  local function set_local_options(local_opts)
-    merged_options = local_opts
-  end
-
-  ---
   ---Parse local options and set this options to the global variable
   ---`local_options`.
   ---
@@ -590,7 +584,7 @@ local config = (function()
   ---@param kv_string string
   local function parse_local_extend_options(kv_string)
     local local_opts = defs_extend:parse(kv_string)
-    set_local_options(local_opts)
+    load_opts(local_opts)
   end
 
   return {
@@ -605,7 +599,6 @@ local config = (function()
     debug_marker = function()
       luakeys.debug(storage)
     end,
-    set_local_options = set_local_options,
     parse_local_options = parse_local_options,
     parse_global_options = parse_global_options,
     parse_local_space_options = parse_local_space_options,
