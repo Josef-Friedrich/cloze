@@ -83,11 +83,6 @@ local config = (function()
   ---took my birthday (3.12.1978) and transformed it into a large number.
   local user_id = 3121978
 
-  ---
-  ---Store all local options of the markers.
-  ---@type {[integer]: MarkerData }
-  local storage = {}
-
   ---@class Options
   ---@field align? 'left'|'center'|'right' # The alignment of a fixed-size cloze text (`\clozefix`).
   ---@field box_height? string # The height of a cloze box (`clozebox`).
@@ -99,6 +94,7 @@ local config = (function()
   ---@field extend_height? string # The height of one extension unit (`\clozeextend`).
   ---@field extend_width? string # The width of one extension unit (`\clozeextend`).
   ---@field font? string # The font of the cloze text.
+  ---@field group? string # The name of the group to which the cloze belongs.
   ---@field line_color? string # The color name to colorize the cloze line.
   ---@field margin? string # The additional margin between the normal and the cloze text.
   ---@field min_lines? integer # The minimum number of lines a `clozepar` environment must have.
@@ -108,6 +104,17 @@ local config = (function()
   ---@field thickness? string # The thickness of a line.
   ---@field visibility? boolean # The visibility of the cloze text.
   ---@field width? string # The width of a fixed size cloze (`\clozefix`).
+
+  ---
+  ---Store all local options of the markers.
+  ---@type {[integer]: MarkerData }
+  local storage = {}
+
+  ---
+  ---A table with the group options that are indexed with the corresponding
+  ---group name.
+  ---@type {[string]: Options }
+  local group_storage = {}
 
   ---The default options.
   ---@type Options
@@ -122,6 +129,7 @@ local config = (function()
     extend_height = '2ex',
     extend_width = '1em',
     font = nil,
+    group = nil,
     line_color = 'black',
     margin = '3pt',
     min_lines = 0,
@@ -139,7 +147,12 @@ local config = (function()
   local global_options = {}
 
   ---
-  ---The local options.
+  ---The current group options.
+  ---@type Options
+  local group_options = {}
+
+  ---
+  ---The currnt local options.
   ---@type Options
   local local_options = {}
 
@@ -206,10 +219,15 @@ local config = (function()
       node.subtype('user_defined') and n.user_id == user_id then
       local data = get_storage(n.value --[[@as integer]] )
       if data.position == 'start' then
+        group_options = {}
         if data.local_opts == nil then
           local_options = {}
         else
           local_options = data.local_opts
+          if data.local_opts.group ~= nil and
+            group_storage[data.local_opts.group] ~= nil then
+            group_options = group_storage[data.local_opts.group]
+          end
         end
         current_marker_data = data
       end
@@ -290,20 +308,25 @@ local config = (function()
 
   ---
   ---Retrieve a value from a given key. First search for the value in the
-  ---local options, then in the global options. If both option storages are
-  ---empty, the default value will be returned.
+  ---local options, then in the group otions and then in the global
+  ---options. If both option storages are empty, the default value will
+  ---be returned.
   ---
   ---@param key string # The name of the options key.
   ---
   ---@return any # The value of the corresponding option key.
   local function get(key)
     local value_local = local_options[key]
+    local value_group = group_options[key]
     local value_global = global_options[key]
 
     local value, source
     if has_value(value_local) then
       source = 'local'
       value = local_options[key]
+    elseif has_value(value_group) then
+      source = 'group'
+      value = value_group
     elseif has_value(value_global) then
       source = 'global'
       value = value_global
@@ -341,17 +364,17 @@ local config = (function()
     box_height = {
       description = 'The height of a cloze box (clozebox).',
       alias = { 'boxheight' },
-      data_type = 'string'
+      data_type = 'string',
     },
     box_rule = {
       description = 'The thickness of the line around a cloze box (clozebox).',
       alias = { 'boxrule' },
-      data_type = 'string'
+      data_type = 'string',
     },
     box_width = {
       description = 'The width of a cloze box (clozebox).',
       alias = { 'boxwidth' },
-      data_type = 'string'
+      data_type = 'string',
     },
     debug = {
       description = 'The debug or log level.',
@@ -363,7 +386,7 @@ local config = (function()
     },
     distance = {
       description = 'The distance between the cloze text and the cloze line.',
-      data_type = 'string'
+      data_type = 'string',
     },
     extend_count = {
       description = 'The number of extension units (\\clozeextend).',
@@ -392,7 +415,7 @@ local config = (function()
       process = function(value, input)
         tex_printf('\\FarbeImport{%s}', value)
       end,
-      data_type = 'string'
+      data_type = 'string',
     },
     margin = {
       description = 'The additional margin between the normal and the cloze text.',
@@ -455,13 +478,29 @@ local config = (function()
   end
 
   ---
+  ---Parse global or group options.
+  ---
   ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
-  local function parse_global_options(kv_string)
-    luakeys.parse(kv_string, {
-      defs = defs,
-      accumulated_result = global_options,
-      debug = log.get() > 3,
-    })
+  ---@param group? string # The name of a cloze group
+  local function parse_global_options(kv_string, group)
+    if group ~= nil then
+      if group_storage[group] ~= nil then
+        group_options = group_storage[group]
+      else
+        group_options = {}
+      end
+      luakeys.parse(kv_string, {
+        defs = defs,
+        accumulated_result = group_options,
+        debug = log.get() > 3,
+      })
+    else
+      luakeys.parse(kv_string, {
+        defs = defs,
+        accumulated_result = global_options,
+        debug = log.get() > 3,
+      })
+    end
   end
 
   local defs_manager = luakeys.DefinitionManager(defs)
