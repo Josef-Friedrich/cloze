@@ -476,6 +476,15 @@ local config = (function()
   }
 
   ---
+  ---This little helper function specifies the log level from which
+  ---luakeys should log.
+  ---
+  ---@return boolean
+  local function log_luakeys()
+    return log.get() > 4
+  end
+
+  ---
   ---Parse local options and set this options to the global variable
   ---`local_options`.
   ---
@@ -486,7 +495,7 @@ local config = (function()
   local function parse_local_options(kv_string)
     local local_opts = luakeys.parse(kv_string, {
       defs = defs,
-      debug = log.get() > 3,
+      debug = log_luakeys(),
     })
     local merged_opts = load_opts(local_opts)
     return local_opts, merged_opts
@@ -511,7 +520,7 @@ local config = (function()
     luakeys.parse(kv_string, {
       defs = defs,
       accumulated_result = global_options,
-      debug = log.get() > 3,
+      debug = log_luakeys(),
     })
   end
 
