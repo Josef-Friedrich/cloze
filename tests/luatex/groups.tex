@@ -1,0 +1,24 @@
+\input cloze-test-macros-luatex.tex
+
+\input cloze.tex
+
+\TestTitleDesc{LuaLa\TeX: groups}
+{}
+
+\clozeset[red]{text_color=red}
+
+% to test trimming
+\clozeset[ green ]{text_color=green}
+
+% global options
+\clozeset[]{text_color=yellow}
+
+Default global group (text color is yellow): \cloze{yellow}
+
+Group green: \cloze[group=green]{green}
+
+Group green specified with spaces \cloze[group= green ]{green}
+
+Group red: \cloze[group=red]{red}
+
+\bye

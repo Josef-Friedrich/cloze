@@ -117,6 +117,29 @@ local config = (function()
   ---@type {[string]: Options }
   local groups = { global = {} }
 
+  local function trim(s)
+    return (s:gsub('^%s*(.-)%s*$', '%1'))
+  end
+
+  ---
+  ---Normalize the group name.
+  ---
+  ---The group name is trimmed.
+  ---
+  ---@param group any
+  ---
+  ---@return string|nil group # The trimmed group name or nil
+  local function normalize_group_name(group)
+    if not group then
+      return
+    end
+    group = trim(tostring(group))
+    if group == '' then
+      return
+    end
+    return group
+  end
+
   ---The default options.
   ---@type Options
   local defaults = {
@@ -201,7 +224,7 @@ local config = (function()
   ---
   ---@param local_opts? Options # The not merged local options of a single cloze command.
   ---@param merged_opts? Options # Already merged options
-  ---@param group? string # If not specified local_opts is asked for a group field
+  ---@param group? string # If not specified `local_opts` is asked for a group field.
   ---
   ---@return Options merged_opts
   ---@return Options global_options
@@ -494,7 +517,8 @@ local config = (function()
   ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
   ---@param group? string # The name of a cloze group
   local function parse_global_options(kv_string, group)
-    if has_value(group) then
+    group = normalize_group_name(group)
+    if group then
       if groups[group] ~= nil then
         global_options = groups[group]
       else
