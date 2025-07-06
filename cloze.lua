@@ -109,13 +109,13 @@ local config = (function()
   ---
   ---Store all local options of the markers.
   ---@type {[integer]: MarkerData }
-  local storage = {}
+  local marker_data = {}
 
   ---
   ---A table with the group options that are indexed with the corresponding
   ---group name.
   ---@type {[string]: Options }
-  local group_storage = { global = {} }
+  local groups = { global = {} }
 
   ---The default options.
   ---@type Options
@@ -156,32 +156,19 @@ local config = (function()
   local current_marker_data = nil
 
   ---@type integer
-  local index
+  local marker_index
 
   ---
-  ---`index` is a counter. The functions `get_index()`
-  ---increases the counter by one and then returns it.
+  ---Get the next marker index.
   ---
   ---@return integer # The index number of the corresponding table in `storage`.
-  local function get_index()
-    if not index then
-      index = 0
+  local function get_marker_index()
+    if not marker_index then
+      marker_index = 0
     end
-    index = index + 1
-    return index
+    marker_index = marker_index + 1
+    return marker_index
   end
-
-  ---
-  ---The function `get_storage()` retrieves values which belong
-  --- to a whatsit marker.
-  ---
-  ---@param index integer # The argument `index` is a numeric value.
-  ---
-  ---@return MarkerData value
-  local function get_storage(index)
-    return storage[index]
-  end
-
   ---
   ---Write a marker node to TeX's current node list.
   ---
@@ -193,7 +180,7 @@ local config = (function()
     position,
     local_opts,
     merged_opts)
-    local index = get_index()
+    local index = get_marker_index()
     local data = { cloze_type = cloze_type, position = position }
     if local_opts ~= nil then
       data.local_opts = local_opts
@@ -201,7 +188,7 @@ local config = (function()
     if merged_opts ~= nil then
       data.merged_opts = merged_opts
     end
-    storage[index] = data
+    marker_data[index] = data
     local marker = node.new('whatsit', 'user_defined') --[[@as UserDefinedWhatsitNode]]
     marker.type = 100 -- number
     marker.user_id = user_id
@@ -226,9 +213,9 @@ local config = (function()
       group = local_opts.group
     end
     if group ~= nil then
-      global_options = group_storage[group]
+      global_options = groups[group]
     else
-      global_options = group_storage.global
+      global_options = groups.global
     end
     if merged_opts == nil then
       merged_opts = luakeys.utils.clone_table(global_options)
@@ -249,7 +236,7 @@ local config = (function()
   local function get_marker_data(n)
     if n.id == node.id('whatsit') and n.subtype ==
       node.subtype('user_defined') and n.user_id == user_id then
-      local data = get_storage(n.value --[[@as integer]] )
+      local data = marker_data[n.value --[[@as integer]] ]
       if data.position == 'start' then
         load_opts(data.local_opts, data.merged_opts)
         current_marker_data = data
@@ -311,7 +298,7 @@ local config = (function()
   ---
   ---Clear the global options storage.
   local function reset_global_options()
-    group_storage.global = {}
+    groups.global = {}
   end
 
   ---
@@ -476,6 +463,15 @@ local config = (function()
   }
 
   ---
+  ---This little helper function specifies the log level from which
+  ---luakeys should log.
+  ---
+  ---@return boolean
+  local function log_luakeys()
+    return log.get() > 4
+  end
+
+  ---
   ---Parse local options and set this options to the global variable
   ---`local_options`.
   ---
@@ -486,7 +482,7 @@ local config = (function()
   local function parse_local_options(kv_string)
     local local_opts = luakeys.parse(kv_string, {
       defs = defs,
-      debug = log.get() > 3,
+      debug = log_luakeys(),
     })
     local merged_opts = load_opts(local_opts)
     return local_opts, merged_opts
@@ -499,19 +495,19 @@ local config = (function()
   ---@param group? string # The name of a cloze group
   local function parse_global_options(kv_string, group)
     if has_value(group) then
-      if group_storage[group] ~= nil then
-        global_options = group_storage[group]
+      if groups[group] ~= nil then
+        global_options = groups[group]
       else
         global_options = {}
-        group_storage[group] = global_options
+        groups[group] = global_options
       end
     else
-      global_options = group_storage.global
+      global_options = groups.global
     end
     luakeys.parse(kv_string, {
       defs = defs,
       accumulated_result = global_options,
-      debug = log.get() > 3,
+      debug = log_luakeys(),
     })
   end
 
@@ -597,7 +593,7 @@ local config = (function()
     get_marker = get_marker,
     get_marker_data = get_marker_data,
     debug_marker = function()
-      luakeys.debug(storage)
+      luakeys.debug(marker_data)
     end,
     parse_local_options = parse_local_options,
     parse_global_options = parse_global_options,
@@ -1787,7 +1783,9 @@ end)()
 local fboxrule_restore
 
 ---
----@param cloze_type ClozeType
+---Print the low level cloze command `\Cloze{#1}{#2}{#3}`
+---
+---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
 ---@param append_opts? string
 local function print_cloze(cloze_type, append_opts)
   local kv_string, text = lparse.scan('O{} v')
@@ -1798,7 +1796,6 @@ local function print_cloze(cloze_type, append_opts)
       kv_string = kv_string .. ',' .. append_opts
     end
   end
-
   tex.print(string.format('\\Cloze{%s}{%s}{%s}', cloze_type, kv_string,
     text))
 end
@@ -1870,6 +1867,12 @@ return {
   register_callback = cb.register_callbacks,
   unregister_callback = cb.unregister_callbacks,
 
+  ---
+  ---Initialize a cloze by registering the required callbacks and
+  ---writing marker nodes.
+  ---
+  ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
+  ---@param kv_string string
   initialize_cloze = function(cloze_type, kv_string)
     cb.register_callbacks(cloze_type)
     local local_opts, merged_opts =
@@ -1905,7 +1908,9 @@ return {
   end,
 
   ---
-  ---@param text string
+  ---Print the enviroment `clozebox`.
+  ---
+  ---@param text string # The cloze text inside the box.
   ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
   ---@param starred string # `\BooleanTrue` `\BooleanFalse`
   print_box = function(text, kv_string, starred)
@@ -1949,6 +1954,10 @@ return {
     tex_printf('\\begin{spacing}{%s}', config.get_spacing())
   end,
 
+  ---
+  ---Print the current font using `tex.print()`.
+  ---
+  ---If the font is not set, `\clozefont` is printed.
   print_font = function()
     local font = config.get_font()
     if font ~= nil then
@@ -1958,6 +1967,8 @@ return {
     end
   end,
 
+  ---
+  ---Restore the dimension `fboxrule`.
   restore_fboxrule = function()
     tex.dimen['fboxrule'] = fboxrule_restore
   end,
