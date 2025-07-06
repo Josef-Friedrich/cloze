@@ -1689,20 +1689,26 @@ end
 
 local cb = (function()
   ---
-  ---@param callback_name CallbackName # The name of a callback
-  ---@param func function # A function to register for the callback
-  ---@param description string # Only used in LuaLatex
-  local function register(callback_name, func, description)
+  ---Register a callback independently of the engine
+  ---(plain `LuaTeX` or `LuaLaTeX`).
+  ---
+  ---@param callback_name CallbackName # The name of the callback to register.
+  ---@param fn function # A function to register for the callback
+  ---@param description string # A description to identify the function (only used in LuaLaTeX).
+  local function register(callback_name, fn, description)
     if luatexbase then
-      luatexbase.add_to_callback(callback_name, func, description)
+      luatexbase.add_to_callback(callback_name, fn, description)
     else
-      callback.register(callback_name, func)
+      callback.register(callback_name, fn)
     end
   end
 
   ---
-  ---@param callback_name CallbackName # The name of a callback
-  ---@param description string # Only used in LuaLatex
+  ---Unregister a callback independently of the engine
+  ---(plain `LuaTeX` or `LuaLaTeX`).
+  ---
+  ---@param callback_name CallbackName # The name of the callback to unregister.
+  ---@param description string # A description to identify the function (only used in LuaLaTeX).
   local function unregister(callback_name, description)
     if luatexbase then
       luatexbase.remove_from_callback(callback_name, description)

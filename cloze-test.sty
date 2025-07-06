@@ -1,0 +1,18 @@
+% https://tug.org/TUGboat/tb32-1/tb100isambert.pdf
+
+\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\ProvidesPackage{cloze-test}[2025/06/29 v2.0.0 Package to test cloze]
+
+\input cloze-test.tex
+
+\RequirePackage{cloze}
+
+\RequirePackage{color}
+\definecolor{background}{rgb}{.9, .9, .9}
+
+\RequirePackage{minted}
+\setminted{
+  bgcolor=background,
+  bgcolorpadding=2mm,
+  fontsize=\footnotesize,
+}
