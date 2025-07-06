@@ -159,8 +159,7 @@ local config = (function()
   local marker_index
 
   ---
-  ---`index` is a counter. The functions `get_index()`
-  ---increases the counter by one and then returns it.
+  ---Get the next marker index.
   ---
   ---@return integer # The index number of the corresponding table in `storage`.
   local function get_marker_index()
@@ -1686,9 +1685,11 @@ end
 
 local cb = (function()
   ---
-  ---@param callback_name CallbackName # The name of a callback
-  ---@param func function # A function to register for the callback
-  ---@param description string # Only used in LuaLatex
+  ---Register a callback function.
+  ---
+  ---@param callback_name CallbackName # The name of a callback.
+  ---@param func function # A function to register for the callback.
+  ---@param description string # Only used in LuaLatex.
   local function register(callback_name, func, description)
     if luatexbase then
       luatexbase.add_to_callback(callback_name, func, description)
@@ -1698,8 +1699,10 @@ local cb = (function()
   end
 
   ---
-  ---@param callback_name CallbackName # The name of a callback
-  ---@param description string # Only used in LuaLatex
+  ---Unregister a callback function.
+  ---
+  ---@param callback_name CallbackName # The name of a callback.
+  ---@param description string # Only used in LuaLatex.
   local function unregister(callback_name, description)
     if luatexbase then
       luatexbase.remove_from_callback(callback_name, description)
@@ -1778,7 +1781,9 @@ end)()
 local fboxrule_restore
 
 ---
----@param cloze_type ClozeType
+---Print the low level cloze command `\Cloze{#1}{#2}{#3}`
+---
+---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
 ---@param append_opts? string
 local function print_cloze(cloze_type, append_opts)
   local kv_string, text = lparse.scan('O{} v')
@@ -1789,7 +1794,6 @@ local function print_cloze(cloze_type, append_opts)
       kv_string = kv_string .. ',' .. append_opts
     end
   end
-
   tex.print(string.format('\\Cloze{%s}{%s}{%s}', cloze_type, kv_string,
     text))
 end
@@ -1861,6 +1865,12 @@ return {
   register_callback = cb.register_callbacks,
   unregister_callback = cb.unregister_callbacks,
 
+  ---
+  ---Initialize a cloze by registering the required callbacks and
+  ---writing marker nodes.
+  ---
+  ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
+  ---@param kv_string string
   initialize_cloze = function(cloze_type, kv_string)
     cb.register_callbacks(cloze_type)
     local local_opts, merged_opts =
@@ -1896,7 +1906,9 @@ return {
   end,
 
   ---
-  ---@param text string
+  ---Print the enviroment `clozebox`.
+  ---
+  ---@param text string # The cloze text inside the box.
   ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
   ---@param starred string # `\BooleanTrue` `\BooleanFalse`
   print_box = function(text, kv_string, starred)
@@ -1940,6 +1952,10 @@ return {
     tex_printf('\\begin{spacing}{%s}', config.get_spacing())
   end,
 
+  ---
+  ---Print the current font using `tex.print()`.
+  ---
+  ---If the font is not set, `\clozefont` is printed.
   print_font = function()
     local font = config.get_font()
     if font ~= nil then
@@ -1949,6 +1965,8 @@ return {
     end
   end,
 
+  ---
+  ---Restore the dimension `fboxrule`.
   restore_fboxrule = function()
     tex.dimen['fboxrule'] = fboxrule_restore
   end,
