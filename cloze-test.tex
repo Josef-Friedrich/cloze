@@ -1,6 +1,7 @@
 % https://tug.org/TUGboat/tb32-1/tb100isambert.pdf
 \directlua{
    cloze_test = require('cloze-test')
+   cloze_test.register_functions()
 }
 
 \input cloze.tex
@@ -30,10 +31,6 @@
   \catcode`\ = 13\gdef {\quitvmode\Space}%
 \egroup
 
-\def\ClozeTest{%
-  \directlua{cloze_test.register_verbatim()}%
-}
-
 \def\EndClozeTest{}
 
 \def\useverbatim{%
@@ -44,4 +41,10 @@
    \bgroup\parindent=0pt \tt
    \directlua{cloze_test.print_lines(1)}
    \egroup
+}
+
+\def\ClozeTestAll{%
+  \directlua{
+    cloze_test.test_all()
+  }%
 }

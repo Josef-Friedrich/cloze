@@ -1,5 +1,9 @@
+local lparse = require('lparse')
+
 -- https://tug.org/TUGboat/tb32-1/tb100isambert.pdf
-local verb_table = {}
+local all_runs = {}
+
+local lines = {}
 
 ---
 ---Register a callback independently of the engine
@@ -35,27 +39,47 @@ end
 
 local function print_lines(catcode)
   if catcode then
-    tex.print(catcode, verb_table)
+    tex.print(catcode, lines)
   else
-    tex.print(verb_table)
+    tex.print(lines)
   end
 end
 
 local function store_lines(str)
   if string.find(str, '\\EndClozeTest') then
     unregister_callback('process_input_buffer', 'store_lines')
+    table.insert(all_runs, lines)
   else
-    table.insert(verb_table, str)
+    table.insert(lines, str)
   end
   return ''
 end
 
-local function register_verbatim()
-  verb_table = {}
+local function capture_lines_verbatim()
+  lines = {}
   register_callback('process_input_buffer', store_lines, 'store_lines')
+end
+
+local function test_all()
+  for index, lines in ipairs(all_runs) do
+    tex.print('\\par')
+    tex.print('\\bgroup\\parindent=0pt \\tt')
+    tex.print(1, lines)
+    tex.print('\\egroup')
+    tex.print('\\bigskip')
+    tex.print(lines)
+    tex.print('\\bigskip')
+    tex.print('\\bigskip')
+  end
 end
 
 return {
   print_lines = print_lines,
-  register_verbatim = register_verbatim,
+  test_all = test_all,
+  register_functions = function()
+    lparse.register_csname('ClozeTest', function()
+      lparse.scan('m')
+      capture_lines_verbatim()
+    end)
+  end,
 }
