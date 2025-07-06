@@ -109,13 +109,13 @@ local config = (function()
   ---
   ---Store all local options of the markers.
   ---@type {[integer]: MarkerData }
-  local storage = {}
+  local marker_data = {}
 
   ---
   ---A table with the group options that are indexed with the corresponding
   ---group name.
   ---@type {[string]: Options }
-  local group_storage = { global = {} }
+  local groups = { global = {} }
 
   ---The default options.
   ---@type Options
@@ -156,32 +156,20 @@ local config = (function()
   local current_marker_data = nil
 
   ---@type integer
-  local index
+  local marker_index
 
   ---
   ---`index` is a counter. The functions `get_index()`
   ---increases the counter by one and then returns it.
   ---
   ---@return integer # The index number of the corresponding table in `storage`.
-  local function get_index()
-    if not index then
-      index = 0
+  local function get_marker_index()
+    if not marker_index then
+      marker_index = 0
     end
-    index = index + 1
-    return index
+    marker_index = marker_index + 1
+    return marker_index
   end
-
-  ---
-  ---The function `get_storage()` retrieves values which belong
-  --- to a whatsit marker.
-  ---
-  ---@param index integer # The argument `index` is a numeric value.
-  ---
-  ---@return MarkerData value
-  local function get_storage(index)
-    return storage[index]
-  end
-
   ---
   ---Write a marker node to TeX's current node list.
   ---
@@ -193,7 +181,7 @@ local config = (function()
     position,
     local_opts,
     merged_opts)
-    local index = get_index()
+    local index = get_marker_index()
     local data = { cloze_type = cloze_type, position = position }
     if local_opts ~= nil then
       data.local_opts = local_opts
@@ -201,7 +189,7 @@ local config = (function()
     if merged_opts ~= nil then
       data.merged_opts = merged_opts
     end
-    storage[index] = data
+    marker_data[index] = data
     local marker = node.new('whatsit', 'user_defined') --[[@as UserDefinedWhatsitNode]]
     marker.type = 100 -- number
     marker.user_id = user_id
@@ -226,9 +214,9 @@ local config = (function()
       group = local_opts.group
     end
     if group ~= nil then
-      global_options = group_storage[group]
+      global_options = groups[group]
     else
-      global_options = group_storage.global
+      global_options = groups.global
     end
     if merged_opts == nil then
       merged_opts = luakeys.utils.clone_table(global_options)
@@ -249,7 +237,7 @@ local config = (function()
   local function get_marker_data(n)
     if n.id == node.id('whatsit') and n.subtype ==
       node.subtype('user_defined') and n.user_id == user_id then
-      local data = get_storage(n.value --[[@as integer]] )
+      local data = marker_data[n.value --[[@as integer]] ]
       if data.position == 'start' then
         load_opts(data.local_opts, data.merged_opts)
         current_marker_data = data
@@ -311,7 +299,7 @@ local config = (function()
   ---
   ---Clear the global options storage.
   local function reset_global_options()
-    group_storage.global = {}
+    groups.global = {}
   end
 
   ---
@@ -508,14 +496,14 @@ local config = (function()
   ---@param group? string # The name of a cloze group
   local function parse_global_options(kv_string, group)
     if has_value(group) then
-      if group_storage[group] ~= nil then
-        global_options = group_storage[group]
+      if groups[group] ~= nil then
+        global_options = groups[group]
       else
         global_options = {}
-        group_storage[group] = global_options
+        groups[group] = global_options
       end
     else
-      global_options = group_storage.global
+      global_options = groups.global
     end
     luakeys.parse(kv_string, {
       defs = defs,
@@ -606,7 +594,7 @@ local config = (function()
     get_marker = get_marker,
     get_marker_data = get_marker_data,
     debug_marker = function()
-      luakeys.debug(storage)
+      luakeys.debug(marker_data)
     end,
     parse_local_options = parse_local_options,
     parse_global_options = parse_global_options,
