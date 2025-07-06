@@ -114,6 +114,9 @@ local config = (function()
   ---
   ---A table with the group options that are indexed with the corresponding
   ---group name.
+  ---
+  ---The global options are also a group with the name `global`.
+  ---
   ---@type {[string]: Options }
   local groups = { global = {} }
 
@@ -124,18 +127,19 @@ local config = (function()
   ---
   ---Normalize the group name.
   ---
-  ---The group name is trimmed.
+  ---The group name is trimmed. If the group name is `nil` or `false`
+  ---or an empty string, the group name `global` is returned.
   ---
-  ---@param group any
+  ---@param group any # The raw group name in any data type.
   ---
-  ---@return string|nil group # The trimmed group name or nil
+  ---@return string group # The trimmed group name or `global`
   local function normalize_group_name(group)
     if not group then
-      return
+      return 'global'
     end
     group = trim(tostring(group))
     if group == '' then
-      return
+      return 'global'
     end
     return group
   end
@@ -319,9 +323,14 @@ local config = (function()
   end
 
   ---
-  ---Clear the global options storage.
-  local function reset_global_options()
-    groups.global = {}
+  ---Reset and clear the global/groups options storage.
+  ---
+  ---@param group? unknown # The name of a cloze group.
+  local function reset_global_options(group)
+    group = normalize_group_name(group)
+    if groups[group] ~= nil then
+      groups[group] = {}
+    end
   end
 
   ---
@@ -515,18 +524,14 @@ local config = (function()
   ---Parse global or group options.
   ---
   ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
-  ---@param group? string # The name of a cloze group
+  ---@param group? string # The name of a cloze group.
   local function parse_global_options(kv_string, group)
     group = normalize_group_name(group)
-    if group then
-      if groups[group] ~= nil then
-        global_options = groups[group]
-      else
-        global_options = {}
-        groups[group] = global_options
-      end
+    if groups[group] ~= nil then
+      global_options = groups[group]
     else
-      global_options = groups.global
+      global_options = {}
+      groups[group] = global_options
     end
     luakeys.parse(kv_string, {
       defs = defs,
@@ -1870,8 +1875,12 @@ return {
 
     lparse.register_csname('clozeset', function()
       local group, kv_string = lparse.scan('O{} m')
-      print(group, kv_string)
       config.parse_global_options(kv_string, group)
+    end)
+
+    lparse.register_csname('clozereset', function()
+      local group = lparse.scan('O{}')
+      config.reset_global_options(group)
     end)
 
     lparse.register_csname('ClozeDebugMarker', function()

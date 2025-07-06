@@ -74,6 +74,18 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\clozereset}
+%    \begin{macrocode}
+\let\clozereset=\undefined
+\NewDocumentCommand{ \clozereset } { O{} } {
+  \directlua
+  {
+    cloze.reset('\luaescapestring{\unexpanded{#1}}')
+  }
+}
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}{\cloze}
 %    \begin{macrocode}
 \let\cloze=\undefined

@@ -1146,8 +1146,9 @@ This cloze text belongs to the \cloze[group=small]{small} group.
 \label{sec:command-clozereset}
 
 \DescribeMacro{\clozereset}
-\cmd{\clozereset}: The command resets all \emph{global} options to the
-default values. It has no effect on the \emph{local} options.
+\cmd{\clozereset}\oarg{group-name}: The command resets the \emph{global}
+or \emph{group} options to the default values. It has no effect on
+the \emph{local} options.
 
 \begin{minted}{latex}
 \clozeset{
@@ -1173,8 +1174,41 @@ Very \cloze{silly} global \cloze{options}.
 \cloze{Relax!} We can reset \cloze{those} options.
 \end{TmpExample}
 
+% Verwenden Sie das optionale Argument, um eine Gruppe anzugeben, die
+% zurückgesetzt werden soll.
+\noindent
+Use the optional argument to specify a group to be reset.
+
+\begin{minted}{latex}
+\clozeset[red]{text_color=red}
+\clozeset[green]{text_color=green}
+
+This cloze is \cloze[group=red]{red}.
+This cloze is \cloze[group=green]{green}.
+
+\clozereset[red]
+
+\noindent
+This cloze is now \cloze[group=red]{blue}.
+This cloze is still \cloze[group=green]{green}.
+\end{minted}
+
+\begin{TmpExample}
+\clozeset[red]{text_color=red}
+\clozeset[green]{text_color=green}
+
+This cloze is \cloze[group=red]{red}.
+This cloze is \cloze[group=green]{green}.
+
+\clozereset[red]
+
+\noindent
+This cloze is now \cloze[group=red]{blue}.
+This cloze is still \cloze[group=green]{green}.
+\end{TmpExample}
+
 %%
-% \clozereset
+% \clozeshow and \clozehide
 %%
 
 \subsubsection{\cmd{\clozeshow} and \cmd{\clozehide}}
