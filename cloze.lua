@@ -144,6 +144,33 @@ local config = (function()
     return group
   end
 
+  ---
+  ---Return true if the specified group name is definied.
+  ---
+  ---@param group string # The group name.
+  local function validate_group_name(group)
+    return groups[group] ~= nil
+  end
+
+  ---
+  ---Throw an error if the specified group name is not definied.
+  ---
+  ---@param group string # The group name.
+  local function check_group_name(group)
+    if not validate_group_name(group) then
+      local help = {
+        'Use \\clozeset[group-name]{} to define a group.',
+        'Already defined groups:',
+      }
+      for group_name, _ in pairs(groups) do
+        if group_name ~= 'global' then
+          table.insert(help, '  - ' .. group_name)
+        end
+      end
+      tex.error('Not defined cloze group: ' .. group, help)
+    end
+  end
+
   ---The default options.
   ---@type Options
   local defaults = {
@@ -328,6 +355,7 @@ local config = (function()
   ---@param group? unknown # The name of a cloze group.
   local function reset_global_options(group)
     group = normalize_group_name(group)
+    check_group_name(group)
     if groups[group] ~= nil then
       groups[group] = {}
     end
@@ -445,6 +473,11 @@ local config = (function()
     group = {
       description = 'The name of the group to which the cloze belongs.',
       data_type = 'string',
+      process = function(value)
+        local group = normalize_group_name(value)
+        check_group_name(group)
+        return group
+      end,
     },
     line_color = {
       description = 'The color name to colorize the cloze line.',

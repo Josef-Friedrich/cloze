@@ -1,0 +1,11 @@
+\input cloze-test-macros-luatex.tex
+\input cloze.tex
+
+\TestTitleDesc{Lua\TeX: Not defined group in local options}
+{}
+
+\clozeset[group-1]{}
+\clozeset[group-2]{}
+\cloze[group=unknown]{Lorem}
+
+\bye
