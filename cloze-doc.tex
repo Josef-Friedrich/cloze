@@ -1216,8 +1216,10 @@ This cloze is still \cloze[group=green]{green}.
 \label{sec:command-clozehide}
 
 \DescribeMacro{\clozeshow} \DescribeMacro{\clozehide}
-\cmd{\clozeshow} and \cmd{\clozehide}: This commands are shortcuts for
-\cmd{\clozeset}\marg{show} and \cmd{\clozeset}\marg{hide}.
+\cmd{\clozeshow}\oarg{group} and \cmd{\clozehide}\oarg{group}: This
+commands are shortcuts for \cmd{\clozeset}\marg{show} and
+\cmd{\clozeset}\marg{hide}. If a group name is specified as an optional
+argument, only cloze texts from this group are show or hidden.
 
 \begin{minted}{latex}
 \clozehide

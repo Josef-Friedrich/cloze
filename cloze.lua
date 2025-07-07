@@ -801,6 +801,20 @@ local config = (function()
     end,
 
     ---
+    ---Set the global visibility.
+    ---
+    ---This function is used by the commands `\clozeshow` and `\clozehide`.
+    ---
+    ---@param state boolean # The visibility state. If true the cloze text is displayed.
+    ---@param group? string # The group name. Specify a group name to show or hide the cloze text only for a group of cloze texts.
+    set_global_visibility = function(state, group)
+      group = normalize_group_name(group)
+      check_group_name(group)
+      local _, global_opts = load_opts(nil, nil, group)
+      global_opts.visibility = state
+    end,
+
+    ---
     ---Get the width of a fixed size cloze (`\clozefix`) in scaled points.
     ---
     ---@return integer width # The width of a fixed size cloze (`\clozefix`) in scaled points.
@@ -1916,6 +1930,16 @@ return {
       config.reset_global_options(group)
     end)
 
+    lparse.register_csname('clozeshow', function()
+      local group = lparse.scan('O{}')
+      config.set_global_visibility(true, group)
+    end)
+
+    lparse.register_csname('clozehide', function()
+      local group = lparse.scan('O{}')
+      config.set_global_visibility(false, group)
+    end)
+
     lparse.register_csname('ClozeDebugMarker', function()
       config.debug_marker()
     end)
@@ -1927,6 +1951,7 @@ return {
   reset = config.reset_global_options,
   get_defaults = config.get_defaults,
   get_option = config.get,
+  set_global_visibility = config.set_global_visibility,
   write_marker = config.write_marker,
   parse_global_options = config.parse_global_options,
   parse_local_options = config.parse_local_options,

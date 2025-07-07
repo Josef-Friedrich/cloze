@@ -6,16 +6,25 @@
 
 \clozehide
 
-lorem \cloze{ipsum} dolor
+hidden:  lorem \cloze{ipsum} dolor
 
 \clozeshow
 
-lorem \cloze{ipsum} dolor
+displayed: lorem \cloze{ipsum} dolor
 
 \clozehide hidden: \cloze{hidden}
 \clozeshow displayed: \cloze{displayed}
 \clozehide hidden: \cloze{hidden}
 \clozeshow displayed: \cloze{displayed}
 
+\clozeset[red]{text_color=red}
+\clozeset[green]{text_color=green}
+
+\clozeshow
+
+\clozehide[red]
+
+Group green is displayed: \cloze[group=green]{green}
+Group red is hidden: \cloze[group=red]{red}
 
 \bye

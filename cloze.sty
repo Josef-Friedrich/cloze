@@ -74,6 +74,30 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\clozeshow}
+%    \begin{macrocode}
+\let\clozeshow=\undefined
+\NewDocumentCommand{ \clozeshow } { O{} } {
+  \directlua
+  {
+    cloze.set_global_visibility(true, '\luaescapestring{\unexpanded{#1}}')
+  }
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\clozehide}
+%    \begin{macrocode}
+\let\clozehide=\undefined
+\NewDocumentCommand{ \clozehide } { O{} } {
+  \directlua
+  {
+    cloze.set_global_visibility(false, '\luaescapestring{\unexpanded{#1}}')
+  }
+}
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}{\clozereset}
 %    \begin{macrocode}
 \let\clozereset=\undefined
