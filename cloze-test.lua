@@ -1,9 +1,9 @@
 local lparse = require('lparse')
 
 -- https://tug.org/TUGboat/tb32-1/tb100isambert.pdf
-local all_runs = {}
+local all_captures = {}
 
-local lines = {}
+local last_capture = {}
 
 ---
 ---Register a callback independently of the engine
@@ -37,49 +37,68 @@ local function unregister_callback(callback_name,
   end
 end
 
-local function print_lines(catcode)
+local function print_last(catcode)
   if catcode then
-    tex.print(catcode, lines)
+    tex.print(catcode, last_capture)
   else
-    tex.print(lines)
+    tex.print(last_capture)
   end
+end
+
+local function use_last()
+  print_last()
 end
 
 local function store_lines(str)
   if string.find(str, '\\EndClozeTest') then
     unregister_callback('process_input_buffer', 'store_lines')
-    table.insert(all_runs, lines)
+    table.insert(all_captures, last_capture)
   else
-    table.insert(lines, str)
+    table.insert(last_capture, str)
   end
   return ''
 end
 
-local function capture_lines_verbatim()
-  lines = {}
+local function capture()
+  last_capture = {}
   register_callback('process_input_buffer', store_lines, 'store_lines')
 end
 
-local function test_all()
-  for index, lines in ipairs(all_runs) do
-    tex.print('\\par')
-    tex.print('\\bgroup\\parindent=0pt \\tt')
-    tex.print(1, lines)
-    tex.print('\\egroup')
-    tex.print('\\bigskip')
-    tex.print(lines)
-    tex.print('\\bigskip')
-    tex.print('\\bigskip')
-  end
-end
-
 return {
-  print_lines = print_lines,
-  test_all = test_all,
+  use_last = use_last,
+  tex = {
+    print_last_verbatim = function()
+      print_last(1)
+    end,
+
+    use_last = function()
+      print_last()
+    end,
+
+    print_all = function()
+      for _, lines in ipairs(all_captures) do
+        tex.print('\\par')
+        tex.print('\\bgroup\\parindent=0pt \\tt')
+        tex.print(1, lines)
+        tex.print('\\egroup')
+        tex.print('\\bigskip')
+        tex.print(lines)
+        tex.print('\\bigskip')
+        tex.print('\\bigskip')
+      end
+    end,
+  },
+  latex = {
+    print_last_verbatim = function()
+      tex.print('\\begin{minted}{latex}')
+      tex.print(last_capture)
+      tex.print('\\end{minted}')
+    end,
+  },
   register_functions = function()
     lparse.register_csname('ClozeTest', function()
       lparse.scan('m')
-      capture_lines_verbatim()
+      capture()
     end)
   end,
 }
