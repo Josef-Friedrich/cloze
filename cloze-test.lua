@@ -87,7 +87,6 @@ local function get_capture(capture)
   return capture
 end
 
-
 ---
 ---@param capture? VerbatimCapture
 local function print_last_verbatim(capture)
@@ -109,7 +108,6 @@ local function use_last(capture)
   capture = get_capture(capture)
   tex.print(capture.lines)
 end
-
 
 local function print_all()
   for _, capture in ipairs(all_captures) do
