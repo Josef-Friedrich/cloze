@@ -1,4 +1,4 @@
-% https://tug.org/TUGboat/tb32-1/tb100isambert.pdf
+
 \directlua{
    cloze_test = require('cloze-test')
    cloze_test.register_functions()
@@ -12,6 +12,9 @@
 
 \input cloze.tex
 
+\initcatcodetable 8
+
+% https://tug.org/TUGboat/tb32-1/tb100isambert.pdf
 \ifPLAINLUATEX
   \def\createcatcodes{
     \bgroup
@@ -62,29 +65,10 @@
 \font\tTypewriterFontBig=cmtt10 scaled \magstep1
 \font\tTypewriterFontNormal=cmtt10
 
-\def\tTitle#1{%
-  \noindent%
-  {\tTypewriterFontBigger #1}%
-}
-
-\def\tDescription#1{%
-  \noindent%
-  {\tTypewriterFontNormal #1}%
-}
+\def\tTitle{\directlua{cloze_test.print_title()}}
 
 \def\tComment#1{%
   \par\tDescription{#1:} %
-}
-
-\def\tTitleDesc#1#2{%
-  \tTitle{#1}
-  \par
-  \tDescription{#2}
-  \par
-  {\noindent\tTypewriterFontNormal Test file: \jobname.tex}
-  \par
-  \hrule width 6cm
-  \bigskip
 }
 
 \def\tSection#1{%

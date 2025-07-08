@@ -136,4 +136,23 @@ return {
       capture(result.title, result.desciption)
     end)
   end,
+
+  print_title = function()
+    tex.setcatcode('global', utf8.codepoint('_'), 12)
+
+    local title, description = lparse.scan('m O{}')
+    tex.print('\\noindent{\\tTypewriterFontBigger{}' .. title ..
+                '}\\par')
+    if description ~= nil then
+      tex.print('\\noindent{\\tTypewriterFontNormal{}' .. description ..
+                  '}\\par')
+    end
+    tex.print({
+      '{\\noindent\\tTypewriterFontNormal{}Test file: ' .. tex.jobname ..
+        '.tex}',
+      '\\par',
+      '\\hrule width 6cm',
+      '\\bigskip',
+    })
+  end,
 }
