@@ -29,16 +29,17 @@
    \directlua{cloze_test.use_last()}
 }
 
-\def\ClozeTestLastVerbatim{
+% Expl syntax is not compatible with minted
+\ExplSyntaxOff
+
+\def\ClozeTestLastVerbatim{%
   \directlua{
     cloze_test.print_last_verbatim()
-  }
+  }%
 }
 
-\def\ClozeTestAll{
+\def\ClozeTestAll{%
   \directlua{
     cloze_test.print_all()
-  }
+  }%
 }
-
-\ExplSyntaxOff

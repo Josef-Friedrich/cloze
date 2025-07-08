@@ -33,18 +33,18 @@
 
 \def\EndClozeTest{}
 
-\def\useverbatim{%
-   \directlua{cloze_test.print_lines()}%
+\def\ClozeTestUseLast{
+   \directlua{cloze_test.use_last()}
 }
 
-\def\printverbatim{%
-   \bgroup\parindent=0pt \tt
-   \directlua{cloze_test.print_lines(1)}
-   \egroup
+\def\ClozeTestLastVerbatim{
+  \directlua{
+    cloze_test.print_last_verbatim()
+  }
 }
 
 \def\ClozeTestAll{%
   \directlua{
-    cloze_test.print_all_luatex()
+    cloze_test.print_all()
   }%
 }
