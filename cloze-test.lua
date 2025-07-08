@@ -96,9 +96,11 @@ local function print_last_verbatim(capture)
     tex.print(capture.lines)
     tex.print('\\end{minted}')
   else
+    tex.print('\\bigskip')
     tex.print('\\bgroup\\parindent=0pt \\tt')
     tex.print(1, capture.lines)
     tex.print('\\egroup')
+    tex.print('\\bigskip')
   end
 end
 
@@ -117,6 +119,13 @@ local function print_all()
 end
 
 return {
+  set_if_plain_luatex = function()
+    if is_latex then
+      tex.print('\\PLAINLUATEXfalse')
+    else
+      tex.print('\\PLAINLUATEXtrue')
+    end
+  end,
   print_last_verbatim = print_last_verbatim,
   use_last = use_last,
   print_all = print_all,

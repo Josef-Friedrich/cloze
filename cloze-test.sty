@@ -3,15 +3,7 @@
 \NeedsTeXFormat{LaTeX2e}[1999/12/01]
 \ProvidesPackage{cloze-test}[2025/06/29 v2.0.0 Package to test cloze]
 
-% https://tug.org/TUGboat/tb32-1/tb100isambert.pdf
-\directlua{
-   cloze_test = require('cloze-test')
-   cloze_test.register_functions()
-}
-
-\ExplSyntaxOn
-
-\RequirePackage{cloze}
+\input cloze-test.tex
 
 \RequirePackage{color}
 \definecolor{background}{rgb}{.9, .9, .9}
@@ -21,25 +13,4 @@
   bgcolor=background,
   bgcolorpadding=2mm,
   fontsize=\footnotesize,
-}
-
-\def\EndClozeTest{}
-
-\def\ClozeTestUseLast{
-   \directlua{cloze_test.use_last()}
-}
-
-% Expl syntax is not compatible with minted
-\ExplSyntaxOff
-
-\def\ClozeTestLastVerbatim{%
-  \directlua{
-    cloze_test.print_last_verbatim()
-  }%
-}
-
-\def\ClozeTestAll{%
-  \directlua{
-    cloze_test.print_all()
-  }%
 }
