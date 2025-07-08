@@ -1,65 +1,65 @@
 \input cloze.tex
 
-\font\TestTypewriterFontBigger=cmtt10 scaled \magstep3
-\font\TestTypewriterFontBig=cmtt10 scaled \magstep1
-\font\TestTypewriterFontNormal=cmtt10
+\font\tTypewriterFontBigger=cmtt10 scaled \magstep3
+\font\tTypewriterFontBig=cmtt10 scaled \magstep1
+\font\tTypewriterFontNormal=cmtt10
 
-\def\TestTitle#1{%
+\def\tTitle#1{%
   \noindent%
-  {\TestTypewriterFontBigger #1}%
+  {\tTypewriterFontBigger #1}%
 }
 
-\def\TestDescription#1{%
+\def\tDescription#1{%
   \noindent%
-  {\TestTypewriterFontNormal #1}%
+  {\tTypewriterFontNormal #1}%
 }
 
-\def\TestComment#1{%
-  \par\TestDescription{#1:} %
+\def\tComment#1{%
+  \par\tDescription{#1:} %
 }
 
-\def\TestTitleDesc#1#2{%
-  \TestTitle{#1}
+\def\tTitleDesc#1#2{%
+  \tTitle{#1}
   \par
-  \TestDescription{#2}
+  \tDescription{#2}
   \par
-  {\noindent\TestTypewriterFontNormal Test file: \jobname.tex}
+  {\noindent\tTypewriterFontNormal Test file: \jobname.tex}
   \par
   \hrule width 6cm
   \bigskip
 }
 
-\def\TestSection#1{%
+\def\tSection#1{%
   \bigskip%
   \noindent%
-  {\TestTypewriterFontBig#1}%
+  {\tTypewriterFontBig#1}%
   \bigskip%
 }
 
-\def\TestShowHideText#1#2{%
+\def\tShowHideText#1#2{%
   \par%
   \bigskip\bigskip%
   \noindent%
-  {\TestTypewriterFontNormal Cloze texts are #1 (visibility=#2):}%
+  {\tTypewriterFontNormal Cloze texts are #1 (visibility=#2):}%
   \par\bigskip%
 }
 
-\def\TestShowCloze{%
+\def\tShowCloze{%
   \clozeshow%
-  \TestShowHideText{displayed}{true}%
+  \tShowHideText{displayed}{true}%
 }
 
-\def\TestHideCloze{%
+\def\tHideCloze{%
   \clozehide%
-  \TestShowHideText{hidden}{false}%
+  \tShowHideText{hidden}{false}%
 }
 
-\def\TestShowAndHide{
-  \TestShowCloze
+\def\tShowAndHide{
+  \tShowCloze
 
   \TestExample
 
-  \TestHideCloze
+  \tHideCloze
 
   \TestExample
 }

@@ -1,18 +1,18 @@
 \input cloze-test-macros-luatex.tex
 \input cloze.tex
 
-\TestTitleDesc{Lua\TeX: macro \string\clozelinefil}
+\tTitleDesc{Lua\TeX: macro \string\clozelinefil}
 {}
 
-\TestSection{After cloze}
+\tSection{After cloze}
 
 Lorem ipsum \cloze{dolor sit amet}\clozelinefil
 
-\TestSection{Before cloze}
+\tSection{Before cloze}
 
 \clozelinefil\cloze{Lorem ipsum} dolor sit amet.
 
-\TestSection{Local option: linecolor}
+\tSection{Local option: linecolor}
 
 Lorem ipsum \cloze{dolor sit amet}\clozelinefil[linecolor=green]
 

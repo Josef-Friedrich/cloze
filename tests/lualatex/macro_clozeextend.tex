@@ -5,16 +5,16 @@
 \catcode`\_=12
 
 \begin{document}
-\TestTitleDesc{LuaLa\TeX: macro \string\clozeextend}
+\tTitleDesc{LuaLa\TeX: macro \string\clozeextend}
 {}
 
-\TestComment{Without an option}
+\tComment{Without an option}
 
 Lorem ipsum \cloze[hide]{dolor sit \clozeextend}
 
-\TestSection{extend_count}
+\tSection{extend_count}
 
-\def\TmpExtend#1{\TestComment{[#1]} Lorem ipsum \cloze[show]{dolor sit reprehenderit\clozeextend[#1]}}
+\def\TmpExtend#1{\tComment{[#1]} Lorem ipsum \cloze[show]{dolor sit reprehenderit\clozeextend[#1]}}
 
 \TmpExtend{1}
 \TmpExtend{2}
@@ -27,41 +27,41 @@ Lorem ipsum \cloze[hide]{dolor sit \clozeextend}
 \TmpExtend{9}
 \TmpExtend{10}
 
-\TestComment{[10]}
+\tComment{[10]}
 
 Lorem ipsum \cloze[hide]{dolor sit reprehenderit\clozeextend[10]}
 
-\TestComment{[count=10]}
+\tComment{[count=10]}
 
 Lorem ipsum \cloze[hide]{dolor sit reprehenderit\clozeextend[count=10]}
 
-\TestComment{[extend_count=10]}
+\tComment{[extend_count=10]}
 
 Lorem ipsum \cloze[hide]{dolor sit reprehenderit\clozeextend[extend_count=10]}
 
-\TestSection{extend_height}
+\tSection{extend_height}
 
-\TestComment{[height=2cm]}
+\tComment{[height=2cm]}
 
 Lorem ipsum \cloze[hide]{dolor sit reprehenderit\clozeextend[10,height=2cm]}
 
-\TestComment{[extend_height=2cm]}
+\tComment{[extend_height=2cm]}
 
 Lorem ipsum \cloze[hide]{dolor sit reprehenderit\clozeextend[10,extend_height=2cm]}
 
-\TestSection{extend_width}
+\tSection{extend_width}
 
-\TestComment{[width=2cm]}
+\tComment{[width=2cm]}
 
 Lorem ipsum \cloze[hide]{dolor sit reprehenderit\clozeextend[10,width=2cm]}
 
-\TestComment{[extend_width=2cm]}
+\tComment{[extend_width=2cm]}
 
 Lorem ipsum \cloze[hide]{dolor sit reprehenderit\clozeextend[10,extend_width=2cm]}
 
 \newpage
 
-\TestComment{Inside a squeezed environment}
+\tComment{Inside a squeezed environment}
 
 \begin{clozespace}[spacing=0.6]
 Lorem ipsum \cloze{dolor sit reprehenderit in voluptate velit esse
@@ -73,7 +73,7 @@ sunt in culpa qui officia deserunt mollit anim id est
 laborum.\clozeextend[100]}
 \end{clozespace}
 
-\TestComment{spacing=2}
+\tComment{spacing=2}
 
 \begin{clozespace}[spacing=2]
 Lorem ipsum \cloze{dolor sit reprehenderit in voluptate velit esse

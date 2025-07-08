@@ -1,14 +1,14 @@
 \input cloze-test.tex
 
-\ClozeTest{}
+\tBeginVerbatim{}
 Lorem \cloze{ipsum} dolor.
-\EndClozeTest
+\tEndVerbatim
 
-\ClozeTest{}
+\tBeginVerbatim{}
 Lorem2 \cloze[text_color=green]{ipsum} dolor.
-\EndClozeTest
+\tEndVerbatim
 
-\ClozeTest{}
+\tBeginVerbatim{}
 Lorem ipsum \cloze{dolor sit} amet.
 
 Lorem ipsum \cloze{dolor sit amet, consectetur adipisicing elit, sed do
@@ -20,9 +20,9 @@ eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
 minim veniam exercitation ullamco.Lorem ipsumdolor sit amet, consectetur
 adipisicing elit, sed do eiusmod tempor incididunt ut labore} et dolore
 magna aliqua. Ut enim ad minim veniam exercitation ullamco.
-\EndClozeTest
+\tEndVerbatim
 
-\ClozeTest{}
+\tBeginVerbatim{}
 \def\clozepunctation{%
   Lorem ipsum dolor sit amet, consectetur adipisicing elit sit amet
   \cloze{Lorem}.
@@ -40,8 +40,8 @@ magna aliqua. Ut enim ad minim veniam exercitation ullamco.
   \repeat
 }
 \Repeat[20]\clozepunctation
-\EndClozeTest
+\tEndVerbatim
 
-\ClozeTestAll
+\tAll
 
 \bye

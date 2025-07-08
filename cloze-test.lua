@@ -48,7 +48,7 @@ local function unregister_callback(callback_name,
 end
 
 local function store_lines(str)
-  if string.find(str, '\\EndClozeTest') then
+  if string.find(str, '\\tEndVerbatim') then
     unregister_callback('process_input_buffer', 'store_lines')
     table.insert(all_captures, last_capture)
   else
@@ -130,7 +130,7 @@ return {
   use_last = use_last,
   print_all = print_all,
   register_functions = function()
-    lparse.register_csname('ClozeTest', function()
+    lparse.register_csname('tBeginVerbatim', function()
       local kv_string = lparse.scan('m')
       local result = defs:parse(kv_string)
       capture(result.title, result.desciption)

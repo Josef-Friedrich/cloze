@@ -4,22 +4,22 @@
 \usepackage{mdframed}
 
 \begin{document}
-\TestTitleDesc{LuaLa\TeX: macro \string\clozestrike}
+\tTitleDesc{LuaLa\TeX: macro \string\clozestrike}
 {With different options.}
 
-\TestSection{Different length of top and base texts}
+\tSection{Different length of top and base texts}
 
 Lorem ipsum \clozestrike{\textbf{short}}{long text above} dolor sit.
 
 Lorem ipsum \clozestrike{\textbf{long text below}}{short} dolor sit.
 
-\TestSection{Picture environment}
+\tSection{Picture environment}
 
 \begin{picture}(20,20)
 \put(10,10){Lorem \clozestrike{ipsum}{sit} consectetur.}
 \end{picture}
 
-\TestSection{Different font sizes}
+\tSection{Different font sizes}
 
 \def\TmpFontsize{\par\noindent Lorem ipsum \clozestrike{dolor sit}{amet}, consectetur}
 
@@ -34,17 +34,17 @@ Lorem ipsum \clozestrike{\textbf{long text below}}{short} dolor sit.
 {\huge\TmpFontsize}
 {\Huge\TmpFontsize}
 
-\TestSection{Local options}
+\tSection{Local options}
 
 Lorem ipsum \clozestrike[textcolor=green]{dolor sit}{amet}.
 
-\TestSection{Package mdframed}
+\tSection{Package mdframed}
 
 \begin{mdframed}
 Lorem \clozestrike{ipsum}{sit} consectetur.
 \end{mdframed}
 
-\TestSection{Hide and show}
+\tSection{Hide and show}
 
 \def\TestExample{
 Lorem ipsum \clozestrike{dolor sit}{amet}, consectetur adipisicing
@@ -53,5 +53,5 @@ Ut enim ad minim veniam exercitation ullamco. Lorem ipsum
 \clozestrike{dolor sit amet}{consectetur}, adipisicing elit.
 }
 
-\TestShowAndHide
+\tShowAndHide
 \end{document}

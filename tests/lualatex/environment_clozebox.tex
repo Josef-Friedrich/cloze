@@ -3,10 +3,10 @@
 \usepackage[box_rule=0.04mm,box_width=3cm,box_height=5cm]{cloze}
 
 \begin{document}
-\TestTitleDesc{LuaLa\TeX: environment clozebox}
+\tTitleDesc{LuaLa\TeX: environment clozebox}
 {}
 
-\TestSection{Global options from usepackage: box\_rule=0.04mm,box\_width=3cm,box\_height=5cm}
+\tSection{Global options from usepackage: box\_rule=0.04mm,box\_width=3cm,box\_height=5cm}
 
 \begin{clozebox}
 Lorem ipsum dolor
@@ -14,19 +14,19 @@ Lorem ipsum dolor
 
 \clozereset
 
-\TestSection{Defaults after clozereset}
+\tSection{Defaults after clozereset}
 
 \begin{clozebox}
 Lorem ipsum dolor
 \end{clozebox}
 
-\TestSection{width=1cm, rule=0.1cm}
+\tSection{width=1cm, rule=0.1cm}
 
 \begin{clozebox}[width = 1cm, rule=0.1cm]
 Lorem ipsum dolor
 \end{clozebox}
 
-\TestSection{hide}
+\tSection{hide}
 
 \clozehide
 
@@ -35,7 +35,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et.
 \end{clozebox}
 
-\TestSection{show}
+\tSection{show}
 
 \clozeshow
 
@@ -44,13 +44,13 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et.
 \end{clozebox}
 
-\TestSection{Little Text}
+\tSection{Little Text}
 
 \begin{clozebox}
 Lorem ipsum dolor sit amet.
 \end{clozebox}
 
-\TestSection{A lot of text}
+\tSection{A lot of text}
 
 \begin{clozebox}
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
@@ -64,7 +64,7 @@ rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
 ipsum dolor sit amet.
 \end{clozebox}
 
-\TestSection{textcolor = green}
+\tSection{textcolor = green}
 
 \clozeset{textcolor=green}
 
@@ -73,7 +73,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et.
 \end{clozebox}
 
-\TestSection{boxwidth=5cm}
+\tSection{boxwidth=5cm}
 
 \clozereset
 
@@ -82,7 +82,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et.
 \end{clozebox}
 
-\TestSection{boxwidth=5cm,boxheight=5cm}
+\tSection{boxwidth=5cm,boxheight=5cm}
 
 \clozereset
 
@@ -91,7 +91,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et.
 \end{clozebox}
 
-\TestSection{box\_rule=0.2cm,hide}
+\tSection{box\_rule=0.2cm,hide}
 
 \clozereset
 
@@ -100,14 +100,14 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et.
 \end{clozebox}
 
-\TestSection{starred}
+\tSection{starred}
 
 \begin{clozebox}*
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et.
 \end{clozebox}
 
-\TestSection{Multiple paragraphs (not allowed)}
+\tSection{Multiple paragraphs (not allowed)}
 
 \begin{clozebox}
 \noindent

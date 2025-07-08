@@ -40,20 +40,84 @@
 \else
 \fi
 
-\def\EndClozeTest{}
+\def\tEndVerbatim{}
 
-\def\ClozeTestUseLast{
+\def\tUseLast{
    \directlua{cloze_test.use_last()}
 }
 
-\def\ClozeTestLastVerbatim{
+\def\tLastVerbatim{
   \directlua{
     cloze_test.print_last_verbatim()
   }
 }
 
-\def\ClozeTestAll{%
+\def\tAll{%
   \directlua{
     cloze_test.print_all()
   }%
+}
+
+\font\tTypewriterFontBigger=cmtt10 scaled \magstep3
+\font\tTypewriterFontBig=cmtt10 scaled \magstep1
+\font\tTypewriterFontNormal=cmtt10
+
+\def\tTitle#1{%
+  \noindent%
+  {\tTypewriterFontBigger #1}%
+}
+
+\def\tDescription#1{%
+  \noindent%
+  {\tTypewriterFontNormal #1}%
+}
+
+\def\tComment#1{%
+  \par\tDescription{#1:} %
+}
+
+\def\tTitleDesc#1#2{%
+  \tTitle{#1}
+  \par
+  \tDescription{#2}
+  \par
+  {\noindent\tTypewriterFontNormal Test file: \jobname.tex}
+  \par
+  \hrule width 6cm
+  \bigskip
+}
+
+\def\tSection#1{%
+  \bigskip%
+  \noindent%
+  {\tTypewriterFontBig#1}%
+  \bigskip%
+}
+
+\def\tShowHideText#1#2{%
+  \par%
+  \bigskip\bigskip%
+  \noindent%
+  {\tTypewriterFontNormal Cloze texts are #1 (visibility=#2):}%
+  \par\bigskip%
+}
+
+\def\tShowCloze{%
+  \clozeshow%
+  \tShowHideText{displayed}{true}%
+}
+
+\def\tHideCloze{%
+  \clozehide%
+  \tShowHideText{hidden}{false}%
+}
+
+\def\tShowAndHide{
+  \tShowCloze
+
+  \TestExample
+
+  \tHideCloze
+
+  \TestExample
 }
