@@ -1,9 +1,19 @@
 local lparse = require('lparse')
+local luakeys = require('luakeys')()
+
+---@class VerbatimCapture
+---@field title? string
+---@field description? string
+---@field lines string[]
 
 -- https://tug.org/TUGboat/tb32-1/tb100isambert.pdf
+---@type VerbatimCapture[]
 local all_captures = {}
 
-local last_capture = {}
+---@type VerbatimCapture
+local last_capture
+
+local is_latex = luatexbase ~= nil
 
 ---
 ---Register a callback independently of the engine
@@ -37,68 +47,84 @@ local function unregister_callback(callback_name,
   end
 end
 
-local function print_last(catcode)
-  if catcode then
-    tex.print(catcode, last_capture)
-  else
-    tex.print(last_capture)
-  end
-end
-
-local function use_last()
-  print_last()
-end
-
 local function store_lines(str)
   if string.find(str, '\\EndClozeTest') then
     unregister_callback('process_input_buffer', 'store_lines')
     table.insert(all_captures, last_capture)
   else
-    table.insert(last_capture, str)
+    table.insert(last_capture.lines, str)
   end
   return ''
 end
 
-local function capture()
-  last_capture = {}
+---
+---@param title? string
+---@param description? string
+local function capture(title, description)
+  last_capture = { lines = {} }
+  if title ~= nil then
+    last_capture.title = title
+  end
+  if description ~= nil then
+    last_capture.description = description
+  end
   register_callback('process_input_buffer', store_lines, 'store_lines')
 end
 
+local defs = luakeys.DefinitionManager({
+  title = { data_type = 'string' },
+  desciption = { data_type = 'string' },
+})
+
+---
+---@param capture? VerbatimCapture
+---
+---@return VerbatimCapture capture
+local function get_capture(capture)
+  if capture == nil then
+    return last_capture
+  end
+  return capture
+end
+
+---
+---@param capture? VerbatimCapture
+local function print_last_verbatim(capture)
+  capture = get_capture(capture)
+  if is_latex then
+    tex.print('\\begin{minted}{latex}')
+    tex.print(capture.lines)
+    tex.print('\\end{minted}')
+  else
+    tex.print('\\bgroup\\parindent=0pt \\tt')
+    tex.print(1, capture.lines)
+    tex.print('\\egroup')
+  end
+end
+
+---
+---@param capture? VerbatimCapture
+local function use_last(capture)
+  capture = get_capture(capture)
+  tex.print(capture.lines)
+end
+
+local function print_all()
+  for _, capture in ipairs(all_captures) do
+    print_last_verbatim(capture)
+    use_last(capture)
+  end
+end
+
 return {
+  print_last_verbatim = print_last_verbatim,
   use_last = use_last,
-  tex = {
-    print_last_verbatim = function()
-      print_last(1)
-    end,
-
-    use_last = function()
-      print_last()
-    end,
-
-    print_all = function()
-      for _, lines in ipairs(all_captures) do
-        tex.print('\\par')
-        tex.print('\\bgroup\\parindent=0pt \\tt')
-        tex.print(1, lines)
-        tex.print('\\egroup')
-        tex.print('\\bigskip')
-        tex.print(lines)
-        tex.print('\\bigskip')
-        tex.print('\\bigskip')
-      end
-    end,
-  },
-  latex = {
-    print_last_verbatim = function()
-      tex.print('\\begin{minted}{latex}')
-      tex.print(last_capture)
-      tex.print('\\end{minted}')
-    end,
-  },
+  print_all = print_all,
   register_functions = function()
     lparse.register_csname('ClozeTest', function()
-      lparse.scan('m')
-      capture()
+      local kv_string = lparse.scan('m')
+      local result = defs:parse(kv_string)
+      capture(result.title, result.desciption)
     end)
   end,
 }
