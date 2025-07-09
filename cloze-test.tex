@@ -1,7 +1,7 @@
 
 \directlua{
-   cloze_test = require('cloze-test')
-   cloze_test.register_functions()
+  cloze_test = require('cloze-test')
+  cloze_test.register_functions()
 }
 
 \newif\ifPLAINLUATEX
@@ -11,6 +11,7 @@
 }
 
 \input cloze.tex
+\input farbe.tex
 
 % https://tug.org/TUGboat/tb32-1/tb100isambert.pdf
 \ifPLAINLUATEX
@@ -66,14 +67,13 @@
 \def\tTitle{\directlua{cloze_test.print_title()}}
 
 \def\tComment#1{%
-  \par\tDescription{#1:} %
+  \par{\tTypewriterFontNormal#1:} %
 }
 
 \def\tSection#1{%
   \bigskip%
   \noindent%
   {\tTypewriterFontBig#1}%
-  \bigskip%
 }
 
 \def\tShowHideText#1#2{%

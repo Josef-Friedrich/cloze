@@ -1,35 +1,59 @@
-\input cloze-test-macros-luatex.tex
-\input cloze.tex
+\input cloze-test.tex
 
-\tTitleDesc{Lua\TeX: low-level macro \string\Cloze}
-{}
+\tTitle{Low-level macro \string\Cloze}
 
-\tSection{basic}
+% basic
 
+\tBeginVerbatim{}
 Should be displayed: Lorem\Cloze{basic}{show}{ipsum} dolor
+\tEndVerbatim
 
+\tBeginVerbatim{}
 Should be hidden: Lorem \Cloze{basic}{hide}{ipsum} dolor
+\tEndVerbatim
 
+\tBeginVerbatim{}
 Should be green: Lorem \Cloze{basic}{text_color=green}{ipsum} dolor
+\tEndVerbatim
 
+\tBeginVerbatim{}
 Should be displayed: Lorem \Cloze{basic}{}{ipsum} dolor
+\tEndVerbatim
 
+\tBeginVerbatim{}
 Should be displayed: Lorem \Cloze{basic}{thickness=0pt}{ipsum} dolor
+\tEndVerbatim
 
-\tSection{fix}
+% fix
 
+\tBeginVerbatim{}
 align=left: Lorem \Cloze{fix}{align=left}{left} dolor
+\tEndVerbatim
 
+\tBeginVerbatim{}
 align=center: Lorem \Cloze{fix}{align=center}{center} dolor
+\tEndVerbatim
 
+\tBeginVerbatim{}
 align=right: Lorem \Cloze{fix}{align=right}{right} dolor
+\tEndVerbatim
 
+\tBeginVerbatim{}
 Should be displayed: Lorem\Cloze{fix}{show}{ipsum} dolor
+\tEndVerbatim
 
+\tBeginVerbatim{}
 Should be hidden: Lorem \Cloze{fix}{hide}{iiipsum} dolor
+\tEndVerbatim
 
+\tBeginVerbatim{}
 Should be green: Lorem \Cloze{fix}{text_color=green}{iiiiipsum} dolor
+\tEndVerbatim
 
+\tBeginVerbatim{}
 Should be displayed: Lorem \Cloze{fix}{}{iiiiiiipsum} dolor
+\tEndVerbatim
+
+\tAll
 
 \bye

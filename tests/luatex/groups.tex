@@ -1,24 +1,35 @@
-\input cloze-test-macros-luatex.tex
+\input cloze-test.tex
 
-\input cloze.tex
+\tTitle{Groups}
 
-\tTitleDesc{LuaLa\TeX: groups}
-{}
-
+\tBeginVerbatim{}
 \clozeset[red]{text_color=red}
+\tEndVerbatim
 
-% to test trimming
+\tBeginVerbatim{ title = to test trimming }
 \clozeset[ green ]{text_color=green}
+\tEndVerbatim
 
-% global options
+\tBeginVerbatim{ title = global options }
 \clozeset[]{text_color=yellow}
+\tEndVerbatim
 
+\tBeginVerbatim{}
 Default global group (text color is yellow): \cloze{yellow}
+\tEndVerbatim
 
+\tBeginVerbatim{}
 Group green: \cloze[group=green]{green}
+\tEndVerbatim
 
+\tBeginVerbatim{}
 Group green specified with spaces \cloze[group= green ]{green}
+\tEndVerbatim
 
+\tBeginVerbatim{}
 Group red: \cloze[group=red]{red}
+\tEndVerbatim
+
+\tAll
 
 \bye

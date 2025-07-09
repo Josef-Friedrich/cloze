@@ -1,0 +1,27 @@
+\input cloze-test.tex
+
+\tTitle{Command \string\clozefix}
+
+\tBeginVerbatim{}
+Lorem \clozefix{ipsum} dolor.
+\tEndVerbatim
+
+\tBeginVerbatim{}
+Lorem \clozefix[width=7cm]{ipsum} dolor.
+\tEndVerbatim
+
+\tBeginVerbatim{}
+Lorem \clozefix[align=left]{ipsum} dolor.
+\tEndVerbatim
+
+\tBeginVerbatim{}
+Lorem \clozefix[align=center]{ipsum} dolor.
+\tEndVerbatim
+
+\tBeginVerbatim{}
+Lorem \clozefix[align=right]{ipsum} dolor.
+\tEndVerbatim
+
+\tAll
+
+\bye

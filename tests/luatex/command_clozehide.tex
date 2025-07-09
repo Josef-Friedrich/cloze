@@ -1,22 +1,27 @@
-\input cloze-test-macros-luatex.tex
-\input cloze.tex
+\input cloze-test.tex
 
-\tTitleDesc{Lua\TeX: macro \string\clozehide}
-{}
+\tTitle{Command \string\clozehide}
 
+\tBeginVerbatim{}
 \clozehide
 
 hidden:  lorem \cloze{ipsum} dolor
+\tEndVerbatim
 
+\tBeginVerbatim{}
 \clozeshow
 
 displayed: lorem \cloze{ipsum} dolor
+\tEndVerbatim
 
+\tBeginVerbatim{}
 \clozehide hidden: \cloze{hidden}
 \clozeshow displayed: \cloze{displayed}
 \clozehide hidden: \cloze{hidden}
 \clozeshow displayed: \cloze{displayed}
+\tEndVerbatim
 
+\tBeginVerbatim{}
 \clozeset[red]{text_color=red}
 \clozeset[green]{text_color=green}
 
@@ -26,5 +31,7 @@ displayed: lorem \cloze{ipsum} dolor
 
 Group green is displayed: \cloze[group=green]{green}
 Group red is hidden: \cloze[group=red]{red}
+\tEndVerbatim
 
+\tAll
 \bye

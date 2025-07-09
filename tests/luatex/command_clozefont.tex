@@ -1,0 +1,17 @@
+\input cloze-test.tex
+
+\tTitle{Command \string\clozefont}
+
+\tBeginVerbatim{title = Default font}
+lorem \cloze{ipsum} dolor
+\tEndVerbatim
+
+\tBeginVerbatim{title = Make the cloze font bold}
+\def\clozefont{\bf}
+
+lorem \cloze{ipsum} dolor
+\tEndVerbatim
+
+\tAll
+
+\bye

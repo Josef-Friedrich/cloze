@@ -97,9 +97,11 @@ local function print_last_verbatim(capture)
     tex.print('\\end{minted}')
   else
     tex.print('\\bigskip')
+    tex.print('\\FarbeColor{gray}')
     tex.print('\\bgroup\\parindent=0pt \\tt')
     tex.print(1, capture.lines)
-    tex.print('\\egroup')
+    tex.print('\\egroup\\FarbeColorEnd')
+    tex.print('\\FarbeColorEnd')
     tex.print('\\bigskip')
   end
 end
@@ -113,6 +115,16 @@ end
 
 local function print_all()
   for _, capture in ipairs(all_captures) do
+    if capture.title then
+      tex.sprint('\\tSection{')
+      tex.sprint(-2, capture.title)
+      tex.sprint('}')
+    end
+    if capture.description then
+      tex.sprint('\\tComment{')
+      tex.sprint(-2, capture.description)
+      tex.print('}')
+    end
     print_last_verbatim(capture)
     use_last(capture)
   end
@@ -142,7 +154,7 @@ return {
 
     local title, description = lparse.scan('m O{}')
 
-    --title
+    -- title
     tex.sprint('\\noindent{\\tTypewriterFontBigger')
     if is_latex then
       tex.sprint('LuaLa\\TeX{}: ')
