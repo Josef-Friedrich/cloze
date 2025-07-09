@@ -141,18 +141,24 @@ return {
     tex.setcatcode('global', utf8.codepoint('_'), 12)
 
     local title, description = lparse.scan('m O{}')
-    tex.print('\\noindent{\\tTypewriterFontBigger{}' .. title ..
-                '}\\par')
+
+    --title
+    tex.sprint('\\noindent{\\tTypewriterFontBigger')
+    if is_latex then
+      tex.sprint('LuaLa\\TeX{}: ')
+    else
+      tex.sprint('Lua\\TeX{}: ')
+    end
+    tex.sprint(-2, title)
+    tex.print('}\\par')
+
+    -- description
     if description ~= nil then
       tex.print('\\noindent{\\tTypewriterFontNormal{}' .. description ..
                   '}\\par')
     end
-    tex.print({
-      '{\\noindent\\tTypewriterFontNormal{}Test file: ' .. tex.jobname ..
-        '.tex}',
-      '\\par',
-      '\\hrule width 6cm',
-      '\\bigskip',
-    })
+    tex.sprint('{\\noindent\\tTypewriterFontNormal{}Test file: ')
+    tex.sprint(-2, tex.jobname)
+    tex.sprint({ '.tex}', '\\par', '\\hrule width 6cm', '\\bigskip' })
   end,
 }
