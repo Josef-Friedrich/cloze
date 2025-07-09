@@ -1,0 +1,16 @@
+\input cloze-test.tex
+
+\tTitle{Command \string\clozesetfont}
+
+\tBeginVerbatim{title=Default font}
+Lorem \cloze{ipsum} dolor
+\tEndVerbatim
+
+\tBeginVerbatim{title=Make the cloze font a typewriter font}
+\clozesetfont{\tt}
+Lorem \cloze{ipsum} dolor
+\tEndVerbatim
+
+\tAll
+
+\bye

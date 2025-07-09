@@ -1,24 +1,28 @@
-\input cloze-test-macros-luatex.tex
-\input cloze.tex
+\input cloze-test.tex
 
-\tTitleDesc{Lua\TeX: macro \string\clozeset}
-{}
+\tTitle{Command \string\clozeset}
 
+\tBeginVerbatim{}
 \clozeset{margin=2cm,thickness=2pt}
-
 \clozeset[red-group]{text_color=red}
 
 Lorem \cloze{ipsum} dolor.
 
 Lorem \cloze[group=red-group]{ipsum} dolor
+\tEndVerbatim
 
+\tBeginVerbatim{}
 \clozereset
 
 lorem \cloze{ipsum} dolor
+\tEndVerbatim
 
+\tBeginVerbatim{}
 \clozeset{text_color=red} Text color = red: \cloze{ipsum} dolor.
 \clozeset{line_color=green} line color = green: \cloze{ipsum} dolor.
 \clozeset{thickness=3pt} Thickness = 3pt: Lorem \cloze{ipsum} dolor.
+\tEndVerbatim
 
-\ClozeDebugMarker
+\tAll
+
 \bye

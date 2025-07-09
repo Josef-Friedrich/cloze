@@ -1,0 +1,16 @@
+\input cloze-test.tex
+
+\tTitle{Command \string\clozereset}
+
+\tBeginVerbatim{}
+\clozeset{margin=2cm,thickness=2pt}
+lorem \cloze{ipsum} dolor
+\tEndVerbatim
+
+\tBeginVerbatim{}
+\clozereset
+lorem \cloze{ipsum} dolor
+\tEndVerbatim
+
+\tAll
+\bye

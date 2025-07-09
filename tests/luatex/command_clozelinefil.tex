@@ -1,0 +1,19 @@
+\input cloze-test.tex
+
+\tTitle{Command \string\clozelinefil}
+
+\tBeginVerbatim{title=After cloze}
+Lorem ipsum \cloze{dolor sit amet}\clozelinefil
+\tEndVerbatim
+
+\tBeginVerbatim{title=Before cloze}
+\clozelinefil\cloze{Lorem ipsum} dolor sit amet.
+\tEndVerbatim
+
+\tBeginVerbatim{title=Local option: linecolor}
+Lorem ipsum \cloze{dolor sit amet}\clozelinefil[linecolor=green]
+\tEndVerbatim
+
+\tAll
+
+\bye

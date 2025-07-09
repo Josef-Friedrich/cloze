@@ -1,0 +1,23 @@
+\input cloze-test.tex
+
+\tTitle{Command \string\clozenol}
+
+\tBeginVerbatim{}
+Lorem \clozenol{ipsum} dolor.
+\tEndVerbatim
+
+\tBeginVerbatim{}
+\clozehide
+
+Lorem \clozenol{ipsum} dolor.
+\tEndVerbatim
+
+\tBeginVerbatim{}
+\clozeshow
+
+Lorem \clozenol[text_color=red]{ipsum} dolor.
+\tEndVerbatim
+
+\tAll
+
+\bye

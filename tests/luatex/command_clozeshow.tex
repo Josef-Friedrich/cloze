@@ -1,0 +1,21 @@
+\input cloze-test.tex
+
+\tTitle{Command \string\clozeshow}
+
+\tBeginVerbatim{title=Should be displayed}
+\cloze{ipsum} dolor
+\tEndVerbatim
+
+\tBeginVerbatim{title=Should be hidden}
+\clozehide
+\cloze{ipsum} dolor
+\tEndVerbatim
+
+\tBeginVerbatim{title=Should be displayed}
+\clozeshow
+\cloze{ipsum} dolor
+\tEndVerbatim
+
+\tAll
+
+\bye
