@@ -1,16 +1,22 @@
 \documentclass{article}
 \usepackage{cloze-test}
-
 \usepackage[spread=0.5]{cloze}
+
 \begin{document}
-\tTitle{}
+\tTitle{Option spread}
 
+\tBeginVerbatim{}
 Lorem \cloze{ipsum} dolor sit \cloze{amet lorem sit}.
+\tEndVerbatim
 
+\tBeginVerbatim{title = Override global spread option}
 Ut \cloze[spread=0]{enim} ad.
+\tEndVerbatim
 
+\tBeginVerbatim{title = Large spread factor}
 \begin{itemize}
 \item \cloze[spread=3]{text}
 \end{itemize}
+\tEndVerbatim
 
 \end{document}

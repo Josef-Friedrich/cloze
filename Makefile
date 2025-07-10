@@ -16,9 +16,6 @@ install:
 	cp -f $(jobname)-test.tex $(installdir)
 	cp -f $(jobname)-test.sty $(installdir)
 	cp -f $(jobname)-test.lua $(installdir)
-	cp -f tests/$(jobname)-test-macros-lualatex.tex $(installdir)
-	cp -f tests/$(jobname)-test-macros-luatex.tex $(installdir)
-	cp -f tests/$(jobname)-test-macros.tex $(installdir)
 
 doc: doc_pdf
 

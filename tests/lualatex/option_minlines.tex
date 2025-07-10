@@ -5,45 +5,45 @@
 \begin{document}
 \tTitle{Option minlines}
 
-\tSection{Global: \texttt{minlines=5}}
-
+\tBeginVerbatim{title = "Global minlines=3"}
 \begin{clozepar}
 Lorem ipsum.
 \end{clozepar}
+\tEndVerbatim
 
-\tSection{Local: \texttt{minlines=5}}
-
+\tBeginVerbatim{title = "minlines=5"}
 \begin{clozepar}[minlines=5]
 Lorem ipsum.
 \end{clozepar}
+\tEndVerbatim
 
-\tSection{Local: \texttt{minlines=7}}
-
+\tBeginVerbatim{title = "minlines=7"}
 \begin{clozepar}[minlines=7]
 Lorem ipsum.
 \end{clozepar}
+\tEndVerbatim
 
-\tSection{after clozereset}
-
+\tBeginVerbatim{title = after clozereset}
 \clozereset
 
 \begin{clozepar}
 Lorem ipsum.
 \end{clozepar}
+\tEndVerbatim
 
-\tSection{Local: \texttt{minlines=-1}}
-
+\tBeginVerbatim{title = "minlines=-1"}
 \begin{clozepar}[minlines=-1]
 Lorem ipsum.
 \end{clozepar}
+\tEndVerbatim
 
-\tSection{Local: \texttt{minlines=1} and more text }
-
+\tBeginVerbatim{title = "minlines=1 and more text "}
 \begin{clozepar}[minlines=-1]
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
 eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
 voluptua. At vero eos et accusam et justo duo dolores et ea
 rebum.
 \end{clozepar}
+\tEndVerbatim
 
 \end{document}
