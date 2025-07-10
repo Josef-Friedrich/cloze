@@ -4,9 +4,16 @@
 \usepackage[spread=0.5]{cloze}
 \begin{document}
 \tTitle{option visibility}
-visibility=false \cloze[visibility=false]{false}
 
-visibility=true \cloze[visibility=true]{true}
+\tBeginVerbatim{title = "visibility=false"}
+\cloze[visibility=false]{false}
+\tEndVerbatim
 
-visibility=false \cloze[visibility=false]{false}
+\tBeginVerbatim{title = "visibility=true"}
+\cloze[visibility=true]{true}
+\tEndVerbatim
+
+\tBeginVerbatim{title = "visibility=false"}
+\cloze[visibility=false]{false}
+\tEndVerbatim
 \end{document}

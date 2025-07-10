@@ -5,8 +5,7 @@
 \begin{document}
 \tTitle{option boxrule}
 
-\tSection{The dimension fboxrule gets restored}
-
+\tBeginVerbatim{title = The dimension fboxrule gets restored}
 \setlength{\fboxrule}{10pt}
 \fbox{fboxrule 10pt}
 
@@ -14,29 +13,35 @@
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et.
 \end{clozebox}
+\tEndVerbatim
 
+\tBeginVerbatim{}
 \fbox{fboxrule 10pt}
+\tEndVerbatim
 
-\tSection{Try different rule thicknesses}
-
+\tBeginVerbatim{title = Try different rule thicknesses}
 \begin{clozebox}[boxrule=1pt]
 1pt
 \end{clozebox}
+\tEndVerbatim
 
+\tBeginVerbatim{}
 \begin{clozebox}[boxrule=2pt]
 2pt
 \end{clozebox}
+\tEndVerbatim
 
+\tBeginVerbatim{}
 \begin{clozebox}[boxrule=3pt]
 3pt
 \end{clozebox}
+\tEndVerbatim
 
-\tSection{Restore to default values}
-
+\tBeginVerbatim{title=Restore to default values}
 \clozereset
-
 \begin{clozebox}
 restore
 \end{clozebox}
+\tEndVerbatim
 
 \end{document}

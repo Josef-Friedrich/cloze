@@ -1,14 +1,19 @@
 \documentclass{article}
 \usepackage{cloze-test}
-\usepackage[show]{cloze}
+\usepackage{cloze}
 \usepackage{mdframed}
 
 \begin{document}
-\tTitle{package mdframed (show)}
+\tTitle{Package mdframed}
 
+\def\tExample{
 \begin{mdframed}
 \cloze{Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
 nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
 sed diam voluptua.}
 \end{mdframed}
+}
+
+\tShowAndHide
+
 \end{document}
