@@ -1,15 +1,22 @@
 \documentclass{article}
-\input cloze-test-macros-lualatex.tex
+\usepackage{cloze-test}
 \usepackage[show]{cloze}
 \usepackage{multicol}
 
 \begin{document}
-\tTitleDesc{LuaLa\TeX: macro \string\cloze}
+\tTitle{macro \string\cloze}
 {With different options.}
 
 \tSection{Simple}
 
 Lorem ipsum \cloze{dolor sit} amet.
+
+\tBeginVerbatim{}
+Lorem \cloze[text_color=green]{ipsum} dolor
+
+\cloze[line_color=red]{sit} amet.
+\tEndVerbatim
+
 
 Lorem \cloze[text_color=green,margin=4mm]{i\textbf{ps}um} dolor
 
