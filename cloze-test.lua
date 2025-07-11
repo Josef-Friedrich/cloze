@@ -171,6 +171,6 @@ return {
     end
     tex.sprint('{\\noindent\\tTypewriterFontNormal{}Test file: ')
     tex.sprint(-2, tex.jobname)
-    tex.sprint({ '.tex}', '\\par', '\\hrule width 6cm', '\\bigskip' })
+    tex.sprint({ '.tex}', '\\par', '\\hrule depth 1pt', '\\bigskip' })
   end,
 }

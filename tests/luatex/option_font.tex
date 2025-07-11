@@ -1,27 +1,29 @@
-\input cloze-test-macros-luatex.tex
-
-\input cloze.tex
+\input cloze-test.tex
 
 \tTitle{option font}
 
+\tBeginVerbatim{title = "global option \string\tt"}
 \clozeset{font=\tt,log=5}
 
 Lorem \cloze{ipsum} dolor.
+\tEndVerbatim
 
-{\bf bf}
-
+\tBeginVerbatim{title = "\string\bf"}
 Lorem \cloze[font=\bf]{ipsum} dolor.
+\tEndVerbatim
 
-{\it it}
-
+\tBeginVerbatim{title = "\string\it"}
 Lorem \cloze[font=\it]{ipsum} dolor.
+\tEndVerbatim
 
-{\sl sl}
-
+\tBeginVerbatim{title = "\string\sl"}
 Lorem \cloze[font=\sl]{ipsum} dolor.
+\tEndVerbatim
 
-{\tt tt}
-
+\tBeginVerbatim{title = "\string\tt"}
 Lorem \cloze[font=\tt]{ipsum} dolor.
+\tEndVerbatim
+
+\tAll
 
 \bye

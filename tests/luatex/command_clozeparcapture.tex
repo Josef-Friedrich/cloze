@@ -1,0 +1,53 @@
+\input cloze-test.tex
+
+\tTitle{Command \string\clozeparcapture}
+
+\tBeginVerbatim{title = Normal paragraph}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+erat, sed diam voluptua.
+\tEndVerbatim
+
+\tBeginVerbatim{title = Use line breaks}
+\clozeparcapture Lorem ipsum dolor sit amet, consetetur sadipscing
+elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+aliquyam erat, sed diam voluptua. \par
+\tEndVerbatim
+
+\tBeginVerbatim{title = Use par to mark end}
+At vero \clozeparcapture eos \par et.
+\tEndVerbatim
+
+\tBeginVerbatim{title = Normal paragraph}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+erat, sed diam voluptua.
+\tEndVerbatim
+
+\tBeginVerbatim{title = minimum lines is 4}
+\clozeset{minlines=4}
+\clozeparcapture Lorem ipsum dolor sit amet.
+\par
+\tEndVerbatim
+
+\tBeginVerbatim{title = minimum lines is 3}
+\clozeset{minlines=3}
+\clozeparcapture Lorem ipsum dolor sit amet.
+\par
+\tEndVerbatim
+
+\tBeginVerbatim{title = minimum lines is 2}
+\clozeset{minlines=2}
+\clozeparcapture Lorem ipsum dolor sit amet.
+\par
+\tEndVerbatim
+
+\tBeginVerbatim{title = minimum lines is 1}
+\clozeset{minlines=1}
+\clozeparcapture Lorem ipsum dolor sit amet.
+\par
+\tEndVerbatim
+
+\tAll
+
+\bye
