@@ -1,9 +1,11 @@
 \documentclass{article}
 \usepackage{cloze-test}
+\usepackage[hide]{cloze}
 
 \begin{document}
-\tTitle{}
+\tTitle{Cloze in a picture environment (real world example)}
 
+\def\tExample{
 \setlength{\unitlength}{0.8cm}
 \begin{picture}(4.8,3.8)
 \thicklines
@@ -17,4 +19,7 @@
 \put(0.8,1.8){\cloze{b}}
 \put(2.5,0.9){\cloze{c}}
 \end{picture}
+}
+
+\tShowAndHide
 \end{document}
