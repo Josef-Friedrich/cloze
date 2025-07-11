@@ -199,7 +199,19 @@ local config = (function()
   ---
   ---The current global or group options.
   ---@type Options
-  local global_options = {}
+  local group_options = {}
+
+  ---
+  ---The current group name.
+  ---
+  ---@type string|nil
+  local current_group = nil
+
+  ---
+  ---A counter for unnamed / local groups
+  ---
+  ---@type integer
+  local unnamed_group_index = 0
 
   ---
   ---The current merged local and global/group options.
@@ -263,20 +275,23 @@ local config = (function()
     if local_opts == nil then
       local_opts = {}
     end
+    if current_group ~= nil and local_opts.group == nil then
+      local_opts.group = current_group
+    end
     if group == nil and local_opts.group ~= nil then
       group = local_opts.group
     end
     if group ~= nil then
-      global_options = groups[group]
+      group_options = groups[group]
     else
-      global_options = groups.global
+      group_options = groups.global
     end
     if merged_opts == nil then
-      merged_opts = luakeys.utils.clone_table(global_options)
+      merged_opts = luakeys.utils.clone_table(group_options)
       luakeys.utils.merge_tables(merged_opts, local_opts)
     end
     merged_options = merged_opts
-    return merged_opts, global_options
+    return merged_opts, group_options
   end
 
   ---
@@ -540,7 +555,7 @@ local config = (function()
   ---Parse local options and set this options to the global variable
   ---`local_options`.
   ---
-  ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
+  ---@param kv_string string # A string of key-value pairs that can be parsed by `luakeys`.
   ---
   ---@return Options local_opts # The local options that only apply to a single cloze command or environment.
   ---@return Options merged_opts # The merged global/group options and the local options. The local options overwrite the global ones.
@@ -556,19 +571,19 @@ local config = (function()
   ---
   ---Parse global or group options.
   ---
-  ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
+  ---@param kv_string string # A string of key-value pairs that can be parsed by `luakeys`.
   ---@param group? string # The name of a cloze group.
   local function parse_global_options(kv_string, group)
     group = normalize_group_name(group)
     if groups[group] ~= nil then
-      global_options = groups[group]
+      group_options = groups[group]
     else
-      global_options = {}
-      groups[group] = global_options
+      group_options = {}
+      groups[group] = group_options
     end
     luakeys.parse(kv_string, {
       defs = defs,
-      accumulated_result = global_options,
+      accumulated_result = group_options,
       debug = log_luakeys(),
     })
   end
@@ -586,7 +601,7 @@ local config = (function()
   ---
   ---Parse the oarg (optional argument) of the environment `clozespace`
   ---
-  ---@param kv_string string for example `2` or `spacing=2`
+  ---@param kv_string string # A string of key-value pairs that can be parsed by `luakeys`, for example `2` or `spacing=2`
   local function parse_local_space_options(kv_string)
     local local_opts = defs_space:parse(kv_string)
     load_opts(local_opts)
@@ -605,7 +620,7 @@ local config = (function()
   ---
   ---Parse the oarg (optional argument) of the environment `clozebox`
   ---
-  ---@param kv_string string
+  ---@param kv_string string # A string of key-value pairs that can be parsed by `luakeys`.
   local function parse_local_box_options(kv_string)
     local local_opts = defs_box:parse(kv_string)
     load_opts(local_opts)
@@ -639,10 +654,39 @@ local config = (function()
   ---
   ---Parse the oarg (optional argument) of the command `clozeextend`
   ---
-  ---@param kv_string string
+  ---@param kv_string string # A string of key-value pairs that can be parsed by `luakeys`.
   local function parse_local_extend_options(kv_string)
     local local_opts = defs_extend:parse(kv_string)
     load_opts(local_opts)
+  end
+
+  ---
+  ---Key-value pair definitions for the environment `clozegroup`
+  local defs_group = (function()
+    local manager = defs_manager:clone()
+    manager.defs.group = {
+      description = 'The name of the group to which the cloze belongs.',
+      data_type = 'string',
+      alias = { 'name' },
+      process = function(value)
+        local group = normalize_group_name(value)
+        -- Do not check. We create the group
+        -- check_group_name(group)
+        return group
+      end,
+    }
+    return manager
+  end)()
+
+  ---
+  ---Parse the oarg (optional argument) of the environment `clozegroup`.
+  ---
+  ---@param kv_string string # A string of key-value pairs that can be parsed by `luakeys`.
+  ---
+  ---@return table opts
+  local function parse_group_options(kv_string)
+    local opts = defs_group:parse(kv_string)
+    return opts
   end
 
   return {
@@ -663,6 +707,33 @@ local config = (function()
     parse_local_box_options = parse_local_box_options,
     parse_local_extend_options = parse_local_extend_options,
     defs_manager = defs_manager,
+
+    ---
+    ---@param kv_string string # A string of key-value pairs that can be parsed by `luakeys`.
+    start_group = function(kv_string)
+      local opts = parse_group_options(kv_string)
+      if opts.group ~= nil then
+        current_group = opts.group
+      else
+        current_group = '_unnamed-group_' .. unnamed_group_index
+        unnamed_group_index = unnamed_group_index + 1
+      end
+
+      if groups[current_group] ~= nil then
+        group_options = groups[current_group]
+      else
+        group_options = {}
+        groups[current_group] = group_options
+      end
+
+      luakeys.utils.merge_tables(group_options, opts)
+    end,
+
+    ---
+    ---Stop the current by setting the variable `current_group` to `nil`.
+    stop_group = function()
+      current_group = nil
+    end,
 
     ---
     ---Get the alignment of a fixed-size cloze text (`\clozefix`).
@@ -1940,6 +2011,15 @@ return {
       config.set_global_visibility(false, group)
     end)
 
+    lparse.register_csname('clozegroupstart', function()
+      local kv_string = lparse.scan('O{}')
+      config.start_group(kv_string)
+    end)
+
+    lparse.register_csname('clozegroupstop', function()
+      config.stop_group()
+    end)
+
     lparse.register_csname('ClozeDebugMarker', function()
       config.debug_marker()
     end)
@@ -1963,7 +2043,7 @@ return {
   ---writing marker nodes.
   ---
   ---@param cloze_type ClozeType # The cloze type, for example `basic` or `fixed`.
-  ---@param kv_string string
+  ---@param kv_string string # A string of key-value pairs that can be parsed by `luakeys`.
   initialize_cloze = function(cloze_type, kv_string)
     cb.register_callbacks(cloze_type)
     local local_opts, merged_opts =
@@ -1974,7 +2054,7 @@ return {
   ---
   ---Print the TeX markup for the command `\clozeextend`
   ---
-  ---@param kv_string string
+  ---@param kv_string string # A string of key-value pairs that can be parsed by `luakeys`.
   print_extension = function(kv_string)
     config.parse_local_extend_options(kv_string)
     for _ = 1, config.get_extend_count() do
@@ -2002,7 +2082,7 @@ return {
   ---Print the enviroment `clozebox`.
   ---
   ---@param text string # The cloze text inside the box.
-  ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
+  ---@param kv_string string # A string of key-value pairs that can be parsed by `luakeys`.
   ---@param starred string # `\BooleanTrue` `\BooleanFalse`
   print_box = function(text, kv_string, starred)
     log.debug('text: %s kv_string: %s starred: %s', text, kv_string,
@@ -2039,7 +2119,7 @@ return {
   ---
   ---Print the required TeX markup for the environment `clozespace` using `tex.print()`
   ---
-  ---@param kv_string string # A string of key-value pairs that can be parsed by luakeys.
+  ---@param kv_string string # A string of key-value pairs that can be parsed by `luakeys`.
   print_space = function(kv_string)
     config.parse_local_space_options(kv_string)
     tex_printf('\\begin{spacing}{%s}', config.get_spacing())

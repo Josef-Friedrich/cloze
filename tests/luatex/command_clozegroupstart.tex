@@ -1,0 +1,31 @@
+\input cloze-test.tex
+
+\tTitle{Command \string\clozegroupstart}
+
+\tBeginVerbatim{title=Start a new named group}
+\clozegroupstart[name=new-group,text_color=red]
+Lorem \cloze{should be red} dolor.
+\clozegroupstop
+
+Lorem \cloze{should be blue (default text color)} dolor.
+\tEndVerbatim
+
+\tBeginVerbatim{title=Start a new unnamed group}
+\clozegroupstart[text_color=green]
+Lorem \cloze{should be green} dolor.
+\clozegroupstop
+
+Lorem \cloze{should be blue (default text color)} dolor.
+\tEndVerbatim
+
+\tBeginVerbatim{title=Use already created named group}
+\clozegroupstart[name=new-group]
+Lorem \cloze{should be red} dolor.
+\clozegroupstop
+
+Lorem \cloze{should be blue (default text color)} dolor.
+\tEndVerbatim
+
+\tAll
+
+\bye
