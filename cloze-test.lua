@@ -1,5 +1,6 @@
 local lparse = require('lparse')
 local luakeys = require('luakeys')()
+-- local assert = require('luassert')
 
 ---@class VerbatimCapture
 ---@field title? string
@@ -130,6 +131,66 @@ local function print_all()
   end
 end
 
+--- deeply compare two objects
+--- https://gist.github.com/sapphyrus/fd9aeb871e3ce966cc4b0b969f62f539?permalink_comment_id=4563041#gistcomment-4563041
+---
+local function deep_equals(o1, o2, ignore_mt)
+  -- same object
+  if o1 == o2 then
+    return true
+  end
+
+  local o1Type = type(o1)
+  local o2Type = type(o2)
+  --- different type
+  if o1Type ~= o2Type then
+    return false
+  end
+  --- same type but not table, already compared above
+  if o1Type ~= 'table' then
+    return false
+  end
+
+  -- use metatable method
+  if not ignore_mt then
+    local mt1 = getmetatable(o1)
+    if mt1 and mt1.__eq then
+      -- compare using built in method
+      return o1 == o2
+    end
+  end
+
+  -- iterate over o1
+  for key1, value1 in pairs(o1) do
+    local value2 = o2[key1]
+    if value2 == nil or deep_equals(value1, value2, ignore_mt) == false then
+      return false
+    end
+  end
+
+  --- check keys in o2 but missing from o1
+  for key2, _ in pairs(o2) do
+    if o1[key2] == nil then
+      return false
+    end
+  end
+  return true
+end
+
+---
+---@param expected_kv_string string
+---@param actual unknown
+local function assert_same(expected_kv_string, actual)
+  local _, _, expected = luakeys.parse(expected_kv_string)
+  if not deep_equals(actual, expected) then
+    print('\nActual:')
+    luakeys.debug(actual)
+    print('\nExpected:')
+    luakeys.debug(expected)
+    tex.error('The provided tables are not the same!')
+  end
+end
+
 return {
   set_if_plain_luatex = function()
     if is_latex then
@@ -146,6 +207,11 @@ return {
       local kv_string = lparse.scan('m')
       local result = defs:parse(kv_string)
       capture(result.title, result.desciption)
+    end)
+
+    lparse.register_csname('tAssertLocalOpts', function()
+      local kv_string = lparse.scan('m')
+      assert_same(kv_string, { 'one', 'two', 'three' })
     end)
   end,
 
@@ -173,4 +239,5 @@ return {
     tex.sprint(-2, tex.jobname)
     tex.sprint({ '.tex}', '\\par', '\\hrule depth 1pt', '\\bigskip' })
   end,
+
 }

@@ -28,11 +28,13 @@
     "~/repos/tex/lua-api/library",
     "~/repos/tex/farbe/farbe.lua",
     "~/repos/tex/luakeys/luakeys.lua",
-    "${3rd}/lfs/library"
+    "${3rd}/lfs/library",
+    "${addons}/luassert/module/library"
   ],
   "Lua.diagnostics.disable": ["redefined-local"],
   "Lua.diagnostics.severity": {
     "undefined-global": "Error!"
   },
-  "latex-workshop.latex.autoBuild.run": "never"
+  "latex-workshop.latex.autoBuild.run": "never",
+  "Lua.workspace.checkThirdParty": false
 }
