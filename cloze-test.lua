@@ -1,5 +1,6 @@
 local lparse = require('lparse')
 local luakeys = require('luakeys')()
+local cloze = require('cloze')
 -- local assert = require('luassert')
 
 ---@class VerbatimCapture
@@ -211,7 +212,7 @@ return {
 
     lparse.register_csname('tAssertLocalOpts', function()
       local kv_string = lparse.scan('m')
-      assert_same(kv_string, { 'one', 'two', 'three' })
+      assert_same(kv_string, cloze.export_local_opts())
     end)
   end,
 

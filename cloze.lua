@@ -736,6 +736,22 @@ local config = (function()
     end,
 
     ---
+    ---Export the local options of all start marker.
+    ---
+    ---see `\tAssertLocalOpts`.
+    ---
+    ---@return Options[]
+    export_local_opts = function()
+      local local_opts = {}
+      for _, marker in pairs(marker_data) do
+        if marker.position == 'start' then
+          table.insert(local_opts, marker.local_opts)
+        end
+      end
+      return local_opts
+    end,
+
+    ---
     ---Get the alignment of a fixed-size cloze text (`\clozefix`).
     ---
     ---@return 'left'|'center'|'right' align # The alignment of a fixed-size cloze text (`\clozefix`).
@@ -2031,6 +2047,7 @@ return {
   reset = config.reset_global_options,
   get_defaults = config.get_defaults,
   get_option = config.get,
+  export_local_opts = config.export_local_opts,
   set_global_visibility = config.set_global_visibility,
   write_marker = config.write_marker,
   parse_global_options = config.parse_global_options,
