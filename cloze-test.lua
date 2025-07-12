@@ -188,6 +188,8 @@ local function assert_same(expected_kv_string, actual)
     luakeys.debug(actual)
     print('\nExpected:')
     luakeys.debug(expected)
+    print('\nRendered:')
+    print(luakeys.render(actual))
     tex.error('The provided tables are not the same!')
   end
 end
@@ -200,9 +202,13 @@ return {
       tex.print('\\PLAINLUATEXtrue')
     end
   end,
+
   print_last_verbatim = print_last_verbatim,
+
   use_last = use_last,
+
   print_all = print_all,
+
   register_functions = function()
     lparse.register_csname('tBeginVerbatim', function()
       local kv_string = lparse.scan('m')
@@ -213,6 +219,16 @@ return {
     lparse.register_csname('tAssertLocalOpts', function()
       local kv_string = lparse.scan('m')
       assert_same(kv_string, cloze.export_local_opts())
+    end)
+
+    lparse.register_csname('tAssertGroupOpts', function()
+      local kv_string = lparse.scan('m')
+      assert_same(kv_string, cloze.export_group_opts())
+    end)
+
+    lparse.register_csname('tAssertGlobalOpt', function()
+      local kv_string = lparse.scan('m')
+      assert_same(kv_string, cloze.export_global_opt())
     end)
   end,
 

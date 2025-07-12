@@ -198,6 +198,7 @@ local config = (function()
 
   ---
   ---The current global or group options.
+  ---
   ---@type Options
   local group_options = {}
 
@@ -215,6 +216,7 @@ local config = (function()
 
   ---
   ---The current merged local and global/group options.
+  ---
   ---@type Options
   local merged_options = {}
 
@@ -715,8 +717,9 @@ local config = (function()
       if opts.group ~= nil then
         current_group = opts.group
       else
-        current_group = '_unnamed-group_' .. unnamed_group_index
+        -- We start with 0 and the first group should be named `_unnamed-group_1`
         unnamed_group_index = unnamed_group_index + 1
+        current_group = '_unnamed-group_' .. unnamed_group_index
       end
 
       if groups[current_group] ~= nil then
@@ -727,6 +730,10 @@ local config = (function()
       end
 
       luakeys.utils.merge_tables(group_options, opts)
+
+      -- To avoid duplicate data. The group name is the index in the
+      -- groups table
+      group_options.group = nil
     end,
 
     ---
@@ -749,6 +756,26 @@ local config = (function()
         end
       end
       return local_opts
+    end,
+
+    ---
+    ---Export all group options including the global group.
+    ---
+    ---see `\tAssertGroupOpts`.
+    ---
+    ---@return {[string]: Options }
+    export_group_opts = function()
+      return groups
+    end,
+
+    ---
+    ---Export the global option table (`groups.global`).
+    ---
+    ---see `\tAssertGlobalOpt`.
+    ---
+    ---@return {[string]: Options }
+    export_global_opt = function()
+      return groups.global
     end,
 
     ---
@@ -2048,6 +2075,8 @@ return {
   get_defaults = config.get_defaults,
   get_option = config.get,
   export_local_opts = config.export_local_opts,
+  export_group_opts = config.export_group_opts,
+  export_global_opt = config.export_global_opt,
   set_global_visibility = config.set_global_visibility,
   write_marker = config.write_marker,
   parse_global_options = config.parse_global_options,

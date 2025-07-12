@@ -28,4 +28,31 @@ Lorem \cloze{should be blue (default text color)} dolor.
 
 \tAll
 
+\tAssertGroupOpts{
+  new-group =
+  {
+    text_color=red
+  },
+  _unnamed-group_1=
+  {
+    text_color=green
+  },
+  global={}
+}
+
+\tAssertLocalOpts{
+  {
+    group = new-group
+  },
+  {},
+  {
+    group = _unnamed-group_1
+  },
+  {},
+  {
+    group = new-group
+  },
+  {}
+}
+
 \bye
