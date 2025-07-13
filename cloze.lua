@@ -116,6 +116,10 @@ local config = (function()
   ---group name.
   ---
   ---The global options are also a group with the name `__global__`.
+  ---The name begins and ends with two underscores. This makes it
+  ---possible to name a group globally. The double leading and trailing
+  ---underscores are inspired by the Python programming language
+  ---(`dunder`).
   ---
   ---@type {[string]: Options }
   local groups = { __global__ = {} }
@@ -265,7 +269,7 @@ local config = (function()
   end
 
   ---
-  ---Load and set the two global variables `global_options` and `merged_options`.
+  ---Load and set the two global variables `group_options` and `merged_options`.
   ---
   ---@param local_opts? Options # The not merged local options of a single cloze command.
   ---@param merged_opts? Options # Already merged options
@@ -672,7 +676,7 @@ local config = (function()
       alias = { 'name' },
       process = function(value)
         local group = normalize_group_name(value)
-        -- Do not check. We create the group
+        -- Do not check. We create the group later.
         -- check_group_name(group)
         return group
       end,
@@ -719,7 +723,7 @@ local config = (function()
       else
         -- We start with 0 and the first group should be named `_unnamed-group_1`
         unnamed_group_index = unnamed_group_index + 1
-        current_group = '_unnamed-group_' .. unnamed_group_index
+        current_group = '__unnamed-group-' .. unnamed_group_index .. '__'
       end
 
       if groups[current_group] ~= nil then
