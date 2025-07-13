@@ -216,19 +216,24 @@ return {
       capture(result.title, result.desciption)
     end)
 
-    lparse.register_csname('tAssertLocalOpts', function()
+    lparse.register_csname('tAssertAllLocalOpts', function()
       local kv_string = lparse.scan('m')
-      assert_same(kv_string, cloze.export_local_opts())
+      assert_same(kv_string, cloze.export_all_local_opts())
     end)
 
     lparse.register_csname('tAssertGroupOpts', function()
-      local kv_string = lparse.scan('m')
-      assert_same(kv_string, cloze.export_group_opts())
+      local group, kv_string = lparse.scan('m m')
+      assert_same(kv_string, cloze.export_group_opts(group))
     end)
 
-    lparse.register_csname('tAssertGlobalOpt', function()
+    lparse.register_csname('tAssertAllGroupOpts', function()
       local kv_string = lparse.scan('m')
-      assert_same(kv_string, cloze.export_global_opt())
+      assert_same(kv_string, cloze.export_all_group_opts())
+    end)
+
+    lparse.register_csname('tAssertGlobalOpts', function()
+      local kv_string = lparse.scan('m')
+      assert_same(kv_string, cloze.export_global_opts())
     end)
   end,
 

@@ -745,10 +745,10 @@ local config = (function()
     ---
     ---Export the local options of all start marker.
     ---
-    ---see `\tAssertLocalOpts`.
+    ---see `\tAssertAllLocalOpts`.
     ---
     ---@return Options[]
-    export_local_opts = function()
+    export_all_local_opts = function()
       local local_opts = {}
       for _, marker in pairs(marker_data) do
         if marker.position == 'start' then
@@ -759,22 +759,34 @@ local config = (function()
     end,
 
     ---
-    ---Export all group options including the global group.
+    ---Export the options of a specific group.
     ---
-    ---see `\tAssertGroupOpts`.
+    ---see `\tAssertGroupOpts{group}{opts}`.
+    ---
+    ---@param group string # The group name.
     ---
     ---@return {[string]: Options }
-    export_group_opts = function()
+    export_group_opts = function(group)
+      return groups[group]
+    end,
+
+    ---
+    ---Export all group options including the global group.
+    ---
+    ---see `\tAssertAllGroupOpts{opts}`.
+    ---
+    ---@return {[string]: Options }
+    export_all_group_opts = function()
       return groups
     end,
 
     ---
     ---Export the global option table (`groups.global`).
     ---
-    ---see `\tAssertGlobalOpt`.
+    ---see `\tAssertGlobalOpts`.
     ---
     ---@return {[string]: Options }
-    export_global_opt = function()
+    export_global_opts = function()
       return groups.global
     end,
 
@@ -2074,9 +2086,10 @@ return {
   reset = config.reset_global_options,
   get_defaults = config.get_defaults,
   get_option = config.get,
-  export_local_opts = config.export_local_opts,
+  export_all_local_opts = config.export_all_local_opts,
   export_group_opts = config.export_group_opts,
-  export_global_opt = config.export_global_opt,
+  export_all_group_opts = config.export_all_group_opts,
+  export_global_opts = config.export_global_opts,
   set_global_visibility = config.set_global_visibility,
   write_marker = config.write_marker,
   parse_global_options = config.parse_global_options,

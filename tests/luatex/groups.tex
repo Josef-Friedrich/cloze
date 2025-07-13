@@ -32,4 +32,24 @@ Group red: \cloze[group=red]{red}
 
 \tAll
 
+\tAssertAllGroupOpts{
+  global=
+  {
+    text_color=yellow
+  },
+  green=
+  {
+    text_color=green
+  },
+  red={
+    text_color=red
+  }
+}
+
+\tAssertGlobalOpts{text_color=yellow}
+
+\tAssertGroupOpts{green}{text_color=green}
+
+\tAssertGroupOpts{red}{text_color=red}
+
 \bye
