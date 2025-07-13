@@ -723,7 +723,8 @@ local config = (function()
       else
         -- We start with 0 and the first group should be named `_unnamed-group_1`
         unnamed_group_index = unnamed_group_index + 1
-        current_group = '__unnamed-group-' .. unnamed_group_index .. '__'
+        current_group = '__unnamed-group-' .. unnamed_group_index ..
+                          '__'
       end
 
       if groups[current_group] ~= nil then
@@ -744,6 +745,22 @@ local config = (function()
     ---Stop the current by setting the variable `current_group` to `nil`.
     stop_group = function()
       current_group = nil
+    end,
+
+    ---
+    ---Export the marker data of all start marker.
+    ---
+    ---see `\tAssertAllStartMarker`.
+    ---
+    ---@return MarkerData[]
+    export_all_start_marker = function()
+      local all_marker = {}
+      for _, marker in pairs(marker_data) do
+        if marker.position == 'start' then
+          table.insert(all_marker, marker)
+        end
+      end
+      return all_marker
     end,
 
     ---
@@ -2023,6 +2040,13 @@ return {
       print_cloze('basic', 'thickness=0pt')
     end)
 
+    lparse.register_csname('clozeparplain', function()
+      local kv_string, text =
+        lparse.scan('O{} v')
+      tex.print(string.format('\\ClozePar{%s}{%s}', kv_string,
+      text))
+    end)
+
     lparse.register_csname('clozestrike', function()
       local kv_string, error_text, solution_text =
         lparse.scan('O{} v v')
@@ -2091,6 +2115,7 @@ return {
   get_defaults = config.get_defaults,
   get_option = config.get,
   export_all_local_opts = config.export_all_local_opts,
+  export_all_start_marker = config.export_all_start_marker,
   export_group_opts = config.export_group_opts,
   export_all_group_opts = config.export_all_group_opts,
   export_global_opts = config.export_global_opts,

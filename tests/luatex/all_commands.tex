@@ -1,0 +1,80 @@
+\input cloze-test.tex
+\input cloze.tex
+
+\tTitle{All cloze commands}
+
+\tBeginVerbatim{}
+Lorem \cloze{ipsum} dolor.
+\tEndVerbatim
+
+\tBeginVerbatim{}
+Lorem \clozefix{ipsum} dolor.
+\tEndVerbatim
+
+\tBeginVerbatim{}
+Lorem \clozenol{ipsum} dolor.
+\tEndVerbatim
+
+\tBeginVerbatim{}
+Lorem \clozefil{ipsum} dolor.
+\tEndVerbatim
+
+\tBeginVerbatim{}
+Lorem \clozeparplain{ipsum} dolor.
+\tEndVerbatim
+
+\tBeginVerbatim{}
+Lorem \clozestrike{iipsum}{ipsum} dolor.
+\tEndVerbatim
+
+\tAll
+
+\tAssertAllStartMarker{
+  {
+    cloze_type = basic,
+    position = start,
+    local_opts = {},
+    merged_opts = {},
+    finished = true,
+  },
+  {
+    cloze_type = fix,
+    position = start,
+    local_opts = {},
+    merged_opts = {},
+    finished = true,
+  },
+  {
+    cloze_type = basic,
+    position = start,
+    local_opts = {
+      thickness = 0pt,
+    },
+    merged_opts = {
+      thickness = 0pt,
+    },
+    finished = true,
+  },
+  {
+    cloze_type = basic,
+    position = start,
+    local_opts = {},
+    merged_opts = {},
+    finished = true,
+  },
+  {
+    cloze_type = par,
+    merged_opts = {},
+    position = start,
+    local_opts = {},
+  },
+  {
+    cloze_type = strike,
+    position = start,
+    local_opts = {},
+    merged_opts = {},
+    finished = true,
+  },
+}
+
+\bye
