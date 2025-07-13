@@ -115,10 +115,10 @@ local config = (function()
   ---A table with the group options that are indexed with the corresponding
   ---group name.
   ---
-  ---The global options are also a group with the name `global`.
+  ---The global options are also a group with the name `__global__`.
   ---
   ---@type {[string]: Options }
-  local groups = { global = {} }
+  local groups = { __global__ = {} }
 
   local function trim(s)
     return (s:gsub('^%s*(.-)%s*$', '%1'))
@@ -128,18 +128,18 @@ local config = (function()
   ---Normalize the group name.
   ---
   ---The group name is trimmed. If the group name is `nil` or `false`
-  ---or an empty string, the group name `global` is returned.
+  ---or an empty string, the group name `__global__` is returned.
   ---
   ---@param group any # The raw group name in any data type.
   ---
-  ---@return string group # The trimmed group name or `global`
+  ---@return string group # The trimmed group name or `__global__`
   local function normalize_group_name(group)
     if not group then
-      return 'global'
+      return '__global__'
     end
     group = trim(tostring(group))
     if group == '' then
-      return 'global'
+      return '__global__'
     end
     return group
   end
@@ -163,7 +163,7 @@ local config = (function()
         'Already defined groups:',
       }
       for group_name, _ in pairs(groups) do
-        if group_name ~= 'global' then
+        if group_name ~= '__global__' then
           table.insert(help, '  - ' .. group_name)
         end
       end
@@ -286,7 +286,7 @@ local config = (function()
     if group ~= nil then
       group_options = groups[group]
     else
-      group_options = groups.global
+      group_options = groups.__global__
     end
     if merged_opts == nil then
       merged_opts = luakeys.utils.clone_table(group_options)
@@ -771,7 +771,7 @@ local config = (function()
     end,
 
     ---
-    ---Export all group options including the global group.
+    ---Export all group options including the `__global__` group.
     ---
     ---see `\tAssertAllGroupOpts{opts}`.
     ---
@@ -781,13 +781,13 @@ local config = (function()
     end,
 
     ---
-    ---Export the global option table (`groups.global`).
+    ---Export the global option table (`groups.__global__`).
     ---
     ---see `\tAssertGlobalOpts`.
     ---
     ---@return {[string]: Options }
     export_global_opts = function()
-      return groups.global
+      return groups.__global__
     end,
 
     ---
