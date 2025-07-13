@@ -27,7 +27,7 @@ doc_pdf:
 	mkdir -p $(texmf)/doc
 	cp $(jobname)-doc.pdf $(texmf)/doc/$(jobname).pdf
 
-test: install test_luatex_without_open test_lualatex_without_open
+test: install test_luatex_without_open test_lualatex_without_open doc_pdf
 	pdftk tests-luatex.pdf tests-lualatex.pdf cat output tests.pdf
 	xdg-open tests.pdf > /dev/null 2>&1 &
 
