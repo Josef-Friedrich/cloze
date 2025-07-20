@@ -1,0 +1,58 @@
+\input cloze-test.tex
+
+\tTitle{Groups}
+
+\tBeginVerbatim{title=Define two groups and hide}
+\clozeset[dependent-group]{text_color=red}
+\clozeset[independent-group]{text_color=green,independent}
+\clozeset{hide}
+\tEndVerbatim
+
+\tBeginVerbatim{title=All cloze texts should be hidden except the independent group}
+Global group: \cloze{green}
+dependent-group: \cloze[group=dependent-group]{red}
+independent-group: \cloze[group=independent-group]{green}
+\tEndVerbatim
+
+\tAll
+
+\tAssertAllGroupOpts{
+  __global__ = {
+    visibility = false
+  },
+  dependent-group = {
+    text_color = red
+  },
+  independent-group = {
+    independent_group = true,
+    text_color = green
+  }
+}
+
+\tAssertAllLocalOpts{
+  {},
+  {
+    group = dependent-group
+  },
+  {
+    group = independent-group
+  }
+}
+
+\tAssertAllMergedOpts{
+  {
+    visibility = false
+  },
+  {
+    group = dependent-group,
+    text_color = red,
+    visibility = false
+  },
+  {
+    group = independent-group,
+    independent_group = true,
+    text_color = green
+  }
+}
+
+\bye

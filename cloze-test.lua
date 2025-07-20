@@ -221,6 +221,11 @@ return {
       assert_same(kv_string, cloze.export_all_local_opts())
     end)
 
+    lparse.register_csname('tAssertAllMergedOpts', function()
+      local kv_string = lparse.scan('m')
+      assert_same(kv_string, cloze.export_all_merged_opts())
+    end)
+
     lparse.register_csname('tAssertAllStartMarker', function()
       local kv_string = lparse.scan('m')
       assert_same(kv_string, cloze.export_all_start_marker())

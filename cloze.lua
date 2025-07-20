@@ -96,6 +96,7 @@ local config = (function()
   ---@field extend_width? string # The width of one extension unit (`\clozeextend`).
   ---@field font? string # The font of the cloze text.
   ---@field group? string # The name of the group to which the cloze belongs.
+  ---@field independent_group? boolean # The cloze group is independent from the global options.
   ---@field line_color? string # The color name to colorize the cloze line.
   ---@field margin? string # The additional margin between the normal and the cloze text.
   ---@field min_lines? integer # The minimum number of lines a `clozepar` environment must have.
@@ -189,6 +190,7 @@ local config = (function()
     extend_width = '1em',
     font = nil,
     group = nil,
+    independent_group = false,
     line_color = 'black',
     margin = '3pt',
     min_lines = 0,
@@ -199,6 +201,12 @@ local config = (function()
     visibility = true,
     width = '2cm',
   }
+
+  ---
+  ---The global options.
+  ---
+  ---@type Options
+  local global_options = {}
 
   ---
   ---The current global or group options.
@@ -290,10 +298,15 @@ local config = (function()
     if group ~= nil then
       group_options = groups[group]
     else
-      group_options = groups.__global__
+      group_options = {}
     end
     if merged_opts == nil then
-      merged_opts = luakeys.utils.clone_table(group_options)
+      if group_options.independent_group then
+        merged_opts = {}
+      else
+        merged_opts = luakeys.utils.clone_table(groups.__global__)
+      end
+      luakeys.utils.merge_tables(merged_opts, group_options)
       luakeys.utils.merge_tables(merged_opts, local_opts)
     end
     merged_options = merged_opts
@@ -499,6 +512,11 @@ local config = (function()
         check_group_name(group)
         return group
       end,
+    },
+    independent_group = {
+      description = 'The group is independent from the global options.',
+      alias = { 'independent', 'shielded' },
+      data_type = 'boolean',
     },
     line_color = {
       description = 'The color name to colorize the cloze line.',
@@ -777,6 +795,22 @@ local config = (function()
         end
       end
       return local_opts
+    end,
+
+    ---
+    ---Export the merged options of all start marker.
+    ---
+    ---see `\tAssertAllMergeOpts`.
+    ---
+    ---@return Options[]
+    export_all_merged_opts = function()
+      local merged_opts = {}
+      for _, marker in pairs(marker_data) do
+        if marker.position == 'start' then
+          table.insert(merged_opts, marker.merged_opts)
+        end
+      end
+      return merged_opts
     end,
 
     ---
@@ -2041,10 +2075,8 @@ return {
     end)
 
     lparse.register_csname('clozeparplain', function()
-      local kv_string, text =
-        lparse.scan('O{} v')
-      tex.print(string.format('\\ClozePar{%s}{%s}', kv_string,
-      text))
+      local kv_string, text = lparse.scan('O{} v')
+      tex.print(string.format('\\ClozePar{%s}{%s}', kv_string, text))
     end)
 
     lparse.register_csname('clozestrike', function()
@@ -2115,6 +2147,7 @@ return {
   get_defaults = config.get_defaults,
   get_option = config.get,
   export_all_local_opts = config.export_all_local_opts,
+  export_all_merged_opts = config.export_all_merged_opts,
   export_all_start_marker = config.export_all_start_marker,
   export_group_opts = config.export_group_opts,
   export_all_group_opts = config.export_all_group_opts,
