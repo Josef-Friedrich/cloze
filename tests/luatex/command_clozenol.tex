@@ -2,22 +2,37 @@
 
 \tTitle{Command \string\clozenol}
 
-\tBeginVerbatim{}
+\tBeginVerbatim{Without any options}
 Lorem \clozenol{ipsum} dolor.
 \tEndVerbatim
 
-\tBeginVerbatim{}
+\tBeginVerbatim{Hide}
 \clozehide
 
 Lorem \clozenol{ipsum} dolor.
 \tEndVerbatim
 
-\tBeginVerbatim{}
+\tBeginVerbatim{Show and change text color to red}
 \clozeshow
 
 Lorem \clozenol[text_color=red]{ipsum} dolor.
 \tEndVerbatim
 
 \tAll
+
+\tAssertAllMergedOpts{
+  {
+    thickness = 0pt
+  },
+  {
+    thickness = 0pt,
+    visibility = false
+  },
+  {
+    text_color = red,
+    thickness = 0pt,
+    visibility = true
+  }
+}
 
 \bye

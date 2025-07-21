@@ -74,8 +74,8 @@ local function capture(title, description)
 end
 
 local defs = luakeys.DefinitionManager({
-  title = { data_type = 'string' },
-  desciption = { data_type = 'string' },
+  title = { data_type = 'string', pick = 'string' },
+  description = { data_type = 'string' },
 })
 
 ---
@@ -213,7 +213,7 @@ return {
     lparse.register_csname('tBeginVerbatim', function()
       local kv_string = lparse.scan('m')
       local result = defs:parse(kv_string)
-      capture(result.title, result.desciption)
+      capture(result.title, result.description)
     end)
 
     lparse.register_csname('tAssertAllLocalOpts', function()

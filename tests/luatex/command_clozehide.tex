@@ -2,26 +2,24 @@
 
 \tTitle{Command \string\clozehide}
 
-\tBeginVerbatim{}
+\tBeginVerbatim{Hide cloze tests globally}
 \clozehide
 
 hidden:  lorem \cloze{ipsum} dolor
 \tEndVerbatim
 
-\tBeginVerbatim{}
+\tBeginVerbatim{Show cloze tests globally}
 \clozeshow
 
 displayed: lorem \cloze{ipsum} dolor
 \tEndVerbatim
 
-\tBeginVerbatim{}
-\clozehide hidden: \cloze{hidden}
-\clozeshow displayed: \cloze{displayed}
+\tBeginVerbatim{Hide and show inside a paragraph}
 \clozehide hidden: \cloze{hidden}
 \clozeshow displayed: \cloze{displayed}
 \tEndVerbatim
 
-\tBeginVerbatim{}
+\tBeginVerbatim{Define two groups (red and green),description=Show cloze texts globally and hide group red}
 \clozeset[red]{text_color=red}
 \clozeset[green]{text_color=green}
 
@@ -34,4 +32,30 @@ Group red is hidden: \cloze[group=red]{red}
 \tEndVerbatim
 
 \tAll
+
+\tAssertAllMergedOpts{
+  {
+    visibility = false
+  },
+  {
+    visibility = true
+  },
+  {
+    visibility = false
+  },
+  {
+    visibility = true
+  },
+  {
+    group = green,
+    text_color = green,
+    visibility = true
+  },
+  {
+    group = red,
+    text_color = red,
+    visibility = false
+  }
+}
+
 \bye

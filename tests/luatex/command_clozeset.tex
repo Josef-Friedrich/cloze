@@ -2,27 +2,59 @@
 
 \tTitle{Command \string\clozeset}
 
-\tBeginVerbatim{}
+\tBeginVerbatim{Set global options and group options of group “red-group”}
 \clozeset{margin=2cm,thickness=2pt}
 \clozeset[red-group]{text_color=red}
 
 Lorem \cloze{ipsum} dolor.
 
-Lorem \cloze[group=red-group]{ipsum} dolor
+Lorem \cloze[group=red-group]{red} dolor.
 \tEndVerbatim
 
-\tBeginVerbatim{}
+\tBeginVerbatim{Reset the global options. The group “red-group” is not reset}
 \clozereset
 
-lorem \cloze{ipsum} dolor
+Lorem \cloze{ipsum} dolor.
+
+Lorem \cloze[group=red-group]{red} dolor.
 \tEndVerbatim
 
-\tBeginVerbatim{}
+\tBeginVerbatim{The options are accumulated}
 \clozeset{text_color=red} Text color = red: \cloze{ipsum} dolor.
 \clozeset{line_color=green} line color = green: \cloze{ipsum} dolor.
 \clozeset{thickness=3pt} Thickness = 3pt: Lorem \cloze{ipsum} dolor.
 \tEndVerbatim
 
 \tAll
+
+\tAssertAllMergedOpts{
+  {
+    margin = 2cm,
+    thickness = 2pt
+  },
+  {
+    group = red-group,
+    margin = 2cm,
+    text_color = red,
+    thickness = 2pt
+  },
+  {},
+  {
+    group = red-group,
+    text_color = red
+  },
+  {
+    text_color = red
+  },
+  {
+    line_color = green,
+    text_color = red
+  },
+  {
+    line_color = green,
+    text_color = red,
+    thickness = 3pt
+  }
+}
 
 \bye
