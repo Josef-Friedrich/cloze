@@ -107,75 +107,6 @@ local config = (function()
   ---@field visibility? boolean # The visibility of the cloze text.
   ---@field width? string # The width of a fixed size cloze (`\clozefix`).
 
-  ---
-  ---Store all local options of the markers.
-  ---@type {[integer]: MarkerData }
-  local marker_data = {}
-
-  ---
-  ---A table with the group options that are indexed with the corresponding
-  ---group name.
-  ---
-  ---The global options are also a group with the name `__global__`.
-  ---The name begins and ends with two underscores. This makes it
-  ---possible to name a group globally. The double leading and trailing
-  ---underscores are inspired by the Python programming language
-  ---(`dunder`).
-  ---
-  ---@type {[string]: Options }
-  local groups = { __global__ = {} }
-
-  local function trim(s)
-    return (s:gsub('^%s*(.-)%s*$', '%1'))
-  end
-
-  ---
-  ---Normalize the group name.
-  ---
-  ---The group name is trimmed. If the group name is `nil` or `false`
-  ---or an empty string, the group name `__global__` is returned.
-  ---
-  ---@param group any # The raw group name in any data type.
-  ---
-  ---@return string group # The trimmed group name or `__global__`
-  local function normalize_group_name(group)
-    if not group then
-      return '__global__'
-    end
-    group = trim(tostring(group))
-    if group == '' then
-      return '__global__'
-    end
-    return group
-  end
-
-  ---
-  ---Return true if the specified group name is definied.
-  ---
-  ---@param group string # The group name.
-  local function validate_group_name(group)
-    return groups[group] ~= nil
-  end
-
-  ---
-  ---Throw an error if the specified group name is not definied.
-  ---
-  ---@param group string # The group name.
-  local function check_group_name(group)
-    if not validate_group_name(group) then
-      local help = {
-        'Use \\clozeset[group-name]{} to define a group.',
-        'Already defined groups:',
-      }
-      for group_name, _ in pairs(groups) do
-        if group_name ~= '__global__' then
-          table.insert(help, '  - ' .. group_name)
-        end
-      end
-      tex.error('Not defined cloze group: ' .. group, help)
-    end
-  end
-
   ---The default options.
   ---@type Options
   local defaults = {
@@ -209,7 +140,14 @@ local config = (function()
   local global_options = {}
 
   ---
-  ---The current global or group options.
+  ---A table with the group options that are indexed with the corresponding
+  ---group name.
+  ---
+  ---@type {[string]: Options }
+  local groups = {}
+
+  ---
+  ---The current group options.
   ---
   ---@type Options
   local group_options = {}
@@ -221,20 +159,77 @@ local config = (function()
   local current_group = nil
 
   ---
-  ---A counter for unnamed / local groups
+  ---A counter for unnamed / local groups.
   ---
   ---@type integer
   local unnamed_group_index = 0
 
   ---
-  ---The current merged local and global/group options.
+  ---The current merged options. (global -> group -> local: merged)
   ---
   ---@type Options
   local merged_options = {}
 
+  local function trim(s)
+    return (s:gsub('^%s*(.-)%s*$', '%1'))
+  end
+
+  ---
+  ---Normalize the group name.
+  ---
+  ---The group name is trimmed.
+  ---
+  ---@param group unknown # The raw group name in any data type.
+  ---
+  ---@return string|nil group # The trimmed group name
+  local function normalize_group_name(group)
+    if group then
+      group = trim(tostring(group))
+      if group ~= '' then
+        return group
+      end
+    end
+  end
+
+  ---
+  ---Return true if the specified group name is definied.
+  ---
+  ---@param group string # The group name.
+  local function validate_group_name(group)
+    return groups[group] ~= nil
+  end
+
+  ---
+  ---Throw an error if the specified group name is not definied.
+  ---
+  ---@param group unknown # The group name.
+  ---
+  ---@return string group # The group name.
+  local function check_group_name(group)
+    if not validate_group_name(group) then
+      local help = {
+        'Use \\clozeset[group-name]{} to define a group.',
+        'Already defined groups:',
+      }
+      for group_name, _ in pairs(groups) do
+        table.insert(help, '  - ' .. group_name)
+      end
+      tex.error('Not defined cloze group: ' .. group, help)
+    end
+    return group
+  end
+
+  ---
+  ---Store all local options of the markers.
+  ---@type {[integer]: MarkerData }
+  local marker_data = {}
+
   ---@type MarkerData|nil
   local current_marker_data = nil
 
+  ---
+  ---All marker nodes are numbered in ascending order. The first start marker is
+  ---assigned the number 1, the first stop marker then the number 2... and so on
   ---@type integer
   local marker_index
 
@@ -284,7 +279,7 @@ local config = (function()
   ---@param group? string # If not specified `local_opts` is asked for a group field.
   ---
   ---@return Options merged_opts
-  ---@return Options global_options
+  ---@return Options group_options
   local function load_opts(local_opts, merged_opts, group)
     if local_opts == nil then
       local_opts = {}
@@ -304,7 +299,7 @@ local config = (function()
       if group_options.independent_group then
         merged_opts = {}
       else
-        merged_opts = luakeys.utils.clone_table(groups.__global__)
+        merged_opts = luakeys.utils.clone_table(global_options)
       end
       luakeys.utils.merge_tables(merged_opts, group_options)
       luakeys.utils.merge_tables(merged_opts, local_opts)
@@ -384,14 +379,18 @@ local config = (function()
   end
 
   ---
-  ---Reset and clear the global/groups options storage.
+  ---Reset and clear the group or the global option.
   ---
   ---@param group? unknown # The name of a cloze group.
-  local function reset_global_options(group)
+  local function reset_options(group)
     group = normalize_group_name(group)
-    check_group_name(group)
-    if groups[group] ~= nil then
-      groups[group] = {}
+    if group ~= nil then
+      check_group_name(group)
+      if groups[group] ~= nil then
+        groups[group] = {}
+      end
+    else
+      global_options = {}
     end
   end
 
@@ -593,21 +592,13 @@ local config = (function()
   end
 
   ---
-  ---Parse global or group options.
+  ---Parse global options.
   ---
   ---@param kv_string string # A string of key-value pairs that can be parsed by `luakeys`.
-  ---@param group? string # The name of a cloze group.
-  local function parse_global_options(kv_string, group)
-    group = normalize_group_name(group)
-    if groups[group] ~= nil then
-      group_options = groups[group]
-    else
-      group_options = {}
-      groups[group] = group_options
-    end
+  local function parse_global_options(kv_string)
     luakeys.parse(kv_string, {
       defs = defs,
-      accumulated_result = group_options,
+      accumulated_result = global_options,
       debug = log_luakeys(),
     })
   end
@@ -703,20 +694,51 @@ local config = (function()
   end)()
 
   ---
-  ---Parse the oarg (optional argument) of the environment `clozegroup`.
+  ---Parse the groups options and set the corresponding global variables.
   ---
   ---@param kv_string string # A string of key-value pairs that can be parsed by `luakeys`.
+  ---@param group? string # The name of the group.
   ---
   ---@return table opts
-  local function parse_group_options(kv_string)
+  local function parse_group_options(kv_string,
+    group,
+    set_current_group)
     local opts = defs_group:parse(kv_string)
+    if group ~= nil then
+      group = normalize_group_name(group)
+    end
+    if group == nil and opts.group ~= nil then
+      -- normalized inside luakeys process function
+      group = opts.group
+    end
+    if group == nil then
+      -- We start with 0 and the first group should be named `__unnamed-group-1__`
+      unnamed_group_index = unnamed_group_index + 1
+      group = '__unnamed-group-' .. unnamed_group_index .. '__'
+    end
+
+    if groups[group] ~= nil then
+      group_options = groups[group]
+    else
+      group_options = {}
+      groups[group] = group_options
+    end
+
+    if set_current_group then
+      current_group = group
+    end
+
+    luakeys.utils.merge_tables(group_options, opts)
+    -- To avoid duplicate data. The group name is the index in the
+    -- groups table
+    group_options.group = nil
     return opts
   end
 
   return {
     get = get,
     get_defaults = get_defaults,
-    reset_global_options = reset_global_options,
+    reset_options = reset_options,
     finalize_cloze = finalize_cloze,
     check_marker = check_marker,
     write_marker = write_marker,
@@ -733,34 +755,33 @@ local config = (function()
     defs_manager = defs_manager,
 
     ---
+    ---For `\clozeset`.
+    ---
+    ---@param kv_string string # A string of key-value pairs that can be parsed by `luakeys`.
+    ---@param group? string # The name of the group.
+    set_options = function(kv_string, group)
+      if group ~= nil then
+        group = normalize_group_name(group)
+      end
+      if group ~= nil and group ~= '' then
+        parse_group_options(kv_string, group, false)
+      else
+        parse_global_options(kv_string)
+      end
+    end,
+
+    ---
+    ---For `\clozegroupstart`.
+    ---
     ---@param kv_string string # A string of key-value pairs that can be parsed by `luakeys`.
     start_group = function(kv_string)
-      local opts = parse_group_options(kv_string)
-      if opts.group ~= nil then
-        current_group = opts.group
-      else
-        -- We start with 0 and the first group should be named `_unnamed-group_1`
-        unnamed_group_index = unnamed_group_index + 1
-        current_group = '__unnamed-group-' .. unnamed_group_index ..
-                          '__'
-      end
-
-      if groups[current_group] ~= nil then
-        group_options = groups[current_group]
-      else
-        group_options = {}
-        groups[current_group] = group_options
-      end
-
-      luakeys.utils.merge_tables(group_options, opts)
-
-      -- To avoid duplicate data. The group name is the index in the
-      -- groups table
-      group_options.group = nil
+      parse_group_options(kv_string, nil, true)
     end,
 
     ---
     ---Stop the current by setting the variable `current_group` to `nil`.
+    ---
+    ---For `\clozegroupstop`.
     stop_group = function()
       current_group = nil
     end,
@@ -826,7 +847,7 @@ local config = (function()
     end,
 
     ---
-    ---Export all group options including the `__global__` group.
+    ---Export all group options.
     ---
     ---see `\tAssertAllGroupOpts{opts}`.
     ---
@@ -836,13 +857,13 @@ local config = (function()
     end,
 
     ---
-    ---Export the global option table (`groups.__global__`).
+    ---Export the global options.
     ---
     ---see `\tAssertGlobalOpts`.
     ---
     ---@return {[string]: Options }
     export_global_opts = function()
-      return groups.__global__
+      return global_options
     end,
 
     ---
@@ -982,17 +1003,21 @@ local config = (function()
     end,
 
     ---
-    ---Set the global visibility.
+    ---Set the global visibility or the visiblity of a group.
     ---
     ---This function is used by the commands `\clozeshow` and `\clozehide`.
     ---
     ---@param state boolean # The visibility state. If true the cloze text is displayed.
     ---@param group? string # The group name. Specify a group name to show or hide the cloze text only for a group of cloze texts.
-    set_global_visibility = function(state, group)
+    set_visibility = function(state, group)
       group = normalize_group_name(group)
-      check_group_name(group)
-      local _, global_opts = load_opts(nil, nil, group)
-      global_opts.visibility = state
+      if group then
+        check_group_name(group)
+        local _, group_opts = load_opts(nil, nil, group)
+        group_opts.visibility = state
+      else
+        global_options.visibility = state
+      end
     end,
 
     ---
@@ -2108,22 +2133,22 @@ return {
 
     lparse.register_csname('clozeset', function()
       local group, kv_string = lparse.scan('O{} m')
-      config.parse_global_options(kv_string, group)
+      config.set_options(kv_string, group)
     end)
 
     lparse.register_csname('clozereset', function()
       local group = lparse.scan('O{}')
-      config.reset_global_options(group)
+      config.reset_options(group)
     end)
 
     lparse.register_csname('clozeshow', function()
       local group = lparse.scan('O{}')
-      config.set_global_visibility(true, group)
+      config.set_visibility(true, group)
     end)
 
     lparse.register_csname('clozehide', function()
       local group = lparse.scan('O{}')
-      config.set_global_visibility(false, group)
+      config.set_visibility(false, group)
     end)
 
     lparse.register_csname('clozegroupstart', function()
@@ -2143,8 +2168,9 @@ return {
   write_linefil_nodes = utils.write_linefil_nodes,
   write_line_nodes = utils.write_line_nodes,
   write_margin_node = utils.write_margin_node,
-  reset = config.reset_global_options,
+  reset = config.reset_options,
   get_defaults = config.get_defaults,
+  set_options = config.set_options,
   get_option = config.get,
   export_all_local_opts = config.export_all_local_opts,
   export_all_merged_opts = config.export_all_merged_opts,
@@ -2152,7 +2178,7 @@ return {
   export_group_opts = config.export_group_opts,
   export_all_group_opts = config.export_all_group_opts,
   export_global_opts = config.export_global_opts,
-  set_global_visibility = config.set_global_visibility,
+  set_visibility = config.set_visibility,
   write_marker = config.write_marker,
   parse_global_options = config.parse_global_options,
   parse_local_options = config.parse_local_options,

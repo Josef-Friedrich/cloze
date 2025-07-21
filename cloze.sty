@@ -45,7 +45,7 @@
 \ProcessOptions\relax
 \RequirePackage{luakeys}
 \directlua{
-  cloze.parse_global_options('\LuakeysGetPackageOptions', '__global__')
+  cloze.parse_global_options('\LuakeysGetPackageOptions')
 }
 %    \end{macrocode}
 %
@@ -68,7 +68,7 @@
 \NewDocumentCommand{ \clozeset } { O{} m } {
   \directlua
   {
-    cloze.parse_global_options('\luaescapestring{\unexpanded{#2}}', '#1')
+    cloze.set_options('\luaescapestring{\unexpanded{#2}}', '#1')
   }
 }
 %    \end{macrocode}
@@ -80,7 +80,7 @@
 \NewDocumentCommand{ \clozeshow } { O{} } {
   \directlua
   {
-    cloze.set_global_visibility(true, '\luaescapestring{\unexpanded{#1}}')
+    cloze.set_visibility(true, '\luaescapestring{\unexpanded{#1}}')
   }
 }
 %    \end{macrocode}
@@ -92,7 +92,7 @@
 \NewDocumentCommand{ \clozehide } { O{} } {
   \directlua
   {
-    cloze.set_global_visibility(false, '\luaescapestring{\unexpanded{#1}}')
+    cloze.set_visibility(false, '\luaescapestring{\unexpanded{#1}}')
   }
 }
 %    \end{macrocode}
