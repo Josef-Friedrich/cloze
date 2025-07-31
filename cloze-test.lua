@@ -132,9 +132,16 @@ local function print_all()
   end
 end
 
---- deeply compare two objects
---- https://gist.github.com/sapphyrus/fd9aeb871e3ce966cc4b0b969f62f539?permalink_comment_id=4563041#gistcomment-4563041
 ---
+---Deeply compare two objects.
+---
+---Source: [gist.github.com/sapphyrus/fd9aeb871e3ce966cc4b0b969f62f539](https://gist.github.com/sapphyrus/fd9aeb871e3ce966cc4b0b969f62f539?permalink_comment_id=4563041#gistcomment-4563041)
+---
+---@param o1 unknown # An object of any type.
+---@param o2 unknown # An object of any type.
+---@param ignore_mt? boolean # Ignore the metatable.
+---
+---@return boolean # `true`, if the two specified objects are deeply equal.
 local function deep_equals(o1, o2, ignore_mt)
   -- same object
   if o1 == o2 then
